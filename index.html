@@ -1150,8 +1150,8 @@ function renderWeekView(date){
   const todayStr = [today.getFullYear(), String(today.getMonth()+1).padStart(2,'0'), String(today.getDate()).padStart(2,'0')].join('-');
   const viewMode = parseInt(localStorage.getItem('at_planning_viewmode') || '3');
   const HOUR_HEIGHT = 60;
-  const START_HOUR = 6;
-  const END_HOUR = 23;
+  const START_HOUR = 0;
+  const END_HOUR = 24;
   const TOTAL_HOURS = END_HOUR - START_HOUR;
   const HOUR_COL_WIDTH = window.innerWidth < 768 ? 30 : 50;
   const GAP = 3;
@@ -1163,25 +1163,32 @@ function renderWeekView(date){
   const dayNames = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
   const allTasks = DataLayer.getPlanning();
   const typeColors = {rappel:'#CCFF00', preparation:'#00FF88', sav:'#FF1744', rdv:'#00D4FF', appel:'#7B68EE'};
+
+  const selectedDateStr = [date.getFullYear(), String(date.getMonth()+1).padStart(2,'0'), String(date.getDate()).padStart(2,'0')].join('-');
+
+  // ── BANDE 7 JOURS (vue jour et 3 jours) ──
   let weekStripHtml = '';
   if(viewMode === 1 || viewMode === 3){
     const monday = new Date(date);
     const dow = monday.getDay();
     monday.setDate(monday.getDate() - (dow === 0 ? 6 : dow - 1));
-    const selectedDateStr = [date.getFullYear(), String(date.getMonth()+1).padStart(2,'0'), String(date.getDate()).padStart(2,'0')].join('-');
     weekStripHtml = `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:8px;padding:0 8px;flex-shrink:0;">`;
     for(let i = 0; i < 7; i++){
       const d = new Date(monday); d.setDate(monday.getDate() + i);
       const ds = [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
       const isToday = ds === todayStr;
       const isSelected = ds === selectedDateStr;
+      const circleBg = 'transparent';
+      const circleColor = isSelected ? '#FF3B30' : isToday ? '#FF3B30' : '#1a1a1a';
       weekStripHtml += `<button onclick="setDateAndViewDay('${ds}')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px;border:none;cursor:pointer;border-radius:10px;background:transparent;">
-        <div style="font-size:10px;font-weight:500;color:#8e8e93;">${dayNames[d.getDay()]}</div>
-        <div style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${isSelected ? '#f2f2f7' : 'transparent'};font-size:15px;font-weight:${isSelected ? '700' : '400'};color:${isToday ? '#FF3B30' : '#1a1a1a'};margin-top:2px;">${d.getDate()}</div>
+        <div style="font-size:10px;font-weight:500;color:${isToday && !isSelected ? '#FF3B30' : '#8e8e93'};">${dayNames[d.getDay()]}</div>
+        <div style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${circleBg};font-size:15px;font-weight:${isSelected || isToday ? '700' : '400'};color:${circleColor};margin-top:2px;">${d.getDate()}</div>
       </button>`;
     }
     weekStripHtml += '</div>';
   }
+
+  // ── HEADER JOURS (vue 3j et semaine) ──
   let headerHtml = '';
   if(viewMode !== 1){
     headerHtml = `<div style="display:grid;grid-template-columns:${HOUR_COL_WIDTH}px repeat(${days.length},1fr);gap:${GAP}px;margin-bottom:4px;flex-shrink:0;padding:0 8px;">`;
@@ -1189,33 +1196,51 @@ function renderWeekView(date){
     days.forEach(d => {
       const ds = [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
       const isToday = ds === todayStr;
+      const isSelected = ds === selectedDateStr;
+      const circleBg = 'transparent';
+      const circleColor = isSelected ? '#FF3B30' : isToday ? '#FF3B30' : '#1a1a1a';
       headerHtml += `<button onclick="setDateAndViewDay('${ds}')" style="display:flex;flex-direction:column;align-items:center;padding:4px 2px;border:none;cursor:pointer;background:transparent;border-radius:8px;">
-        <div style="font-size:10px;font-weight:500;color:#8e8e93;">${dayNames[d.getDay()]}</div>
-        <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:${isToday ? '#FF3B30' : '#1a1a1a'};margin-top:2px;">${d.getDate()}</div>
+        <div style="font-size:10px;font-weight:500;color:${isToday && !isSelected ? '#FF3B30' : '#8e8e93'};">${dayNames[d.getDay()]}</div>
+        <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;background:${circleBg};color:${circleColor};margin-top:2px;">${d.getDate()}</div>
       </button>`;
     });
     headerHtml += '</div>';
   }
+
+  // ── GRILLE ──
   const gridHeight = TOTAL_HOURS * HOUR_HEIGHT;
   let gridHtml = `<div style="display:grid;grid-template-columns:${HOUR_COL_WIDTH}px repeat(${days.length},1fr);gap:${GAP}px;position:relative;padding:0 8px;">`;
+
+  // Colonne heures
   let hoursHtml = `<div style="position:relative;height:${gridHeight}px;">`;
-  for(let h = START_HOUR; h <= END_HOUR; h++){
+  for(let h = START_HOUR; h < END_HOUR; h++){
     const top = (h - START_HOUR) * HOUR_HEIGHT;
+    const isEven = h % 2 === 0;
+    hoursHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;height:${HOUR_HEIGHT}px;background:${isEven ? 'rgba(0,0,0,0.015)' : 'transparent'};border-radius:4px;"></div>`;
     hoursHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;font-size:10px;font-weight:600;color:#8e8e93;line-height:1;padding-top:3px;">${String(h).padStart(2,'0')}</div>`;
   }
   hoursHtml += '</div>';
   gridHtml += hoursHtml;
+
+  // Colonnes par jour
   days.forEach(d => {
     const ds = [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
     const isToday = ds === todayStr;
     const dayTasks = allTasks.filter(t => t.date === ds);
+
     let colHtml = `<div style="position:relative;height:${gridHeight}px;background:${isToday ? 'rgba(26,26,26,0.03)' : 'transparent'};border-radius:8px;" onclick="openPlanningTaskWithTime('${ds}', '09:00')">`;
-    for(let h = START_HOUR; h <= END_HOUR; h++){
+
+    // Lignes horaires avec alternance pair/impair
+    for(let h = START_HOUR; h < END_HOUR; h++){
       const top = (h - START_HOUR) * HOUR_HEIGHT;
+      const isEven = h % 2 === 0;
       const hour = String(h).padStart(2,'0') + ':00';
+      colHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;height:${HOUR_HEIGHT}px;background:${isEven ? 'rgba(0,0,0,0.015)' : 'transparent'};"></div>`;
       colHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;height:1px;background:${h === START_HOUR ? 'transparent' : '#e5e5e5'};"></div>`;
       colHtml += `<div onclick="event.stopPropagation();openPlanningTaskWithTime('${ds}','${hour}')" style="position:absolute;top:${top}px;left:0;right:0;height:${HOUR_HEIGHT}px;cursor:pointer;z-index:1;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'"></div>`;
     }
+
+    // Tâches
     dayTasks.forEach(task => {
       if(task.allDay) return;
       const timeStr = task.timeStart || task.time || '00:00';
@@ -1232,11 +1257,13 @@ function renderWeekView(date){
         <div style="font-size:11px;font-weight:700;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${task.description}</div>
       </div>`;
     });
+
+    // Indicateur heure actuelle
     if(isToday){
       const now = new Date();
       const nowMins = Math.max(Math.min(now.getHours() * 60 + now.getMinutes(), END_HOUR * 60), START_HOUR * 60);
       const nowTop = ((nowMins - START_HOUR * 60) / 60) * HOUR_HEIGHT;
-      colHtml += `<div style="position:absolute;top:${nowTop}px;left:-8px;right:0;display:flex;align-items:center;z-index:20;pointer-events:none;">
+      colHtml += `<div id="now-indicator" style="position:absolute;top:${nowTop}px;left:-8px;right:0;display:flex;align-items:center;z-index:20;pointer-events:none;">
         <div style="width:12px;height:12px;border-radius:50%;background:#FF3B30;flex-shrink:0;box-shadow:0 0 0 3px rgba(255,59,48,0.25);"></div>
         <div style="flex:1;height:2px;background:linear-gradient(90deg, #FF3B30, rgba(255,59,48,0.3));"></div>
       </div>`;
@@ -1244,17 +1271,22 @@ function renderWeekView(date){
     colHtml += '</div>';
     gridHtml += colHtml;
   });
+
   gridHtml += '</div>';
+
   const html = `<div style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
     ${weekStripHtml}${headerHtml}
     <div id="calendar-scroll-area" style="flex:1;overflow-y:auto;padding-bottom:calc(140px + env(safe-area-inset-bottom));">${gridHtml}</div>
   </div>`;
+
   document.getElementById('calendar-content').innerHTML = html;
+
+  // Scroll vers l'heure actuelle
   const scrollArea = document.getElementById('calendar-scroll-area');
   if(scrollArea){
     const now = new Date();
-    const nowMins = Math.max(Math.min(now.getHours() * 60 + now.getMinutes(), END_HOUR * 60), START_HOUR * 60);
-    const nowTop = ((nowMins - START_HOUR * 60) / 60) * HOUR_HEIGHT;
+    const nowMins = now.getHours() * 60 + now.getMinutes();
+    const nowTop = (nowMins / 60) * HOUR_HEIGHT;
     setTimeout(() => { scrollArea.scrollTop = Math.max(0, nowTop - (scrollArea.clientHeight / 2) + 60); }, 50);
   }
 }
