@@ -333,7 +333,7 @@
     .bottom-nav-item:active { opacity: 0.6; }
     .bottom-nav-item.active { color: #1a1a1a; }
     .bottom-nav-label { font-size: 10px; font-weight: 500; letter-spacing: -0.1px; }
-    .app-container { padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
+    .app-container { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
 
     /* ── Finances ── */
     .fin-section-label { font-size:13px; color:#8e8e93; margin:20px 0 6px 20px; }
@@ -1246,7 +1246,7 @@ function renderWeekView(date){
   gridHtml += '</div>';
   const html = `<div style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
     ${weekStripHtml}${headerHtml}
-    <div id="calendar-scroll-area" style="flex:1;overflow-y:auto;padding-bottom:16px;">${gridHtml}</div>
+    <div id="calendar-scroll-area" style="flex:1;overflow-y:auto;padding-bottom:calc(110px + env(safe-area-inset-bottom));">${gridHtml}</div>
   </div>`;
   document.getElementById('calendar-content').innerHTML = html;
   const scrollArea = document.getElementById('calendar-scroll-area');
