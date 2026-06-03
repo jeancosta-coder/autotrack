@@ -1072,7 +1072,72 @@ function changeStatut(newStatut){
   }
 }
 
-function openDetailTaskModal(){ const today = new Date().toISOString().split('T')[0]; openNewTaskModalOutlookForVehicle(today, '09:00', currentDetailVehicleId); }
+function openDetailTaskModal(){
+  const existing = document.getElementById('simple-task-modal');
+  if(existing) existing.remove();
+
+  if(!document.getElementById('modal-anim-style')){
+    const style = document.createElement('style');
+    style.id = 'modal-anim-style';
+    style.textContent = '@keyframes slideUpFull{from{transform:translateY(100%);opacity:0;}to{transform:translateY(0);opacity:1;}}';
+    document.head.appendChild(style);
+  }
+
+  const html = `<div id="simple-task-modal" style="
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    background:white;z-index:9999;display:flex;flex-direction:column;
+    animation:slideUpFull 0.3s ease;
+  ">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;flex-shrink:0;min-height:56px;">
+      <button onclick="document.getElementById('simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
+      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Nouvelle tâche</span>
+      <button onclick="saveSimpleTask()" style="background:none;border:none;cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg>
+      </button>
+    </div>
+    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px;">
+      <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
+        <input type="text" id="stask-title" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;"/>
+      </div>
+      <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:#1a1a1a;">Coût</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" id="stask-cost" placeholder="0" style="border:none;outline:none;font-size:16px;color:#1a1a1a;text-align:right;width:100px;background:transparent;"/>
+            <span style="font-size:16px;color:#8e8e93;">€</span>
+          </div>
+        </div>
+        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:#1a1a1a;">Date</span>
+          <input type="date" id="stask-date" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;text-align:right;"/>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+  setTimeout(() => document.getElementById('stask-title').focus(), 300);
+}
+
+function saveSimpleTask(){
+  const title = document.getElementById('stask-title')?.value.trim();
+  if(!title){ showToast('⚠️ Titre requis'); return; }
+  const cost = Number(document.getElementById('stask-cost')?.value) || 0;
+  const date = document.getElementById('stask-date')?.value || null;
+  const v = vehicles.find(x => x.id === currentDetailVehicleId);
+  if(!v) return;
+  if(!v.tasks) v.tasks = [];
+  v.tasks.push({ id: Date.now(), type: 'preparation', cat: title, desc: '', cost, completed: false, date });
+  save();
+  document.getElementById('simple-task-modal').remove();
+  renderDetailTasks(currentDetailVehicleId, 'all');
+  // Reset filtre sur Toutes
+  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.background='rgba(0,0,0,0.06)';b.style.color='#3a3a3c';b.style.fontWeight='500'; });
+  const allBtn = document.getElementById('filter-all-tasks');
+  if(allBtn){ allBtn.style.background='#1a1a1a';allBtn.style.color='white';allBtn.style.fontWeight='600'; }
+  currentDetailTaskFilter = 'all';
+  showToast('✓ Tâche ajoutée');
+}
 
 let currentCalendarView = 'week';
 let currentDisplayDate = new Date();
@@ -1535,14 +1600,86 @@ function saveEditPlanningTask(taskId){
 }
 
 function openEditTaskModal(vehicleId, taskId){
+  // Si c'est un événement planning, ouvrir le modal planning
   const planningTask = planning.find(t => t.id === taskId);
-  if(planningTask) { openEditPlanningTaskModal(taskId); return; }
+  if(planningTask){ openEditPlanningTaskModal(taskId); return; }
+
+  // Sinon : modal simple d'édition tâche véhicule
   const v = vehicles.find(x => x.id === vehicleId);
   const task = v ? v.tasks.find(t => t.id === taskId) : null;
   if(!task) return;
-  planning.push({ id: taskId, type: task.type, description: task.desc, date: task.date || null, time: null, vehicleId: vehicleId, completed: task.completed });
+
+  const existing = document.getElementById('edit-simple-task-modal');
+  if(existing) existing.remove();
+
+  const html = `<div id="edit-simple-task-modal" style="
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    background:white;z-index:9999;display:flex;flex-direction:column;
+    animation:slideUpFull 0.3s ease;
+  ">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;flex-shrink:0;min-height:56px;">
+      <button onclick="document.getElementById('edit-simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
+      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Modifier la tâche</span>
+      <button onclick="updateSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg>
+      </button>
+    </div>
+    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px;">
+      <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
+        <input type="text" id="etask-title" value="${task.cat || ''}" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;"/>
+      </div>
+      <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:#1a1a1a;">Coût</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" id="etask-cost" value="${task.cost || ''}" placeholder="0" style="border:none;outline:none;font-size:16px;color:#1a1a1a;text-align:right;width:100px;background:transparent;"/>
+            <span style="font-size:16px;color:#8e8e93;">€</span>
+          </div>
+        </div>
+        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:#1a1a1a;">Date</span>
+          <input type="date" id="etask-date" value="${task.date || ''}" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;text-align:right;"/>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:8px;">
+        <button onclick="deleteSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;padding:12px;display:flex;align-items:center;justify-content:center;border-radius:50%;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function updateSimpleTask(vehicleId, taskId){
+  const v = vehicles.find(x => x.id === vehicleId);
+  const task = v ? v.tasks.find(t => t.id === taskId) : null;
+  if(!task) return;
+  const title = document.getElementById('etask-title')?.value.trim();
+  if(!title){ showToast('⚠️ Titre requis'); return; }
+  task.cat = title;
+  task.cost = Number(document.getElementById('etask-cost')?.value) || 0;
+  task.date = document.getElementById('etask-date')?.value || null;
   save();
-  openEditPlanningTaskModal(taskId);
+  document.getElementById('edit-simple-task-modal').remove();
+  renderDetailTasks(vehicleId, 'all');
+  showToast('✓ Tâche modifiée');
+}
+
+function deleteSimpleTask(vehicleId, taskId){
+  const sheet = document.createElement('div');
+  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
+  sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
+    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer cette tâche ?</div>
+    <div style="color:#8e8e93;font-size:15px;margin-bottom:24px;">Cette action ne peut pas être annulée.</div>
+    <button onclick="DataLayer.deleteTask(${vehicleId},${taskId});save();document.getElementById('edit-simple-task-modal').remove();renderDetailTasks(${vehicleId},'all');showToast('✓ Tâche supprimée');this.closest('[style*=fixed]').remove();" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Supprimer</button>
+    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
+  </div>`;
+  sheet.addEventListener('click', e => { if(e.target === sheet) sheet.remove(); });
+  document.body.appendChild(sheet);
 }
 
 function closeEditTaskModal(){ document.getElementById('modal-edit-task').classList.remove('active'); }
@@ -1696,7 +1833,7 @@ function openNewTaskModalOutlook(dateStr, timeStr){
   const html = `<div id="new-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;background:white;flex-shrink:0;min-height:56px;">
       <button onclick="closeNewTaskModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
-      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Nouvelle tâche</span>
+      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Nouvel événement</span>
       <button onclick="saveNewTask()" style="background:none;border:none;cursor:pointer;"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg></button>
     </div>
     <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
