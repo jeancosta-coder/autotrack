@@ -7,7 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="AutoTrack">
-  <title>AutoTrack - Gestion de Parc Automobile</title>
+  <title>Trakoto - Gestion de Parc Automobile</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -851,6 +852,12 @@ const EVENT_LABELS = {rdv:'RDV', appel:'Appel', rappel:'Rappel', livraison:'Livr
 
 const TASK_COLORS = {mecanique:'#FF9500', carrosserie:'#007AFF', administratif:'#AF52DE', preparation:'#34C759', sav:'#FF3B30'};
 const TASK_LABELS = {mecanique:'Mécanique', carrosserie:'Carrosserie', administratif:'Administratif', preparation:'Préparation', sav:'SAV'};
+// ── SUPABASE ────────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://qfwbneqcnqmpwkyolxze.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_0PVpvCFraP4oUAvstn88hA_ZFmp2ekl';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let sbUser = null;
+
 let vehicles = JSON.parse(localStorage.getItem('at_vehicles') || '[]');
 let planning = JSON.parse(localStorage.getItem('at_planning') || '[]');
 let currentTaskFilter = 'all';
@@ -909,6 +916,31 @@ const DataLayer = {
 function save(){
   localStorage.setItem('at_vehicles', JSON.stringify(vehicles));
   localStorage.setItem('at_planning', JSON.stringify(planning));
+  if(sbUser) syncToSupabase();
+}
+
+async function syncToSupabase(){
+  try {
+    await sb.from('vehicles').upsert({
+      id: sbUser.id + '_vehicles',
+      user_id: sbUser.id,
+      data: vehicles
+    }, {onConflict: 'id'});
+    await sb.from('planning_tasks').upsert({
+      id: sbUser.id + '_planning',
+      user_id: sbUser.id,
+      data: planning
+    }, {onConflict: 'id'});
+  } catch(e) { console.log('Sync error:', e); }
+}
+
+async function loadFromSupabase(){
+  try {
+    const {data: vRow} = await sb.from('vehicles').select('data').eq('user_id', sbUser.id).single();
+    const {data: pRow} = await sb.from('planning_tasks').select('data').eq('user_id', sbUser.id).single();
+    if(vRow?.data) { vehicles = vRow.data; localStorage.setItem('at_vehicles', JSON.stringify(vehicles)); }
+    if(pRow?.data) { planning = pRow.data; localStorage.setItem('at_planning', JSON.stringify(planning)); }
+  } catch(e) { console.log('Load error:', e); }
 }
 
 const Utils = {
@@ -3102,13 +3134,107 @@ function saveNewTask(){
 function closeNewTaskModal(){ const modal = document.getElementById('new-task-modal'); if(modal) modal.remove(); }
 function openPlanningTaskWithTime(dateStr, timeStr){ openNewTaskModalOutlook(dateStr, timeStr); }
 
-if(vehicles.length === 0) {
-  const today = Utils.today();
-  vehicles = [{id: Date.now(), marque:'Mercedes', modele:'C-Class', year:2022, gen:'W206', km:45000, achat:32000, vente:38500, prepCost:1200, statut:'En cours', statusHistory:[{statut:'En cours', date:today}], notes:'', tasks:[{id: Date.now()+1, type:'preparation', cat:'Préparation', desc:'Contrôle technique', cost:0, completed:false, date:null}]}];
-  localStorage.setItem('at_vehicles', JSON.stringify(vehicles));
+// ── AUTH + INIT ──────────────────────────────────────────────────────────────
+function showLoginScreen(){
+  document.querySelectorAll('.bottom-nav, #fab-parc, #fab-planning, .app-container').forEach(el => { if(el) el.style.display='none'; });
+
+  const loginDiv = document.createElement('div');
+  loginDiv.id = 'login-screen';
+  loginDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#f2f2f7;display:flex;align-items:center;justify-content:center;padding:24px;z-index:99999;';
+  loginDiv.innerHTML = `
+    <div style="width:100%;max-width:360px;">
+      <div style="text-align:center;margin-bottom:40px;">
+        <div style="display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;background:#1a1a1a;border-radius:16px;margin-bottom:14px;">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect x="3" y="11" width="26" height="14" rx="3.5" fill="white" opacity="0.95"/>
+            <rect x="7" y="7" width="18" height="7" rx="2" fill="white" opacity="0.5"/>
+            <circle cx="9" cy="25" r="3" fill="#1a1a1a"/>
+            <circle cx="23" cy="25" r="3" fill="#1a1a1a"/>
+            <rect x="12" y="15" width="8" height="4" rx="1" fill="#FF6B35"/>
+          </svg>
+        </div>
+        <div style="font-size:28px;font-weight:700;color:#1a1a1a;letter-spacing:-0.5px;">Trakoto</div>
+        <div style="color:#8e8e93;font-size:14px;margin-top:4px;">Gestion de parc automobile</div>
+      </div>
+
+      <div style="background:white;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <div id="auth-tabs" style="display:flex;background:#f2f2f7;border-radius:10px;padding:3px;margin-bottom:20px;">
+          <button onclick="authTab('login')" id="tab-login" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:white;color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,0.1);">Connexion</button>
+          <button onclick="authTab('register')" id="tab-register" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:transparent;color:#8e8e93;">Créer un compte</button>
+        </div>
+        <div id="field-name" style="display:none;margin-bottom:12px;">
+          <input id="inp-name" type="text" placeholder="Nom complet" style="width:100%;padding:13px 14px;background:#f2f2f7;border:none;border-radius:10px;font-size:15px;color:#1a1a1a;outline:none;-webkit-appearance:none;"/>
+        </div>
+        <div style="margin-bottom:12px;">
+          <input id="inp-email" type="email" placeholder="Email" style="width:100%;padding:13px 14px;background:#f2f2f7;border:none;border-radius:10px;font-size:15px;color:#1a1a1a;outline:none;-webkit-appearance:none;" onkeydown="if(event.key==='Enter')doAuth()"/>
+        </div>
+        <div style="margin-bottom:8px;">
+          <input id="inp-pwd" type="password" placeholder="Mot de passe" style="width:100%;padding:13px 14px;background:#f2f2f7;border:none;border-radius:10px;font-size:15px;color:#1a1a1a;outline:none;-webkit-appearance:none;" onkeydown="if(event.key==='Enter')doAuth()"/>
+        </div>
+        <div id="auth-msg" style="min-height:18px;font-size:13px;color:#FF3B30;margin-bottom:12px;text-align:center;"></div>
+        <button onclick="doAuth()" id="auth-btn" style="width:100%;padding:15px;background:#1a1a1a;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Se connecter</button>
+      </div>
+    </div>`;
+  document.body.appendChild(loginDiv);
 }
 
-switchView('parc');
+let authMode = 'login';
+function authTab(m){
+  authMode = m;
+  document.getElementById('tab-login').style.background = m==='login'?'white':'transparent';
+  document.getElementById('tab-login').style.color = m==='login'?'#1a1a1a':'#8e8e93';
+  document.getElementById('tab-login').style.boxShadow = m==='login'?'0 1px 3px rgba(0,0,0,0.1)':'none';
+  document.getElementById('tab-register').style.background = m==='register'?'white':'transparent';
+  document.getElementById('tab-register').style.color = m==='register'?'#1a1a1a':'#8e8e93';
+  document.getElementById('tab-register').style.boxShadow = m==='register'?'0 1px 3px rgba(0,0,0,0.1)':'none';
+  document.getElementById('field-name').style.display = m==='register'?'block':'none';
+  document.getElementById('auth-btn').textContent = m==='login'?'Se connecter':'Créer mon compte';
+}
+
+async function doAuth(){
+  const email = document.getElementById('inp-email').value.trim();
+  const pwd = document.getElementById('inp-pwd').value;
+  const msg = document.getElementById('auth-msg');
+  const btn = document.getElementById('auth-btn');
+  if(!email||!pwd){msg.textContent='Veuillez remplir tous les champs.';return;}
+  btn.textContent='Chargement…';btn.disabled=true;msg.textContent='';
+  if(authMode==='register'){
+    const name = document.getElementById('inp-name').value.trim();
+    if(!name){msg.textContent='Entrez votre nom.';btn.textContent='Créer mon compte';btn.disabled=false;return;}
+    if(pwd.length<6){msg.textContent='Mot de passe trop court (6 min).';btn.textContent='Créer mon compte';btn.disabled=false;return;}
+    const {error} = await sb.auth.signUp({email,password:pwd,options:{data:{full_name:name}}});
+    if(error){msg.textContent=error.message;btn.textContent='Créer mon compte';btn.disabled=false;return;}
+    msg.style.color='#34C759';msg.textContent='Compte créé ! Vérifiez votre email.';btn.textContent='Créer mon compte';btn.disabled=false;
+  } else {
+    const {data,error} = await sb.auth.signInWithPassword({email,password:pwd});
+    if(error){msg.textContent='Email ou mot de passe incorrect.';btn.textContent='Se connecter';btn.disabled=false;return;}
+    sbUser = data.user;
+    await loadFromSupabase();
+    initApp();
+  }
+}
+
+function initApp(){
+  const ls = document.getElementById('login-screen');
+  if(ls) ls.remove();
+  document.querySelectorAll('.bottom-nav, #fab-parc, #fab-planning, .app-container').forEach(el => { if(el) el.style.display=''; });
+  if(vehicles.length === 0) {
+    const today = Utils.today();
+    vehicles = [{id: Date.now(), marque:'Mercedes', modele:'C-Class', year:2022, gen:'W206', km:45000, achat:32000, vente:38500, prepCost:1200, statut:'En cours', statusHistory:[{statut:'En cours', date:today}], notes:'', tasks:[{id: Date.now()+1, type:'preparation', cat:'Préparation', desc:'Contrôle technique', cost:0, completed:false, date:null}]}];
+    save();
+  }
+  switchView('parc');
+}
+
+// Vérifier si déjà connecté
+sb.auth.getSession().then(({data:{session}}) => {
+  if(session){
+    sbUser = session.user;
+    loadFromSupabase().then(() => initApp());
+  } else {
+    showLoginScreen();
+  }
+});
 </script>
 
 <nav class="bottom-nav">
