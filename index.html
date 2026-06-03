@@ -36,10 +36,10 @@
     .app-container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 12px 8px 80px 8px;
+      padding: 12px 8px 160px 8px;
       display: flex;
       flex-direction: column;
-      height: 100vh;
+      min-height: 100vh;
     }
     .modal-box {
       background: var(--surface);
@@ -333,7 +333,7 @@
     .bottom-nav-item:active { opacity: 0.6; }
     .bottom-nav-item.active { color: #1a1a1a; }
     .bottom-nav-label { font-size: 10px; font-weight: 500; letter-spacing: -0.1px; }
-    .app-container { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
+    .app-container { padding-bottom: 160px; }
 
     /* ── Finances ── */
     .fin-section-label { font-size:13px; color:#8e8e93; margin:20px 0 6px 20px; }
