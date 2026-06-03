@@ -1045,7 +1045,7 @@ function renderDetailTasks(id, filter){
     grouped[date].forEach((t, idx) => {
       const color = typeColors[t.type] || '#8e8e93';
       const isLast = idx === grouped[date].length - 1;
-      const title = (t.cat || '') + (t.desc ? ' — ' + t.desc : '');
+      const title = t.cat || t.desc || '';
       html += `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;${isLast ? '' : 'border-bottom:1px solid #f2f2f7;'}opacity:${t.completed ? '0.45' : '1'};" onclick="openEditTaskModal(${id}, ${t.id})">`;
       html += `<div onclick="event.stopPropagation();const v=vehicles.find(x=>x.id===${id});const t=v.tasks.find(s=>s.id===${t.id});t.completed=!t.completed;save();renderDetailTasks(${id},'${filter}');" style="width:24px;height:24px;border-radius:50%;flex-shrink:0;cursor:pointer;border:2px solid ${t.completed ? color : '#d1d1d6'};background:${t.completed ? color : 'transparent'};display:flex;align-items:center;justify-content:center;transition:all 0.2s;">${t.completed ? `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><polyline points="1,6 4,9 11,3"/></svg>` : ''}</div>`;
       html += `<div style="flex:1;min-width:0;"><div style="font-size:15px;color:#1a1a1a;text-decoration:${t.completed ? 'line-through' : 'none'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${title}</div>`;
@@ -1661,6 +1661,7 @@ function updateSimpleTask(vehicleId, taskId){
   const title = document.getElementById('etask-title')?.value.trim();
   if(!title){ showToast('⚠️ Titre requis'); return; }
   task.cat = title;
+  task.desc = '';
   task.cost = Number(document.getElementById('etask-cost')?.value) || 0;
   task.date = document.getElementById('etask-date')?.value || null;
   save();
