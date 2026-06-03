@@ -333,7 +333,7 @@
     .bottom-nav-item:active { opacity: 0.6; }
     .bottom-nav-item.active { color: #1a1a1a; }
     .bottom-nav-label { font-size: 10px; font-weight: 500; letter-spacing: -0.1px; }
-    .app-container { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
+    .app-container { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
 
     /* ── Finances ── */
     .fin-section-label { font-size:13px; color:#8e8e93; margin:20px 0 6px 20px; }
@@ -475,7 +475,7 @@
       <button id="tab-finances" class="detail-tab" onclick="switchDetailTab('finances')" style="flex:1;padding:11px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:#8e8e93;">Finances</button>
       <button id="tab-historique" class="detail-tab" onclick="switchDetailTab('historique')" style="flex:1;padding:11px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:#8e8e93;">Historique</button>
     </div>
-    <div style="flex:1;overflow-y:auto;padding:16px 16px 40px 16px;">
+    <div style="flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
       <div id="detail-tab-infos" class="detail-tab-content" style="display:block;">
         <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Statut</span></div>
         <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
@@ -566,7 +566,7 @@
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,11 9,17 19,5"/></svg>
     </button>
   </div>
-  <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px 40px 16px;">
+  <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
     <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
       <div style="padding:0 16px;"><input type="text" id="f-marque" placeholder="Marque" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;box-sizing:border-box;"/></div>
       <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
@@ -1246,7 +1246,7 @@ function renderWeekView(date){
   gridHtml += '</div>';
   const html = `<div style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
     ${weekStripHtml}${headerHtml}
-    <div id="calendar-scroll-area" style="flex:1;overflow-y:auto;padding-bottom:calc(110px + env(safe-area-inset-bottom));">${gridHtml}</div>
+    <div id="calendar-scroll-area" style="flex:1;overflow-y:auto;padding-bottom:calc(140px + env(safe-area-inset-bottom));">${gridHtml}</div>
   </div>`;
   document.getElementById('calendar-content').innerHTML = html;
   const scrollArea = document.getElementById('calendar-scroll-area');
@@ -1285,7 +1285,7 @@ function openEditPlanningTaskModal(taskId){
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg>
       </button>
     </div>
-    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px 40px 16px;">
+    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
       <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;padding:0 16px;">
         <input type="text" id="edit-task-title" value="${task.description || ''}" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;"/>
       </div>
@@ -1566,7 +1566,7 @@ function openNewTaskModalOutlook(dateStr, timeStr){
       <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Nouvelle tâche</span>
       <button onclick="saveNewTask()" style="background:none;border:none;cursor:pointer;"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg></button>
     </div>
-    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px 40px 16px;">
+    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
       <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;padding:0 16px;">
         <input type="text" id="ntask-title" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;"/>
       </div>
