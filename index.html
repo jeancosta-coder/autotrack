@@ -1,0 +1,3189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#f2f2f7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="AutoTrack">
+  <title>AutoTrack - Gestion de Parc Automobile</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy: #1a1a1a;
+      --blue: #2d2d2d;
+      --orange: #FF6B35;
+      --green: #00D084;
+      --red: #FF3E41;
+      --bg: #f0f2f5;
+      --surface: #ffffff;
+      --border: #e8eaed;
+      --text: #1a1a1a;
+      --text2: #4a4a4a;
+      --accent: #00B8E6;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 8px 80px 8px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .modal-box {
+      background: var(--surface);
+      padding: 32px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      max-width: 500px;
+      width: 100%;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-input {
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--border);
+      box-shadow: none;
+      background: white;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    .tab {
+      padding: 14px 24px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text2);
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+      position: relative;
+      margin-bottom: -1px;
+    }
+    .tab:hover {
+      color: var(--text);
+      border-bottom-color: #d0d0d0;
+    }
+    .tab.active {
+      color: var(--navy);
+      border-bottom-color: var(--navy);
+      background: rgba(26, 26, 26, 0.03);
+    }
+    .view {
+      display: none;
+      opacity: 0;
+      animation: fadeIn 0.3s ease-in-out forwards;
+    }
+    .view.active {
+      display: block;
+      opacity: 1;
+      animation: fadeIn 0.3s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .task-draggable {
+      cursor: grab;
+      transition: all 0.2s ease;
+    }
+    .task-draggable:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transform: translateY(-2px);
+    }
+    .task-draggable.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+    .task-draggable.drag-over {
+      background: rgba(26,26,26,0.08) !important;
+      border: 2px dashed #1a1a1a !important;
+    }
+    .filter-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.3s;
+    }
+    .filter-btn.active {
+      background: var(--navy);
+      color: white;
+      border-color: var(--navy);
+    }
+    #parc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .vehicle-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    .vehicle-card:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border-color: #1a1a1a;
+    }
+    .vehicle-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 12px;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+    .statut-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+    .btn-primary {
+      padding: 12px 24px;
+      background: #1a1a1a;
+      color: white;
+      border: 1px solid #1a1a1a;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-primary:hover { background: #333; border-color: #333; }
+    .btn-primary:active { transform: scale(0.95); }
+    .btn-outline {
+      padding: 12px 24px;
+      background: transparent;
+      color: #1a1a1a;
+      border: 1px solid #1a1a1a;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .btn-outline:hover { background: #f0f2f5; }
+    .btn-outline:active { transform: scale(0.95); }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.active { display: flex; }
+    #modal-edit-task.active { z-index: 1001; }
+    .modal-box {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+    .form-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; font-family: inherit; }
+    .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+    .modal-actions button { flex: 1; }
+    .task-group {
+      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(26, 26, 26, 0.06);
+      transition: all 0.3s ease;
+    }
+    .task-group:hover { box-shadow: 0 6px 16px rgba(26, 26, 26, 0.1); }
+    .task-item { display: flex; gap: 14px; padding: 4px 0; align-items: center; }
+    .task-item input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border: 2px solid #D1D5DB;
+      border-radius: 6px;
+      cursor: pointer;
+      background: white;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .task-item input[type="checkbox"]:hover { border-color: #0A2E6E; box-shadow: 0 0 0 3px rgba(45, 45, 45, 0.1); }
+    .task-item input[type="checkbox"]:checked {
+      background: #27ae60;
+      border-color: #27ae60;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 11.94l6.72-6.72a.75.75 0 011.06 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 16px;
+    }
+    .task-text { flex: 1; font-size: 13px; }
+    #timeline { margin-top: 20px; }
+    #detail-tasks, #confirmation-tasks { margin-top: 20px; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    button, input, select, textarea { transition: all 0.2s ease; }
+    .filter-btn {
+      transition: all 0.2s ease;
+      background-color: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .filter-btn:hover { background-color: #E5E7EB; }
+    .filter-btn:active { transform: scale(0.95); background-color: #D1D5DB; }
+    .filter-btn.active { background-color: var(--navy); color: white; border-color: var(--navy); }
+    .tab { transition: all 0.2s ease; }
+    .tab:hover { color: var(--navy); }
+    .modal { animation: fadeIn 0.2s ease; }
+    .task-group { animation: slideIn 0.3s ease; }
+    .progress-container { width: 100%; height: 8px; background-color: #E5E7EB; border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, #27ae60, #0A2E6E); border-radius: 4px; transition: width 0.3s ease; }
+    input[type="date"], input[type="time"] { font-family: inherit; font-size: 14px; font-weight: 500; }
+    @media (max-width: 768px) {
+      .app-container { padding: 16px 12px; }
+      .tab { padding: 10px 12px; font-size: 13px; }
+      .modal-box { padding: 16px; max-width: 95%; }
+      .modal-title { font-size: 16px; margin-bottom: 16px; }
+      .form-label { font-size: 11px; margin-bottom: 6px; }
+      .form-input, input[type="date"], input[type="time"], select, textarea { padding: 14px 12px; min-height: 44px; font-size: 14px; }
+      .form-group { margin-bottom: 14px; }
+      .btn-primary, .btn-outline, .filter-btn, .btn-action, .statut-btn { padding: 12px 16px; min-height: 44px; font-size: 13px; }
+      .bottom-nav-item { min-height: unset; border: none; background: transparent; padding: 0; }
+      .modal-actions { gap: 10px; }
+      #parc-grid { grid-template-columns: 1fr; gap: 12px; }
+      .vehicle-card { padding: 12px; }
+      .task-group { padding: 12px; margin-bottom: 12px; }
+      .task-item { font-size: 12px; }
+      .filter-btn { padding: 10px 12px; gap: 6px; }
+      input, textarea, select { font-size: 16px; }
+      div[style*="grid-template-columns:1fr 1fr"] { display: grid !important; grid-template-columns: 1fr !important; gap: 16px !important; margin-bottom: 20px !important; }
+      .detail-tab { padding: 10px 14px; font-size: 12px; }
+      .progress-container { margin-bottom: 0.5rem; }
+      .modal-actions button { font-size: 13px; padding: 10px 14px; }
+      .vehicle-card, .task-group { padding: 12px !important; }
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(248,248,248,0.92);
+      backdrop-filter: saturate(180%) blur(30px);
+      -webkit-backdrop-filter: saturate(180%) blur(30px);
+      border-top: 0.33px solid rgba(0,0,0,0.18);
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      z-index: 1000;
+      padding: 10px 0 calc(24px + env(safe-area-inset-bottom)) 0;
+    }
+    .bottom-nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 0;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #8e8e93;
+      transition: color 0.2s ease;
+    }
+    .bottom-nav-item:active { opacity: 0.6; }
+    .bottom-nav-item.active { color: #1a1a1a; }
+    .bottom-nav-label { font-size: 10px; font-weight: 500; letter-spacing: -0.1px; }
+    .app-container { padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
+
+    /* ── Finances ── */
+    .fin-section-label { font-size:13px; color:#8e8e93; margin:20px 0 6px 20px; }
+    .fin-card { background:white; border-radius:12px; overflow:hidden; margin:0 16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+    .fin-row { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:0.5px solid #e5e5ea; min-height:50px; }
+    .fin-row:last-child { border-bottom:none; }
+    .fin-row-left { font-size:17px; color:#1c1c1e; }
+    .fin-bold { font-weight:600; }
+    .fin-muted { color:#8e8e93 !important; font-weight:400 !important; }
+    .fin-row-right { display:flex; align-items:center; gap:4px; }
+    .fin-row-right input { font-size:17px; color:#1c1c1e; text-align:right; border:none; outline:none; background:transparent; width:100px; -moz-appearance:textfield; }
+    .fin-row-right input::-webkit-outer-spin-button,
+    .fin-row-right input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+    .fin-row-right input::placeholder { color:#c7c7cc; }
+    .fin-unit { font-size:17px; color:#8e8e93; }
+    .fin-val { font-size:17px; font-weight:500; color:#1c1c1e; }
+    .fin-marge-card { background:white; border-radius:12px; padding:28px 16px; text-align:center; margin:0 16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+    .fin-marge-label { font-size:12px; color:#8e8e93; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+    .fin-marge-val { font-size:42px; font-weight:700; letter-spacing:-1.5px; line-height:1; }
+    .fin-marge-pct { font-size:16px; color:#8e8e93; margin-top:6px; }
+    .fin-dark { color:#1c1c1e; }
+    .fin-green { color:#34c759; }
+    .fin-red { color:#ff3b30; }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+<div class="app-container">
+  <div id="parc" class="view active">
+
+    <!-- HEADER iOS -->
+
+    <!-- KPI CARDS iOS -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
+      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+        <div style="font-size:11px;font-weight:600;color:#8e8e93;margin-bottom:6px;">En cours</div>
+        <div style="font-size:24px;font-weight:700;color:#CCFF00;" id="kpi-enc">0</div>
+      </div>
+      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+        <div style="font-size:11px;font-weight:600;color:#8e8e93;margin-bottom:6px;">Prêt</div>
+        <div style="font-size:24px;font-weight:700;color:#00FF88;" id="kpi-prt">0</div>
+      </div>
+      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+        <div style="font-size:11px;font-weight:600;color:#8e8e93;margin-bottom:6px;">Vendus</div>
+        <div style="font-size:24px;font-weight:700;color:#FF1744;" id="kpi-vnd">0</div>
+      </div>
+    </div>
+
+    <!-- RECHERCHE iOS -->
+    <div style="position:relative;margin-bottom:14px;">
+      <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#8e8e93;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="Rechercher..." style="
+        width:100%;padding:10px 12px 10px 36px;
+        background:#f2f2f7;border:none;border-radius:10px;
+        font-size:15px;color:#1a1a1a;outline:none;
+        box-sizing:border-box;
+      " onkeyup="filterParc('search')"/>
+    </div>
+
+    <!-- FILTRES -->
+    <div style="display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+      <button class="parc-filter active" onclick="filterParc('all',this)" style="padding:6px 16px;border:none;border-radius:20px;background:#1a1a1a;color:white;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:-0.1px;transition:all 0.2s;">Tous</button>
+      <button class="parc-filter" onclick="filterParc('En cours',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:-0.1px;transition:all 0.2s;">En cours</button>
+      <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:-0.1px;transition:all 0.2s;">Prêt</button>
+      <button class="parc-filter" onclick="filterParc('Vendu',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:-0.1px;transition:all 0.2s;">Vendu</button>
+    </div>
+
+    <div id="parc-grid"></div>
+  </div>
+
+  <div id="planning" class="view" style="position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;background:#f2f2f7;z-index:1;">
+
+    <!-- HEADER PLANNING FIXE -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:white;border-bottom:1px solid #e5e5e5;flex-shrink:0;">
+      <div style="font-weight:700;font-size:16px;color:#1a1a1a;" id="planning-header-date">Planning</div>
+      <button onclick="openViewModal()" style="
+        width:36px;height:36px;
+        background:none;border:none;cursor:pointer;
+        display:flex;align-items:center;justify-content:center;
+        border-radius:50%;transition:background 0.2s;
+        color:#1a1a1a;
+      " onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <rect x="2" y="2" width="6" height="6" rx="1.5"/>
+          <rect x="12" y="2" width="6" height="6" rx="1.5"/>
+          <rect x="2" y="12" width="6" height="6" rx="1.5"/>
+          <rect x="12" y="12" width="6" height="6" rx="1.5"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- CALENDRIER PLEIN ÉCRAN -->
+    <div id="calendar-container" style="flex:1;overflow:hidden;position:relative;background:#f2f2f7;">
+      <p style="color:var(--text2);text-align:center;padding-top:40px;">Chargement...</p>
+    </div>
+
+    <!-- FAB Planning -->
+    <button id="fab-planning" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="
+      position:fixed;bottom:96px;right:20px;
+      width:52px;height:52px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.75);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border:0.5px solid rgba(255,255,255,0.6);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 4px 24px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+      cursor:pointer;z-index:100;
+      transition:transform 0.2s ease, box-shadow 0.2s ease;
+    " onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
+        <line x1="9" y1="2" x2="9" y2="16"/>
+        <line x1="2" y1="9" x2="16" y2="9"/>
+      </svg>
+    </button>
+  </div>
+
+  <div id="dashboard" class="view">
+
+    <!-- KPI CARDS -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
+      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <div style="font-size:10px;font-weight:600;color:#8e8e93;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">Trésorerie</div>
+        <div style="font-size:20px;font-weight:700;color:#1a1a1a;letter-spacing:-0.5px;" id="dash-tresorerie">0€</div>
+      </div>
+      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <div style="font-size:10px;font-weight:600;color:#8e8e93;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">CA réalisé</div>
+        <div style="font-size:20px;font-weight:700;color:#1a1a1a;letter-spacing:-0.5px;" id="dash-ca">0€</div>
+      </div>
+      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <div style="font-size:10px;font-weight:600;color:#8e8e93;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">Profit</div>
+        <div style="font-size:20px;font-weight:700;color:#34C759;letter-spacing:-0.5px;" id="dash-profit-real">0€</div>
+      </div>
+    </div>
+
+    <!-- GRAPHIQUE -->
+    <div style="margin-bottom:20px;">
+      <!-- Filtres graphique pills -->
+      <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+        <button class="chart-filter active" onclick="switchChart('ca',this)" style="padding:6px 14px;border:none;border-radius:20px;background:#1a1a1a;color:white;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">CA</button>
+        <button class="chart-filter" onclick="switchChart('prep-profit',this)" style="padding:6px 14px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Prep vs Profit</button>
+        <button class="chart-filter" onclick="switchChart('temps-vente',this)" style="padding:6px 14px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Temps de vente</button>
+      </div>
+      <div style="background:white;border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <canvas id="chart-canvas" style="max-height:220px;"></canvas>
+      </div>
+    </div>
+
+    <!-- STATS FINANCES -->
+    <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Finances</span></div>
+    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
+        <span style="font-size:15px;color:#8e8e93;">Profit moyen / véhicule</span>
+        <span id="dash-avg-profit" style="font-size:15px;font-weight:600;color:#34C759;"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
+        <span style="font-size:15px;color:#8e8e93;">Marge moyenne</span>
+        <span id="dash-avg-margin" style="font-size:15px;font-weight:600;color:#34C759;"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
+        <span style="font-size:15px;color:#8e8e93;">Trésorerie bloquée</span>
+        <span id="dash-cash-blocked" style="font-size:15px;font-weight:600;color:#1a1a1a;"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;">
+        <span style="font-size:15px;color:#8e8e93;">Chiffre d'affaires</span>
+        <span id="dash-revenue" style="font-size:15px;font-weight:600;color:#1a1a1a;"></span>
+      </div>
+    </div>
+
+    <!-- STATS OPÉRATIONS -->
+    <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Opérations</span></div>
+    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
+        <span style="font-size:15px;color:#8e8e93;">Rotation</span>
+        <span id="dash-rotation" style="font-size:15px;font-weight:600;color:#1a1a1a;"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
+        <span style="font-size:15px;color:#8e8e93;">Temps moyen de vente</span>
+        <span id="dash-avg-time" style="font-size:15px;font-weight:600;color:#1a1a1a;"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
+        <span style="font-size:15px;color:#8e8e93;">Coût moyen préparation</span>
+        <span id="dash-avg-prep" style="font-size:15px;font-weight:600;color:#1a1a1a;"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;">
+        <span style="font-size:15px;color:#8e8e93;">Tâches urgentes</span>
+        <span id="dash-urgent-tasks" style="font-size:15px;font-weight:600;color:#FF3B30;"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="details" style="
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:#f2f2f7;z-index:500;
+    display:none;flex-direction:column;
+  ">
+    <!-- DRAG HANDLE + HEADER -->
+    <div style="background:white;border-bottom:1px solid #e5e5e5;flex-shrink:0;">
+      <!-- Drag handle style iOS sheet -->
+      <div style="display:flex;justify-content:center;padding:8px 0 4px 0;">
+        <div style="width:36px;height:4px;border-radius:2px;background:#d1d1d6;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px 12px 16px;">
+        <button onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;color:#8e8e93;font-size:22px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">✕</button>
+        <div>
+          <div id="detail-title" style="font-size:17px;font-weight:600;color:#1a1a1a;text-align:center;"></div>
+          <div id="detail-subtitle" style="font-size:12px;color:#8e8e93;text-align:center;margin-top:1px;"></div>
+        </div>
+        <button onclick="confirmDeleteCurrentVehicle()" style="background:none;border:none;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='#ffe5e5'" onmouseout="this.style.background='none'">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ONGLETS -->
+    <div style="display:flex;background:white;border-bottom:1px solid #e5e5e5;flex-shrink:0;">
+      <button id="tab-infos" class="detail-tab" onclick="switchDetailTab('infos')" style="flex:1;padding:11px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:2px solid #1a1a1a;color:#1a1a1a;transition:all 0.2s;">Infos</button>
+      <button id="tab-taches" class="detail-tab" onclick="switchDetailTab('taches')" style="flex:1;padding:11px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:#8e8e93;transition:all 0.2s;">Tâches</button>
+      <button id="tab-finances" class="detail-tab" onclick="switchDetailTab('finances')" style="flex:1;padding:11px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:#8e8e93;transition:all 0.2s;">Finances</button>
+      <button id="tab-historique" class="detail-tab" onclick="switchDetailTab('historique')" style="flex:1;padding:11px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:#8e8e93;transition:all 0.2s;">Historique</button>
+    </div>
+
+    <!-- CONTENU SCROLLABLE -->
+    <div style="flex:1;overflow-y:auto;padding:16px 16px 40px 16px;">
+
+      <!-- ONGLET INFOS -->
+      <div id="detail-tab-infos" class="detail-tab-content" style="display:block;">
+
+        <!-- Statut bloc iOS avec checkmark -->
+        <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Statut</span></div>
+        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <button class="statut-btn" id="btn-en-cours" onclick="changeStatut('En cours')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;border-bottom:1px solid #f2f2f7;font-size:15px;font-weight:400;cursor:pointer;color:#1a1a1a;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-en-cours"></span>
+              <span>En cours</span>
+            </div>
+            <svg id="check-en-cours" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
+          </button>
+          <button class="statut-btn" id="btn-pret" onclick="changeStatut('Prêt à vendre')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;border-bottom:1px solid #f2f2f7;font-size:15px;font-weight:400;cursor:pointer;color:#1a1a1a;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-pret"></span>
+              <span>Prêt à vendre</span>
+            </div>
+            <svg id="check-pret" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
+          </button>
+          <button class="statut-btn" id="btn-vendu" onclick="changeStatut('Vendu')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;font-size:15px;font-weight:400;cursor:pointer;color:#1a1a1a;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-vendu"></span>
+              <span>Vendu</span>
+            </div>
+            <svg id="check-vendu" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
+          </button>
+        </div>
+
+        <!-- Infos véhicule bloc iOS -->
+        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
+            <span style="font-size:15px;color:#8e8e93;">Marque</span>
+            <span id="detail-marque" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
+            <span style="font-size:15px;color:#8e8e93;">Modèle</span>
+            <span id="detail-modele" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
+            <span style="font-size:15px;color:#8e8e93;">Année</span>
+            <span id="detail-year" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
+            <span style="font-size:15px;color:#8e8e93;">Génération</span>
+            <span id="detail-gen" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;">
+            <span style="font-size:15px;color:#8e8e93;">Kilométrage</span>
+            <span id="detail-km" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span>
+          </div>
+        </div>
+
+        <!-- Notes auto-save -->
+        <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
+        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:#1a1a1a;background:transparent;padding:14px 16px;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
+        </div>
+
+      </div>
+
+      <!-- ONGLET FINANCES -->
+      <div id="detail-tab-finances" class="detail-tab-content" style="display:none;">
+
+        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid #e5e5ea;min-height:50px;">
+            <span style="font-size:17px;color:#1c1c1e;">Prix d'achat</span>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:100px;">
+              <span style="font-size:17px;color:#8e8e93;">€</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid #e5e5ea;min-height:50px;">
+            <span style="font-size:17px;color:#1c1c1e;">Coût sans TVA</span>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <input type="number" id="detail-sans-tva-input" placeholder="0" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:100px;">
+              <span style="font-size:17px;color:#8e8e93;">€</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid #e5e5ea;min-height:50px;">
+            <span style="font-size:17px;color:#1c1c1e;">Coût soumis à la TVA</span>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <input type="number" id="detail-avec-tva-input" placeholder="0" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:100px;">
+              <span style="font-size:17px;color:#8e8e93;">€</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;min-height:50px;">
+            <span style="font-size:17px;font-weight:600;color:#1c1c1e;">Prix de revient</span>
+            <span id="detail-cout-revient" style="font-size:17px;font-weight:600;color:#1c1c1e;">—</span>
+          </div>
+        </div>
+
+        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;min-height:50px;">
+            <span style="font-size:17px;color:#1c1c1e;">Carte grise</span>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:100px;">
+              <span style="font-size:17px;color:#8e8e93;">€</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid #e5e5ea;min-height:50px;">
+            <span style="font-size:17px;color:#1c1c1e;">Prix de vente</span>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:100px;">
+              <span style="font-size:17px;color:#8e8e93;">€</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid #e5e5ea;min-height:50px;">
+            <span style="font-size:17px;color:#1c1c1e;">Marge cible</span>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <input type="number" id="detail-marge-cible-input" value="15" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:60px;">
+              <span style="font-size:17px;color:#8e8e93;">%</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;min-height:50px;">
+            <span style="font-size:17px;color:#8e8e93;">Prix minimum recommandé</span>
+            <span id="detail-prix-min" style="font-size:17px;color:#8e8e93;">—</span>
+          </div>
+        </div>
+
+        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:28px 16px;text-align:center;margin-bottom:12px;">
+          <div style="font-size:12px;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Marge réelle</div>
+          <div id="detail-marge" class="fin-marge-val fin-dark" style="font-size:42px;font-weight:700;letter-spacing:-1.5px;line-height:1;">—</div>
+          <div id="detail-marge-pct" style="font-size:16px;color:#8e8e93;margin-top:6px;"></div>
+        </div>
+
+        <button onclick="savePrices()" style="width:100%;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;gap:8px;">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,7 5,11 13,3"/></svg>
+          Enregistrer
+        </button>
+      </div>
+
+      <!-- ONGLET TÂCHES -->
+      <div id="detail-tab-taches" class="detail-tab-content" style="display:none;">
+
+        <!-- Progress bar -->
+        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:14px 16px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-size:13px;color:#8e8e93;font-weight:600;">Progression</span>
+            <span id="detail-progress-text" style="font-size:13px;font-weight:700;color:#1a1a1a;">0%</span>
+          </div>
+          <div class="progress-container" style="margin-bottom:0;">
+            <div class="progress-bar" id="detail-progress-bar" style="width:0%;"></div>
+          </div>
+        </div>
+
+        <!-- Filtres pills -->
+        <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;">
+          <button id="filter-all-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('all',this)" style="padding:6px 16px;border:none;border-radius:20px;background:#1a1a1a;color:white;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:-0.1px;transition:all 0.2s;">Toutes</button>
+          <button id="filter-rappel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('rappel',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:-0.1px;transition:all 0.2s;">Rappels</button>
+          <button id="filter-prep-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('preparation',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:-0.1px;transition:all 0.2s;">Préparation</button>
+          <button id="filter-sav-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('sav',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:-0.1px;transition:all 0.2s;">SAV</button>
+          <button id="filter-rdv-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('rdv',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:-0.1px;transition:all 0.2s;">RDV</button>
+          <button id="filter-appel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('appel',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:-0.1px;transition:all 0.2s;">Appel</button>
+        </div>
+
+        <div id="detail-tasks"></div>
+
+        <button onclick="openDetailTaskModal()" style="width:100%;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+          Ajouter une tâche
+        </button>
+      </div>
+
+      <!-- ONGLET HISTORIQUE -->
+      <div id="detail-tab-historique" class="detail-tab-content" style="display:none;">
+        <div id="detail-historique-content">
+          <div style="text-align:center;padding:40px 20px;color:#8e8e93;font-size:15px;">Aucun événement lié à ce véhicule</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="modal-add-vehicle" style="
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:white;z-index:9999;
+  display:none;flex-direction:column;
+  animation:slideUpFull 0.3s ease;
+">
+  <!-- HEADER FIXE -->
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;background:white;flex-shrink:0;min-height:56px;">
+    <button onclick="closeAddModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">✕</button>
+    <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Nouveau véhicule</span>
+    <button onclick="addVehicle()" style="background:none;border:none;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3,11 9,17 19,5"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- CORPS SCROLLABLE -->
+  <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px 40px 16px;">
+
+    <!-- Section Marque + Modèle -->
+    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+      <div style="padding:0 16px;">
+        <input type="text" id="f-marque" placeholder="Marque" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;box-sizing:border-box;"/>
+      </div>
+      <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+      <div style="padding:0 16px;">
+        <input type="text" id="f-modele" placeholder="Modèle" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;box-sizing:border-box;"/>
+      </div>
+    </div>
+
+    <!-- Section Année + Génération + Kilométrage -->
+    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
+        <span style="font-size:16px;color:#8e8e93;flex-shrink:0;">Année</span>
+        <input type="number" id="f-year" placeholder="2022" style="border:none;outline:none;font-size:16px;color:#1a1a1a;padding:15px 0;background:transparent;text-align:right;width:100%;"/>
+      </div>
+      <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
+        <span style="font-size:16px;color:#8e8e93;flex-shrink:0;">Génération</span>
+        <input type="text" id="f-gen" placeholder="W206" style="border:none;outline:none;font-size:16px;color:#1a1a1a;padding:15px 0;background:transparent;text-align:right;width:100%;"/>
+      </div>
+      <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
+        <span style="font-size:16px;color:#8e8e93;flex-shrink:0;">Kilométrage</span>
+        <input type="number" id="f-km" placeholder="45 000" style="border:none;outline:none;font-size:16px;color:#1a1a1a;padding:15px 0;background:transparent;text-align:right;width:100%;"/>
+      </div>
+    </div>
+
+    <!-- Section Prix achat -->
+    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
+        <span style="font-size:16px;color:#8e8e93;flex-shrink:0;">Prix achat</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <input type="number" id="f-achat" placeholder="0" style="border:none;outline:none;font-size:16px;color:#1a1a1a;padding:15px 0;background:transparent;text-align:right;width:120px;"/>
+          <span style="font-size:16px;color:#8e8e93;">€</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="modal-edit-task" class="modal">
+  <div class="modal-box">
+    <h3 class="modal-title">Modifier la tâche</h3>
+    <div class="form-group"><label class="form-label">Type</label><select class="form-input" id="edit-task-type" onchange="updateEditCategories()"><option value="prep">Préparation</option><option value="sav">SAV</option></select></div>
+    <div class="form-group"><label class="form-label">Catégorie</label><select class="form-input" id="edit-task-cat"></select></div>
+    <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="edit-task-desc" placeholder="Ex: Vidange"/></div>
+    <div class="form-group"><label class="form-label">Coût</label><input type="number" class="form-input" id="edit-task-cost" placeholder="0"/></div>
+    <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="edit-task-date"/></div>
+    <div class="modal-actions"><button class="btn-outline" onclick="closeEditTaskModal()">Annuler</button><button class="btn-primary" onclick="saveEditTask()">Enregistrer</button></div>
+  </div>
+</div>
+
+<div id="modal-confirmation-tasks" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9999;align-items:flex-end;justify-content:center;">
+  <div style="background:white;width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;max-height:80vh;overflow-y:auto;animation:slideUpFull 0.25s ease;">
+    <!-- Drag handle -->
+    <div style="display:flex;justify-content:center;padding:10px 0 6px 0;">
+      <div style="width:36px;height:4px;border-radius:2px;background:#d1d1d6;"></div>
+    </div>
+    <!-- Header -->
+    <div style="display:flex;justify-content:center;align-items:center;padding:8px 20px 16px 20px;border-bottom:1px solid #f2f2f7;">
+      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Tâches du véhicule</span>
+    </div>
+    <!-- Liste -->
+    <div id="modal-confirmation-list" style="padding:8px 0;"></div>
+    <!-- Boutons -->
+    <div style="padding:12px 16px 0 16px;display:flex;flex-direction:column;gap:10px;">
+      <button onclick="openConfirmationAddTaskModal()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+        Ajouter une tâche
+      </button>
+      <button onclick="closeConfirmationModal()" style="width:100%;padding:14px;background:transparent;color:#8e8e93;border:none;border-radius:12px;font-size:15px;font-weight:400;cursor:pointer;">
+        Continuer sans tâche
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SVG_ICONS = {
+  settings: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 0l4.24-4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08 0l4.24 4.24"></path></svg>',
+  calendar: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>',
+  trash: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'
+};
+
+const STATUS_COLORS = {'En cours':'#CCFF00','En attente':'#92620A','Prêt à vendre':'#00FF88','Vendu':'#FF1744'};
+
+const EVENT_COLORS = {rdv:'#007AFF', appel:'#34C759', rappel:'#FF9500', livraison:'#AF52DE', autre:'#8e8e93'};
+const EVENT_LABELS = {rdv:'RDV', appel:'Appel', rappel:'Rappel', livraison:'Livraison', autre:'Autre'};
+
+const TASK_COLORS = {mecanique:'#FF9500', carrosserie:'#007AFF', administratif:'#AF52DE', preparation:'#34C759', sav:'#FF3B30'};
+const TASK_LABELS = {mecanique:'Mécanique', carrosserie:'Carrosserie', administratif:'Administratif', preparation:'Préparation', sav:'SAV'};
+let vehicles = JSON.parse(localStorage.getItem('at_vehicles') || '[]');
+let planning = JSON.parse(localStorage.getItem('at_planning') || '[]');
+let currentTaskFilter = 'all';
+let currentDetailVehicleId = null;
+let currentDetailTaskFilter = 'all';
+let currentParcFilter = 'all';
+let currentEditTaskId = null;
+let currentEditVehicleId = null;
+let currentConfirmationVehicleId = null;
+let currentChart = null;
+let currentChartType = 'ca';
+
+const DataLayer = {
+  getVehicles: () => vehicles,
+  getVehicleById: (id) => vehicles.find(v => v.id === id),
+  getAllVehicles: () => vehicles,
+  getVehiclesByStatus: (status) => vehicles.filter(v => v.statut === status),
+  getVehicleCount: () => vehicles.length,
+  getVehicleCountsByStatus: () => {
+    const counts = { 'En cours': 0, 'Prêt à vendre': 0, 'Vendu': 0 };
+    vehicles.forEach(v => { if(counts.hasOwnProperty(v.statut)) counts[v.statut]++; });
+    return counts;
+  },
+  addVehicle: (vehicle) => { vehicles.push(vehicle); save(); },
+  updateVehicle: (id, updates) => {
+    const v = vehicles.find(v => v.id === id);
+    if(v) {
+      const allowed = ['statut', 'achat', 'vente', 'prepCost', 'notes', 'statusHistory', 'carteGrise', 'transport', 'commission', 'margeCible', 'sansTva', 'avecTva'];
+      Object.keys(updates).forEach(key => { if(allowed.includes(key)) v[key] = updates[key]; });
+      save();
+    }
+  },
+  deleteVehicle: (id) => {
+    const index = vehicles.findIndex(v => v.id === id);
+    if(index !== -1) { vehicles.splice(index, 1); save(); }
+  },
+  getTasksByVehicleId: (vehicleId) => { const v = vehicles.find(v => v.id === vehicleId); return v ? v.tasks : []; },
+  getTaskById: (vehicleId, taskId) => { const v = vehicles.find(v => v.id === vehicleId); return v ? v.tasks.find(t => t.id === taskId) : null; },
+  addTask: (vehicleId, task) => { const v = vehicles.find(v => v.id === vehicleId); if(v) { v.tasks.push(task); save(); } },
+  updateTask: (vehicleId, taskId, updates) => {
+    const v = vehicles.find(v => v.id === vehicleId);
+    if(v) { const t = v.tasks.find(t => t.id === taskId); if(t) { Object.assign(t, updates); save(); } }
+  },
+  deleteTask: (vehicleId, taskId) => {
+    const v = vehicles.find(v => v.id === vehicleId);
+    if(v) { const index = v.tasks.findIndex(t => t.id === taskId); if(index !== -1) { v.tasks.splice(index, 1); save(); } }
+  },
+  getPlanning: () => planning,
+  getPlanningTasks: (date, time) => planning.filter(t => t.date === date && t.time === time),
+  getPlanningTaskById: (id) => planning.find(t => t.id === id),
+  addPlanningTask: (task) => { planning.push(task); save(); },
+  updatePlanningTask: (id, updates) => { const t = planning.find(t => t.id === id); if(t) { Object.assign(t, updates); save(); } },
+  deletePlanningTask: (id) => { const index = planning.findIndex(t => t.id === id); if(index !== -1) { planning.splice(index, 1); save(); } }
+};
+
+function save(){
+  localStorage.setItem('at_vehicles', JSON.stringify(vehicles));
+  localStorage.setItem('at_planning', JSON.stringify(planning));
+}
+
+const Utils = {
+  el: (id) => document.getElementById(id),
+  today: () => {
+    const d = new Date();
+    return [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
+  },
+  dateToStr: (date) => {
+    return [date.getFullYear(), String(date.getMonth()+1).padStart(2,'0'), String(date.getDate()).padStart(2,'0')].join('-');
+  },
+  formatDate: (dateStr) => { if(!dateStr) return ''; const [y, m, d] = dateStr.split('-'); return `${d}/${m}/${y}`; },
+  formatCurrency: (amount) => Number(amount).toLocaleString('fr-FR') + '€',
+  toNumber: (val) => Number(val) || 0,
+  isEmpty: (str) => !str || str.trim() === '',
+  isValidDate: (dateStr) => /^\d{4}-\d{2}-\d{2}$/.test(dateStr),
+  removeActiveClass: (selector) => { document.querySelectorAll(selector).forEach(el => el.classList.remove('active')); }
+};
+
+function showToast(message){
+  const existing = document.getElementById('ios-toast');
+  if(existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.id = 'ios-toast';
+  toast.style.cssText = `
+    position:fixed;
+    top:60px;
+    left:50%;
+    transform:translateX(-50%) translateY(-8px);
+    background:rgba(30,30,30,0.88);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    color:white;
+    padding:10px 20px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:500;
+    letter-spacing:-0.1px;
+    white-space:nowrap;
+    z-index:99999;
+    opacity:0;
+    transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events:none;
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  // Appear
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+    });
+  });
+
+  // Disappear
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(-8px)';
+    setTimeout(() => toast.remove(), 250);
+  }, 1800);
+}
+
+function switchView(view){
+  document.querySelectorAll('.view').forEach(v => {
+    v.classList.remove('active');
+    v.style.display = 'none';
+  });
+  Utils.removeActiveClass('.bottom-nav-item');
+
+  const el = Utils.el(view);
+  if(el) {
+    el.classList.add('active');
+    el.style.display = view === 'planning' ? 'flex' : 'block';
+  }
+
+  // FAB parc
+  const fabParc = document.getElementById('fab-parc');
+  if(fabParc) fabParc.style.display = view === 'parc' ? 'flex' : 'none';
+
+  // Icônes filled/outline
+  ['planning','parc','dashboard'].forEach(v => {
+    const btn = document.getElementById('nav-' + v);
+    if(!btn) return;
+    const outline = btn.querySelector('.nav-icon-outline');
+    const filled = btn.querySelector('.nav-icon-filled');
+    if(v === view) {
+      btn.classList.add('active');
+      if(outline) outline.style.display = 'none';
+      if(filled) filled.style.display = 'block';
+    } else {
+      btn.classList.remove('active');
+      if(outline) outline.style.display = 'block';
+      if(filled) filled.style.display = 'none';
+    }
+  });
+
+  const navItems = document.querySelectorAll('.bottom-nav-item');
+  const viewMap = {'planning': 0, 'parc': 1, 'dashboard': 2};
+  if(navItems[viewMap[view]]) navItems[viewMap[view]].classList.add('active');
+
+  if(view === 'parc') renderParc();
+  else if(view === 'planning') renderPlanning();
+  else if(view === 'dashboard') renderDashboard();
+}
+
+function openAddModal(){
+  ['f-marque','f-modele','f-year','f-gen','f-km','f-achat'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  const modal = document.getElementById('modal-add-vehicle');
+  modal.style.display = 'flex';
+  modal.style.animation = 'slideUpFull 0.3s ease';
+  setTimeout(() => { const el = document.getElementById('f-marque'); if(el) el.focus(); }, 300);
+}
+
+function closeAddModal(){
+  const modal = document.getElementById('modal-add-vehicle');
+  modal.style.animation = 'slideDownFull 0.25s ease forwards';
+  setTimeout(() => { modal.style.display = 'none'; modal.style.animation = ''; }, 250);
+}
+
+function addVehicle(){
+  const marque = document.getElementById('f-marque').value.trim();
+  const modele = document.getElementById('f-modele').value.trim();
+  if(!marque || !modele) { showToast('⚠️ Marque et modèle requis'); return; }
+  const year = document.getElementById('f-year').value || '?';
+  const gen = document.getElementById('f-gen').value.trim() || '?';
+  const km = document.getElementById('f-km').value || '0';
+  const achat = Number(document.getElementById('f-achat').value) || 0;
+  const today = Utils.today();
+  const newVehicle = {
+    id: Date.now(), marque, modele, year, gen, km, achat, vente: 0, prepCost: 0,
+    statut:'En cours', statusHistory: [{statut: 'En cours', date: today}],
+    sav: [{id: Date.now() + 1, type: 'sav', cat: 'Contrôle technique', desc: 'Contrôle technique obligatoire', cost: 0, completed: false, date: today}],
+    notes: ''
+  };
+  DataLayer.addVehicle(newVehicle);
+  showToast('✓ Véhicule créé');
+  closeAddModal();
+  renderParc();
+  currentConfirmationVehicleId = newVehicle.id;
+  renderConfirmationTasksList();
+  const modal = document.getElementById('modal-confirmation-tasks');
+  const inner = modal.querySelector('div');
+  if(inner){ inner.style.animation = 'none'; setTimeout(() => { inner.style.animation = 'slideUpFull 0.25s ease'; }, 10); }
+  modal.style.display = 'flex';
+}
+
+function renderConfirmationTasksList(){
+  const v = vehicles.find(x => x.id === currentConfirmationVehicleId);
+  if(!v) return;
+  setTimeout(() => {
+    const listEl = document.getElementById('modal-confirmation-list');
+    if(!listEl) return;
+    const typeColors = {'preparation':'#00FF88','sav':'#FF1744','rappel':'#CCFF00','prep':'#00FF88'};
+    let html = '';
+    v.tasks.forEach((t, idx) => {
+      const color = typeColors[t.type] || '#8e8e93';
+      const isLast = idx === v.tasks.length - 1;
+      html += `<div style="display:flex;align-items:center;gap:12px;padding:12px 20px;${isLast ? '' : 'border-bottom:1px solid #f2f2f7;'}">`;
+      html += `<div style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></div>`;
+      html += `<div style="flex:1;"><div style="font-size:15px;color:#1a1a1a;">${t.cat}</div>`;
+      if(t.desc) html += `<div style="font-size:13px;color:#8e8e93;margin-top:1px;">${t.desc}</div>`;
+      html += `</div>`;
+      if(t.cost) html += `<div style="font-size:14px;font-weight:600;color:#1a1a1a;">${Number(t.cost).toLocaleString('fr-FR')}€</div>`;
+      html += `</div>`;
+    });
+    listEl.innerHTML = html || '<div style="padding:20px;text-align:center;color:#8e8e93;">Aucune tâche</div>';
+  }, 50);
+}
+
+function closeConfirmationModal(){
+  const modal = document.getElementById('modal-confirmation-tasks');
+  if(!modal) return;
+  modal.style.display = 'none';
+  currentConfirmationVehicleId = null;
+}
+
+function openConfirmationAddTaskModal(){
+  const today = new Date().toISOString().split('T')[0];
+  openNewTaskModalOutlookForVehicle(today, '09:00', currentConfirmationVehicleId);
+}
+
+const RenderHelpers = {
+  filterVehicles: (filter) => {
+    let filtered = vehicles;
+    if(filter === 'search'){
+      const searchText = Utils.el('search-input').value.toLowerCase();
+      filtered = vehicles.filter(v => (v.marque + ' ' + v.modele).toLowerCase().includes(searchText));
+    } else if(filter !== 'all') {
+      filtered = vehicles.filter(v => v.statut === filter);
+    }
+    return filtered;
+  },
+  filterTasks: (tasks, type) => {
+    if(type === 'all') return tasks;
+    if(type === 'prep') return tasks.filter(t => t.type === 'preparation');
+    if(type === 'sav') return tasks.filter(t => t.type === 'sav');
+    if(type === 'rappel') return tasks.filter(t => t.type === 'rappel');
+    if(type === 'rdv') return tasks.filter(t => t.type === 'rdv');
+    if(type === 'appel') return tasks.filter(t => t.type === 'appel');
+    return tasks.filter(t => t.type === type);
+  },
+  buildStatusBadge: (statut) => {
+    const color = STATUS_COLORS[statut];
+    return `<div class="vehicle-badge" style="background:transparent;color:${color};border:1px solid ${color};">${statut}</div>`;
+  },
+  buildVehicleCard: (v) => {
+    const color = STATUS_COLORS[v.statut] || '#8e8e93';
+    const STATUS_LABELS = {'En cours':'En cours','Prêt à vendre':'Prêt à vendre','Vendu':'Vendu'};
+    const gen = v.gen !== '?' ? ` · ${v.gen}` : '';
+    const marge = (v.vente || 0) - (v.achat || 0) - (v.prepCost || 0);
+    const margeColor = marge >= 0 ? '#34C759' : '#FF3B30';
+    return `<div class="vehicle-card" onclick="openVehicleDetails(${v.id})" style="
+      background:white;border-radius:14px;padding:16px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.08);border:none;
+      cursor:pointer;display:flex;flex-direction:column;gap:10px;
+      transition:transform 0.15s ease, box-shadow 0.15s ease;
+    " onmouseover="this.style.transform='scale(1.01)';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.08)'">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-size:16px;font-weight:700;color:#1a1a1a;">${v.marque} ${v.modele}</div>
+          <div style="font-size:13px;color:#8e8e93;margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></div>
+          <div style="font-size:12px;font-weight:600;color:#8e8e93;">${STATUS_LABELS[v.statut] || v.statut}</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:11px;color:#8e8e93;margin-bottom:2px;">Prix vente</div>
+          <div style="font-size:17px;font-weight:700;color:#1a1a1a;">${Utils.formatCurrency(v.vente || 0)}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px;color:#8e8e93;margin-bottom:2px;">Marge</div>
+          <div style="font-size:17px;font-weight:700;color:${margeColor};">${Utils.formatCurrency(marge)}</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;">
+        <button style="padding:6px 8px;border:none;background:transparent;color:#FF3B30;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation(); deleteVehicle(${v.id})" title="Supprimer">${SVG_ICONS.trash}</button>
+      </div>
+    </div>`;
+  },
+  getNextDay: (days) => new Date(Date.now() + (days * 86400000)).toISOString().split('T')[0],
+  filterTasksByDate: (tasks, filter) => {
+    const today = Utils.today();
+    const tomorrow = RenderHelpers.getNextDay(1);
+    const weekEnd = RenderHelpers.getNextDay(7);
+    if(filter === 'today') return tasks.filter(t => t.date === today && !t.completed);
+    if(filter === 'tomorrow') return tasks.filter(t => t.date === tomorrow && !t.completed);
+    if(filter === 'week') return tasks.filter(t => t.date >= today && t.date <= weekEnd && !t.completed);
+    if(filter === 'done') return tasks.filter(t => t.completed);
+    return tasks;
+  },
+  indexPlanningBySlot: (planning) => {
+    const index = {};
+    planning.forEach(task => {
+      const key = `${task.date}_${task.time}`;
+      if(!index[key]) index[key] = [];
+      index[key].push(task);
+    });
+    return index;
+  },
+  getPlanningForSlot: (index, date, time) => {
+    const hourOnly = time.split(':')[0] + ':00';
+    let tasks = [];
+    Object.keys(index).forEach(key => {
+      if(key.startsWith(date + '_')) {
+        const keyTime = key.split('_')[1];
+        const keyHour = keyTime ? keyTime.split(':')[0] + ':00' : '';
+        if(keyHour === hourOnly) tasks = tasks.concat(index[key]);
+      }
+    });
+    return tasks;
+  }
+};
+
+function renderParc(){
+  const counts = DataLayer.getVehicleCountsByStatus();
+  if(Utils.el('kpi-enc')) Utils.el('kpi-enc').textContent = counts['En cours'];
+  if(Utils.el('kpi-prt')) Utils.el('kpi-prt').textContent = counts['Prêt à vendre'];
+  if(Utils.el('kpi-vnd')) Utils.el('kpi-vnd').textContent = counts['Vendu'];
+  const filtered = RenderHelpers.filterVehicles(currentParcFilter);
+  Utils.el('parc-grid').innerHTML = filtered.map(v => RenderHelpers.buildVehicleCard(v)).join('');
+  initSwipeToDelete();
+}
+
+function initSwipeToDelete(){
+  document.querySelectorAll('.vehicle-card-inner').forEach(card => {
+    let startX = 0, currentX = 0, isDragging = false;
+    const onStart = (e) => { startX = e.touches ? e.touches[0].clientX : e.clientX; isDragging = true; card.style.transition = 'none'; };
+    const onMove = (e) => {
+      if(!isDragging) return;
+      currentX = (e.touches ? e.touches[0].clientX : e.clientX) - startX;
+      if(currentX > 0) currentX = 0;
+      if(currentX < -80) currentX = -80;
+      card.style.transform = 'translateX(' + currentX + 'px)';
+    };
+    const onEnd = () => {
+      isDragging = false;
+      card.style.transition = 'transform 0.25s ease';
+      if(currentX < -60) { card.style.transform = 'translateX(-80px)'; }
+      else { card.style.transform = 'translateX(0)'; }
+      currentX = 0;
+    };
+    card.addEventListener('touchstart', onStart, {passive:true});
+    card.addEventListener('touchmove', onMove, {passive:true});
+    card.addEventListener('touchend', onEnd);
+    const deleteZone = card.parentElement ? card.parentElement.querySelector('div[style*="FF3B30"]') : null;
+    if(deleteZone) {
+      deleteZone.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteVehicle(parseInt(card.dataset.id));
+      });
+    }
+  });
+}
+
+function filterParc(status, btn){
+  currentParcFilter = status;
+  if(status !== 'search'){
+    document.querySelectorAll('.parc-filter').forEach(b => {
+      b.style.background = 'rgba(0,0,0,0.06)';
+      b.style.color = '#3a3a3c';
+      b.style.fontWeight = '500';
+    });
+    if(btn) {
+      btn.style.background = '#1a1a1a';
+      btn.style.color = 'white';
+      btn.style.fontWeight = '600';
+    }
+  }
+  renderParc();
+}
+
+function openVehicleDetails(id){
+  currentDetailVehicleId = id;
+  const v = vehicles.find(x => x.id === id);
+  if(!v) return;
+
+  document.getElementById('detail-title').textContent = v.marque + ' ' + v.modele;
+  document.getElementById('detail-subtitle').textContent = v.year + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
+  document.getElementById('detail-marque').textContent = v.marque;
+  document.getElementById('detail-modele').textContent = v.modele;
+  document.getElementById('detail-year').textContent = v.year;
+  document.getElementById('detail-gen').textContent = v.gen;
+  document.getElementById('detail-km').textContent = Number(v.km).toLocaleString('fr-FR') + ' km';
+  document.getElementById('detail-achat-input').value      = v.achat      || '';
+  document.getElementById('detail-vente-input').value      = v.vente      || '';
+  document.getElementById('detail-sans-tva-input').value   = v.sansTva    || '';
+  document.getElementById('detail-avec-tva-input').value   = v.avecTva    || '';
+  document.getElementById('detail-cg-input').value         = v.carteGrise || '';
+  document.getElementById('detail-marge-cible-input').value = v.margeCible || 15;
+  document.getElementById('detail-notes').value = v.notes || '';
+
+  updateMargePreview();
+  updateStatutUI(v.statut);
+
+  // Progress
+  const totalTasks = v.tasks ? v.tasks.length : 0;
+  const completedTasks = v.tasks ? v.tasks.filter(t => t.completed).length : 0;
+  const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  document.getElementById('detail-progress-bar').style.width = progressPercent + '%';
+  document.getElementById('detail-progress-text').textContent = progressPercent + '%';
+
+  currentDetailTaskFilter = 'all';
+  renderDetailTasks(id, 'all');
+  switchDetailTab('infos');
+
+  const modal = document.getElementById('details');
+  modal.style.display = 'flex';
+  modal.style.animation = 'slideUpFull 0.3s ease';
+
+  // Masquer le FAB
+  const fab = document.getElementById('fab-parc');
+  if(fab) fab.style.display = 'none';
+}
+
+function updateMargePreview(){
+  const achat   = parseFloat(document.getElementById('detail-achat-input')?.value)    || 0;
+  const sansTva = parseFloat(document.getElementById('detail-sans-tva-input')?.value) || 0;
+  const avecTva = parseFloat(document.getElementById('detail-avec-tva-input')?.value) || 0;
+  const vente   = parseFloat(document.getElementById('detail-vente-input')?.value)    || 0;
+  const cible   = parseFloat(document.getElementById('detail-marge-cible-input')?.value) || 15;
+
+  const revient = achat + sansTva + avecTva;
+  const marge   = vente - revient;
+  const pct     = revient ? (marge / revient * 100) : 0;
+  const fmt     = v => Math.round(v).toLocaleString('fr-FR') + ' €';
+
+  const crEl = document.getElementById('detail-cout-revient');
+  if(crEl) crEl.textContent = revient ? fmt(revient) : '—';
+
+  const prixMinEl = document.getElementById('detail-prix-min');
+  if(prixMinEl) prixMinEl.textContent = revient ? fmt(revient / (1 - cible / 100)) : '—';
+
+  const margeEl  = document.getElementById('detail-marge');
+  const margePct = document.getElementById('detail-marge-pct');
+  if(margeEl){
+    if(!vente && !revient){
+      margeEl.textContent = '—';
+      margeEl.className = 'fin-marge-val fin-dark';
+      if(margePct) margePct.textContent = '';
+    } else {
+      margeEl.textContent = fmt(marge);
+      margeEl.className = 'fin-marge-val ' + (marge >= 0 ? 'fin-green' : 'fin-red');
+      if(margePct) margePct.textContent = pct.toFixed(1) + '%';
+    }
+  }
+}
+
+function updateStatutUI(statut){
+  const STATUS_COLORS = {'En cours':'#CCFF00','Prêt à vendre':'#00FF88','Vendu':'#FF1744'};
+  const keys = {'En cours':'en-cours','Prêt à vendre':'pret','Vendu':'vendu'};
+  Object.keys(keys).forEach(s => {
+    const key = keys[s];
+    const dot = document.getElementById('stat-dot-' + key);
+    const check = document.getElementById('check-' + key);
+    if(dot) dot.style.background = STATUS_COLORS[s]; // toujours la bonne couleur
+    if(check) check.style.display = s === statut ? 'block' : 'none';
+  });
+}
+
+function closeVehicleDetails(){
+  const modal = document.getElementById('details');
+  modal.style.animation = 'slideDownFull 0.25s ease forwards';
+  setTimeout(() => {
+    modal.style.display = 'none';
+    modal.style.animation = '';
+    // Réafficher le FAB
+    const fab = document.getElementById('fab-parc');
+    if(fab) fab.style.display = 'flex';
+  }, 250);
+}
+
+function confirmDeleteCurrentVehicle(){
+  const sheet = document.createElement('div');
+  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
+  sheet.innerHTML = `
+    <div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;animation:slideUpFull 0.25s ease;">
+      <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer ce véhicule ?</div>
+      <div style="color:#8e8e93;font-size:15px;margin-bottom:24px;">Toutes les tâches associées seront supprimées. Cette action ne peut pas être annulée.</div>
+      <button onclick="
+        DataLayer.deleteVehicle(${currentDetailVehicleId});
+        showToast('✓ Véhicule supprimé');
+        closeVehicleDetails();
+        renderParc();
+        this.closest('[style*=fixed]').remove();
+      " style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Supprimer</button>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
+    </div>`;
+  sheet.addEventListener('click', (e) => { if(e.target === sheet) sheet.remove(); });
+  document.body.appendChild(sheet);
+}
+
+function renderDetailTasks(id, filter){
+  const v = vehicles.find(x => x.id === id);
+  if(!v) return;
+  let filtered = RenderHelpers.filterTasksByDate(v.tasks, filter);
+  const typeFilter = currentDetailTaskFilter || 'all';
+  filtered = RenderHelpers.filterTasks(filtered, typeFilter);
+
+  if(filtered.length === 0){
+    document.getElementById('detail-tasks').innerHTML = '<div style="text-align:center;padding:2rem;color:#8e8e93;font-size:15px;">Aucune tâche</div>';
+    return;
+  }
+
+  const grouped = {};
+  filtered.forEach(t => { const key = t.date || 'Sans date'; if(!grouped[key]) grouped[key] = []; grouped[key].push(t); });
+
+  const typeColors = {'preparation':'#00FF88','sav':'#FF1744','rappel':'#CCFF00','prep':'#00FF88','rdv':'#00D4FF','appel':'#7B68EE'};
+  const typeLabels = {'preparation':'Prépa','sav':'SAV','rappel':'Rappel','prep':'Prépa','rdv':'RDV','appel':'Appel'};
+
+  let html = '';
+  Object.keys(grouped).sort().forEach(date => {
+    const dateObj = new Date(date + 'T00:00:00');
+    const dayName = date === 'Sans date' ? 'Sans date' : dateObj.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+    html += `<div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:capitalize;">${dayName}</span></div>`;
+    html += `<div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">`;
+
+    grouped[date].forEach((t, idx) => {
+      const color = typeColors[t.type] || '#8e8e93';
+      const label = typeLabels[t.type] || t.type;
+      const isLast = idx === grouped[date].length - 1;
+      const title = (t.cat || '') + (t.desc ? ' — ' + t.desc : '');
+
+      html += `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;${isLast ? '' : 'border-bottom:1px solid #f2f2f7;'}opacity:${t.completed ? '0.45' : '1'};" onclick="openEditTaskModal(${id}, ${t.id})">`;
+
+      // Checkbox iOS style
+      html += `<div onclick="event.stopPropagation();const v=vehicles.find(x=>x.id===${id});const t=v.tasks.find(s=>s.id===${t.id});t.completed=!t.completed;save();renderDetailTasks(${id},'${filter}');" style="
+        width:24px;height:24px;border-radius:50%;flex-shrink:0;cursor:pointer;
+        border:2px solid ${t.completed ? color : '#d1d1d6'};
+        background:${t.completed ? color : 'transparent'};
+        display:flex;align-items:center;justify-content:center;
+        transition:all 0.2s;
+      ">${t.completed ? `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><polyline points="1,6 4,9 11,3"/></svg>` : ''}</div>`;
+
+      // Contenu
+      html += `<div style="flex:1;min-width:0;">
+        <div style="font-size:15px;color:#1a1a1a;font-weight:400;text-decoration:${t.completed ? 'line-through' : 'none'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${title}</div>`;
+      if(t.cost) html += `<div style="font-size:12px;color:#8e8e93;margin-top:2px;">${Number(t.cost).toLocaleString('fr-FR')}€</div>`;
+      html += `</div>`;
+
+      // Badge type + chevron
+      html += `<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+        <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></span>
+        <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="#c7c7cc" stroke-width="1.5" stroke-linecap="round"><polyline points="1,1 7,7 1,13"/></svg>
+      </div>`;
+
+      html += `</div>`;
+    });
+
+    html += `</div>`;
+  });
+
+  document.getElementById('detail-tasks').innerHTML = html;
+}
+
+function changeStatut(newStatut){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId);
+  if(v) {
+    const today = Utils.today();
+    const updates = { statut: newStatut, statusHistory: v.statusHistory || [] };
+    updates.statusHistory.push({statut: newStatut, date: today});
+    DataLayer.updateVehicle(currentDetailVehicleId, updates);
+    updateStatutUI(newStatut);
+    renderParc();
+    showToast('✓ Statut mis à jour');
+  }
+}
+
+function openDetailTaskModal(){
+  const today = new Date().toISOString().split('T')[0];
+  openNewTaskModalOutlookForVehicle(today, '09:00', currentDetailVehicleId);
+}
+
+let currentCalendarView = 'week';
+let currentDisplayDate = new Date();
+let planningIndex = {};
+
+let renderPlanningTimeout = null;
+
+function switchDetailTab(tab){
+  document.querySelectorAll('.detail-tab-content').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.detail-tab').forEach(el => {
+    el.style.color = '#8e8e93';
+    el.style.borderBottomColor = 'transparent';
+  });
+  const tabContent = document.getElementById('detail-tab-' + tab);
+  const tabBtn = document.getElementById('tab-' + tab);
+  if(tabContent) tabContent.style.display = 'block';
+  if(tabBtn) { tabBtn.style.color = '#1a1a1a'; tabBtn.style.borderBottomColor = '#1a1a1a'; }
+  if(tab === 'historique') renderHistorique(currentDetailVehicleId);
+}
+
+function renderHistorique(vehicleId){
+  const el = document.getElementById('detail-historique-content');
+  if(!el) return;
+  const events = planning.filter(t => t.vehicleId == vehicleId).sort((a,b) => {
+    return (b.date || '').localeCompare(a.date || '');
+  });
+  if(events.length === 0){
+    el.innerHTML = '<div style="text-align:center;padding:40px 20px;color:#8e8e93;font-size:15px;">Aucun événement lié à ce véhicule</div>';
+    return;
+  }
+  const grouped = {};
+  events.forEach(t => {
+    const key = t.date ? t.date.substring(0,7) : 'Sans date';
+    if(!grouped[key]) grouped[key] = [];
+    grouped[key].push(t);
+  });
+  let html = '';
+  Object.keys(grouped).sort().reverse().forEach(monthKey => {
+    const monthLabel = monthKey === 'Sans date' ? 'Sans date' : (() => {
+      const [y, m] = monthKey.split('-');
+      return new Date(parseInt(y), parseInt(m)-1, 1).toLocaleDateString('fr-FR', {month:'long', year:'numeric'});
+    })();
+    html += '<div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:capitalize;">' + monthLabel + '</span></div>';
+    html += '<div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">';
+    grouped[monthKey].forEach((t, idx) => {
+      const color = EVENT_COLORS[t.type] || '#8e8e93';
+      const label = EVENT_LABELS[t.type] || t.type;
+      const isLast = idx === grouped[monthKey].length - 1;
+      const dateStr = t.date ? new Date(t.date + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) : '';
+      const timeStr = t.timeStart ? ' · ' + t.timeStart : '';
+      html += '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;' + (isLast ? '' : 'border-bottom:1px solid #f2f2f7;') + 'opacity:' + (t.completed ? '0.5' : '1') + ';">';
+      html += '<div style="width:8px;height:8px;border-radius:50%;background:' + color + ';flex-shrink:0;"></div>';
+      html += '<div style="flex:1;"><div style="font-size:15px;color:#1a1a1a;text-decoration:' + (t.completed ? 'line-through' : 'none') + ';">' + t.description + '</div>';
+      html += '<div style="font-size:12px;color:#8e8e93;margin-top:2px;">' + label + (dateStr ? ' · ' + dateStr + timeStr : '') + '</div></div>';
+      if(t.completed) html += '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round"><polyline points="1,7 5,11 13,3"/></svg>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
+
+function filterDetailTasksByType(type, btn){
+  currentDetailTaskFilter = type;
+  document.querySelectorAll('.task-filter-btn').forEach(b => {
+    b.style.background = 'rgba(0,0,0,0.06)';
+    b.style.color = '#3a3a3c';
+    b.style.fontWeight = '500';
+  });
+  if(btn) { btn.style.background = '#1a1a1a'; btn.style.color = 'white'; btn.style.fontWeight = '600'; }
+  if(currentDetailVehicleId) renderDetailTasks(currentDetailVehicleId, 'all');
+}
+
+function saveSimpleTask(){
+  const titleEl = document.getElementById('simple-task-title');
+  const title = titleEl ? titleEl.value.trim() : '';
+  if(!title) { showToast('⚠️ Titre requis'); return; }
+  const type = document.simpleTaskType || 'mecanique';
+  const cost = Number(document.getElementById('simple-task-cost')?.value) || 0;
+  const v = vehicles.find(x => x.id === currentDetailVehicleId);
+  if(!v) return;
+  if(!v.tasks) v.tasks = [];
+  v.tasks.push({ id: Date.now(), type, cat: type.charAt(0).toUpperCase() + type.slice(1), desc: title, cost, completed: false, date: null });
+  save();
+  const modal = document.getElementById('simple-task-modal');
+  if(modal) modal.remove();
+  renderDetailTasks(currentDetailVehicleId, 'all');
+  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.background = 'rgba(0,0,0,0.06)'; b.style.color = '#3a3a3c'; b.style.fontWeight = '500'; });
+  const allBtn = document.getElementById('filter-all-tasks');
+  if(allBtn) { allBtn.style.background = '#1a1a1a'; allBtn.style.color = 'white'; allBtn.style.fontWeight = '600'; }
+  currentDetailTaskFilter = 'all';
+  showToast('✓ Tâche ajoutée');
+}
+
+function renderPlanning(){
+  planningIndex = RenderHelpers.indexPlanningBySlot(DataLayer.getPlanning());
+
+  // Mettre à jour la date dans le header fixe
+  const currentViewMode = localStorage.getItem('at_planning_viewmode') || '3';
+  let dateRangeStr = '';
+  if(currentViewMode === 'month') {
+    dateRangeStr = currentDisplayDate.toLocaleDateString('fr-FR', {month: 'long', year: 'numeric'});
+    dateRangeStr = dateRangeStr.charAt(0).toUpperCase() + dateRangeStr.slice(1);
+  } else if(currentViewMode === '1') {
+    dateRangeStr = currentDisplayDate.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+    dateRangeStr = dateRangeStr.charAt(0).toUpperCase() + dateRangeStr.slice(1);
+  } else {
+    const dow = currentDisplayDate.getDay();
+    const monday = new Date(currentDisplayDate);
+    monday.setDate(currentDisplayDate.getDate() - (dow === 0 ? 6 : dow - 1));
+    const end = new Date(monday);
+    end.setDate(monday.getDate() + (currentViewMode === '3' ? 2 : 6));
+    dateRangeStr = monday.toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) + ' – ' + end.toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
+  }
+  const headerDate = document.getElementById('planning-header-date');
+  if(headerDate) headerDate.textContent = dateRangeStr;
+
+  // Injecter le calendar-content plein écran
+  document.getElementById('calendar-container').innerHTML = `
+    <div id="calendar-content" style="
+      width:100%;height:100%;
+      background:white;
+      overflow:hidden;position:relative;
+    " ontouchstart="handleSwipeStart(event)" ontouchend="handleSwipeEnd(event)"></div>`;
+
+  const viewMode = localStorage.getItem('at_planning_viewmode') || '3';
+  if(viewMode === 'month') renderMonthView(currentDisplayDate);
+  else renderWeekView(currentDisplayDate);
+}
+
+function setDateAndViewDay(dateStr){
+  // Construire la date sans ambiguïté timezone
+  const [y, m, d] = dateStr.split('-').map(Number);
+  currentDisplayDate = new Date(y, m - 1, d);
+  const currentViewMode = localStorage.getItem('at_planning_viewmode') || '3';
+  // Depuis la vue mois, on bascule en vue jour
+  if(currentViewMode === 'month'){
+    localStorage.setItem('at_planning_viewmode', '1');
+  }
+  renderPlanning();
+}
+function setViewMode(mode){ localStorage.setItem('at_planning_viewmode', mode); renderPlanning(); }
+
+function openViewModal(){
+  const viewMode = localStorage.getItem('at_planning_viewmode') || '3';
+
+  const options = [
+    {val:'1', label:'Jour', icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="4" x2="8" y2="10"/></svg>'},
+    {val:'3', label:'3 Jours', icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="4" x2="9" y2="22"/></svg>'},
+    {val:'7', label:'Semaine', icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="4" x2="8" y2="22"/><line x1="13" y1="4" x2="13" y2="22"/><line x1="18" y1="4" x2="18" y2="22"/></svg>'},
+    {val:'month', label:'Mois', icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="4" x2="8" y2="6"/><line x1="16" y1="4" x2="16" y2="6"/></svg>'}
+  ];
+
+  const optionsHtml = options.map(opt => {
+    const isActive = viewMode === opt.val;
+    return `<div onclick="setViewMode('${opt.val}'); closeViewModal();" style="
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 20px;cursor:pointer;
+      border-bottom:1px solid #f2f2f7;min-height:52px;
+      background:white;
+    " onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="color:${isActive ? '#1a1a1a' : '#8e8e93'};">${opt.icon}</div>
+        <span style="font-size:16px;font-weight:${isActive ? '600' : '400'};color:#1a1a1a;">${opt.label}</span>
+      </div>
+      ${isActive ? '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}
+    </div>`;
+  }).join('');
+
+  const sheet = document.createElement('div');
+  sheet.id = 'view-modal';
+  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9999;display:flex;align-items:flex-end;';
+  sheet.innerHTML = `
+    <div style="background:white;width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;animation:slideUpFull 0.25s ease;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;">
+        <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Vue</span>
+        <button onclick="closeViewModal()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>
+      </div>
+      ${optionsHtml}
+    </div>`;
+  sheet.addEventListener('click', (e) => { if(e.target === sheet) closeViewModal(); });
+  document.body.appendChild(sheet);
+}
+
+function closeViewModal(){ const modal = document.getElementById('view-modal'); if(modal) modal.remove(); }
+
+function handleSwipeStart(e){
+  window.swipeStartX = e.touches[0].clientX;
+  window.swipeStartY = e.touches[0].clientY;
+  window.swipeStartTime = Date.now();
+}
+
+function handleSwipeEnd(e){
+  const swipeEndX = e.changedTouches[0].clientX;
+  const swipeEndY = e.changedTouches[0].clientY;
+  const diffX = window.swipeStartX - swipeEndX;
+  const diffY = window.swipeStartY - swipeEndY;
+  const elapsed = Date.now() - window.swipeStartTime;
+
+  // Ignorer si c'est plus un scroll vertical qu'un swipe horizontal
+  if(Math.abs(diffY) > Math.abs(diffX)) return;
+  // Seuil minimum : 40px et moins de 400ms
+  if(Math.abs(diffX) < 40 || elapsed > 400) return;
+
+  const viewMode = localStorage.getItem('at_planning_viewmode') || '3';
+  const direction = diffX > 0 ? 1 : -1; // 1 = suivant, -1 = précédent
+
+  if(viewMode === 'month'){
+    currentDisplayDate.setMonth(currentDisplayDate.getMonth() + direction);
+  } else if(viewMode === '1'){
+    currentDisplayDate.setDate(currentDisplayDate.getDate() + direction);
+  } else if(viewMode === '3'){
+    currentDisplayDate.setDate(currentDisplayDate.getDate() + (direction * 3));
+  } else {
+    // semaine
+    currentDisplayDate.setDate(currentDisplayDate.getDate() + (direction * 7));
+  }
+
+  // Animation slide
+  const content = document.getElementById('calendar-content');
+  if(content){
+    content.style.transition = 'transform 0.15s ease, opacity 0.15s ease';
+    content.style.transform = `translateX(${direction * -30}px)`;
+    content.style.opacity = '0';
+    setTimeout(() => {
+      renderPlanning();
+      const newContent = document.getElementById('calendar-content');
+      if(newContent){
+        newContent.style.transition = 'none';
+        newContent.style.transform = `translateX(${direction * 30}px)`;
+        newContent.style.opacity = '0';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            newContent.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
+            newContent.style.transform = 'translateX(0)';
+            newContent.style.opacity = '1';
+          });
+        });
+      }
+    }, 150);
+  } else {
+    renderPlanning();
+  }
+}
+
+function renderMonthView(date){
+  const year = date.getFullYear(), month = date.getMonth();
+  const firstDay = new Date(year, month, 1), lastDay = new Date(year, month + 1, 0);
+  const today = new Date();
+  const dayNames = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+  const monthName = date.toLocaleDateString('fr-FR', {month: 'long', year: 'numeric'});
+  let html = '<div style="padding:12px;height:100%;display:flex;flex-direction:column;overflow:auto;">';
+  html += '<div style="text-align:center;font-weight:700;font-size:14px;margin-bottom:12px;">' + monthName + '</div>';
+  html += '<div style="display:grid;grid-template-columns:repeat(7, 1fr);gap:2px;margin-bottom:8px;">';
+  dayNames.forEach(day => { html += '<div style="text-align:center;font-weight:600;font-size:11px;padding:6px;color:var(--text2);">' + day + '</div>'; });
+  html += '</div><div style="display:grid;grid-template-columns:repeat(7, 1fr);gap:2px;flex:1;">';
+  for(let i = 0; i < firstDay.getDay(); i++) html += '<div></div>';
+  for(let day = 1; day <= lastDay.getDate(); day++) {
+    const dateObj = new Date(year, month, day);
+    const dateStr = [year, String(month+1).padStart(2,'0'), String(day).padStart(2,'0')].join('-');
+    const todayStr = [today.getFullYear(), String(today.getMonth()+1).padStart(2,'0'), String(today.getDate()).padStart(2,'0')].join('-');
+    const isToday = dateStr === todayStr;
+    const plannings = DataLayer.getPlanning().filter(p => p.date === dateStr);
+    html += '<div onclick="setDateAndViewDay(\'' + dateStr + '\')" style="min-height:60px;padding:4px;border:' + (isToday ? '2px solid #1a1a1a' : '1px solid var(--border)') + ';background:' + (isToday ? 'rgba(26,26,26,0.05)' : 'var(--bg)') + ';border-radius:6px;cursor:pointer;overflow:hidden;display:flex;flex-direction:column;gap:2px;">';
+    html += '<div style="font-weight:600;font-size:11px;color:' + (isToday ? '#1a1a1a' : 'var(--text2)') + ';">' + day + '</div>';
+    const typeColors = {'rappel': '#CCFF00', 'preparation': '#00FF88', 'sav': '#FF1744'};
+    plannings.slice(0, 2).forEach(task => {
+      const color = typeColors[task.type] || '#999';
+      html += '<div style="background:' + color + ';color:#1a1a1a;padding:1px 4px;border-radius:2px;font-size:9px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + task.description.substring(0, 10) + '</div>';
+    });
+    if(plannings.length > 2) html += '<div style="font-size:9px;color:var(--text2);">+' + (plannings.length - 2) + '</div>';
+    html += '</div>';
+  }
+  html += '</div><div style="text-align:center;font-size:11px;color:var(--text2);margin-top:8px;padding:8px;">← Swipe pour changer de mois →</div></div>';
+  document.getElementById('calendar-content').innerHTML = html;
+}
+
+function renderWeekView(date){
+  const today = new Date();
+  const todayStr = [
+    today.getFullYear(),
+    String(today.getMonth()+1).padStart(2,'0'),
+    String(today.getDate()).padStart(2,'0')
+  ].join('-');
+  const dayOfWeek = date.getDay();
+  const startDate = new Date(date);
+  const viewMode = parseInt(localStorage.getItem('at_planning_viewmode') || '3');
+  const daysToShow = viewMode;
+  const daysEnabled = {0: false, 1: true, 2: true, 3: true, 4: true, 5: true, 6: false};
+
+  // En vue semaine uniquement : partir du lundi
+  if(viewMode === 7){
+    const dow = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    startDate.setDate(date.getDate() - dow);
+  }
+
+  // Constantes de mise en page
+  const HOUR_HEIGHT = 60; // px par heure
+  const START_HOUR = 6;
+  const END_HOUR = 23;
+  const TOTAL_HOURS = END_HOUR - START_HOUR;
+  const HOUR_COL_WIDTH = window.innerWidth < 768 ? 30 : 50; // px colonne heure
+  const GAP = 3;
+
+  // Collecter les jours à afficher
+  const days = [];
+
+  if(viewMode === 1){
+    // Vue jour : juste le jour courant
+    days.push(new Date(startDate));
+  } else if(viewMode === 3){
+    // Vue 3 jours : partir du jour sélectionné, 3 jours consécutifs
+    for(let i = 0; i < 3; i++){
+      const d = new Date(startDate);
+      d.setDate(startDate.getDate() + i);
+      days.push(d);
+    }
+  } else {
+    // Vue semaine : 7 jours lun→dim
+    for(let i = 0; i < 7; i++){
+      const d = new Date(startDate);
+      d.setDate(startDate.getDate() + i);
+      days.push(d);
+    }
+  }
+
+  const dayNames = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  const allTasks = DataLayer.getPlanning();
+  const typeColors = {rappel:'#CCFF00', preparation:'#00FF88', sav:'#FF1744', rdv:'#00D4FF', appel:'#7B68EE'};
+
+  // ---- RANGÉE 7 JOURS (vue jour et 3 jours uniquement) ----
+  let weekStripHtml = '';
+  if(viewMode === 1 || viewMode === 3){
+    // Trouver le lundi de la semaine courante
+    const monday = new Date(date);
+    const dow = monday.getDay();
+    monday.setDate(monday.getDate() - (dow === 0 ? 6 : dow - 1));
+
+    // Date sélectionnée en string pour comparaison fiable
+    const selectedDateStr = [
+      date.getFullYear(),
+      String(date.getMonth()+1).padStart(2,'0'),
+      String(date.getDate()).padStart(2,'0')
+    ].join('-');
+
+    weekStripHtml = `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:8px;padding:0 8px;flex-shrink:0;">`;
+    for(let i = 0; i < 7; i++){
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      const ds = [
+        d.getFullYear(),
+        String(d.getMonth()+1).padStart(2,'0'),
+        String(d.getDate()).padStart(2,'0')
+      ].join('-');
+      const isToday = ds === todayStr;
+      const isSelected = viewMode === 1
+        ? ds === selectedDateStr
+        : ds === selectedDateStr;
+
+      weekStripHtml += `<button onclick="setDateAndViewDay('${ds}')" style="
+        display:flex;flex-direction:column;align-items:center;justify-content:center;
+        padding:6px 2px;border:none;cursor:pointer;border-radius:10px;
+        background:transparent;
+        color:${isToday ? '#FF3B30' : '#1a1a1a'};
+        transition:background 0.15s;
+      " onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">
+        <div style="font-size:10px;font-weight:500;color:#8e8e93;">${dayNames[d.getDay()]}</div>
+        <div style="
+          width:30px;height:30px;border-radius:50%;
+          display:flex;align-items:center;justify-content:center;
+          background:${isSelected ? '#f2f2f7' : 'transparent'};
+          font-size:15px;font-weight:${isSelected ? '700' : '400'};
+          color:${isToday ? '#FF3B30' : '#1a1a1a'};
+          margin-top:2px;
+        ">${d.getDate()}</div>
+      </button>`;
+    }
+    weekStripHtml += '</div>';
+  }
+
+  // ---- HEADER JOURS ----
+  let headerHtml = '';
+  if(viewMode !== 1){
+    headerHtml = `<div style="display:grid;grid-template-columns:${HOUR_COL_WIDTH}px repeat(${days.length},1fr);gap:${GAP}px;margin-bottom:4px;flex-shrink:0;padding:0 8px;">`;
+    headerHtml += '<div></div>';
+    days.forEach(d => {
+      const ds = [
+        d.getFullYear(),
+        String(d.getMonth()+1).padStart(2,'0'),
+        String(d.getDate()).padStart(2,'0')
+      ].join('-');
+      const isToday = ds === todayStr;
+      headerHtml += `<button onclick="setDateAndViewDay('${ds}')" style="
+        display:flex;flex-direction:column;align-items:center;justify-content:center;
+        padding:4px 2px;border:none;cursor:pointer;background:transparent;
+        transition:background 0.15s;border-radius:8px;
+      " onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">
+        <div style="font-size:10px;font-weight:500;color:#8e8e93;">${dayNames[d.getDay()]}</div>
+        <div style="
+          width:28px;height:28px;border-radius:50%;
+          display:flex;align-items:center;justify-content:center;
+          font-size:14px;font-weight:600;
+          color:${isToday ? '#FF3B30' : '#1a1a1a'};
+          margin-top:2px;
+        ">${d.getDate()}</div>
+      </button>`;
+    });
+    headerHtml += '</div>';
+  }
+
+  // ---- GRILLE PRINCIPALE ----
+  const gridHeight = TOTAL_HOURS * HOUR_HEIGHT;
+
+  let gridHtml = `<div style="display:grid;grid-template-columns:${HOUR_COL_WIDTH}px repeat(${days.length},1fr);gap:${GAP}px;position:relative;padding:0 8px;">`;
+
+  // Colonne des heures
+  let hoursHtml = `<div style="position:relative;height:${gridHeight}px;">`;
+  for(let h = START_HOUR; h <= END_HOUR; h++){
+    const top = (h - START_HOUR) * HOUR_HEIGHT;
+    const isEven = h % 2 === 0;
+    hoursHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;height:${HOUR_HEIGHT}px;background:${isEven ? 'rgba(0,0,0,0.015)' : 'transparent'};border-radius:4px;"></div>`;
+    hoursHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;font-size:10px;font-weight:600;color:#8e8e93;line-height:1;padding-top:3px;">${String(h).padStart(2,'0')}</div>`;
+  }
+  hoursHtml += '</div>';
+  gridHtml += hoursHtml;
+
+  // Colonnes par jour
+  days.forEach(d => {
+    const ds = [
+      d.getFullYear(),
+      String(d.getMonth()+1).padStart(2,'0'),
+      String(d.getDate()).padStart(2,'0')
+    ].join('-');
+    const isToday = ds === todayStr;
+
+    // Tâches de ce jour
+    const dayTasks = allTasks.filter(t => t.date === ds);
+
+    // Fond de colonne avec lignes horaires alternées
+    let colHtml = `<div style="position:relative;height:${gridHeight}px;background:${isToday ? 'rgba(26,26,26,0.03)' : 'transparent'};border-radius:8px;" onclick="openPlanningTaskWithTime('${ds}', '09:00')">`;
+
+    // Lignes horaires en fond avec alternance pair/impair
+    for(let h = START_HOUR; h <= END_HOUR; h++){
+      const top = (h - START_HOUR) * HOUR_HEIGHT;
+      const isEven = h % 2 === 0;
+      colHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;height:${HOUR_HEIGHT}px;background:${isEven ? 'rgba(0,0,0,0.015)' : 'transparent'};"></div>`;
+      colHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;height:1px;background:${h === START_HOUR ? 'transparent' : '#e5e5e5'};"></div>`;
+      const hour = String(h).padStart(2,'0') + ':00';
+      colHtml += `<div onclick="event.stopPropagation();openPlanningTaskWithTime('${ds}','${hour}')" style="position:absolute;top:${top}px;left:0;right:0;height:${HOUR_HEIGHT}px;cursor:pointer;transition:background 0.15s;border-radius:4px;z-index:1;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'"></div>`;
+    }
+
+    // Tâches positionnées en absolu
+    dayTasks.forEach(task => {
+      // Skip les tâches toute la journée dans la grille horaire
+      if(task.allDay) return;
+
+      const timeStr = task.timeStart || task.time || '00:00';
+      const timeEndStr = task.timeEnd || '';
+      const [sh, sm] = timeStr.split(':').map(Number);
+      let [eh, em] = timeEndStr ? timeEndStr.split(':').map(Number) : [sh + 1, sm];
+
+      // Clamp dans la plage visible
+      const startMins = Math.max(sh * 60 + sm, START_HOUR * 60);
+      const endMins = Math.min(eh * 60 + em, END_HOUR * 60);
+      if(endMins <= startMins) return;
+
+      const top = ((startMins - START_HOUR * 60) / 60) * HOUR_HEIGHT;
+      const height = Math.max(((endMins - startMins) / 60) * HOUR_HEIGHT - 2, 20);
+      const color = typeColors[task.type] || '#aaa';
+      const isCompleted = task.completed || false;
+      const label = task.description || '';
+
+      // Couleur de fond très légère dérivée de la couleur du type
+      const bgOpacity = isCompleted ? 0.06 : 0.12;
+
+      colHtml += `<div onclick="event.stopPropagation();openEditPlanningTaskModal(${task.id})" style="
+        position:absolute;top:${top}px;left:3px;right:2px;height:${height}px;
+        background:${color}${Math.round(bgOpacity*255).toString(16).padStart(2,'0')};
+        border-left:3px solid ${color};
+        border-radius:0 6px 6px 0;
+        padding:4px 6px;
+        overflow:hidden;cursor:pointer;
+        opacity:${isCompleted ? 0.5 : 1};
+        box-shadow:0 1px 4px rgba(0,0,0,0.08);
+        transition:opacity 0.2s, transform 0.15s, box-shadow 0.15s;
+        z-index:10;
+        display:flex;flex-direction:column;justify-content:flex-start;
+        backdrop-filter:blur(2px);
+      " onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 3px 10px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.08)'">
+        <div style="
+          font-size:11px;font-weight:700;color:#1a1a1a;
+          white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+          text-decoration:${isCompleted ? 'line-through' : 'none'};
+          opacity:${isCompleted ? 0.6 : 1};
+        ">${label}</div>
+        ${height > 28 ? '<div style="font-size:10px;color:#1a1a1a;opacity:0.55;margin-top:2px;font-weight:500;">' + timeStr + (timeEndStr ? ' – ' + timeEndStr : '') + '</div>' : ''}
+      </div>`;
+    });
+
+    // Indicateur heure actuelle (seulement sur le jour d'aujourd'hui)
+    const isCurrentDay = ds === todayStr;
+    if(isCurrentDay){
+      const now = new Date();
+      const nowMins = now.getHours() * 60 + now.getMinutes();
+      const clampedMins = Math.max(Math.min(nowMins, END_HOUR * 60), START_HOUR * 60);
+      const nowTop = ((clampedMins - START_HOUR * 60) / 60) * HOUR_HEIGHT;
+      colHtml += `
+        <div id="now-indicator" style="
+          position:absolute;top:${nowTop}px;left:-8px;right:0;
+          display:flex;align-items:center;z-index:20;pointer-events:none;
+        ">
+          <div style="
+            width:12px;height:12px;border-radius:50%;
+            background:#FF3B30;flex-shrink:0;
+            box-shadow:0 0 0 3px rgba(255,59,48,0.25), 0 0 0 1px #FF3B30;
+          "></div>
+          <div style="
+            flex:1;height:2px;
+            background:linear-gradient(90deg, #FF3B30, rgba(255,59,48,0.3));
+          "></div>
+        </div>`;
+    }
+
+    colHtml += '</div>';
+    gridHtml += colHtml;
+  });
+
+  gridHtml += '</div>';
+
+  // ---- BANDE TOUTE LA JOURNÉE ----
+  const allDayTasks = DataLayer.getPlanning().filter(t => t.allDay);
+  let allDayHtml = '';
+  const hasAllDay = days.some(d => {
+    const ds = [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
+    return allDayTasks.some(t => t.date === ds);
+  });
+
+  if(hasAllDay){
+    allDayHtml = `<div style="display:grid;grid-template-columns:${HOUR_COL_WIDTH}px repeat(${days.length},1fr);gap:${GAP}px;padding:0 8px 4px 8px;flex-shrink:0;border-bottom:1px solid #e5e5e5;margin-bottom:4px;">`;
+    allDayHtml += `<div style="font-size:9px;color:#8e8e93;display:flex;align-items:center;justify-content:flex-end;padding-right:4px;">Jour</div>`;
+    days.forEach(d => {
+      const ds = [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
+      const dayAllDay = allDayTasks.filter(t => t.date === ds);
+      const color = dayAllDay.length > 0 ? (typeColors[dayAllDay[0].type] || '#aaa') : 'transparent';
+      allDayHtml += `<div style="min-height:20px;display:flex;flex-direction:column;gap:2px;">`;
+      dayAllDay.forEach(task => {
+        const c = typeColors[task.type] || '#aaa';
+        allDayHtml += `<div onclick="openEditPlanningTaskModal(${task.id})" style="
+          background:${c}22;border-left:3px solid ${c};
+          border-radius:0 4px 4px 0;padding:2px 6px;
+          font-size:10px;font-weight:600;color:#1a1a1a;
+          cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+        ">${task.description}</div>`;
+      });
+      allDayHtml += `</div>`;
+    });
+    allDayHtml += '</div>';
+  }
+
+  // ---- ASSEMBLAGE FINAL ----
+  const html = `<div style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
+    ${weekStripHtml}
+    ${headerHtml}
+    ${allDayHtml}
+    <div id="calendar-scroll-area" style="flex:1;overflow-y:auto;padding-bottom:16px;">
+      ${gridHtml}
+    </div>
+  </div>`;
+
+  document.getElementById('calendar-content').innerHTML = html;
+
+  // Scroll automatique vers l'heure actuelle
+  const scrollArea = document.getElementById('calendar-scroll-area');
+  if(scrollArea){
+    const now = new Date();
+    const nowMins = now.getHours() * 60 + now.getMinutes();
+    const clampedMins = Math.max(Math.min(nowMins, END_HOUR * 60), START_HOUR * 60);
+    const nowTop = ((clampedMins - START_HOUR * 60) / 60) * HOUR_HEIGHT;
+    // Centrer la vue sur l'heure actuelle avec un offset pour avoir du contexte au-dessus
+    const offset = Math.max(0, nowTop - (scrollArea.clientHeight / 2) + 60);
+    setTimeout(() => { scrollArea.scrollTop = offset; }, 50);
+  }
+
+  // Mettre à jour l'indicateur chaque minute
+  if(window._nowIndicatorTimer) clearInterval(window._nowIndicatorTimer);
+  window._nowIndicatorTimer = setInterval(() => {
+    const indicator = document.getElementById('now-indicator');
+    if(!indicator) { clearInterval(window._nowIndicatorTimer); return; }
+    const now = new Date();
+    const nowMins = now.getHours() * 60 + now.getMinutes();
+    const clampedMins = Math.max(Math.min(nowMins, END_HOUR * 60), START_HOUR * 60);
+    const nowTop = ((clampedMins - START_HOUR * 60) / 60) * HOUR_HEIGHT;
+    indicator.style.top = nowTop + 'px';
+  }, 60000);
+}
+
+function openEditPlanningTaskModal(taskId){
+  const task = planning.find(t => t.id === taskId);
+  if(!task) return;
+
+  // Valeurs pré-remplies
+  const taskType = task.type || 'rappel';
+  const taskDate = task.date || Utils.today();
+  const taskDateEnd = task.dateEnd || taskDate;
+  const taskTimeStart = task.timeStart || task.time || '09:00';
+  const taskTimeEnd = task.timeEnd || (() => { const [h,m] = taskTimeStart.split(':'); return String((parseInt(h)+1)%24).padStart(2,'0')+':'+m; })();
+  const taskNotif = task.notification || 'none';
+  const taskRepeat = task.repeat || 'never';
+  const taskVehicleId = task.vehicleId || '';
+
+  const TYPE_COLORS = {rappel:'#CCFF00', preparation:'#00FF88', sav:'#FF1744', rdv:'#00D4FF', appel:'#7B68EE'};
+  const TYPE_LABELS = {rappel:'Rappel', preparation:'Préparation', sav:'SAV', rdv:'RDV', appel:'Appel'};
+  const NOTIF_LABELS = {none:'Aucune','5':'5 minutes avant','10':'10 minutes avant','15':'15 minutes avant','30':'30 minutes avant','60':'1 heure avant','120':'2 heures avant','1440':'1 jour avant'};
+  const REPEAT_LABELS = {never:'Jamais', daily:'Tous les jours', weekly:'Toutes les semaines', biweekly:'Toutes les 2 semaines', monthly:'Tous les mois', yearly:'Tous les ans'};
+
+  const dotColor = TYPE_COLORS[taskType] || '#CCFF00';
+  const typeLabel = TYPE_LABELS[taskType] || 'Rappel';
+  const notifLabel = NOTIF_LABELS[taskNotif] || 'Aucune';
+  const repeatLabel = REPEAT_LABELS[taskRepeat] || 'Jamais';
+  const vehicleLabel = taskVehicleId ? (vehicles.find(v => v.id == taskVehicleId)?.marque + ' ' + vehicles.find(v => v.id == taskVehicleId)?.modele) || 'Aucun' : 'Aucun';
+
+  const dateFormatted = (d) => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
+
+  // Init variables d'édition
+  document.editTaskId = taskId;
+  document.editTaskType = taskType;
+  document.editTaskVehicleId = taskVehicleId;
+  document.editTaskDate = taskDate;
+  document.editTaskDateEnd = taskDateEnd;
+  document.editTaskNotif = taskNotif;
+  document.editTaskRepeat = taskRepeat;
+  document.editTaskAllDay = task.allDay || false;
+  _editCalDate = new Date(taskDate + 'T00:00:00');
+
+  const html = `
+  <div id="edit-task-modal-planning" style="
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    background:white;z-index:9999;
+    display:flex;flex-direction:column;
+    animation:slideUpFull 0.3s ease;
+  ">
+    <!-- HEADER -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;background:white;flex-shrink:0;min-height:56px;">
+      <button onclick="closeEditPlanningModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">✕</button>
+      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Modifier la tâche</span>
+      <button onclick="saveEditPlanningTask(${taskId})" style="background:none;border:none;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3,11 9,17 19,5"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- CORPS SCROLLABLE -->
+    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px 40px 16px;">
+
+      <!-- TITRE -->
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;">
+        <div style="padding:0 16px;">
+          <input type="text" id="edit-task-title" value="${task.description || ''}" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;"/>
+        </div>
+      </div>
+
+      <!-- TYPE + VÉHICULE -->
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openEditBottomSheet('type')">
+          <span style="font-size:16px;color:#1a1a1a;">Type</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="edit-type-dot" style="width:10px;height:10px;border-radius:50%;background:${dotColor};flex-shrink:0;"></span>
+            <span id="edit-type-label" style="font-size:16px;color:#1a1a1a;">${typeLabel}</span>
+            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+          </div>
+        </div>
+        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openEditBottomSheet('vehicle')">
+          <span style="font-size:16px;color:#1a1a1a;">Véhicule</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="edit-vehicle-label" style="font-size:16px;color:${taskVehicleId ? '#1a1a1a' : '#8e8e93'};">${vehicleLabel}</span>
+            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOUTE LA JOURNÉE + DÉBUT + FIN -->
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:visible;margin-bottom:24px;">
+
+        <!-- Toute la journée -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:#1a1a1a;">Toute la journée</span>
+          <div onclick="toggleEditAllDay()" id="edit-allday-toggle" style="width:51px;height:31px;border-radius:16px;background:${document.editTaskAllDay ? '#1a1a1a' : '#e5e5ea'};position:relative;cursor:pointer;transition:background 0.3s ease;flex-shrink:0;">
+            <div id="edit-allday-thumb" style="position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:white;box-shadow:0 2px 4px rgba(0,0,0,0.3);transition:transform 0.3s ease;transform:${document.editTaskAllDay ? 'translateX(20px)' : 'translateX(0)'};"></div>
+          </div>
+        </div>
+
+        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+
+        <!-- Début -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:#1a1a1a;flex-shrink:0;">Début</span>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span id="edit-start-date-label" onclick="toggleEditDatePicker('start')" style="font-size:16px;color:#1a1a1a;cursor:pointer;">${dateFormatted(taskDate)}</span>
+            <input type="time" id="edit-start-time" value="${taskTimeStart}" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;cursor:pointer;" onchange="document.editTaskTimeStart=this.value"/>
+          </div>
+        </div>
+
+        <div id="edit-date-picker-start" style="display:none;padding:0 16px 16px 16px;border-top:1px solid #e5e5e5;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
+            <button onclick="shiftEditMonth(-1,'start')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">‹</button>
+            <span id="edit-cal-month-start" style="font-weight:600;font-size:15px;color:#1a1a1a;"></span>
+            <button onclick="shiftEditMonth(1,'start')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">›</button>
+          </div>
+          <div id="edit-cal-grid-start" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+        </div>
+
+        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+
+        <!-- Fin -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:#1a1a1a;flex-shrink:0;">Fin</span>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span id="edit-end-date-label" onclick="toggleEditDatePicker('end')" style="font-size:16px;color:#1a1a1a;cursor:pointer;">${dateFormatted(taskDateEnd)}</span>
+            <input type="time" id="edit-end-time" value="${taskTimeEnd}" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;cursor:pointer;" onchange="document.editTaskTimeEnd=this.value"/>
+          </div>
+        </div>
+
+        <div id="edit-date-picker-end" style="display:none;padding:0 16px 16px 16px;border-top:1px solid #e5e5e5;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
+            <button onclick="shiftEditMonth(-1,'end')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">‹</button>
+            <span id="edit-cal-month-end" style="font-weight:600;font-size:15px;color:#1a1a1a;"></span>
+            <button onclick="shiftEditMonth(1,'end')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">›</button>
+          </div>
+          <div id="edit-cal-grid-end" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+        </div>
+
+      </div>
+
+      <!-- NOTIFICATION -->
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openEditBottomSheet('notif')">
+          <span style="font-size:16px;color:#1a1a1a;">Notification</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="edit-notif-label" style="font-size:16px;color:${taskNotif === 'none' ? '#8e8e93' : '#1a1a1a'};">${notifLabel}</span>
+            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RÉPÉTITION -->
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openEditBottomSheet('repeat')">
+          <span style="font-size:16px;color:#1a1a1a;">Répétition</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="edit-repeat-label" style="font-size:16px;color:${taskRepeat === 'never' ? '#8e8e93' : '#1a1a1a'};">${repeatLabel}</span>
+            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- POUBELLE -->
+      <div style="display:flex;justify-content:center;margin-top:8px;">
+        <button onclick="confirmDeleteEditTask(${taskId})" style="background:none;border:none;cursor:pointer;padding:12px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='#ffe5e5'" onmouseout="this.style.background='none'">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF1744" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>`;
+
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function closeEditPlanningModal(){
+  const m = document.getElementById('edit-task-modal-planning');
+  if(m) m.remove();
+}
+
+// Calendrier inline pour le modal d'édition
+let _editCalDate = new Date();
+let _editCalTarget = 'start';
+
+function toggleEditDatePicker(target){
+  _editCalTarget = target;
+  const other = target === 'start' ? 'end' : 'start';
+  const picker = document.getElementById('edit-date-picker-' + target);
+  const otherPicker = document.getElementById('edit-date-picker-' + other);
+  if(!picker) return;
+  if(otherPicker) otherPicker.style.display = 'none';
+  const isHidden = picker.style.display === 'none';
+  picker.style.display = isHidden ? 'block' : 'none';
+  if(isHidden){
+    const dateStr = target === 'start' ? document.editTaskDate : document.editTaskDateEnd;
+    _editCalDate = new Date(dateStr + 'T00:00:00');
+    renderEditCal(target);
+  }
+}
+
+function renderEditCal(target){
+  const year = _editCalDate.getFullYear(), month = _editCalDate.getMonth();
+  const firstDay = new Date(year, month, 1), lastDay = new Date(year, month + 1, 0);
+  const monthLabel = _editCalDate.toLocaleDateString('fr-FR', {month:'long', year:'numeric'});
+  const monthEl = document.getElementById('edit-cal-month-' + target);
+  const grid = document.getElementById('edit-cal-grid-' + target);
+  if(!monthEl || !grid) return;
+  monthEl.textContent = monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1);
+  const dayNames = ['L','M','M','J','V','S','D'];
+  let html = dayNames.map(d => `<div style="font-size:11px;font-weight:600;color:#8e8e93;padding:4px 0;">${d}</div>`).join('');
+  let startDow = firstDay.getDay(); startDow = startDow === 0 ? 6 : startDow - 1;
+  for(let i = 0; i < startDow; i++) html += '<div></div>';
+  const selectedDate = target === 'start' ? document.editTaskDate : document.editTaskDateEnd;
+  const todayStr = Utils.today();
+  for(let d = 1; d <= lastDay.getDate(); d++){
+    const ds = Utils.dateToStr(new Date(year, month, d));
+    const isSel = ds === selectedDate, isToday = ds === todayStr;
+    html += `<div onclick="selectEditDate('${ds}','${target}')" style="padding:7px 2px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:${isSel||isToday?'700':'400'};background:${isSel?'#1a1a1a':'transparent'};color:${isSel?'white':isToday?'#007AFF':'#1a1a1a'};">${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function selectEditDate(dateStr, target){
+  const label = document.getElementById('edit-' + target + '-date-label');
+  const formatted = new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
+  if(target === 'start') document.editTaskDate = dateStr;
+  else document.editTaskDateEnd = dateStr;
+  if(label) label.textContent = formatted;
+  renderEditCal(target);
+}
+
+function shiftEditMonth(dir, target){
+  _editCalDate.setMonth(_editCalDate.getMonth() + dir);
+  renderEditCal(target);
+}
+
+function toggleEditAllDay(){
+  document.editTaskAllDay = !document.editTaskAllDay;
+  const toggle = document.getElementById('edit-allday-toggle');
+  const thumb = document.getElementById('edit-allday-thumb');
+  const st = document.getElementById('edit-start-time');
+  const et = document.getElementById('edit-end-time');
+  if(document.editTaskAllDay){
+    toggle.style.background = '#1a1a1a'; thumb.style.transform = 'translateX(20px)';
+    if(st) st.style.display = 'none'; if(et) et.style.display = 'none';
+  } else {
+    toggle.style.background = '#e5e5ea'; thumb.style.transform = 'translateX(0)';
+    if(st) st.style.display = 'block'; if(et) et.style.display = 'block';
+  }
+}
+
+// Bottom sheet pour le modal d'édition (réutilise BOTTOM_SHEET_DATA)
+function openEditBottomSheet(key){
+  const config = BOTTOM_SHEET_DATA[key];
+  if(!config) return;
+  const options = typeof config.options === 'function' ? config.options() : config.options;
+  const existing = document.getElementById('edit-bottom-sheet');
+  if(existing) existing.remove();
+  const optionsHtml = options.map(opt => `
+    <div onclick="selectEditBottomSheet('${key}','${opt.val}',${JSON.stringify(opt.label)},${JSON.stringify(opt.dot||'')})"
+      style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;"
+      onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
+      ${opt.dot ? '<span style="width:12px;height:12px;border-radius:50%;background:' + opt.dot + ';flex-shrink:0;"></span>' : ''}
+      <span style="font-size:16px;color:#1a1a1a;">${opt.label}</span>
+    </div>`).join('');
+  const sheet = document.createElement('div');
+  sheet.id = 'edit-bottom-sheet';
+  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
+  sheet.innerHTML = `
+    <div style="background:white;width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;max-height:70vh;overflow-y:auto;animation:slideUpFull 0.25s ease;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;">
+        <span style="font-size:17px;font-weight:600;color:#1a1a1a;">${config.title}</span>
+        <button onclick="document.getElementById('edit-bottom-sheet').remove()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button>
+      </div>
+      <div>${optionsHtml}</div>
+    </div>`;
+  sheet.addEventListener('click', (e) => { if(e.target === sheet) sheet.remove(); });
+  document.body.appendChild(sheet);
+}
+
+function selectEditBottomSheet(key, val, label, extra){
+  const labelMap = {
+    type: { id:'edit-type-label', dotId:'edit-type-dot', prop:'editTaskType', colorKey: extra },
+    vehicle: { id:'edit-vehicle-label', prop:'editTaskVehicleId' },
+    notif: { id:'edit-notif-label', prop:'editTaskNotif' },
+    repeat: { id:'edit-repeat-label', prop:'editTaskRepeat' }
+  };
+  const cfg = labelMap[key];
+  if(!cfg) return;
+  document[cfg.prop] = val;
+  const lbl = document.getElementById(cfg.id);
+  if(lbl){ lbl.textContent = label; lbl.style.color = (val === 'none' || val === 'never' || val === '') ? '#8e8e93' : '#1a1a1a'; }
+  if(key === 'type'){
+    const dot = document.getElementById('edit-type-dot');
+    if(dot) dot.style.background = extra;
+  }
+  const sheet = document.getElementById('edit-bottom-sheet');
+  if(sheet) sheet.remove();
+}
+
+function confirmDeleteEditTask(taskId){
+  const sheet = document.createElement('div');
+  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
+  sheet.innerHTML = `
+    <div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;animation:slideUpFull 0.25s ease;">
+      <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer cette tâche ?</div>
+      <div style="color:#8e8e93;font-size:15px;margin-bottom:24px;">Cette action ne peut pas être annulée.</div>
+      <button onclick="
+        DataLayer.deletePlanningTask(${taskId});
+        vehicles.forEach(v => { const i = v.tasks.findIndex(t => t.id === ${taskId}); if(i !== -1) v.tasks.splice(i,1); });
+        save(); showToast('✓ Tâche supprimée');
+        closeEditPlanningModal(); renderPlanning();
+        if(currentDetailVehicleId) renderDetailTasks(currentDetailVehicleId, currentDetailTaskFilter);
+        this.closest('[style*=fixed]').remove();
+      " style="width:100%;padding:14px;background:#FF1744;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Supprimer</button>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
+    </div>`;
+  document.body.appendChild(sheet);
+  sheet.addEventListener('click', (e) => { if(e.target === sheet) sheet.remove(); });
+}
+
+function saveEditPlanningTask(taskId){
+  const task = planning.find(t => t.id === taskId);
+  if(!task) return;
+  const titleEl = document.getElementById('edit-task-title');
+  const desc = titleEl ? titleEl.value.trim() : '';
+  if(!desc) { showToast('⚠️ Titre requis'); return; }
+  task.description = desc;
+  task.type = document.editTaskType || task.type;
+  task.date = document.editTaskDate || task.date;
+  task.dateEnd = document.editTaskDateEnd || task.date;
+  task.timeStart = document.getElementById('edit-start-time')?.value || task.timeStart;
+  task.timeEnd = document.getElementById('edit-end-time')?.value || task.timeEnd;
+  task.vehicleId = document.editTaskVehicleId || null;
+  task.notification = document.editTaskNotif || 'none';
+  task.repeat = document.editTaskRepeat || 'never';
+  task.allDay = document.editTaskAllDay || false;
+  // Mettre à jour aussi dans sav[] du véhicule si existant
+  vehicles.forEach(v => {
+    const t = v.tasks.find(s => s.id === taskId);
+    if(t){ t.desc = desc; t.type = task.type; t.date = task.date; t.timeStart = task.timeStart; }
+  });
+  save();
+  closeEditPlanningModal();
+  renderPlanning();
+  if(currentDetailVehicleId) renderDetailTasks(currentDetailVehicleId, currentDetailTaskFilter);
+  showToast('✓ Tâche modifiée');
+}
+
+function deletePlanningTask(id){ DataLayer.deletePlanningTask(id); renderPlanning(); }
+
+function openEditTaskModal(vehicleId, taskId){
+  const planningTask = planning.find(t => t.id === taskId);
+  if(planningTask) { openEditPlanningTaskModal(taskId); return; }
+  const v = vehicles.find(x => x.id === vehicleId);
+  const task = v ? v.tasks.find(t => t.id === taskId) : null;
+  if(!task) return;
+  planning.push({ id: taskId, type: task.type, description: task.desc, date: task.date || null, time: null, vehicleId: vehicleId, completed: task.completed });
+  save();
+  openEditPlanningTaskModal(taskId);
+}
+
+function closeEditTaskModal(){ document.getElementById('modal-edit-task').classList.remove('active'); }
+function updateEditCategories(){
+  const type = document.getElementById('edit-task-type').value;
+  const catSelect = document.getElementById('edit-task-cat');
+  catSelect.innerHTML = type === 'prep' ? '<option>Carrosserie</option><option>Mécanique</option><option>Intérieur</option><option>Autres</option>' : '<option>Freins</option><option>Moteur</option><option>Carrosserie</option><option>Autre</option>';
+}
+
+function saveEditTask(){
+  const v = vehicles.find(x => x.id === currentEditVehicleId);
+  const task = v ? v.tasks.find(t => t.id === currentEditTaskId) : null;
+  if(!task) return;
+  task.type = document.getElementById('edit-task-type').value;
+  task.cat = document.getElementById('edit-task-cat').value;
+  task.desc = document.getElementById('edit-task-desc').value.trim();
+  task.cost = Number(document.getElementById('edit-task-cost').value) || 0;
+  task.date = document.getElementById('edit-task-date').value;
+  save(); closeEditTaskModal(); renderTaches();
+  if(currentDetailVehicleId === currentEditVehicleId) renderDetailTasks(currentDetailVehicleId, currentDetailTaskFilter);
+}
+
+function deleteTask(vehicleId, taskId, filter){
+  const confirmModal = document.createElement('div');
+  confirmModal.id = 'confirm-delete-task-modal-detail';
+  confirmModal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:10000;';
+  confirmModal.innerHTML = `<div style="background:white;border-radius:12px;padding:24px;max-width:400px;"><div style="font-weight:700;font-size:18px;margin-bottom:8px;">⚠️ Supprimer cette tâche ?</div><div style="color:#666;margin-bottom:24px;">Cette action ne peut pas être annulée.</div><div style="display:flex;gap:12px;justify-content:flex-end;"><button style="padding:10px 16px;border:1px solid #e8eaed;background:white;border-radius:6px;font-weight:600;cursor:pointer;" onclick="document.getElementById('confirm-delete-task-modal-detail').remove();">Annuler</button><button style="padding:10px 16px;background:#FF1744;color:white;border:none;border-radius:6px;font-weight:600;cursor:pointer;" onclick="DataLayer.deleteTask(${vehicleId}, ${taskId}); const pi = planning.findIndex(t => t.id === ${taskId}); if(pi !== -1) planning.splice(pi, 1); save(); showToast('✓ Tâche supprimée'); renderPlanning(); if(currentDetailVehicleId === ${vehicleId}) renderDetailTasks(${vehicleId}, '${filter}'); document.getElementById('confirm-delete-task-modal-detail').remove();">Supprimer</button></div></div>`;
+  document.body.appendChild(confirmModal);
+}
+
+let draggedTask = null;
+
+function dragStartTask(e, vehicleId, taskId){ draggedTask = {vehicleId, taskId}; e.target.classList.add('dragging'); }
+function dragOverTask(e){ e.preventDefault(); }
+function dragLeaveTask(e){ e.target.classList.remove('drag-over'); }
+function dropTask(e, vehicleId, taskId){ e.preventDefault(); draggedTask = null; }
+
+function deleteVehicle(vehicleId){
+  const confirmModal = document.createElement('div');
+  confirmModal.id = 'confirm-delete-vehicle-modal-card';
+  confirmModal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:10000;';
+  confirmModal.innerHTML = `<div style="background:white;border-radius:12px;padding:24px;max-width:400px;"><div style="font-weight:700;font-size:18px;margin-bottom:8px;">⚠️ Supprimer ce véhicule ?</div><div style="color:#666;margin-bottom:24px;">Toutes les tâches associées seront supprimées. Cette action ne peut pas être annulée.</div><div style="display:flex;gap:12px;justify-content:flex-end;"><button style="padding:10px 16px;border:1px solid #e8eaed;background:white;border-radius:6px;font-weight:600;cursor:pointer;" onclick="document.getElementById('confirm-delete-vehicle-modal-card').remove();">Annuler</button><button style="padding:10px 16px;background:#FF1744;color:white;border:none;border-radius:6px;font-weight:600;cursor:pointer;" onclick="DataLayer.deleteVehicle(${vehicleId}); showToast('✓ Véhicule supprimé'); if(currentDetailVehicleId === ${vehicleId}) switchView('parc'); renderParc(); document.getElementById('confirm-delete-vehicle-modal-card').remove();">Supprimer</button></div></div>`;
+  document.body.appendChild(confirmModal);
+}
+
+function saveVehicleNotes(){
+  const v = vehicles.find(x => x.id === currentDetailVehicleId);
+  if(v) { v.notes = document.getElementById('detail-notes').value; save(); showToast('✓ Notes enregistrées'); }
+}
+
+function savePrices(){
+  if(!DataLayer.getVehicleById(currentDetailVehicleId)) return;
+  DataLayer.updateVehicle(currentDetailVehicleId, {
+    achat:      Utils.toNumber(Utils.el('detail-achat-input').value),
+    vente:      Utils.toNumber(Utils.el('detail-vente-input').value),
+    sansTva:    Utils.toNumber(Utils.el('detail-sans-tva-input').value),
+    avecTva:    Utils.toNumber(Utils.el('detail-avec-tva-input').value),
+    carteGrise: Utils.toNumber(Utils.el('detail-cg-input').value),
+    margeCible: Utils.toNumber(Utils.el('detail-marge-cible-input').value)
+  });
+  showToast('✓ Prix enregistrés');
+  updateMargePreview();
+}
+
+function renderConfirmationTasksList(){
+  const v = vehicles.find(x => x.id === currentConfirmationVehicleId);
+  if(!v) return;
+  setTimeout(() => {
+    const listEl = document.getElementById('modal-confirmation-list');
+    if(!listEl) return;
+    let html = '';
+    v.tasks.forEach(t => {
+      html += '<div style="padding:12px;background:var(--surface);border-radius:6px;margin-bottom:12px;"><div style="display:flex;gap:10px;align-items:flex-start;"><input type="checkbox" ' + (t.completed ? 'checked' : '') + ' disabled style="margin-top:3px;"/><div style="flex:1;"><div style="font-weight:600;font-size:14px;">' + t.cat + '</div><div style="font-size:13px;color:var(--text2);">' + t.desc + '</div></div>' + (t.cost ? '<div style="font-weight:700;">' + t.cost + '€</div>' : '') + '</div></div>';
+    });
+    listEl.innerHTML = html;
+  }, 50);
+}
+
+function openConfirmationAddTaskModal(){
+  const today = new Date().toISOString().split('T')[0];
+  openNewTaskModalOutlookForVehicle(today, '09:00', currentConfirmationVehicleId);
+}
+
+function closeConfirmationModal(){
+  document.getElementById('modal-confirmation-tasks').classList.remove('active');
+  currentConfirmationVehicleId = null;
+}
+
+function switchChart(type, btn){
+  currentChartType = type;
+  document.querySelectorAll('.chart-filter').forEach(b => {
+    b.style.background = 'rgba(0,0,0,0.06)';
+    b.style.color = '#3a3a3c';
+    b.style.fontWeight = '500';
+  });
+  if(btn){ btn.style.background = '#1a1a1a'; btn.style.color = 'white'; btn.style.fontWeight = '600'; }
+  drawChart();
+}
+
+function drawChart(){
+  const ctx = document.getElementById('chart-canvas');
+  if(!ctx) return;
+  if(currentChart) currentChart.destroy();
+  if(currentChartType === 'ca') {
+    const soldVehicles = vehicles.filter(v => v.statut === 'Vendu');
+    const labels = soldVehicles.map(v => v.marque + ' ' + v.modele);
+    const data = []; let cumul = 0;
+    soldVehicles.forEach(v => { cumul += (v.vente || 0); data.push(cumul); });
+    currentChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'CA Cumulé', data, borderColor: '#0A2E6E', backgroundColor: 'rgba(45,45,45,0.1)', tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } } });
+  } else if(currentChartType === 'prep-profit') {
+    const soldVehicles = vehicles.filter(v => v.statut === 'Vendu');
+    currentChart = new Chart(ctx, { type: 'scatter', data: { datasets: [{ label: 'Coût prep vs Profit', data: soldVehicles.map(v => ({x: v.prepCost || 0, y: (v.vente || 0) - (v.achat || 0) - (v.prepCost || 0)})), borderColor: '#27ae60', backgroundColor: 'rgba(39,174,96,0.5)', pointRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false } });
+  } else if(currentChartType === 'temps-vente') {
+    const soldVehicles = vehicles.filter(v => v.statut === 'Vendu');
+    const labels = soldVehicles.map(v => v.marque + ' ' + v.modele);
+    const times = soldVehicles.map(v => {
+      const vendedEntry = v.statusHistory ? v.statusHistory.find(h => h.statut === 'Vendu') : null;
+      const vended = vendedEntry ? vendedEntry.date : '2000-01-01';
+      const created = new Date(parseInt(v.id)).toISOString().split('T')[0];
+      return Math.max(0, Math.floor((new Date(vended) - new Date(created)) / 86400000));
+    });
+    currentChart = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: 'Jours de vente', data: times, backgroundColor: '#EF4444' }] }, options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', scales: { x: { beginAtZero: true } } } });
+  }
+}
+
+function renderDashboard(){
+  const sold = vehicles.filter(v => v.statut === 'Vendu');
+  const stock = vehicles.filter(v => v.statut !== 'Vendu');
+  const totalProfit = vehicles.reduce((s, v) => s + ((v.vente || 0) - (v.achat || 0) - (v.prepCost || 0)), 0);
+  const avgProfit = sold.length > 0 ? Math.round(totalProfit / sold.length) : 0;
+  const revenue = sold.reduce((s, v) => s + (v.vente || 0), 0);
+  const avgMargin = revenue > 0 ? Math.round((totalProfit / revenue) * 100) : 0;
+  const cashBlocked = stock.reduce((s, v) => s + (v.achat || 0), 0);
+  const rotation = stock.length > 0 ? (sold.length / stock.length).toFixed(2) : 0;
+  let avgTime = '—';
+  if(sold.length > 0) {
+    const times = sold.map(v => { const ve = v.statusHistory ? v.statusHistory.find(h => h.statut === 'Vendu') : null; return Math.max(0, Math.floor((new Date(ve ? ve.date : '2000-01-01') - new Date(parseInt(v.id))) / 86400000)); }).filter(t => t < 365);
+    if(times.length > 0) avgTime = Math.round(times.reduce((a, b) => a + b, 0) / times.length) + ' jours';
+  }
+  const avgPrep = sold.length > 0 ? Math.round(sold.reduce((s, v) => s + (v.prepCost || 0), 0) / sold.length) : 0;
+  const today = Utils.today();
+  const urgentTasks = vehicles.reduce((count, v) => count + (v.tasks ? v.tasks.filter(t => t.date <= today && !t.completed).length : 0), 0);
+  Utils.el('dash-tresorerie').textContent = cashBlocked + '€';
+  Utils.el('dash-ca').textContent = revenue + '€';
+  Utils.el('dash-profit-real').textContent = totalProfit + '€';
+  Utils.el('dash-avg-profit').textContent = avgProfit + '€';
+  Utils.el('dash-avg-margin').textContent = avgMargin + '%';
+  Utils.el('dash-cash-blocked').textContent = cashBlocked + '€';
+  Utils.el('dash-revenue').textContent = revenue + '€';
+  Utils.el('dash-rotation').textContent = rotation;
+  Utils.el('dash-avg-time').textContent = avgTime;
+  Utils.el('dash-avg-prep').textContent = avgPrep + '€';
+  Utils.el('dash-urgent-tasks').textContent = urgentTasks;
+  setTimeout(() => drawChart(), 100);
+}
+
+function renderTaches(){
+  let allTasks = [];
+  vehicles.forEach(v => { v.tasks.forEach(t => { allTasks.push({...t, vid: v.id, vname: v.marque + ' ' + v.modele}); }); });
+  const today = Utils.today();
+  let filtered = allTasks;
+  if(currentTaskFilter === 'today') filtered = allTasks.filter(t => t.date === today && !t.completed);
+  else if(currentTaskFilter === 'done') filtered = allTasks.filter(t => t.completed);
+  const grouped = {};
+  filtered.forEach(t => { const key = t.date || 'Sans date'; if(!grouped[key]) grouped[key] = []; grouped[key].push(t); });
+  let html = '';
+  Object.keys(grouped).sort().forEach(date => {
+    const dayName = new Date(date + 'T00:00:00').toLocaleDateString('fr-FR', {weekday: 'long', day: 'numeric', month: 'long'});
+    html += '<div style="margin-bottom:1.5rem;"><div style="font-weight:700;font-size:14px;color:var(--text2);margin-bottom:1rem;text-transform:capitalize;">' + dayName + '</div>';
+    grouped[date].forEach(t => {
+      const vehicleForTask = vehicles.find(v => v.tasks.find(s => s.id === t.id));
+      const vehicleId = vehicleForTask ? vehicleForTask.id : 0;
+      html += '<div class="task-group"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;"><div style="font-weight:700;font-size:13px;">' + t.vname + ' - ' + t.cat + '</div><div style="display:flex;gap:6px;"><button style="padding:0.35rem 0.75rem;border:1px solid var(--border);background:var(--surface);border-radius:6px;font-size:11px;cursor:pointer;" onclick="openEditTaskModal(' + vehicleId + ', ' + t.id + ')">Modifier</button><button style="padding:6px;border:none;background:transparent;color:#FF1744;cursor:pointer;" onclick="deleteTask(' + vehicleId + ', ' + t.id + ', \'all\')">' + SVG_ICONS.trash + '</button></div></div>';
+      html += '<div class="task-item"><input type="checkbox" ' + (t.completed ? 'checked' : '') + ' onchange="const vehicle = vehicles.find(v => v.tasks.find(s => s.id === ' + t.id + ')); if(vehicle) { const task = vehicle.sav.find(s => s.id === ' + t.id + '); if(task) task.completed = this.checked; save(); renderTaches(); }"/><div class="task-text">' + (t.desc || '') + '</div>' + (t.cost ? '<div style="font-size:12px;font-weight:700;">' + t.cost + '€</div>' : '') + '</div></div>';
+    });
+    html += '</div>';
+  });
+  if(Utils.el('timeline')) Utils.el('timeline').innerHTML = html || '<div style="text-align:center;padding:2rem;color:var(--text2);">Aucune tâche</div>';
+}
+
+function openNewTaskModalOutlookForVehicle(dateStr, timeStr, vehicleId){
+  openNewTaskModalOutlook(dateStr, timeStr);
+  setTimeout(() => { const vs = document.getElementById('ntask-vehicle'); if(vs) vs.value = vehicleId || ''; }, 10);
+}
+
+function toggleTypeDropdownNew(){
+  const dd = document.getElementById('ntask-type-dropdown');
+  if(!dd) return;
+  // Fermer véhicule si ouvert
+  const vdd = document.getElementById('ntask-vehicle-dropdown');
+  if(vdd) vdd.style.display = 'none';
+  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+}
+
+function selectTypeNew(type, color, label){
+  document.newTaskType = type;
+  const dot = document.getElementById('ntask-type-dot');
+  const lbl = document.getElementById('ntask-type-label');
+  if(dot) dot.style.background = color;
+  if(lbl) { lbl.textContent = label; lbl.style.color = '#1a1a1a'; }
+  const dd = document.getElementById('ntask-type-dropdown');
+  if(dd) dd.style.display = 'none';
+}
+
+function toggleVehicleDropdownNew(){
+  const dd = document.getElementById('ntask-vehicle-dropdown');
+  if(!dd) return;
+  // Fermer type si ouvert
+  const tdd = document.getElementById('ntask-type-dropdown');
+  if(tdd) tdd.style.display = 'none';
+  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+}
+
+function selectVehicleNew(id, label){
+  document.newTaskVehicleId = id;
+  const lbl = document.getElementById('ntask-vehicle-label');
+  if(lbl) { lbl.textContent = label; lbl.style.color = id ? '#1a1a1a' : '#8e8e93'; }
+  const dd = document.getElementById('ntask-vehicle-dropdown');
+  if(dd) dd.style.display = 'none';
+}
+
+function openNewTaskModalOutlook(dateStr, timeStr){
+  document.newTaskType = 'rappel';
+  document.newTaskVehicleId = '';
+  document.newTaskDate = dateStr;
+  document.newTaskDateEnd = dateStr;
+  document.newTaskTime = timeStr;
+  document.newTaskNotif = 'none';
+  document.newTaskRepeat = 'never';
+  document.newTaskAllDay = false;
+  _ntaskCalDate = new Date(dateStr + 'T00:00:00');
+
+  const typeOptions = [
+    ['rappel','Rappel','#CCFF00'],
+    ['preparation','Préparation','#00FF88'],
+    ['sav','SAV','#FF1744'],
+    ['rdv','RDV','#00D4FF'],
+    ['appel','Appel','#7B68EE']
+  ];
+
+  const vehicleOptions = vehicles.map(v =>
+    `<div onclick="selectVehicleNew('${v.id}','${v.marque} ${v.modele}')" style="
+      padding:14px 16px;cursor:pointer;font-size:15px;color:#1a1a1a;
+      border-bottom:1px solid #f2f2f7;
+    " onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">${v.marque} ${v.modele}</div>`
+  ).join('');
+
+  const typeOptionsHtml = typeOptions.map(([type, label, color]) =>
+    `<div onclick="selectTypeNew('${type}','${color}','${label}')" style="
+      display:flex;align-items:center;gap:12px;
+      padding:14px 16px;cursor:pointer;
+      border-bottom:1px solid #f2f2f7;
+      font-size:15px;color:#1a1a1a;
+    " onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
+      <span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></span>
+      <span>${label}</span>
+    </div>`
+  ).join('');
+
+  const html = `
+  <div id="new-task-modal" style="
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    background:white;z-index:9999;
+    display:flex;flex-direction:column;
+    animation:slideUpFull 0.3s ease;
+  ">
+    <!-- HEADER FIXE -->
+    <div style="
+      display:flex;justify-content:space-between;align-items:center;
+      padding:16px 20px;
+      border-bottom:1px solid #e5e5e5;
+      background:white;flex-shrink:0;min-height:56px;
+    ">
+      <button onclick="closeNewTaskModal()" style="
+        background:none;border:none;cursor:pointer;
+        font-size:22px;color:#8e8e93;
+        width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+        border-radius:50%;transition:background 0.2s;
+      " onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">✕</button>
+
+      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Nouvelle tâche</span>
+
+      <button onclick="saveNewTask()" style="
+        background:none;border:none;cursor:pointer;
+        width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+        border-radius:50%;transition:background 0.2s;
+      " onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3,11 9,17 19,5"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- CORPS SCROLLABLE -->
+    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px 40px 16px;" onclick="closeAllDropdownsNew(event)">
+
+      <!-- TITRE (bloc indépendant) -->
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;">
+        <div style="padding:0 16px;">
+          <input type="text" id="ntask-title" placeholder="Titre" style="
+            width:100%;border:none;outline:none;
+            font-size:16px;font-weight:500;color:#1a1a1a;
+            padding:15px 0;background:transparent;
+          "/>
+        </div>
+      </div>
+
+      <!-- SECTION 1 : Type + Véhicule -->
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+
+        <!-- Cellule 1 : Type -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('type')">
+          <span style="font-size:16px;color:#1a1a1a;">Type</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="ntask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#CCFF00;flex-shrink:0;"></span>
+            <span id="ntask-type-label" style="font-size:16px;color:#8e8e93;">Rappel</span>
+            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+
+        <!-- Cellule 2 : Véhicule -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('vehicle')">
+          <span style="font-size:16px;color:#1a1a1a;">Véhicule</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="ntask-vehicle-label" style="font-size:16px;color:#8e8e93;">Aucun</span>
+            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECTION 2 : Toute la journée + Début + Fin -->
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:visible;margin-bottom:24px;">
+
+        <!-- Cellule 0 : Toute la journée -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:#1a1a1a;">Toute la journée</span>
+          <!-- Toggle switch style iOS -->
+          <div onclick="toggleAllDayNew()" id="ntask-allday-toggle" style="
+            width:51px;height:31px;border-radius:16px;background:#e5e5ea;
+            position:relative;cursor:pointer;transition:background 0.3s ease;flex-shrink:0;
+          ">
+            <div id="ntask-allday-thumb" style="
+              position:absolute;top:2px;left:2px;
+              width:27px;height:27px;border-radius:50%;
+              background:white;box-shadow:0 2px 4px rgba(0,0,0,0.3);
+              transition:transform 0.3s ease;
+            "></div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+
+        <!-- Cellule 1 : Début -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:#1a1a1a;flex-shrink:0;">Début</span>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span id="ntask-start-date-label" onclick="toggleDatePickerNew('start')" style="font-size:16px;color:#8e8e93;cursor:pointer;">${new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'})}</span>
+            <input type="time" id="ntask-start-time" value="${timeStr}" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;cursor:pointer;" onchange="document.newTaskTime=this.value"/>
+          </div>
+        </div>
+
+        <!-- Calendrier inline Début -->
+        <div id="ntask-date-picker-start" style="display:none;padding:0 16px 16px 16px;border-top:1px solid #e5e5e5;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
+            <button onclick="shiftMonthNew(-1,'start')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">‹</button>
+            <span id="ntask-cal-month-start" style="font-weight:600;font-size:15px;color:#1a1a1a;"></span>
+            <button onclick="shiftMonthNew(1,'start')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">›</button>
+          </div>
+          <div id="ntask-cal-grid-start" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+        </div>
+
+        <!-- Divider -->
+        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+
+        <!-- Cellule 2 : Fin -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:#1a1a1a;flex-shrink:0;">Fin</span>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span id="ntask-end-date-label" onclick="toggleDatePickerNew('end')" style="font-size:16px;color:#8e8e93;cursor:pointer;">${new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'})}</span>
+            <input type="time" id="ntask-end-time" value="${(() => { const [h,m] = timeStr.split(':'); return String((parseInt(h)+1)%24).padStart(2,'0')+':'+m; })()}" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;cursor:pointer;" onchange="document.newTaskTimeEnd=this.value"/>
+          </div>
+        </div>
+
+        <!-- Calendrier inline Fin -->
+        <div id="ntask-date-picker-end" style="display:none;padding:0 16px 16px 16px;border-top:1px solid #e5e5e5;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
+            <button onclick="shiftMonthNew(-1,'end')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">‹</button>
+            <span id="ntask-cal-month-end" style="font-weight:600;font-size:15px;color:#1a1a1a;"></span>
+            <button onclick="shiftMonthNew(1,'end')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">›</button>
+          </div>
+          <div id="ntask-cal-grid-end" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+        </div>
+
+      </div>
+
+      <!-- SECTION 3 : Notification -->
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('notif')">
+          <span style="font-size:16px;color:#1a1a1a;">Notification</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="ntask-notif-label" style="font-size:16px;color:#8e8e93;">Aucune</span>
+            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 : Répétition -->
+      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('repeat')">
+          <span style="font-size:16px;color:#1a1a1a;">Répétition</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="ntask-repeat-label" style="font-size:16px;color:#8e8e93;">Jamais</span>
+            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  if(!document.getElementById('modal-anim-style')) {
+    const style = document.createElement('style');
+    style.id = 'modal-anim-style';
+    style.textContent = `
+      @keyframes slideUpFull {
+        from { transform: translateY(100%); opacity: 0; }
+        to   { transform: translateY(0);   opacity: 1; }
+      }
+      @keyframes slideDownFull {
+        from { transform: translateY(0);    opacity: 1; }
+        to   { transform: translateY(100%); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function closeAllDropdownsNew(e){}
+
+function toggleAllDayNew(){
+  document.newTaskAllDay = !document.newTaskAllDay;
+  const toggle = document.getElementById('ntask-allday-toggle');
+  const thumb = document.getElementById('ntask-allday-thumb');
+  const startTime = document.getElementById('ntask-start-time');
+  const endTime = document.getElementById('ntask-end-time');
+  if(document.newTaskAllDay){
+    toggle.style.background = '#1a1a1a';
+    thumb.style.transform = 'translateX(20px)';
+    if(startTime) startTime.style.display = 'none';
+    if(endTime) endTime.style.display = 'none';
+  } else {
+    toggle.style.background = '#e5e5ea';
+    thumb.style.transform = 'translateX(0)';
+    if(startTime) startTime.style.display = 'block';
+    if(endTime) endTime.style.display = 'block';
+  }
+}
+
+// ---- BOTTOM SHEET UNIVERSEL ----
+const BOTTOM_SHEET_DATA = {
+  type: {
+    title: 'Type de tâche',
+    options: [
+      {val:'rappel', label:'Rappel', dot:'#CCFF00'},
+      {val:'preparation', label:'Préparation', dot:'#00FF88'},
+      {val:'sav', label:'SAV', dot:'#FF1744'},
+      {val:'rdv', label:'RDV', dot:'#00D4FF'},
+      {val:'appel', label:'Appel', dot:'#7B68EE'}
+    ],
+    onSelect: (val, label, extra) => {
+      document.newTaskType = val;
+      const dot = document.getElementById('ntask-type-dot');
+      const lbl = document.getElementById('ntask-type-label');
+      if(dot) dot.style.background = extra;
+      if(lbl) { lbl.textContent = label; lbl.style.color = '#1a1a1a'; }
+    }
+  },
+  vehicle: {
+    title: 'Véhicule',
+    options: () => {
+      const opts = [{val:'', label:'Aucun', dot:null}];
+      vehicles.forEach(v => opts.push({val: String(v.id), label: v.marque + ' ' + v.modele, dot:null}));
+      return opts;
+    },
+    onSelect: (val, label) => {
+      document.newTaskVehicleId = val;
+      const lbl = document.getElementById('ntask-vehicle-label');
+      if(lbl) { lbl.textContent = label; lbl.style.color = val ? '#1a1a1a' : '#8e8e93'; }
+    }
+  },
+  notif: {
+    title: 'Notification',
+    options: [
+      {val:'none', label:'Aucune', dot:null},
+      {val:'5', label:'5 minutes avant', dot:null},
+      {val:'10', label:'10 minutes avant', dot:null},
+      {val:'15', label:'15 minutes avant', dot:null},
+      {val:'30', label:'30 minutes avant', dot:null},
+      {val:'60', label:'1 heure avant', dot:null},
+      {val:'120', label:'2 heures avant', dot:null},
+      {val:'1440', label:'1 jour avant', dot:null}
+    ],
+    onSelect: (val, label) => {
+      document.newTaskNotif = val;
+      const lbl = document.getElementById('ntask-notif-label');
+      if(lbl) { lbl.textContent = label; lbl.style.color = val === 'none' ? '#8e8e93' : '#1a1a1a'; }
+    }
+  },
+  repeat: {
+    title: 'Répétition',
+    options: [
+      {val:'never', label:'Jamais', dot:null},
+      {val:'daily', label:'Tous les jours', dot:null},
+      {val:'weekly', label:'Toutes les semaines', dot:null},
+      {val:'biweekly', label:'Toutes les 2 semaines', dot:null},
+      {val:'monthly', label:'Tous les mois', dot:null},
+      {val:'yearly', label:'Tous les ans', dot:null}
+    ],
+    onSelect: (val, label) => {
+      document.newTaskRepeat = val;
+      const lbl = document.getElementById('ntask-repeat-label');
+      if(lbl) { lbl.textContent = label; lbl.style.color = val === 'never' ? '#8e8e93' : '#1a1a1a'; }
+    }
+  }
+};
+
+function openBottomSheet(key){
+  const config = BOTTOM_SHEET_DATA[key];
+  if(!config) return;
+  const options = typeof config.options === 'function' ? config.options() : config.options;
+
+  const existing = document.getElementById('ntask-bottom-sheet');
+  if(existing) existing.remove();
+
+  const optionsHtml = options.map((opt, i) => {
+    const dot = opt.dot ? '<span style="width:12px;height:12px;border-radius:50%;background:' + opt.dot + ';flex-shrink:0;"></span>' : '';
+    return '<div data-key="' + key + '" data-idx="' + i + '" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;" onmouseover="this.style.background=\'#f2f2f7\'" onmouseout="this.style.background=\'white\'">' + dot + '<span style="font-size:16px;color:#1a1a1a;">' + opt.label + '</span></div>';
+  }).join('');
+
+  const sheet = document.createElement('div');
+  sheet.id = 'ntask-bottom-sheet';
+  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
+  sheet.innerHTML = '<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;max-height:70vh;overflow-y:auto;animation:slideUpFull 0.25s ease;"><div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;"><span style="font-size:17px;font-weight:600;color:#1a1a1a;">' + config.title + '</span><button onclick="closeBottomSheet()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button></div><div>' + optionsHtml + '</div></div>';
+
+  sheet.addEventListener('click', (e) => {
+    if(e.target === sheet) { closeBottomSheet(); return; }
+    const row = e.target.closest('[data-key]');
+    if(row){
+      const k = row.dataset.key;
+      const idx = parseInt(row.dataset.idx);
+      const cfg = BOTTOM_SHEET_DATA[k];
+      const opts = typeof cfg.options === 'function' ? cfg.options() : cfg.options;
+      const opt = opts[idx];
+      if(cfg && cfg.onSelect) cfg.onSelect(opt.val, opt.label, opt.dot || '');
+      closeBottomSheet();
+    }
+  });
+
+  document.body.appendChild(sheet);
+}
+
+
+function closeBottomSheet(){
+  const sheet = document.getElementById('ntask-bottom-sheet');
+  if(sheet) sheet.remove();
+}
+
+// Garder les anciennes fonctions pour compatibilité
+function toggleTypeDropdownNew(){ openBottomSheet('type'); }
+function toggleVehicleDropdownNew(){ openBottomSheet('vehicle'); }
+function selectTypeNew(type, color, label){ BOTTOM_SHEET_DATA.type.onSelect(type, label, color); }
+function selectVehicleNew(id, label){ BOTTOM_SHEET_DATA.vehicle.onSelect(id, label); }
+
+// ---- DATE PICKER INLINE ----
+let _ntaskCalDate = new Date();
+let _ntaskCalTarget = 'start'; // 'start' ou 'end'
+
+function toggleDatePickerNew(target){
+  _ntaskCalTarget = target;
+  const other = target === 'start' ? 'end' : 'start';
+  const picker = document.getElementById('ntask-date-picker-' + target);
+  const otherPicker = document.getElementById('ntask-date-picker-' + other);
+  if(!picker) return;
+  // Fermer l'autre
+  if(otherPicker) otherPicker.style.display = 'none';
+  const isHidden = picker.style.display === 'none';
+  picker.style.display = isHidden ? 'block' : 'none';
+  if(isHidden) {
+    // Initialiser le calendrier sur la date courante de la cible
+    const dateStr = target === 'start' ? (document.newTaskDate || Utils.today()) : (document.newTaskDateEnd || document.newTaskDate || Utils.today());
+    _ntaskCalDate = new Date(dateStr + 'T00:00:00');
+    renderCalNew(target);
+  }
+}
+
+function renderCalNew(target){
+  const year = _ntaskCalDate.getFullYear();
+  const month = _ntaskCalDate.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const monthLabel = _ntaskCalDate.toLocaleDateString('fr-FR', {month:'long', year:'numeric'});
+
+  const monthEl = document.getElementById('ntask-cal-month-' + target);
+  const grid = document.getElementById('ntask-cal-grid-' + target);
+  if(!monthEl || !grid) return;
+  monthEl.textContent = monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1);
+
+  const dayNames = ['L','M','M','J','V','S','D'];
+  let html = dayNames.map(d => `<div style="font-size:11px;font-weight:600;color:#8e8e93;padding:4px 0;">${d}</div>`).join('');
+
+  let startDow = firstDay.getDay();
+  startDow = startDow === 0 ? 6 : startDow - 1;
+  for(let i = 0; i < startDow; i++) html += '<div></div>';
+
+  const selectedDate = target === 'start' ? document.newTaskDate : document.newTaskDateEnd;
+  const todayStr = Utils.today();
+
+  for(let d = 1; d <= lastDay.getDate(); d++){
+    const dateObj = new Date(year, month, d);
+    const ds = Utils.dateToStr(dateObj);
+    const isSelected = ds === selectedDate;
+    const isToday = ds === todayStr;
+    html += `<div onclick="selectDateNew('${ds}','${target}')" style="
+      padding:7px 2px;border-radius:50%;cursor:pointer;font-size:14px;
+      font-weight:${isSelected || isToday ? '700' : '400'};
+      background:${isSelected ? '#1a1a1a' : 'transparent'};
+      color:${isSelected ? 'white' : isToday ? '#007AFF' : '#1a1a1a'};
+      transition:background 0.15s;
+    " onmouseover="if(${!isSelected}) this.style.background='#f2f2f7'" onmouseout="if(${!isSelected}) this.style.background='transparent'">${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function selectDateNew(dateStr, target){
+  const label = document.getElementById('ntask-' + target + '-date-label');
+  const formatted = new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
+  if(target === 'start'){
+    document.newTaskDate = dateStr;
+    if(label) { label.textContent = formatted; label.style.color = '#1a1a1a'; }
+  } else {
+    document.newTaskDateEnd = dateStr;
+    if(label) { label.textContent = formatted; label.style.color = '#1a1a1a'; }
+  }
+  renderCalNew(target);
+}
+
+function shiftMonthNew(dir, target){
+  _ntaskCalDate.setMonth(_ntaskCalDate.getMonth() + dir);
+  renderCalNew(target);
+}
+
+function saveNewTask(){
+  const type = document.newTaskType || 'rappel';
+  const titleEl = document.getElementById('ntask-title');
+  const title = titleEl ? titleEl.value.trim() : '';
+  const date = document.newTaskDate || null;
+  const timeStartEl = document.getElementById('ntask-start-time');
+  const timeStart = timeStartEl ? timeStartEl.value : (document.newTaskTime || '09:00');
+  const timeEndEl = document.getElementById('ntask-end-time');
+  const timeEnd = timeEndEl ? timeEndEl.value : '';
+  const dateEnd = document.newTaskDateEnd || date;
+  const vehicleId = document.newTaskVehicleId || '';
+  if(!title) { showToast('⚠️ Titre requis'); return; }
+
+  const taskId = Date.now();
+
+  // Ajouter dans planning[] seulement si date définie
+  if(date) {
+    const newTask = {
+      id: taskId, type, description: title, date,
+      timeStart: document.newTaskAllDay ? null : timeStart,
+      dateEnd, timeEnd: document.newTaskAllDay ? null : timeEnd,
+      allDay: document.newTaskAllDay || false,
+      vehicleId: vehicleId || null, completed: false,
+      notification: document.newTaskNotif || 'none',
+      repeat: document.newTaskRepeat || 'never'
+    };
+    planning.push(newTask);
+  }
+
+  // NE PAS ajouter dans v.tasks — les deux systèmes sont indépendants
+
+  save();
+  closeNewTaskModal();
+  renderPlanning();
+  if(currentDetailVehicleId) renderDetailTasks(currentDetailVehicleId, currentDetailTaskFilter);
+  if(currentConfirmationVehicleId) renderConfirmationTasksList();
+  showToast('✓ Tâche ajoutée');
+}
+
+function closeNewTaskModal(){ const modal = document.getElementById('new-task-modal'); if(modal) modal.remove(); }
+function openPlanningTaskWithTime(dateStr, timeStr){ openNewTaskModalOutlook(dateStr, timeStr); }
+
+if(vehicles.length === 0) {
+  const today = Utils.today();
+  vehicles = [{id: Date.now(), marque:'Mercedes', modele:'C-Class', year:2022, gen:'W206', km:45000, achat:32000, vente:38500, prepCost:1200, statut:'En cours', statusHistory:[{statut:'En cours', date:today}], notes:'', tasks:[{id: Date.now()+1, type:'preparation', cat:'Préparation', desc:'Contrôle technique', cost:0, completed:false, date:null}]}];
+  localStorage.setItem('at_vehicles', JSON.stringify(vehicles));
+}
+
+switchView('parc');
+</script>
+
+<nav class="bottom-nav">
+  <!-- Planning -->
+  <button class="bottom-nav-item" onclick="switchView('planning')" id="nav-planning">
+    <!-- Outline (inactif) -->
+    <svg class="nav-icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:26px;height:26px;">
+      <rect x="3" y="4" width="18" height="18" rx="2"/>
+      <line x1="3" y1="10" x2="21" y2="10"/>
+      <line x1="9" y1="4" x2="9" y2="22"/>
+      <line x1="15" y1="4" x2="15" y2="22"/>
+    </svg>
+    <!-- Filled (actif) -->
+    <svg class="nav-icon-filled" viewBox="0 0 24 24" fill="currentColor" style="width:26px;height:26px;display:none;">
+      <rect x="3" y="4" width="18" height="18" rx="2"/>
+      <rect x="3" y="4" width="18" height="6" rx="2" fill="white" opacity="0.3"/>
+      <line x1="9" y1="4" x2="9" y2="22" stroke="white" stroke-width="1.5"/>
+      <line x1="15" y1="4" x2="15" y2="22" stroke="white" stroke-width="1.5"/>
+      <line x1="3" y1="10" x2="21" y2="10" stroke="white" stroke-width="1.5"/>
+    </svg>
+    <span class="bottom-nav-label">Planning</span>
+  </button>
+
+  <!-- Parc -->
+  <button class="bottom-nav-item active" onclick="switchView('parc')" id="nav-parc">
+    <svg class="nav-icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:26px;height:26px;display:none;">
+      <path d="M5 13h14v5H5z"/>
+      <path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/>
+      <circle cx="8" cy="18" r="1.5" fill="currentColor"/>
+      <circle cx="16" cy="18" r="1.5" fill="currentColor"/>
+    </svg>
+    <svg class="nav-icon-filled" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" style="width:26px;height:26px;">
+      <path d="M5 13h14v5H5z"/>
+      <path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="8" cy="18" r="1.5"/>
+      <circle cx="16" cy="18" r="1.5"/>
+    </svg>
+    <span class="bottom-nav-label">Parc</span>
+  </button>
+
+  <!-- Dashboard -->
+  <button class="bottom-nav-item" onclick="switchView('dashboard')" id="nav-dashboard">
+    <svg class="nav-icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:26px;height:26px;">
+      <rect x="3" y="5" width="4" height="14" rx="1"/>
+      <rect x="10" y="3" width="4" height="16" rx="1"/>
+      <rect x="17" y="8" width="4" height="11" rx="1"/>
+    </svg>
+    <svg class="nav-icon-filled" viewBox="0 0 24 24" fill="currentColor" style="width:26px;height:26px;display:none;">
+      <rect x="3" y="5" width="4" height="14" rx="1"/>
+      <rect x="10" y="3" width="4" height="16" rx="1"/>
+      <rect x="17" y="8" width="4" height="11" rx="1"/>
+    </svg>
+    <span class="bottom-nav-label">Dashboard</span>
+  </button>
+</nav>
+
+<!-- FAB PARC - hors de tout conteneur pour rester fixe -->
+<button id="fab-parc" onclick="openAddModal()" style="
+  position:fixed;bottom:100px;right:20px;
+  width:52px;height:52px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.75);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:0.5px solid rgba(255,255,255,0.6);
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 24px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+  cursor:pointer;z-index:999;
+  transition:transform 0.2s ease;
+" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
+    <line x1="9" y1="2" x2="9" y2="16"/>
+    <line x1="2" y1="9" x2="16" y2="9"/>
+  </svg>
+</button>
+
+</body>
+</html>
