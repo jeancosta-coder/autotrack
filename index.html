@@ -791,20 +791,28 @@ const RenderHelpers = {
     const marge = (v.vente || 0) - (v.achat || 0) - (v.prepCost || 0);
     const margeColor = marge >= 0 ? '#34C759' : '#FF3B30';
     return `
-    <div style="position:relative;border-radius:14px;overflow:hidden;margin-bottom:0;" id="swipe-wrapper-${v.id}">
-      <!-- Bouton corbeille derrière -->
-      <div onclick="deleteVehicle(${v.id})" style="
+    <div style="position:relative;border-radius:14px;overflow:hidden;" id="swipe-wrapper-${v.id}">
+      <!-- Zone corbeille derrière -->
+      <div style="
         position:absolute;top:0;right:0;bottom:0;width:80px;
-        background:#FF3B30;border-radius:0 14px 14px 0;
+        background:#f2f2f7;
         display:flex;align-items:center;justify-content:center;
-        cursor:pointer;z-index:0;
+        z-index:0;
       ">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="3 6 5 6 21 6"/>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-        </svg>
+        <div onclick="deleteVehicle(${v.id})" style="
+          width:44px;height:44px;border-radius:50%;
+          background:white;
+          display:flex;align-items:center;justify-content:center;
+          box-shadow:0 2px 8px rgba(0,0,0,0.12);
+          cursor:pointer;
+        ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </div>
       </div>
-      <!-- Carte au-dessus -->
+      <!-- Carte -->
       <div class="vehicle-card-swipeable" id="card-${v.id}" onclick="handleCardTap(event, ${v.id})" style="
         position:relative;z-index:1;
         background:white;border-radius:14px;padding:16px;
