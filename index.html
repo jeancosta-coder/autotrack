@@ -1076,24 +1076,9 @@ function openDetailTaskModal(){
   const existing = document.getElementById('simple-task-modal');
   if(existing) existing.remove();
 
-  const TYPES = [
-    {val:'preparation', label:'Préparation', color:'#00FF88'},
-    {val:'sav', label:'SAV', color:'#FF1744'},
-    {val:'rappel', label:'Rappel', color:'#CCFF00'},
-    {val:'rdv', label:'RDV', color:'#00D4FF'},
-    {val:'appel', label:'Appel', color:'#7B68EE'}
-  ];
-
   document.newSimpleTaskType = 'preparation';
-
-  const pillsHtml = TYPES.map(t => `
-    <button id="stask-type-${t.val}" onclick="selectSimpleTaskType('${t.val}')" style="
-      padding:7px 14px;border:none;border-radius:20px;
-      background:${t.val === 'preparation' ? '#1a1a1a' : 'rgba(0,0,0,0.06)'};
-      color:${t.val === 'preparation' ? 'white' : '#3a3a3c'};
-      font-size:13px;font-weight:${t.val === 'preparation' ? '600' : '500'};
-      cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;
-    ">${t.label}</button>`).join('');
+  document.newSimpleTaskTypeLabel = 'Préparation';
+  document.newSimpleTaskTypeDot = '#00FF88';
 
   const html = `<div id="simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;flex-shrink:0;min-height:56px;">
@@ -1107,10 +1092,16 @@ function openDetailTaskModal(){
       <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
         <input type="text" id="stask-title" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;"/>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
-        ${pillsHtml}
-      </div>
       <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openSimpleTaskTypeSheet('new')">
+          <span style="font-size:16px;color:#1a1a1a;">Type</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="stask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#00FF88;flex-shrink:0;"></span>
+            <span id="stask-type-label" style="font-size:16px;color:#1a1a1a;">Préparation</span>
+            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+          </div>
+        </div>
+        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
           <span style="font-size:16px;color:#1a1a1a;">Coût</span>
           <div style="display:flex;align-items:center;gap:4px;">
@@ -1128,17 +1119,6 @@ function openDetailTaskModal(){
   </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
   setTimeout(() => document.getElementById('stask-title').focus(), 300);
-}
-
-function selectSimpleTaskType(type){
-  document.newSimpleTaskType = type;
-  document.querySelectorAll('[id^="stask-type-"]').forEach(b => {
-    b.style.background = 'rgba(0,0,0,0.06)';
-    b.style.color = '#3a3a3c';
-    b.style.fontWeight = '500';
-  });
-  const btn = document.getElementById('stask-type-' + type);
-  if(btn){ btn.style.background = '#1a1a1a'; btn.style.color = 'white'; btn.style.fontWeight = '600'; }
 }
 
 function saveSimpleTask(){
@@ -1629,24 +1609,9 @@ function openEditTaskModal(vehicleId, taskId){
     // C'est une tâche véhicule → modal simple
     const existing = document.getElementById('edit-simple-task-modal');
     if(existing) existing.remove();
-  const TYPES = [
-    {val:'preparation', label:'Préparation', color:'#00FF88'},
-    {val:'sav', label:'SAV', color:'#FF1744'},
-    {val:'rappel', label:'Rappel', color:'#CCFF00'},
-    {val:'rdv', label:'RDV', color:'#00D4FF'},
-    {val:'appel', label:'Appel', color:'#7B68EE'}
-  ];
   const currentType = task.type || 'preparation';
+  const TASK_TYPE_MAP = {preparation:{label:'Préparation',dot:'#00FF88'}, sav:{label:'SAV',dot:'#FF1744'}, rappel:{label:'Rappel',dot:'#CCFF00'}, rdv:{label:'RDV',dot:'#00D4FF'}, appel:{label:'Appel',dot:'#7B68EE'}};
   document.editSimpleTaskType = currentType;
-
-  const pillsHtml = TYPES.map(t => `
-    <button id="etask-type-${t.val}" onclick="selectEditSimpleTaskType('${t.val}')" style="
-      padding:7px 14px;border:none;border-radius:20px;
-      background:${t.val === currentType ? '#1a1a1a' : 'rgba(0,0,0,0.06)'};
-      color:${t.val === currentType ? 'white' : '#3a3a3c'};
-      font-size:13px;font-weight:${t.val === currentType ? '600' : '500'};
-      cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;
-    ">${t.label}</button>`).join('');
 
   const html = `<div id="edit-simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;flex-shrink:0;min-height:56px;">
@@ -1660,10 +1625,16 @@ function openEditTaskModal(vehicleId, taskId){
       <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
         <input type="text" id="etask-title" value="${task.cat || task.desc || ''}" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;"/>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
-        ${pillsHtml}
-      </div>
       <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openSimpleTaskTypeSheet('edit')">
+          <span style="font-size:16px;color:#1a1a1a;">Type</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="etask-type-dot" style="width:10px;height:10px;border-radius:50%;background:${TASK_TYPE_MAP[currentType]?.dot||'#00FF88'};flex-shrink:0;"></span>
+            <span id="etask-type-label" style="font-size:16px;color:#1a1a1a;">${TASK_TYPE_MAP[currentType]?.label||'Préparation'}</span>
+            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+          </div>
+        </div>
+        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
           <span style="font-size:16px;color:#1a1a1a;">Coût</span>
           <div style="display:flex;align-items:center;gap:4px;">
@@ -1694,15 +1665,54 @@ function openEditTaskModal(vehicleId, taskId){
   if(planningTask) openEditPlanningTaskModal(taskId);
 }
 
+function openSimpleTaskTypeSheet(mode){
+  const TYPES = [
+    {val:'preparation', label:'Préparation', dot:'#00FF88'},
+    {val:'sav', label:'SAV', dot:'#FF1744'},
+    {val:'rappel', label:'Rappel', dot:'#CCFF00'},
+    {val:'rdv', label:'RDV', dot:'#00D4FF'},
+    {val:'appel', label:'Appel', dot:'#7B68EE'}
+  ];
+  const existing = document.getElementById('simple-type-sheet');
+  if(existing) existing.remove();
+  const optionsHtml = TYPES.map(t => `
+    <div onclick="selectSimpleTaskType('${mode}','${t.val}','${t.label}','${t.dot}')" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
+      <span style="width:12px;height:12px;border-radius:50%;background:${t.dot};flex-shrink:0;"></span>
+      <span style="font-size:16px;color:#1a1a1a;">${t.label}</span>
+    </div>`).join('');
+  const sheet = document.createElement('div');
+  sheet.id = 'simple-type-sheet';
+  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
+  sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;animation:slideUpFull 0.25s ease;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;">
+      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Type de tâche</span>
+      <button onclick="document.getElementById('simple-type-sheet').remove()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button>
+    </div>
+    ${optionsHtml}
+  </div>`;
+  sheet.addEventListener('click', e => { if(e.target === sheet) sheet.remove(); });
+  document.body.appendChild(sheet);
+}
+
+function selectSimpleTaskType(mode, val, label, dot){
+  if(mode === 'new'){
+    document.newSimpleTaskType = val;
+    const d = document.getElementById('stask-type-dot');
+    const l = document.getElementById('stask-type-label');
+    if(d) d.style.background = dot;
+    if(l) l.textContent = label;
+  } else {
+    document.editSimpleTaskType = val;
+    const d = document.getElementById('etask-type-dot');
+    const l = document.getElementById('etask-type-label');
+    if(d) d.style.background = dot;
+    if(l) l.textContent = label;
+  }
+  document.getElementById('simple-type-sheet').remove();
+}
+
 function selectEditSimpleTaskType(type){
   document.editSimpleTaskType = type;
-  document.querySelectorAll('[id^="etask-type-"]').forEach(b => {
-    b.style.background = 'rgba(0,0,0,0.06)';
-    b.style.color = '#3a3a3c';
-    b.style.fontWeight = '500';
-  });
-  const btn = document.getElementById('etask-type-' + type);
-  if(btn){ btn.style.background = '#1a1a1a'; btn.style.color = 'white'; btn.style.fontWeight = '600'; }
 }
 
 function updateSimpleTask(vehicleId, taskId){
