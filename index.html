@@ -711,12 +711,19 @@ function showToast(message){
 }
 
 function switchView(view){
+  // Fermer le détail véhicule s'il est ouvert
+  const details = document.getElementById('details');
+  if(details && details.style.display !== 'none'){
+    details.style.display = 'none';
+  }
+  // Fermer le FAB parc si on quitte parc
+  const fabParc = document.getElementById('fab-parc');
+  if(fabParc) fabParc.style.display = view === 'parc' ? 'flex' : 'none';
+
   document.querySelectorAll('.view').forEach(v => { v.classList.remove('active'); v.style.display = 'none'; });
   Utils.removeActiveClass('.bottom-nav-item');
   const el = Utils.el(view);
   if(el) { el.classList.add('active'); el.style.display = view === 'planning' ? 'flex' : 'block'; }
-  const fabParc = document.getElementById('fab-parc');
-  if(fabParc) fabParc.style.display = view === 'parc' ? 'flex' : 'none';
   ['planning','parc','dashboard'].forEach(v => {
     const btn = document.getElementById('nav-' + v);
     if(!btn) return;
