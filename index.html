@@ -559,37 +559,61 @@
   </div>
 
   <!-- VUE COMPTE -->
-  <div id="compte" class="view" style="display:none;padding:0 4px;">
-    <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Mon profil</span></div>
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
-        <span style="font-size:15px;color:#8e8e93;">Nom</span>
-        <span id="compte-nom" style="font-size:15px;font-weight:500;color:#1a1a1a;">—</span>
+  <div id="compte" class="view" style="display:none;">
+
+    <!-- Avatar + nom -->
+    <div style="display:flex;flex-direction:column;align-items:center;padding:32px 16px 24px 16px;">
+      <div style="width:72px;height:72px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;">
-        <span style="font-size:15px;color:#8e8e93;">Garage</span>
-        <span id="compte-garage" style="font-size:15px;font-weight:500;color:#1a1a1a;">—</span>
+      <div id="compte-nom-header" style="font-size:20px;font-weight:700;color:#1a1a1a;letter-spacing:-0.3px;">—</div>
+      <div id="compte-société-header" style="font-size:14px;color:#8e8e93;margin-top:3px;">—</div>
+    </div>
+
+    <!-- Profil -->
+    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Profil</span></div>
+    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 24px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid #e5e5ea;">
+        <span style="font-size:15px;color:#1c1c1e;">Nom</span>
+        <span id="compte-nom" style="font-size:15px;color:#8e8e93;">—</span>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;">
-        <span style="font-size:15px;color:#8e8e93;">Email</span>
-        <span id="compte-email" style="font-size:13px;font-weight:500;color:#1a1a1a;">—</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid #e5e5ea;">
+        <span style="font-size:15px;color:#1c1c1e;">Société</span>
+        <span id="compte-garage" style="font-size:15px;color:#8e8e93;">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
+        <span style="font-size:15px;color:#1c1c1e;">Email</span>
+        <span id="compte-email" style="font-size:13px;color:#8e8e93;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span>
       </div>
     </div>
-    <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Abonnement</span></div>
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;">
-        <span style="font-size:15px;color:#8e8e93;">Plan actuel</span>
-        <span style="font-size:13px;font-weight:600;color:#34C759;background:rgba(52,199,89,0.1);padding:4px 10px;border-radius:20px;">Gratuit</span>
+
+    <!-- Abonnement -->
+    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Abonnement</span></div>
+    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 24px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
+        <span style="font-size:15px;color:#1c1c1e;">Plan actuel</span>
+        <span style="font-size:12px;font-weight:600;color:#34C759;background:rgba(52,199,89,0.12);padding:4px 10px;border-radius:20px;letter-spacing:0.2px;">GRATUIT</span>
       </div>
     </div>
-    <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:32px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;">
-        <span style="font-size:15px;color:#8e8e93;">Version</span>
-        <span style="font-size:15px;font-weight:500;color:#1a1a1a;">v1.0</span>
+
+    <!-- App -->
+    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
+    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 32px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
+        <span style="font-size:15px;color:#1c1c1e;">Version</span>
+        <span style="font-size:15px;color:#8e8e93;">1.0.0</span>
       </div>
     </div>
-    <button onclick="doLogout()" style="width:100%;padding:14px;background:white;color:#FF3B30;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.06);">Se déconnecter</button>
+
+    <!-- Déconnexion -->
+    <div style="margin:0 16px;">
+      <button onclick="doLogout()" style="width:100%;padding:15px;background:white;color:#FF3B30;border:none;border-radius:14px;font-size:16px;font-weight:500;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.06);letter-spacing:-0.2px;">
+        Se déconnecter
+      </button>
+    </div>
     <div style="height:160px;"></div>
   </div>
 
@@ -779,12 +803,14 @@ function switchView(view){
 function renderCompte(){
   const user = sbUser;
   const meta = user?.user_metadata || {};
-  const nom = document.getElementById('compte-nom');
-  const garage = document.getElementById('compte-garage');
-  const email = document.getElementById('compte-email');
-  if(nom) nom.textContent = meta.full_name || '—';
-  if(garage) garage.textContent = meta.garage_name || '—';
-  if(email) email.textContent = user?.email || '—';
+  const nom = meta.full_name || '—';
+  const société = meta.garage_name || '—';
+  const email = user?.email || '—';
+  if(document.getElementById('compte-nom-header')) document.getElementById('compte-nom-header').textContent = nom;
+  if(document.getElementById('compte-société-header')) document.getElementById('compte-société-header').textContent = société;
+  if(document.getElementById('compte-nom')) document.getElementById('compte-nom').textContent = nom;
+  if(document.getElementById('compte-garage')) document.getElementById('compte-garage').textContent = société;
+  if(document.getElementById('compte-email')) document.getElementById('compte-email').textContent = email;
 }
 
 async function doLogout(){
@@ -2145,54 +2171,65 @@ function showLoginScreen(){
   loginDiv.id = 'login-screen';
   loginDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#f2f2f7;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:99999;';
   loginDiv.innerHTML = `
-    <!-- Logo + Nom -->
+    <!-- Logo -->
     <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:48px;">
-      <div style="width:80px;height:80px;background:#1a1a1a;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,0.15);">
-        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
+      <div style="width:88px;height:88px;background:#1a1a1a;border-radius:24px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 12px 32px rgba(0,0,0,0.18);">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
           <path d="M5 13h14v5H5z"/>
           <path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/>
           <circle cx="8" cy="18" r="1.5" fill="white"/>
           <circle cx="16" cy="18" r="1.5" fill="white"/>
         </svg>
       </div>
-      <div style="font-size:32px;font-weight:700;color:#1a1a1a;letter-spacing:-1px;">Trakoto</div>
-      <div style="font-size:15px;color:#8e8e93;margin-top:6px;font-weight:400;">Gestion de parc automobile</div>
+      <div style="font-size:34px;font-weight:700;color:#1a1a1a;letter-spacing:-1px;line-height:1;">Trakoto</div>
+      <div style="font-size:15px;color:#8e8e93;margin-top:6px;">Gestion de parc automobile</div>
     </div>
 
-    <!-- Card -->
+    <!-- Formulaire -->
     <div style="width:100%;max-width:360px;">
-      <!-- Tabs -->
-      <div style="display:flex;background:rgba(118,118,128,0.12);border-radius:10px;padding:2px;margin-bottom:24px;">
-        <button onclick="authTab('login')" id="tab-login" style="flex:1;padding:8px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:white;color:#1a1a1a;box-shadow:0 1px 4px rgba(0,0,0,0.1);transition:all 0.2s;">Connexion</button>
-        <button onclick="authTab('register')" id="tab-register" style="flex:1;padding:8px;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:transparent;color:#8e8e93;transition:all 0.2s;">Créer un compte</button>
+
+      <!-- Tabs iOS segmented -->
+      <div style="display:flex;background:rgba(118,118,128,0.12);border-radius:10px;padding:2px;margin-bottom:28px;">
+        <button onclick="authTab('login')" id="tab-login" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:white;color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,0.12);transition:all 0.2s;">Connexion</button>
+        <button onclick="authTab('register')" id="tab-register" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:transparent;color:#8e8e93;transition:all 0.2s;">Créer un compte</button>
       </div>
 
       <!-- Champs -->
-      <div style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;">
+      <div style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:12px;">
+        
         <div id="field-name" style="display:none;">
           <div style="padding:0 16px;">
             <input id="inp-name" type="text" placeholder="Nom complet" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;"/>
           </div>
-          <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+          <div style="height:0.5px;background:#e5e5ea;margin-left:16px;"></div>
           <div style="padding:0 16px;">
-            <input id="inp-garage" type="text" placeholder="Nom du garage / entreprise" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;"/>
+            <input id="inp-garage" type="text" placeholder="Nom de la société" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;"/>
           </div>
-          <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+          <div style="height:0.5px;background:#e5e5ea;margin-left:16px;"></div>
         </div>
+
         <div style="padding:0 16px;">
           <input id="inp-email" type="email" placeholder="Email" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;" onkeydown="if(event.key==='Enter')doAuth()"/>
         </div>
-        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        <div style="height:0.5px;background:#e5e5ea;margin-left:16px;"></div>
         <div style="padding:0 16px;">
           <input id="inp-pwd" type="password" placeholder="Mot de passe" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;" onkeydown="if(event.key==='Enter')doAuth()"/>
         </div>
       </div>
 
-      <!-- Message erreur -->
-      <div id="auth-msg" style="min-height:18px;font-size:13px;color:#FF3B30;margin-bottom:12px;text-align:center;padding:0 4px;"></div>
+      <!-- Erreur -->
+      <div id="auth-msg" style="min-height:20px;font-size:13px;color:#FF3B30;margin-bottom:16px;text-align:center;padding:0 4px;"></div>
 
       <!-- Bouton -->
-      <button onclick="doAuth()" id="auth-btn" style="width:100%;padding:16px;background:#1a1a1a;color:white;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;letter-spacing:-0.3px;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Se connecter</button>
+      <button onclick="doAuth()" id="auth-btn" style="
+        width:100%;padding:16px;
+        background:#1a1a1a;color:white;
+        border:none;border-radius:14px;
+        font-size:17px;font-weight:600;
+        cursor:pointer;letter-spacing:-0.3px;
+        transition:opacity 0.15s;
+      " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'" onmousedown="this.style.opacity='0.7'" onmouseup="this.style.opacity='1'">Se connecter</button>
+
     </div>`;
   document.body.appendChild(loginDiv);
 }
@@ -2219,7 +2256,7 @@ async function doAuth(){
     const name = document.getElementById('inp-name').value.trim();
     const garage = document.getElementById('inp-garage').value.trim();
     if(!name){msg.textContent='Entrez votre nom.';btn.textContent='Créer mon compte';btn.disabled=false;return;}
-    if(!garage){msg.textContent='Entrez le nom de votre garage.';btn.textContent='Créer mon compte';btn.disabled=false;return;}
+    if(!garage){msg.textContent='Entrez le nom de votre société.';btn.textContent='Créer mon compte';btn.disabled=false;return;}
     if(pwd.length<6){msg.textContent='Mot de passe trop court (6 min).';btn.textContent='Créer mon compte';btn.disabled=false;return;}
     const {error} = await sb.auth.signUp({email,password:pwd,options:{data:{full_name:name, garage_name:garage}}});
     if(error){msg.textContent=error.message;btn.textContent='Créer mon compte';btn.disabled=false;return;}
@@ -2237,12 +2274,7 @@ function initApp(){
   const ls = document.getElementById('login-screen');
   if(ls) ls.remove();
   document.querySelectorAll('.bottom-nav, #fab-parc, .app-container').forEach(el => { if(el) el.style.display=''; });
-  if(vehicles.length === 0){
-    const today = Utils.today();
-    vehicles = [{id: Date.now(), marque:'Mercedes', modele:'C-Class', year:2022, gen:'W206', km:45000, achat:32000, vente:38500, prepCost:1200, statut:'En cours', statusHistory:[{statut:'En cours', date:today}], notes:'', tasks:[{id: Date.now()+1, type:'preparation', cat:'Préparation', desc:'Contrôle technique', cost:0, completed:false, date:null}]}];
-    save();
-  }
-  switchView('parc');
+  switchView('planning');
 }
 
 sb.auth.getSession().then(({data:{session}}) => {
@@ -2252,12 +2284,12 @@ sb.auth.getSession().then(({data:{session}}) => {
 </script>
 
 <nav class="bottom-nav">
-  <button class="bottom-nav-item" onclick="switchView('planning')" id="nav-planning">
+  <button class="bottom-nav-item active" onclick="switchView('planning')" id="nav-planning">
     <svg class="nav-icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:26px;height:26px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="4" x2="9" y2="22"/><line x1="15" y1="4" x2="15" y2="22"/></svg>
     <svg class="nav-icon-filled" viewBox="0 0 24 24" fill="currentColor" style="width:26px;height:26px;display:none;"><rect x="3" y="4" width="18" height="18" rx="2"/><rect x="3" y="4" width="18" height="6" rx="2" fill="white" opacity="0.3"/><line x1="9" y1="4" x2="9" y2="22" stroke="white" stroke-width="1.5"/><line x1="15" y1="4" x2="15" y2="22" stroke="white" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="white" stroke-width="1.5"/></svg>
     <span class="bottom-nav-label">Planning</span>
   </button>
-  <button class="bottom-nav-item active" onclick="switchView('parc')" id="nav-parc">
+  <button class="bottom-nav-item" onclick="switchView('parc')" id="nav-parc">
     <svg class="nav-icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:26px;height:26px;display:none;"><path d="M5 13h14v5H5z"/><path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/><circle cx="8" cy="18" r="1.5" fill="currentColor"/><circle cx="16" cy="18" r="1.5" fill="currentColor"/></svg>
     <svg class="nav-icon-filled" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" style="width:26px;height:26px;"><path d="M5 13h14v5H5z"/><path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="18" r="1.5"/><circle cx="16" cy="18" r="1.5"/></svg>
     <span class="bottom-nav-label">Parc</span>
