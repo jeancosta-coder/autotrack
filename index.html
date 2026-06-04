@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f2f2f7">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="AutoTrack">
+  <meta name="apple-mobile-web-app-title" content="Trakoto">
   <title>Trakoto - Gestion de Parc Automobile</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -2068,27 +2068,57 @@ function showLoginScreen(){
   document.querySelectorAll('.bottom-nav, #fab-parc, #fab-planning, .app-container').forEach(el => { if(el) el.style.display='none'; });
   const loginDiv = document.createElement('div');
   loginDiv.id = 'login-screen';
-  loginDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#f2f2f7;display:flex;align-items:center;justify-content:center;padding:24px;z-index:99999;';
-  loginDiv.innerHTML = `<div style="width:100%;max-width:360px;">
-    <div style="text-align:center;margin-bottom:40px;">
-      <div style="display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;background:#1a1a1a;border-radius:16px;margin-bottom:14px;">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="3" y="11" width="26" height="14" rx="3.5" fill="white" opacity="0.95"/><rect x="7" y="7" width="18" height="7" rx="2" fill="white" opacity="0.5"/><circle cx="9" cy="25" r="3" fill="#1a1a1a"/><circle cx="23" cy="25" r="3" fill="#1a1a1a"/><rect x="12" y="15" width="8" height="4" rx="1" fill="#FF6B35"/></svg>
+  loginDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#f2f2f7;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:99999;';
+  loginDiv.innerHTML = `
+    <!-- Logo + Nom -->
+    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:48px;">
+      <div style="width:80px;height:80px;background:#1a1a1a;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,0.15);">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
+          <path d="M5 13h14v5H5z"/>
+          <path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/>
+          <circle cx="8" cy="18" r="1.5" fill="white"/>
+          <circle cx="16" cy="18" r="1.5" fill="white"/>
+        </svg>
       </div>
-      <div style="font-size:28px;font-weight:700;color:#1a1a1a;letter-spacing:-0.5px;">Trakoto</div>
-      <div style="color:#8e8e93;font-size:14px;margin-top:4px;">Gestion de parc automobile</div>
+      <div style="font-size:32px;font-weight:700;color:#1a1a1a;letter-spacing:-1px;">Trakoto</div>
+      <div style="font-size:15px;color:#8e8e93;margin-top:6px;font-weight:400;">Gestion de parc automobile</div>
     </div>
-    <div style="background:white;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
-      <div id="auth-tabs" style="display:flex;background:#f2f2f7;border-radius:10px;padding:3px;margin-bottom:20px;">
-        <button onclick="authTab('login')" id="tab-login" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:white;color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,0.1);">Connexion</button>
-        <button onclick="authTab('register')" id="tab-register" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:transparent;color:#8e8e93;">Créer un compte</button>
+
+    <!-- Card -->
+    <div style="width:100%;max-width:360px;">
+      <!-- Tabs -->
+      <div style="display:flex;background:rgba(118,118,128,0.12);border-radius:10px;padding:2px;margin-bottom:24px;">
+        <button onclick="authTab('login')" id="tab-login" style="flex:1;padding:8px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:white;color:#1a1a1a;box-shadow:0 1px 4px rgba(0,0,0,0.1);transition:all 0.2s;">Connexion</button>
+        <button onclick="authTab('register')" id="tab-register" style="flex:1;padding:8px;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:transparent;color:#8e8e93;transition:all 0.2s;">Créer un compte</button>
       </div>
-      <div id="field-name" style="display:none;margin-bottom:12px;"><input id="inp-name" type="text" placeholder="Nom complet" style="width:100%;padding:13px 14px;background:#f2f2f7;border:none;border-radius:10px;font-size:15px;color:#1a1a1a;outline:none;"/></div>
-      <div style="margin-bottom:12px;"><input id="inp-email" type="email" placeholder="Email" style="width:100%;padding:13px 14px;background:#f2f2f7;border:none;border-radius:10px;font-size:15px;color:#1a1a1a;outline:none;" onkeydown="if(event.key==='Enter')doAuth()"/></div>
-      <div style="margin-bottom:8px;"><input id="inp-pwd" type="password" placeholder="Mot de passe" style="width:100%;padding:13px 14px;background:#f2f2f7;border:none;border-radius:10px;font-size:15px;color:#1a1a1a;outline:none;" onkeydown="if(event.key==='Enter')doAuth()"/></div>
-      <div id="auth-msg" style="min-height:18px;font-size:13px;color:#FF3B30;margin-bottom:12px;text-align:center;"></div>
-      <button onclick="doAuth()" id="auth-btn" style="width:100%;padding:15px;background:#1a1a1a;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Se connecter</button>
-    </div>
-  </div>`;
+
+      <!-- Champs -->
+      <div style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;">
+        <div id="field-name" style="display:none;">
+          <div style="padding:0 16px;">
+            <input id="inp-name" type="text" placeholder="Nom complet" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;"/>
+          </div>
+          <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+          <div style="padding:0 16px;">
+            <input id="inp-garage" type="text" placeholder="Nom du garage / entreprise" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;"/>
+          </div>
+          <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        </div>
+        <div style="padding:0 16px;">
+          <input id="inp-email" type="email" placeholder="Email" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;" onkeydown="if(event.key==='Enter')doAuth()"/>
+        </div>
+        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        <div style="padding:0 16px;">
+          <input id="inp-pwd" type="password" placeholder="Mot de passe" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;" onkeydown="if(event.key==='Enter')doAuth()"/>
+        </div>
+      </div>
+
+      <!-- Message erreur -->
+      <div id="auth-msg" style="min-height:18px;font-size:13px;color:#FF3B30;margin-bottom:12px;text-align:center;padding:0 4px;"></div>
+
+      <!-- Bouton -->
+      <button onclick="doAuth()" id="auth-btn" style="width:100%;padding:16px;background:#1a1a1a;color:white;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;letter-spacing:-0.3px;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Se connecter</button>
+    </div>`;
   document.body.appendChild(loginDiv);
 }
 
@@ -2112,9 +2142,11 @@ async function doAuth(){
   btn.textContent='Chargement…';btn.disabled=true;msg.textContent='';
   if(authMode==='register'){
     const name = document.getElementById('inp-name').value.trim();
+    const garage = document.getElementById('inp-garage').value.trim();
     if(!name){msg.textContent='Entrez votre nom.';btn.textContent='Créer mon compte';btn.disabled=false;return;}
+    if(!garage){msg.textContent='Entrez le nom de votre garage.';btn.textContent='Créer mon compte';btn.disabled=false;return;}
     if(pwd.length<6){msg.textContent='Mot de passe trop court (6 min).';btn.textContent='Créer mon compte';btn.disabled=false;return;}
-    const {error} = await sb.auth.signUp({email,password:pwd,options:{data:{full_name:name}}});
+    const {error} = await sb.auth.signUp({email,password:pwd,options:{data:{full_name:name, garage_name:garage}}});
     if(error){msg.textContent=error.message;btn.textContent='Créer mon compte';btn.disabled=false;return;}
     msg.style.color='#34C759';msg.textContent='Compte créé ! Vérifiez votre email.';btn.textContent='Créer mon compte';btn.disabled=false;
   } else {
