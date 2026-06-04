@@ -599,6 +599,39 @@
       </div>
     </div>
 
+    <!-- Historique -->
+    <div id="section-historique" style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Données avant Trakoto</span></div>
+    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 8px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid #e5e5ea;">
+        <span style="font-size:15px;color:#1c1c1e;">Véhicules vendus</span>
+        <input type="number" id="hist-nb-ventes" placeholder="0" style="border:none;outline:none;font-size:15px;color:#8e8e93;text-align:right;width:80px;background:transparent;"/>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid #e5e5ea;">
+        <span style="font-size:15px;color:#1c1c1e;">CA total</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <input type="number" id="hist-ca" placeholder="0" style="border:none;outline:none;font-size:15px;color:#8e8e93;text-align:right;width:100px;background:transparent;"/>
+          <span style="font-size:15px;color:#8e8e93;">€</span>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid #e5e5ea;">
+        <span style="font-size:15px;color:#1c1c1e;">Marge totale</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <input type="number" id="hist-marge" placeholder="0" style="border:none;outline:none;font-size:15px;color:#8e8e93;text-align:right;width:100px;background:transparent;"/>
+          <span style="font-size:15px;color:#8e8e93;">€</span>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+        <span style="font-size:15px;color:#1c1c1e;">Coût moyen prépa</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <input type="number" id="hist-prep" placeholder="0" style="border:none;outline:none;font-size:15px;color:#8e8e93;text-align:right;width:100px;background:transparent;"/>
+          <span style="font-size:15px;color:#8e8e93;">€</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin:0 16px 24px 16px;">
+      <button onclick="saveHistorique()" style="width:100%;padding:14px;background:#1a1a1a;color:white;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;">Enregistrer</button>
+    </div>
+
     <!-- App -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
     <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 32px 16px;">
@@ -800,6 +833,21 @@ function switchView(view){
   else if(view === 'compte') renderCompte();
 }
 
+function saveHistorique(){
+  const hist = {
+    nbVentes: Number(document.getElementById('hist-nb-ventes')?.value) || 0,
+    ca:       Number(document.getElementById('hist-ca')?.value)       || 0,
+    marge:    Number(document.getElementById('hist-marge')?.value)    || 0,
+    prep:     Number(document.getElementById('hist-prep')?.value)     || 0
+  };
+  localStorage.setItem('at_historique', JSON.stringify(hist));
+  showToast('✓ Données enregistrées');
+}
+
+function loadHistorique(){
+  return JSON.parse(localStorage.getItem('at_historique') || '{"nbVentes":0,"ca":0,"marge":0,"prep":0}');
+}
+
 function renderCompte(){
   const user = sbUser;
   const meta = user?.user_metadata || {};
@@ -811,6 +859,13 @@ function renderCompte(){
   if(document.getElementById('compte-nom')) document.getElementById('compte-nom').textContent = nom;
   if(document.getElementById('compte-garage')) document.getElementById('compte-garage').textContent = société;
   if(document.getElementById('compte-email')) document.getElementById('compte-email').textContent = email;
+
+  // Pré-remplir historique
+  const hist = loadHistorique();
+  if(document.getElementById('hist-nb-ventes')) document.getElementById('hist-nb-ventes').value = hist.nbVentes || '';
+  if(document.getElementById('hist-ca')) document.getElementById('hist-ca').value = hist.ca || '';
+  if(document.getElementById('hist-marge')) document.getElementById('hist-marge').value = hist.marge || '';
+  if(document.getElementById('hist-prep')) document.getElementById('hist-prep').value = hist.prep || '';
 }
 
 async function doLogout(){
@@ -1925,20 +1980,24 @@ function drawChart(){
 }
 
 function renderDashboard(){
+  const hist = loadHistorique();
   const sold = vehicles.filter(v => v.statut === 'Vendu');
   const stock = vehicles.filter(v => v.statut !== 'Vendu');
-  const totalProfit = vehicles.reduce((s, v) => s + ((v.vente || 0) - (v.achat || 0) - (v.prepCost || 0)), 0);
-  const avgProfit = sold.length > 0 ? Math.round(totalProfit / sold.length) : 0;
-  const revenue = sold.reduce((s, v) => s + (v.vente || 0), 0);
+  const totalProfit = vehicles.reduce((s, v) => s + ((v.vente || 0) - (v.achat || 0) - (v.prepCost || 0)), 0) + hist.marge;
+  const avgProfit = (sold.length + hist.nbVentes) > 0 ? Math.round(totalProfit / (sold.length + hist.nbVentes)) : 0;
+  const revenue = sold.reduce((s, v) => s + (v.vente || 0), 0) + hist.ca;
   const avgMargin = revenue > 0 ? Math.round((totalProfit / revenue) * 100) : 0;
   const cashBlocked = stock.reduce((s, v) => s + (v.achat || 0), 0);
-  const rotation = stock.length > 0 ? (sold.length / stock.length).toFixed(2) : 0;
+  const rotation = stock.length > 0 ? ((sold.length + hist.nbVentes) / stock.length).toFixed(2) : 0;
   let avgTime = '—';
   if(sold.length > 0){
     const times = sold.map(v => { const ve = v.statusHistory ? v.statusHistory.find(h => h.statut === 'Vendu') : null; return Math.max(0, Math.floor((new Date(ve ? ve.date : '2000-01-01') - new Date(parseInt(v.id))) / 86400000)); }).filter(t => t < 365);
     if(times.length > 0) avgTime = Math.round(times.reduce((a, b) => a + b, 0) / times.length) + ' jours';
   }
-  const avgPrep = sold.length > 0 ? Math.round(sold.reduce((s, v) => s + (v.prepCost || 0), 0) / sold.length) : 0;
+  const soldPrep = sold.reduce((s, v) => s + (v.prepCost || 0), 0);
+  const totalPrepCount = sold.length + hist.nbVentes;
+  const totalPrepCost = soldPrep + (hist.prep * hist.nbVentes);
+  const avgPrep = totalPrepCount > 0 ? Math.round(totalPrepCost / totalPrepCount) : 0;
   const today = Utils.today();
   const urgentTasks = vehicles.reduce((count, v) => count + (v.tasks ? v.tasks.filter(t => t.date <= today && !t.completed).length : 0), 0);
   Utils.el('dash-tresorerie').textContent = cashBlocked + '€';
@@ -2274,7 +2333,17 @@ function initApp(){
   const ls = document.getElementById('login-screen');
   if(ls) ls.remove();
   document.querySelectorAll('.bottom-nav, #fab-parc, .app-container').forEach(el => { if(el) el.style.display=''; });
-  switchView('planning');
+  // Première connexion : aller sur Compte pour remplir l'historique
+  const isFirstTime = !localStorage.getItem('at_historique');
+  if(isFirstTime){
+    switchView('compte');
+    setTimeout(() => {
+      const section = document.getElementById('section-historique');
+      if(section) section.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 400);
+  } else {
+    switchView('planning');
+  }
 }
 
 sb.auth.getSession().then(({data:{session}}) => {
