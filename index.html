@@ -526,7 +526,7 @@
           <div id="detail-marge" class="fin-marge-val fin-dark" style="font-size:42px;font-weight:700;letter-spacing:-1.5px;line-height:1;">—</div>
           <div id="detail-marge-pct" style="font-size:16px;color:#8e8e93;margin-top:6px;"></div>
         </div>
-        <button onclick="savePrices()" style="width:100%;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;gap:8px;">
+        <button onclick="savePrices()" style="position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:16px;right:16px;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);z-index:100;display:flex;align-items:center;justify-content:center;gap:8px;">
           <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,7 5,11 13,3"/></svg>
           Enregistrer
         </button>
@@ -546,7 +546,7 @@
           <button id="filter-appel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('appel',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Appel</button>
         </div>
         <div id="detail-tasks"></div>
-        <button onclick="openDetailTaskModal()" style="width:100%;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <button onclick="openDetailTaskModal()" style="position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:16px;right:16px;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);z-index:100;display:flex;align-items:center;justify-content:center;gap:8px;">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
           Ajouter une tâche
         </button>
@@ -629,7 +629,7 @@
       </div>
     </div>
     <div style="margin:0 16px 24px 16px;">
-      <button onclick="saveHistorique()" style="width:100%;padding:14px;background:#1a1a1a;color:white;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;">Enregistrer</button>
+      <button onclick="saveHistorique()" style="width:100%;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;">Enregistrer</button>
     </div>
 
     <!-- App -->
@@ -1133,6 +1133,7 @@ function openVehicleDetails(id){
   modal.style.display = 'flex';
   const fab = document.getElementById('fab-parc');
   if(fab) fab.style.display = 'none';
+  setTimeout(() => initDetailSwipe(), 100);
 }
 
 function updateMargePreview(){
@@ -1308,6 +1309,8 @@ let currentCalendarView = 'week';
 let currentDisplayDate = new Date();
 let planningIndex = {};
 
+const DETAIL_TABS = ['infos', 'taches', 'finances', 'historique'];
+
 function switchDetailTab(tab){
   document.querySelectorAll('.detail-tab-content').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.detail-tab').forEach(el => { el.style.color = '#8e8e93'; el.style.borderBottomColor = 'transparent'; });
@@ -1316,6 +1319,26 @@ function switchDetailTab(tab){
   if(tabContent) tabContent.style.display = 'block';
   if(tabBtn) { tabBtn.style.color = '#1a1a1a'; tabBtn.style.borderBottomColor = '#1a1a1a'; }
   if(tab === 'historique') renderHistorique(currentDetailVehicleId);
+  window._currentDetailTab = tab;
+}
+
+function initDetailSwipe(){
+  const scrollArea = document.querySelector('#details > div:last-child');
+  if(!scrollArea) return;
+  let startX = 0, startY = 0;
+  scrollArea.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, {passive: true});
+  scrollArea.addEventListener('touchend', e => {
+    const dx = startX - e.changedTouches[0].clientX;
+    const dy = startY - e.changedTouches[0].clientY;
+    if(Math.abs(dy) > Math.abs(dx) || Math.abs(dx) < 50) return;
+    const current = window._currentDetailTab || 'infos';
+    const idx = DETAIL_TABS.indexOf(current);
+    if(dx > 0 && idx < DETAIL_TABS.length - 1) switchDetailTab(DETAIL_TABS[idx + 1]);
+    else if(dx < 0 && idx > 0) switchDetailTab(DETAIL_TABS[idx - 1]);
+  }, {passive: true});
 }
 
 function renderHistorique(vehicleId){
@@ -2281,13 +2304,15 @@ function showLoginScreen(){
 
       <!-- Bouton -->
       <button onclick="doAuth()" id="auth-btn" style="
-        width:100%;padding:16px;
-        background:#1a1a1a;color:white;
-        border:none;border-radius:14px;
-        font-size:17px;font-weight:600;
-        cursor:pointer;letter-spacing:-0.3px;
+        width:100%;padding:14px;
+        background:white;color:#1a1a1a;
+        border:none;border-radius:12px;
+        font-size:15px;font-weight:500;
+        cursor:pointer;
+        box-shadow:0 2px 12px rgba(0,0,0,0.1);
         transition:opacity 0.15s;
-      " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'" onmousedown="this.style.opacity='0.7'" onmouseup="this.style.opacity='1'">Se connecter</button>
+        display:flex;align-items:center;justify-content:center;
+      " onmousedown="this.style.opacity='0.7'" onmouseup="this.style.opacity='1'" onmouseout="this.style.opacity='1'">Se connecter</button>
 
     </div>`;
   document.body.appendChild(loginDiv);
