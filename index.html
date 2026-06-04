@@ -2361,11 +2361,9 @@ function initApp(){
   // Première connexion : aller sur Compte pour remplir l'historique
   const isFirstTime = !localStorage.getItem('at_historique');
   if(isFirstTime){
-    switchView('compte');
-    setTimeout(() => {
-      const section = document.getElementById('section-historique');
-      if(section) section.scrollIntoView({behavior:'smooth', block:'start'});
-    }, 400);
+    switchView('planning');
+    // Notifier discrètement de remplir l'historique
+    setTimeout(() => showToast('💡 Renseignez vos données dans Compte'), 1500);
   } else {
     switchView('planning');
   }
