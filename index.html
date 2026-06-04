@@ -1333,7 +1333,7 @@ function initDetailSwipe(){
   scrollArea.addEventListener('touchend', e => {
     const dx = startX - e.changedTouches[0].clientX;
     const dy = startY - e.changedTouches[0].clientY;
-    if(Math.abs(dy) > Math.abs(dx) || Math.abs(dx) < 50) return;
+    if(Math.abs(dy) > Math.abs(dx) * 0.5 || Math.abs(dx) < 80) return;
     const current = window._currentDetailTab || 'infos';
     const idx = DETAIL_TABS.indexOf(current);
     if(dx > 0 && idx < DETAIL_TABS.length - 1) switchDetailTab(DETAIL_TABS[idx + 1]);
