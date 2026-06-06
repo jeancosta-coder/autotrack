@@ -344,7 +344,7 @@
     .fin-bold { font-weight:600; }
     .fin-muted { color:#8e8e93 !important; font-weight:400 !important; }
     .fin-row-right { display:flex; align-items:center; gap:4px; }
-    .fin-row-right input { font-size:17px; color:#1c1c1e; text-align:right; border:none; outline:none; background:transparent; width:100px; -moz-appearance:textfield; }
+    .fin-row-right input { font-size:17px; color:#1c1c1e; text-align:right; border:none; outline:none; background:transparent; width:100px; appearance:textfield; -webkit-appearance:textfield; -moz-appearance:textfield; }
     .fin-row-right input::-webkit-outer-spin-button,
     .fin-row-right input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
     .fin-row-right input::placeholder { color:#c7c7cc; }
@@ -467,6 +467,30 @@
         max-height: calc(100vh - 88px);
         overflow: hidden;
       }
+      #planning > div:first-child {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #eef2f7;
+        padding-top: 24px;
+        padding-bottom: 20px;
+      }
+      #planning #calendar-container {
+        border-radius: 24px;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        overflow: hidden;
+        min-height: calc(100vh - 180px);
+      }
+      #planning .calendar-day {
+        border-radius: 16px;
+      }
+      #planning .planning-section {
+        border-radius: 24px;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        padding: 22px;
+      }
       #details {
         position: fixed !important;
         top: 50% !important;
@@ -497,7 +521,10 @@
         overflow: hidden !important;
       }
       #modal-add-vehicle > *,
-      #simple-task-modal > * {
+      #simple-task-modal > *,
+      #new-task-modal > *,
+      #edit-simple-task-modal > *,
+      #edit-task-modal-planning > * {
         max-height: calc(100vh - 160px);
         overflow: auto;
       }
@@ -507,9 +534,40 @@
         background: rgba(0,0,0,0.35) !important;
       }
       #view-modal > div {
-        width: min(520px, calc(100vw - 260px));
+        width: min(420px, calc(100vw - 320px));
         border-radius: 24px;
         overflow: hidden;
+      }
+      #edit-bottom-sheet,
+      #simple-type-sheet,
+      #ntask-bottom-sheet {
+        align-items: center !important;
+        justify-content: center !important;
+        background: rgba(0,0,0,0.28) !important;
+      }
+      #edit-bottom-sheet > div,
+      #simple-type-sheet > div,
+      #ntask-bottom-sheet > div {
+        width: min(420px, calc(100vw - 320px));
+        max-height: calc(100vh - 120px) !important;
+        overflow: hidden;
+        border-radius: 24px;
+      }
+      #edit-bottom-sheet > div,
+      #simple-type-sheet > div,
+      #ntask-bottom-sheet > div {
+        overflow: auto !important;
+      }
+      .desktop-popup-sheet {
+        align-items: center !important;
+        justify-content: center !important;
+        background: rgba(0,0,0,0.28) !important;
+      }
+      .desktop-popup-sheet > div {
+        width: min(520px, calc(100vw - 320px));
+        border-radius: 24px;
+        max-height: calc(100vh - 120px);
+        overflow: auto;
       }
       #details button[onclick="savePrices()"],
       #details button[onclick="openDetailTaskModal()"] {
@@ -523,6 +581,103 @@
       #details button[onclick="savePrices()"] svg,
       #details button[onclick="openDetailTaskModal()"] svg {
         margin-right: 8px;
+      }
+      .detail-tab,
+      .task-filter-btn,
+      .chart-filter,
+      .filter-btn {
+        border-radius: 16px;
+      }
+      .task-filter-btn,
+      .filter-btn,
+      .chart-filter {
+        background: #f2f2f7;
+        border: 1px solid #e5e5e5;
+        color: #1a1a1a;
+      }
+      .task-filter-btn.active,
+      .filter-btn.active,
+      .chart-filter.active {
+        background: #1a1a1a;
+        color: #fff;
+      }
+      .btn-primary {
+        background: transparent;
+        color: #1a1a1a;
+        border: 1px solid #1a1a1a;
+        box-shadow: none;
+      }
+      .btn-outline {
+        background: transparent;
+        border-color: #d1d1d6;
+      }
+      .desktop-sidebar .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        justify-content: flex-start;
+      }
+      .desktop-sidebar .nav-link::before {
+        content: attr(data-icon);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        background: #f2f2f7;
+        font-size: 14px;
+      }
+      .parc-filter {
+        padding: 8px 16px;
+        border: 1px solid #d1d1d6;
+        border-radius: 16px;
+        background: transparent;
+        color: #1a1a1a;
+        font-weight: 600;
+      }
+      .parc-filter.active {
+        background: #f2f2f7;
+        color: #1a1a1a;
+        border-color: transparent;
+      }
+      .chart-filter.active {
+        background: #f2f2f7;
+        color: #1a1a1a;
+        border-color: #d1d1d6;
+      }
+      .task-filter-btn.active,
+      .filter-btn.active {
+        background: #f2f2f7;
+        color: #1a1a1a;
+      }
+      .swipe-wrapper:hover .trash-button {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .swipe-wrapper .trash-button {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #details {
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: min(980px, calc(100vw - 320px)) !important;
+        max-height: calc(100vh - 120px) !important;
+        border-radius: 24px !important;
+        background: rgba(255,255,255,0.98) !important;
+      }
+      #details .detail-tab.active {
+        background: #f2f2f7;
+        color: #1a1a1a;
+      }
+      #login-screen {
+        background: rgba(245,245,247,0.95) !important;
+        padding: 40px 24px !important;
+      }
+      #login-screen .login-card {
+        width: min(460px, calc(100vw - 240px)) !important;
       }
       .view.active {
         display: block;
@@ -541,10 +696,10 @@
     </div>
   </div>
   <nav style="display:flex;flex-direction:column;gap:8px;margin-top:28px;">
-    <button class="nav-link active" type="button" onclick="switchView('planning')">Planning</button>
-    <button class="nav-link" type="button" onclick="switchView('parc')">Parc</button>
-    <button class="nav-link" type="button" onclick="switchView('dashboard')">Dashboard</button>
-    <button class="nav-link" type="button" onclick="switchView('compte')">Compte</button>
+    <button class="nav-link active" type="button" onclick="switchView('planning')" data-icon="📅">Planning</button>
+    <button class="nav-link" type="button" onclick="switchView('parc')" data-icon="🚗">Parc</button>
+    <button class="nav-link" type="button" onclick="switchView('dashboard')" data-icon="📊">Dashboard</button>
+    <button class="nav-link" type="button" onclick="switchView('compte')" data-icon="👤">Compte</button>
   </nav>
   <div class="sidebar-footer" style="margin-top:auto;display:flex;flex-direction:column;gap:12px;">
     <button class="sidebar-cta btn-primary" type="button" onclick="openAddModal()">Nouveau véhicule</button>
@@ -1066,6 +1221,7 @@ function renderCompte(){
 
 async function doLogout(){
   const sheet = document.createElement('div');
+  sheet.className = 'desktop-popup-sheet';
   sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
   sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Se déconnecter ?</div>
@@ -1150,9 +1306,9 @@ const RenderHelpers = {
     const marge = (v.vente || 0) - (v.achat || 0) - (v.prepCost || 0);
     const margeColor = marge >= 0 ? '#34C759' : '#FF3B30';
     return `
-    <div style="position:relative;border-radius:14px;" id="swipe-wrapper-${v.id}">
+    <div class="swipe-wrapper" style="position:relative;border-radius:14px;" id="swipe-wrapper-${v.id}">
       <!-- Bouton corbeille fixe à droite -->
-      <div id="trash-${v.id}" onclick="deleteVehicle(${v.id})" style="
+      <div class="trash-button" id="trash-${v.id}" onclick="deleteVehicle(${v.id})" style="
         position:absolute;top:50%;right:16px;
         transform:translateY(-50%);
         width:44px;height:44px;border-radius:50%;
@@ -1375,6 +1531,7 @@ function closeVehicleDetails(){
 
 function confirmDeleteCurrentVehicle(){
   const sheet = document.createElement('div');
+  sheet.className = 'desktop-popup-sheet';
   sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
   sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer ce véhicule ?</div>
@@ -1592,7 +1749,9 @@ function savePrices(){
 
 function renderPlanning(){
   planningIndex = RenderHelpers.indexPlanningBySlot(DataLayer.getPlanning());
-  const currentViewMode = localStorage.getItem('at_planning_viewmode') || '3';
+  let currentViewMode = localStorage.getItem('at_planning_viewmode');
+  if(!currentViewMode && window.innerWidth >= 900) currentViewMode = '7';
+  currentViewMode = currentViewMode || '3';
   let dateRangeStr = '';
   if(currentViewMode === 'month'){
     dateRangeStr = currentDisplayDate.toLocaleDateString('fr-FR', {month: 'long', year: 'numeric'});
@@ -1954,6 +2113,7 @@ function openEditBottomSheet(key){
 
 function confirmDeleteEditTask(taskId){
   const sheet = document.createElement('div');
+  sheet.className = 'desktop-popup-sheet';
   sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
   sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer cette tâche ?</div>
@@ -2116,6 +2276,7 @@ function updateSimpleTask(vehicleId, taskId){
 
 function deleteSimpleTask(vehicleId, taskId){
   const sheet = document.createElement('div');
+  sheet.className = 'desktop-popup-sheet';
   sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
   sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer cette tâche ?</div>
@@ -2159,6 +2320,7 @@ function deleteTask(vehicleId, taskId, filter){
 
 function deleteVehicle(vehicleId){
   const sheet = document.createElement('div');
+  sheet.className = 'desktop-popup-sheet';
   sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
   sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer ce véhicule ?</div>
@@ -2447,10 +2609,11 @@ function showLoginScreen(){
   document.querySelectorAll('.bottom-nav, #fab-parc, #fab-planning, .app-container').forEach(el => { if(el) el.style.display='none'; });
   const loginDiv = document.createElement('div');
   loginDiv.id = 'login-screen';
-  loginDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#f2f2f7;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:99999;';
+  loginDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f7;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:99999;';
   loginDiv.innerHTML = `
-    <!-- Logo -->
-    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:48px;">
+    <div class="login-card" style="width:100%;max-width:420px;background:white;border-radius:24px;box-shadow:0 24px 60px rgba(0,0,0,0.08);padding:32px;display:flex;flex-direction:column;align-items:center;">
+      <!-- Logo -->
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:48px;">
       <div style="width:88px;height:88px;background:#1a1a1a;border-radius:24px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 12px 32px rgba(0,0,0,0.18);">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
           <path d="M5 13h14v5H5z"/>
@@ -2510,7 +2673,7 @@ function showLoginScreen(){
         display:flex;align-items:center;justify-content:center;
       " onmousedown="this.style.opacity='0.7'" onmouseup="this.style.opacity='1'" onmouseout="this.style.opacity='1'">Se connecter</button>
 
-    </div>`;
+    </div></div>`;
   document.body.appendChild(loginDiv);
 }
 
