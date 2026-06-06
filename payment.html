@@ -612,7 +612,7 @@
 
       <!-- Paiement -->
       <div class="form-section-label">Paiement</div>
-      <div class="stripe-wrap">
+      <div class="stripe-wrap" style="display:none">
         <div class="stripe-label">Carte bancaire</div>
         <div id="card-element"></div>
         <div id="card-errors"></div>
@@ -667,9 +667,9 @@
 
 <script>
   // ── CONFIG ──────────────────────────────────────────────
-  const SUPABASE_URL = 'SUPABASE_URL';
-  const SUPABASE_KEY = 'SUPABASE_KEY';
-  const STRIPE_PUBLIC_KEY = 'STRIPE_PUBLIC_KEY';
+  const SUPABASE_URL = 'https://qfwbneqcnqmpwkyolxze.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_0PVpvCFraP4oUAvstn88hA_ZFmp2ekl';
+  const STRIPE_PUBLIC_KEY = 'pk_test_placeholder';
   // ────────────────────────────────────────────────────────
 
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -744,20 +744,7 @@
     setLoading(true);
 
     try {
-      // ── ÉTAPE 1 : Créer le PaymentMethod Stripe ──
-      const { paymentMethod, error: pmError } = await stripe.createPaymentMethod({
-        type: 'card',
-        card: cardElement,
-        billing_details: { name, email }
-      });
-
-      if (pmError) {
-        showError(pmError.message);
-        setLoading(false);
-        return;
-      }
-
-      // ── ÉTAPE 2 : Créer le compte Supabase ──
+      // Mode test : pas de Stripe pour le moment.
       const { data, error: signUpError } = await sb.auth.signUp({
         email,
         password: pwd,
@@ -765,7 +752,7 @@
           data: {
             full_name: name,
             garage_name: garage,
-            stripe_payment_method: paymentMethod.id
+            stripe_payment_method: null
           }
         }
       });
