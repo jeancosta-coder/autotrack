@@ -357,10 +357,119 @@
     .fin-dark { color:#1c1c1e; }
     .fin-green { color:#34c759; }
     .fin-red { color:#ff3b30; }
+    .desktop-sidebar { display:none; }
+    @media (min-width: 900px) {
+      body { background: #eef2f7; }
+      .desktop-sidebar {
+        display: flex !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 260px;
+        padding: 28px 20px;
+        background: white;
+        border-right: 1px solid rgba(0,0,0,0.08);
+        box-shadow: 4px 0 40px rgba(0,0,0,0.08);
+        z-index: 1000;
+        flex-direction: column;
+      }
+      .desktop-sidebar .nav-link,
+      .desktop-sidebar .sidebar-logout,
+      .desktop-sidebar .sidebar-cta {
+        width: 100%;
+        text-align: left;
+      }
+      .desktop-sidebar .nav-link {
+        background: transparent;
+        color: #1a1a1a;
+        border: none;
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+      .desktop-sidebar .nav-link:hover {
+        background: #f4f5f7;
+      }
+      .desktop-sidebar .nav-link.active {
+        background: #1a1a1a;
+        color: white;
+      }
+      .desktop-sidebar .sidebar-footer {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .desktop-sidebar .sidebar-cta {
+        padding: 14px 16px;
+      }
+      .desktop-sidebar .sidebar-logout {
+        padding: 14px 16px;
+        background: #f7f7f8;
+        color: #1a1a1a;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+      }
+      .app-container {
+        padding: 32px 32px 32px 300px;
+        min-height: 100vh;
+      }
+      .app-container { display: grid; gap: 32px; }
+      .bottom-nav,
+      #fab-planning,
+      #fab-parc {
+        display: none !important;
+      }
+      #parc-grid {
+        grid-template-columns: repeat(3, minmax(240px, 1fr));
+        gap: 24px;
+      }
+      .vehicle-card {
+        min-height: 180px;
+      }
+      .modal-box {
+        max-width: 640px;
+      }
+      #planning {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: auto !important;
+        flex: 1;
+      }
+      .view.active {
+        display: block;
+      }
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
 <body>
+<aside id="desktop-sidebar" class="desktop-sidebar" style="display:none;">
+  <div class="brand" style="display:flex;align-items:center;gap:12px;">
+    <div style="width:40px;height:40px;border-radius:14px;background:#1a1a1a;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;">T</div>
+    <div>
+      <div style="font-size:18px;font-weight:700;color:#1a1a1a;">Trakoto</div>
+      <div style="font-size:13px;color:#6b7280;">Gestion de parc</div>
+    </div>
+  </div>
+  <nav style="display:flex;flex-direction:column;gap:8px;margin-top:28px;">
+    <button class="nav-link active" type="button" onclick="switchView('planning')">Planning</button>
+    <button class="nav-link" type="button" onclick="switchView('parc')">Parc</button>
+    <button class="nav-link" type="button" onclick="switchView('dashboard')">Dashboard</button>
+    <button class="nav-link" type="button" onclick="switchView('compte')">Compte</button>
+  </nav>
+  <div class="sidebar-footer" style="margin-top:auto;display:flex;flex-direction:column;gap:12px;">
+    <button class="sidebar-cta btn-primary" type="button" onclick="openAddModal()">Nouveau véhicule</button>
+    <button class="sidebar-logout" type="button" onclick="doLogout()">Déconnexion</button>
+  </div>
+</aside>
 <div class="app-container">
   <div id="parc" class="view active">
 
@@ -826,6 +935,12 @@ function switchView(view){
     const filled = btn.querySelector('.nav-icon-filled');
     if(v === view) { btn.classList.add('active'); if(outline) outline.style.display = 'none'; if(filled) filled.style.display = 'block'; }
     else { btn.classList.remove('active'); if(outline) outline.style.display = 'block'; if(filled) filled.style.display = 'none'; }
+  });
+  Utils.removeActiveClass('.desktop-sidebar .nav-link');
+  document.querySelectorAll('.desktop-sidebar .nav-link').forEach(btn => {
+    if(btn.getAttribute('onclick') === "switchView('" + view + "')") {
+      btn.classList.add('active');
+    }
   });
   if(view === 'parc') renderParc();
   else if(view === 'planning') renderPlanning();
