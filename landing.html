@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f2f7">
+  <title>Trakoto — Gestion de parc automobile pour marchands indépendants</title>
+  <meta name="description" content="Trakoto vous aide à gérer votre parc auto, suivre vos marges et planifier vos tâches. Essai gratuit 14 jours.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f2f2f7;
+      --surface: #ffffff;
+      --text: #1a1a1a;
+      --text2: #6e6e73;
+      --border: #e5e5ea;
+      --accent: #1a1a1a;
+      --green: #34C759;
+      --red: #FF3B30;
+      --orange: #FF9500;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(242,242,247,0.88);
+      backdrop-filter: saturate(180%) blur(24px);
+      -webkit-backdrop-filter: saturate(180%) blur(24px);
+      border-bottom: 0.5px solid rgba(0,0,0,0.1);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: #1a1a1a;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-name {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-login {
+      padding: 8px 18px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-login:hover { background: white; border-color: #ccc; }
+
+    .btn-cta-small {
+      padding: 8px 18px;
+      background: var(--accent);
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-cta-small:hover { background: #333; }
+
+    /* ── MAIN ── */
+    main { padding-top: 60px; }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 80px 0 64px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text2);
+      margin-bottom: 28px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .hero-badge span { color: var(--green); font-weight: 600; }
+
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(38px, 6vw, 68px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      color: var(--text);
+      max-width: 800px;
+      margin: 0 auto 20px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--text2);
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 18px);
+      color: var(--text2);
+      max-width: 500px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      padding: 14px 32px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover { background: #333; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .hero-note {
+      font-size: 13px;
+      color: var(--text2);
+      margin-top: 14px;
+    }
+
+    /* ── APP PREVIEW ── */
+    .app-preview {
+      margin: 48px auto 0;
+      max-width: 360px;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.06);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .preview-bar {
+      background: white;
+      border-bottom: 0.5px solid #e5e5ea;
+      padding: 14px 16px 10px;
+    }
+
+    .preview-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+    }
+
+    .preview-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .preview-kpi {
+      background: #f2f2f7;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .preview-kpi-label { font-size: 10px; font-weight: 600; color: #8e8e93; margin-bottom: 4px; }
+    .preview-kpi-val { font-size: 20px; font-weight: 700; }
+
+    .preview-card {
+      background: #f2f2f7;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .preview-card-title { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+    .preview-card-sub { font-size: 11px; color: #8e8e93; margin-top: 2px; }
+    .preview-card-right { text-align: right; }
+    .preview-card-price { font-size: 16px; font-weight: 700; color: #1a1a1a; }
+    .preview-card-marge { font-size: 13px; font-weight: 600; }
+
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      background: white;
+      border-top: 0.5px solid var(--border);
+      border-bottom: 0.5px solid var(--border);
+      padding: 20px 0;
+      margin: 72px 0 0;
+    }
+
+    .trust-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text2);
+    }
+
+    .trust-item svg { flex-shrink: 0; }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 80px 0;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 400;
+      letter-spacing: -1px;
+      text-align: center;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .section-sub {
+      font-size: 16px;
+      color: var(--text2);
+      text-align: center;
+      margin-bottom: 52px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .feature-card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: #f2f2f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .feature-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    /* ── PRICING ── */
+    .pricing {
+      padding: 80px 0;
+    }
+
+    .pricing-card {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      border: 1px solid var(--border);
+      max-width: 480px;
+      margin: 0 auto;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+
+    .pricing-plan {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text2);
+      margin-bottom: 12px;
+    }
+
+    .pricing-price {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .pricing-amount {
+      font-family: 'Instrument Serif', serif;
+      font-size: 52px;
+      font-weight: 400;
+      letter-spacing: -2px;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    .pricing-period {
+      font-size: 15px;
+      color: var(--text2);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .pricing-trial {
+      display: inline-block;
+      background: rgba(52,199,89,0.12);
+      color: #27AE60;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+    }
+
+    .pricing-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 24px 0;
+    }
+
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .check {
+      width: 20px; height: 20px;
+      background: rgba(52,199,89,0.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .btn-pricing {
+      width: 100%;
+      padding: 15px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-pricing:hover { background: #333; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+
+    .pricing-reassurance {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .pricing-reassurance span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── REASSURANCE ── */
+    .reassurance {
+      padding: 72px 0;
+      background: white;
+      border-top: 0.5px solid var(--border);
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .reassurance-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .reassurance-item {
+      text-align: center;
+    }
+
+    .reassurance-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      background: #f2f2f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .reassurance-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .reassurance-desc {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    /* ── CTA FINAL ── */
+    .cta-final {
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .cta-final h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 400;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .cta-final p {
+      font-size: 16px;
+      color: var(--text2);
+      margin-bottom: 32px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: white;
+      border-top: 0.5px solid var(--border);
+      padding: 32px 24px;
+    }
+
+    .footer-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-left {
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── STRIPE BADGE ── */
+    .stripe-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text2);
+      margin-top: 20px;
+      justify-content: center;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .fade-up-1 { animation-delay: 0.05s; }
+    .fade-up-2 { animation-delay: 0.15s; }
+    .fade-up-3 { animation-delay: 0.25s; }
+    .fade-up-4 { animation-delay: 0.35s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      header { padding: 0 16px; }
+      .logo-name { font-size: 20px; }
+      .btn-login { display: none; }
+
+      .hero { padding: 52px 0 48px; }
+      .hero h1 { letter-spacing: -1px; }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .reassurance-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .pricing-card { padding: 28px 20px; }
+      .pricing-amount { font-size: 42px; }
+
+      .trust-inner { gap: 16px; }
+      .trust-item { font-size: 12px; }
+
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+
+      .app-preview { max-width: 300px; }
+    }
+
+    @media (min-width: 769px) {
+      .hero-content-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 48px;
+        text-align: left;
+      }
+
+      .hero-content-wrap .hero-actions { justify-content: flex-start; }
+      .hero-content-wrap .hero-note { text-align: left; }
+      .hero-content-wrap .hero-badge { margin-left: 0; }
+
+      .app-preview { margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="#" class="logo">
+    <div class="logo-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round">
+        <path d="M5 13h14v5H5z"/>
+        <path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/>
+        <circle cx="8" cy="18" r="1.5" fill="white" stroke="none"/>
+        <circle cx="16" cy="18" r="1.5" fill="white" stroke="none"/>
+      </svg>
+    </div>
+    <span class="logo-name">Trakoto</span>
+  </a>
+  <div class="header-right">
+    <a href="index.html" class="btn-login">Connexion</a>
+    <a href="payment.html" class="btn-cta-small">Essai gratuit</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content-wrap">
+
+        <div>
+          <div class="hero-badge fade-up fade-up-1">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" fill="#34C759"/></svg>
+            <span>14 jours</span> d'essai gratuit — sans CB
+          </div>
+
+          <h1 class="fade-up fade-up-2">
+            Gérez votre parc auto.<br>
+            <em>Sans paperasse.</em>
+          </h1>
+
+          <p class="hero-sub fade-up fade-up-3">
+            Trakoto centralise vos véhicules, vos tâches, vos finances et votre planning dans une seule app pensée pour les marchands indépendants.
+          </p>
+
+          <div class="hero-actions fade-up fade-up-4">
+            <a href="payment.html" class="btn-primary">
+              Commencer gratuitement
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg>
+            </a>
+          </div>
+          <p class="hero-note fade-up fade-up-4">Aucune carte bancaire requise pour l'essai.</p>
+        </div>
+
+        <!-- APP PREVIEW -->
+        <div class="app-preview fade-up fade-up-3">
+          <div class="preview-bar">
+            <div class="preview-title">Mon parc</div>
+            <div class="preview-kpis">
+              <div class="preview-kpi">
+                <div class="preview-kpi-label">En cours</div>
+                <div class="preview-kpi-val" style="color:#FF9500;">4</div>
+              </div>
+              <div class="preview-kpi">
+                <div class="preview-kpi-label">Prêt</div>
+                <div class="preview-kpi-val" style="color:#34C759;">2</div>
+              </div>
+              <div class="preview-kpi">
+                <div class="preview-kpi-label">Vendus</div>
+                <div class="preview-kpi-val" style="color:#FF3B30;">7</div>
+              </div>
+            </div>
+          </div>
+          <div style="padding:12px;">
+            <div class="preview-card">
+              <div>
+                <div class="preview-card-title">Peugeot 308</div>
+                <div class="preview-card-sub">2021 · 42 000 km</div>
+              </div>
+              <div class="preview-card-right">
+                <div class="preview-card-price">12 500 €</div>
+                <div class="preview-card-marge" style="color:#34C759;">+1 800 €</div>
+              </div>
+            </div>
+            <div class="preview-card">
+              <div>
+                <div class="preview-card-title">Renault Clio</div>
+                <div class="preview-card-sub">2020 · 58 000 km</div>
+              </div>
+              <div class="preview-card-right">
+                <div class="preview-card-price">8 900 €</div>
+                <div class="preview-card-marge" style="color:#34C759;">+1 200 €</div>
+              </div>
+            </div>
+            <div class="preview-card">
+              <div>
+                <div class="preview-card-title">Volkswagen Golf</div>
+                <div class="preview-card-sub">2019 · 71 000 km</div>
+              </div>
+              <div class="preview-card-right">
+                <div class="preview-card-price">14 200 €</div>
+                <div class="preview-card-marge" style="color:#FF9500;">+950 €</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="container">
+      <p class="section-label">Fonctionnalités</p>
+      <h2 class="section-title">Tout ce dont vous avez besoin,<br>rien de plus.</h2>
+      <p class="section-sub">Tout ce qu'il faut pour gérer votre activité au quotidien, depuis votre téléphone.</p>
+
+      <div class="features-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
+              <path d="M5 13h14v5H5z"/>
+              <path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/>
+              <circle cx="8" cy="18" r="1.5" fill="#1a1a1a" stroke="none"/>
+              <circle cx="16" cy="18" r="1.5" fill="#1a1a1a" stroke="none"/>
+            </svg>
+          </div>
+          <div class="feature-title">Gestion du parc</div>
+          <div class="feature-desc">Ajoutez vos véhicules en quelques secondes. Suivez leur statut (En cours, Prêt, Vendu), leurs infos et leurs tâches associées en un coup d'œil.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+              <line x1="9" y1="4" x2="9" y2="22"/>
+              <line x1="15" y1="4" x2="15" y2="22"/>
+            </svg>
+          </div>
+          <div class="feature-title">Planning intelligent</div>
+          <div class="feature-desc">Visualisez vos RDV, rappels et préparations sur un calendrier jour, semaine ou mois. Chaque événement est lié à un véhicule précis.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <div class="feature-title">Suivi des finances</div>
+          <div class="feature-desc">Prix d'achat, coûts de préparation, carte grise, prix de vente. Calculez votre marge réelle et votre prix minimum recommandé instantanément.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
+              <rect x="3" y="5" width="4" height="14" rx="1"/>
+              <rect x="10" y="3" width="4" height="16" rx="1"/>
+              <rect x="17" y="8" width="4" height="11" rx="1"/>
+            </svg>
+          </div>
+          <div class="feature-title">Dashboard & stats</div>
+          <div class="feature-desc">Trésorerie, CA, marge moyenne, temps de vente moyen, rotation du stock. Toutes vos métriques clés en un seul écran.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- REASSURANCE -->
+  <section class="reassurance">
+    <div class="container">
+      <div class="reassurance-grid">
+
+        <div class="reassurance-item">
+          <div class="reassurance-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="reassurance-title">Paiement 100% sécurisé</div>
+          <div class="reassurance-desc">Vos coordonnées bancaires ne transitent jamais sur nos serveurs. Tout est géré par Stripe, leader mondial des paiements en ligne.</div>
+        </div>
+
+        <div class="reassurance-item">
+          <div class="reassurance-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <div class="reassurance-title">Données protégées</div>
+          <div class="reassurance-desc">Vos données sont stockées de façon chiffrée et sécurisée. Vous restez propriétaire de vos données, conformément au RGPD.</div>
+        </div>
+
+        <div class="reassurance-item">
+          <div class="reassurance-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
+              <polyline points="23 4 23 10 17 10"/>
+              <path d="M20.49 15a9 9 0 1 1-.18-4.55"/>
+            </svg>
+          </div>
+          <div class="reassurance-title">Sans engagement</div>
+          <div class="reassurance-desc">Résiliez à tout moment depuis votre compte, sans frais ni préavis. Pas de mauvaise surprise sur votre relevé bancaire.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing">
+    <div class="container">
+      <p class="section-label">Tarif</p>
+      <h2 class="section-title">Simple. Transparent.</h2>
+      <p class="section-sub">Un seul plan, tout inclus. Pas de paliers, pas de fonctionnalités cachées.</p>
+
+      <div class="pricing-card">
+        <div class="pricing-plan">Trakoto Pro</div>
+        <div class="pricing-price">
+          <div class="pricing-amount">29€</div>
+          <div class="pricing-period">/ mois</div>
+        </div>
+        <div class="pricing-trial">✓ 14 jours gratuits — sans carte bancaire</div>
+
+        <div class="pricing-divider"></div>
+
+        <ul class="pricing-features">
+          <li>
+            <div class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round"><polyline points="1,5 3.5,7.5 9,2"/></svg></div>
+            Parc automobile illimité
+          </li>
+          <li>
+            <div class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round"><polyline points="1,5 3.5,7.5 9,2"/></svg></div>
+            Planning & rappels
+          </li>
+          <li>
+            <div class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round"><polyline points="1,5 3.5,7.5 9,2"/></svg></div>
+            Suivi des finances & marges
+          </li>
+          <li>
+            <div class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round"><polyline points="1,5 3.5,7.5 9,2"/></svg></div>
+            Dashboard & statistiques
+          </li>
+          <li>
+            <div class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round"><polyline points="1,5 3.5,7.5 9,2"/></svg></div>
+            Synchronisation multi-appareils
+          </li>
+          <li>
+            <div class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round"><polyline points="1,5 3.5,7.5 9,2"/></svg></div>
+            Support par email
+          </li>
+        </ul>
+
+        <a href="payment.html" class="btn-pricing">Commencer l'essai gratuit</a>
+
+        <div class="pricing-reassurance">
+          <span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Paiement sécurisé Stripe
+          </span>
+          <span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.18-4.55"/></svg>
+            Résiliation libre
+          </span>
+          <span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Conforme RGPD
+          </span>
+        </div>
+
+        <div class="stripe-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#635BFF" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Paiements gérés par <strong style="color:#635BFF;">&nbsp;Stripe</strong> — aucune donnée bancaire stockée chez nous
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-final">
+    <div class="container">
+      <h2>Prêt à reprendre le contrôle<br><em style="font-family:'Instrument Serif',serif;font-style:italic;color:var(--text2);">de votre activité ?</em></h2>
+      <p>Rejoignez les marchands indépendants qui gèrent leur parc avec Trakoto.</p>
+      <a href="payment.html" class="btn-primary" style="display:inline-flex;">
+        Commencer gratuitement — 14 jours
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg>
+      </a>
+      <p style="font-size:13px;color:var(--text2);margin-top:12px;">Sans carte bancaire. Annulation libre.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      © 2025 Trakoto — L'équipe Trakoto &nbsp;·&nbsp; <a href="mailto:contact@trakoto.fr" style="color:var(--text2);text-decoration:none;">contact@trakoto.fr</a>
+    </div>
+    <div class="footer-links">
+      <a href="cgv.html">CGV</a>
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="confidentialite.html">Politique de confidentialité</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

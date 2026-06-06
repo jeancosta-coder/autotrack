@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trakoto — Politique de confidentialité</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #f2f2f7; --surface: #ffffff; --text: #1a1a1a;
+      --text2: #6e6e73; --border: #e5e5ea;
+    }
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--text);
+      font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+    header {
+      background: rgba(242,242,247,0.92); backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px); border-bottom: 0.5px solid rgba(0,0,0,0.1);
+      padding: 0 24px; height: 56px; display: flex; align-items: center;
+      justify-content: space-between; position: sticky; top: 0; z-index: 10;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon {
+      width: 32px; height: 32px; background: #1a1a1a; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-name { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--text); }
+    .back-link {
+      font-size: 14px; color: var(--text2); text-decoration: none;
+      display: flex; align-items: center; gap: 4px; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+    .container { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+    .doc-title {
+      font-family: 'Instrument Serif', serif; font-size: 36px;
+      letter-spacing: -1px; margin-bottom: 8px;
+    }
+    .doc-date { font-size: 13px; color: var(--text2); margin-bottom: 40px; }
+    .section {
+      background: white; border-radius: 16px; border: 1px solid var(--border);
+      padding: 24px 28px; margin-bottom: 16px;
+    }
+    h2 { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 12px; letter-spacing: -0.2px; }
+    p { font-size: 15px; color: var(--text2); margin-bottom: 10px; }
+    p:last-child { margin-bottom: 0; }
+    ul { padding-left: 20px; margin-bottom: 10px; }
+    li { font-size: 15px; color: var(--text2); margin-bottom: 6px; }
+    a { color: var(--text); }
+    .tag {
+      display: inline-block; background: #f2f2f7; border-radius: 6px;
+      padding: 2px 8px; font-size: 13px; font-weight: 600; color: var(--text);
+      margin-right: 4px; margin-bottom: 4px;
+    }
+    footer {
+      background: white; border-top: 0.5px solid var(--border);
+      padding: 24px; text-align: center;
+    }
+    .footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+    .footer-links a { font-size: 13px; color: var(--text2); text-decoration: none; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 12px; color: var(--text2); }
+    @media (max-width: 768px) {
+      .container { padding: 32px 16px 60px; }
+      .section { padding: 20px; }
+      .doc-title { font-size: 28px; }
+      header { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="landing.html" class="logo">
+    <div class="logo-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round">
+        <path d="M5 13h14v5H5z"/>
+        <path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/>
+        <circle cx="8" cy="18" r="1.5" fill="white" stroke="none"/>
+        <circle cx="16" cy="18" r="1.5" fill="white" stroke="none"/>
+      </svg>
+    </div>
+    <span class="logo-name">Trakoto</span>
+  </a>
+  <a href="landing.html" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="13" y1="8" x2="3" y2="8"/><polyline points="7,4 3,8 7,12"/></svg>
+    Retour
+  </a>
+</header>
+
+<div class="container">
+  <div class="doc-title">Politique de confidentialité</div>
+  <div class="doc-date">Dernière mise à jour : juin 2025</div>
+
+  <div class="section">
+    <h2>1. Qui est responsable du traitement ?</h2>
+    <p>Le responsable du traitement des données personnelles est :</p>
+    <p>
+      <strong>Prénom NOM</strong> — À COMPLÉTER<br>
+      Auto-entrepreneur — SIRET : XX XXX XXX XXXXX — À COMPLÉTER<br>
+      Email : <a href="mailto:contact@trakoto.fr">contact@trakoto.fr</a>
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>2. Quelles données collectons-nous ?</h2>
+    <p>Lors de la création de compte et de l'utilisation de Trakoto, nous collectons :</p>
+    <ul>
+      <li><strong>Données d'identification :</strong> nom complet, nom de la société, adresse email</li>
+      <li><strong>Données de connexion :</strong> mot de passe chiffré (géré par Supabase)</li>
+      <li><strong>Données métier :</strong> véhicules, tâches, événements planning, données financières que vous saisissez dans l'application</li>
+      <li><strong>Données de paiement :</strong> gérées exclusivement par Stripe — nous ne stockons aucune donnée bancaire</li>
+      <li><strong>Données techniques :</strong> logs de connexion, adresse IP (à des fins de sécurité)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>3. Pourquoi utilisons-nous ces données ?</h2>
+    <ul>
+      <li>Création et gestion de votre compte utilisateur</li>
+      <li>Fourniture du service Trakoto</li>
+      <li>Facturation et gestion de l'abonnement</li>
+      <li>Support client</li>
+      <li>Sécurité et prévention de la fraude</li>
+      <li>Amélioration du service (données agrégées et anonymisées)</li>
+    </ul>
+    <p>Nous ne vendons ni ne louons vos données à des tiers. Jamais.</p>
+  </div>
+
+  <div class="section">
+    <h2>4. Qui a accès à vos données ?</h2>
+    <p>Vos données sont traitées par les sous-traitants suivants, dans le cadre strict de la fourniture du service :</p>
+    <ul>
+      <li><strong>Supabase</strong> (base de données et authentification) — <a href="https://supabase.com/privacy" target="_blank">Politique de confidentialité</a></li>
+      <li><strong>Stripe</strong> (paiements) — <a href="https://stripe.com/fr/privacy" target="_blank">Politique de confidentialité</a></li>
+      <li><strong>Netlify</strong> (hébergement) — <a href="https://www.netlify.com/privacy/" target="_blank">Politique de confidentialité</a></li>
+    </ul>
+    <p>Aucune autre personne n'a accès à vos données métier.</p>
+  </div>
+
+  <div class="section">
+    <h2>5. Durée de conservation</h2>
+    <ul>
+      <li><strong>Données de compte :</strong> conservées pendant toute la durée de l'abonnement, puis supprimées dans un délai de 30 jours après résiliation sur demande</li>
+      <li><strong>Données de facturation :</strong> conservées 10 ans conformément aux obligations comptables françaises</li>
+      <li><strong>Données techniques :</strong> conservées 12 mois maximum</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>6. Vos droits</h2>
+    <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+    <ul>
+      <li><strong>Droit d'accès :</strong> obtenir une copie de vos données</li>
+      <li><strong>Droit de rectification :</strong> corriger des données inexactes</li>
+      <li><strong>Droit à l'effacement :</strong> demander la suppression de votre compte et de vos données</li>
+      <li><strong>Droit à la portabilité :</strong> recevoir vos données dans un format lisible</li>
+      <li><strong>Droit d'opposition :</strong> vous opposer à certains traitements</li>
+    </ul>
+    <p>Pour exercer ces droits, contactez-nous à <a href="mailto:contact@trakoto.fr">contact@trakoto.fr</a>. Nous répondons dans un délai de 30 jours.</p>
+    <p>Vous pouvez également introduire une réclamation auprès de la <a href="https://www.cnil.fr" target="_blank">CNIL</a>.</p>
+  </div>
+
+  <div class="section">
+    <h2>7. Cookies</h2>
+    <p>Trakoto utilise uniquement des cookies strictement nécessaires au fonctionnement de l'application :</p>
+    <ul>
+      <li><span class="tag">sb-session</span> Cookie de session Supabase — maintient votre connexion</li>
+    </ul>
+    <p>Aucun cookie publicitaire, analytics ou de tracking tiers n'est utilisé. Aucun bandeau de consentement cookies n'est donc requis.</p>
+  </div>
+
+  <div class="section">
+    <h2>8. Sécurité</h2>
+    <p>Nous appliquons les mesures suivantes pour protéger vos données :</p>
+    <ul>
+      <li>Chiffrement des mots de passe (bcrypt via Supabase Auth)</li>
+      <li>Communication chiffrée via HTTPS/TLS</li>
+      <li>Accès aux données restreint par Row Level Security (Supabase RLS)</li>
+      <li>Données bancaires gérées exclusivement par Stripe (certifié PCI-DSS)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>9. Modifications</h2>
+    <p>Nous nous réservons le droit de modifier cette politique à tout moment. En cas de modification substantielle, vous serez informé par email. La date de dernière mise à jour est indiquée en haut de cette page.</p>
+  </div>
+
+  <div class="section">
+    <h2>10. Contact</h2>
+    <p>Pour toute question relative à vos données personnelles : <a href="mailto:contact@trakoto.fr">contact@trakoto.fr</a></p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="cgv.html">CGV</a>
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="confidentialite.html">Politique de confidentialité</a>
+    <a href="landing.html">Accueil</a>
+  </div>
+  <div class="footer-copy">© 2025 Trakoto — L'équipe Trakoto</div>
+</footer>
+
+</body>
+</html>

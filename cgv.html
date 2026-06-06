@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trakoto — Conditions Générales de Vente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #f2f2f7;
+      --surface: #ffffff;
+      --text: #1a1a1a;
+      --text2: #6e6e73;
+      --border: #e5e5ea;
+    }
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    header {
+      background: rgba(242,242,247,0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 0.5px solid rgba(0,0,0,0.1);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px; text-decoration: none;
+    }
+    .logo-icon {
+      width: 32px; height: 32px; background: #1a1a1a; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-name {
+      font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--text);
+    }
+    .back-link {
+      font-size: 14px; color: var(--text2); text-decoration: none;
+      display: flex; align-items: center; gap: 4px; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .doc-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 36px;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .doc-date {
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 40px;
+    }
+    .section {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      letter-spacing: -0.2px;
+    }
+    p {
+      font-size: 15px;
+      color: var(--text2);
+      margin-bottom: 10px;
+    }
+    p:last-child { margin-bottom: 0; }
+    ul {
+      padding-left: 20px;
+      margin-bottom: 10px;
+    }
+    li {
+      font-size: 15px;
+      color: var(--text2);
+      margin-bottom: 6px;
+    }
+    a { color: var(--text); }
+    footer {
+      background: white;
+      border-top: 0.5px solid var(--border);
+      padding: 24px;
+      text-align: center;
+    }
+    .footer-links {
+      display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px;
+    }
+    .footer-links a { font-size: 13px; color: var(--text2); text-decoration: none; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 12px; color: var(--text2); }
+    @media (max-width: 768px) {
+      .container { padding: 32px 16px 60px; }
+      .section { padding: 20px; }
+      .doc-title { font-size: 28px; }
+      header { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="landing.html" class="logo">
+    <div class="logo-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round">
+        <path d="M5 13h14v5H5z"/>
+        <path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/>
+        <circle cx="8" cy="18" r="1.5" fill="white" stroke="none"/>
+        <circle cx="16" cy="18" r="1.5" fill="white" stroke="none"/>
+      </svg>
+    </div>
+    <span class="logo-name">Trakoto</span>
+  </a>
+  <a href="landing.html" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="13" y1="8" x2="3" y2="8"/><polyline points="7,4 3,8 7,12"/></svg>
+    Retour
+  </a>
+</header>
+
+<div class="container">
+  <div class="doc-title">Conditions Générales de Vente</div>
+  <div class="doc-date">Dernière mise à jour : juin 2025</div>
+
+  <div class="section">
+    <h2>Article 1 — Objet</h2>
+    <p>Les présentes Conditions Générales de Vente (CGV) régissent les relations contractuelles entre L'équipe Trakoto, auto-entrepreneur (ci-après « le Prestataire ») et toute personne physique ou morale (ci-après « le Client ») souscrivant à l'application SaaS Trakoto accessible à l'adresse trakoto.fr.</p>
+    <p>Toute souscription implique l'acceptation pleine et entière des présentes CGV.</p>
+  </div>
+
+  <div class="section">
+    <h2>Article 2 — Description du service</h2>
+    <p>Trakoto est une application web de gestion de parc automobile destinée aux marchands automobiles indépendants. Elle permet notamment :</p>
+    <ul>
+      <li>La gestion et le suivi d'un parc de véhicules</li>
+      <li>La planification de tâches et de rendez-vous</li>
+      <li>Le suivi des finances, marges et coûts de préparation</li>
+      <li>La consultation de statistiques et d'un tableau de bord</li>
+    </ul>
+    <p>Le service est fourni en l'état (SaaS). Le Prestataire se réserve le droit de faire évoluer les fonctionnalités à tout moment.</p>
+  </div>
+
+  <div class="section">
+    <h2>Article 3 — Tarifs et facturation</h2>
+    <p>L'abonnement Trakoto Pro est proposé au tarif de <strong>29 € TTC par mois</strong> (TVA non applicable, article 293 B du CGI — micro-entrepreneur).</p>
+    <p>Une période d'essai gratuite de <strong>14 jours</strong> est proposée à tout nouveau Client. Aucune carte bancaire n'est requise pour démarrer l'essai. À l'issue de la période d'essai, l'abonnement est activé et facturé mensuellement.</p>
+    <p>Le prélèvement est effectué chaque mois à la date anniversaire de souscription, via la plateforme de paiement Stripe.</p>
+  </div>
+
+  <div class="section">
+    <h2>Article 4 — Résiliation</h2>
+    <p>Le Client peut résilier son abonnement à tout moment depuis son espace compte dans l'application, sans frais ni préavis.</p>
+    <p>La résiliation prend effet à la fin de la période de facturation en cours. Aucun remboursement au prorata n'est effectué pour la période restante.</p>
+    <p>Le Prestataire se réserve le droit de résilier un compte en cas de non-paiement ou d'utilisation contraire aux présentes CGV.</p>
+  </div>
+
+  <div class="section">
+    <h2>Article 5 — Droit de rétractation</h2>
+    <p>Conformément à l'article L221-28 du Code de la consommation, le droit de rétractation ne s'applique pas aux contenus numériques fournis immédiatement après souscription, lorsque le Client a expressément renoncé à ce droit.</p>
+    <p>En démarrant l'essai gratuit et en accédant au service, le Client reconnaît renoncer à son droit de rétractation pour la part du service déjà consommée.</p>
+    <p>Toutefois, dans un souci de satisfaction client, le Prestataire examine toute demande de remboursement formulée dans les 7 jours suivant la première facturation à l'adresse <a href="mailto:contact@trakoto.fr">contact@trakoto.fr</a>.</p>
+  </div>
+
+  <div class="section">
+    <h2>Article 6 — Disponibilité du service</h2>
+    <p>Le Prestataire s'engage à maintenir le service accessible au mieux de ses capacités. Des interruptions ponctuelles pour maintenance peuvent survenir et seront communiquées autant que possible à l'avance.</p>
+    <p>Le Prestataire ne saurait être tenu responsable d'interruptions liées à des tiers (hébergeur, opérateur, force majeure).</p>
+  </div>
+
+  <div class="section">
+    <h2>Article 7 — Responsabilité</h2>
+    <p>Trakoto est un outil d'aide à la gestion. Le Prestataire ne saurait être tenu responsable des décisions commerciales prises par le Client sur la base des données affichées dans l'application.</p>
+    <p>La responsabilité du Prestataire est limitée au montant des sommes versées par le Client au cours des trois derniers mois précédant le litige.</p>
+  </div>
+
+  <div class="section">
+    <h2>Article 8 — Données personnelles</h2>
+    <p>Le traitement des données personnelles est décrit dans notre <a href="confidentialite.html">Politique de confidentialité</a>. Le Client dispose d'un droit d'accès, de rectification et de suppression de ses données en contactant <a href="mailto:contact@trakoto.fr">contact@trakoto.fr</a>.</p>
+  </div>
+
+  <div class="section">
+    <h2>Article 9 — Loi applicable et litiges</h2>
+    <p>Les présentes CGV sont soumises au droit français. En cas de litige, le Client s'adressera en priorité au Prestataire par email à <a href="mailto:contact@trakoto.fr">contact@trakoto.fr</a> afin de rechercher une solution amiable.</p>
+    <p>À défaut d'accord amiable, tout litige sera soumis aux tribunaux compétents du ressort du siège du Prestataire.</p>
+    <p>Conformément à l'article L612-1 du Code de la consommation, le Client consommateur peut recourir gratuitement à un médiateur de la consommation.</p>
+  </div>
+
+  <div class="section">
+    <h2>Article 10 — Contact</h2>
+    <p>Pour toute question relative aux présentes CGV : <a href="mailto:contact@trakoto.fr">contact@trakoto.fr</a></p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="cgv.html">CGV</a>
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="confidentialite.html">Politique de confidentialité</a>
+    <a href="landing.html">Accueil</a>
+  </div>
+  <div class="footer-copy">© 2025 Trakoto — L'équipe Trakoto</div>
+</footer>
+
+</body>
+</html>
