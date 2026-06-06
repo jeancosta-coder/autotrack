@@ -1150,6 +1150,36 @@ function showToast(message){
   setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(-8px)'; setTimeout(() => toast.remove(), 250); }, 1800);
 }
 
+function createDesktopDialog(id, innerHtml, opts = {}) {
+  const existing = document.getElementById(id);
+  if (existing) existing.remove();
+  const sheet = document.createElement('div');
+  sheet.id = id;
+  sheet.className = 'desktop-popup-sheet';
+  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.28);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
+  const width = opts.desktopWidth || '520px';
+  const innerStyle = opts.innerStyle || '';
+  sheet.innerHTML = `<div style="width:min(${width},calc(100vw - 320px));max-height:calc(100vh - 120px);overflow:auto;border-radius:24px;background:white;box-shadow:0 24px 80px rgba(0,0,0,0.14);${innerStyle}">${innerHtml}</div>`;
+  sheet.addEventListener('click', e => { if (e.target === sheet) sheet.remove(); });
+  document.body.appendChild(sheet);
+  return sheet;
+}
+
+function createDialogOrSheet(id, innerHtml, options = {}) {
+  const existing = document.getElementById(id);
+  if (existing) existing.remove();
+  if (window.innerWidth >= 900) {
+    return createDesktopDialog(id, innerHtml, options);
+  }
+  const sheet = document.createElement('div');
+  sheet.id = id;
+  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
+  sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;animation:slideUpFull 0.25s ease;${options.innerStyle || ''}">${innerHtml}</div>`;
+  sheet.addEventListener('click', e => { if (e.target === sheet) sheet.remove(); });
+  document.body.appendChild(sheet);
+  return sheet;
+}
+
 function switchView(view){
   // Fermer le détail véhicule s'il est ouvert
   const details = document.getElementById('details');
@@ -1220,17 +1250,13 @@ function renderCompte(){
 }
 
 async function doLogout(){
-  const sheet = document.createElement('div');
-  sheet.className = 'desktop-popup-sheet';
-  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
-  sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
+  const innerHtml = `<div style="padding:24px 20px 40px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Se déconnecter ?</div>
     <div style="color:#8e8e93;font-size:15px;margin-bottom:24px;">Vous devrez vous reconnecter pour accéder à vos données.</div>
-    <button onclick="confirmLogout();this.closest('[style*=fixed]').remove();" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Se déconnecter</button>
-    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
+    <button onclick="confirmLogout();document.getElementById('logout-sheet')?.remove();" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Se déconnecter</button>
+    <button onclick="document.getElementById('logout-sheet')?.remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
   </div>`;
-  sheet.addEventListener('click', e => { if(e.target === sheet) sheet.remove(); });
-  document.body.appendChild(sheet);
+  createDialogOrSheet('logout-sheet', innerHtml, {desktopWidth:'420px'});
 }
 
 async function confirmLogout(){
@@ -1591,14 +1617,13 @@ function changeStatut(newStatut){
 
 function openDetailTaskModal(){
   const existing = document.getElementById('simple-task-modal');
-  if(existing) existing.remove();
+  if (existing) existing.remove();
 
   document.newSimpleTaskType = 'preparation';
   document.newSimpleTaskTypeLabel = 'Préparation';
   document.newSimpleTaskTypeDot = '#00FF88';
 
-  const html = `<div id="simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;flex-shrink:0;min-height:56px;">
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;flex-shrink:0;min-height:56px;">
       <button onclick="document.getElementById('simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
       <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Nouvelle tâche</span>
       <button onclick="saveSimpleTask()" style="background:none;border:none;cursor:pointer;">
@@ -1632,10 +1657,14 @@ function openDetailTaskModal(){
           <input type="date" id="stask-date" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;text-align:right;"/>
         </div>
       </div>
-    </div>
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend', html);
-  setTimeout(() => document.getElementById('stask-title').focus(), 300);
+    </div>`;
+
+  if (window.innerWidth >= 900) {
+    createDesktopDialog('simple-task-modal', innerHtml, { desktopWidth: '520px' });
+  } else {
+    document.body.insertAdjacentHTML('beforeend', `<div id="simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">${innerHtml}</div>`);
+  }
+  setTimeout(() => document.getElementById('stask-title')?.focus(), 300);
 }
 
 function saveSimpleTask(){
@@ -2018,8 +2047,8 @@ function openEditPlanningTaskModal(taskId){
   document.editTaskDate = taskDate;
   document.editTaskDateEnd = task.dateEnd || taskDate;
   document.editTaskAllDay = task.allDay || false;
-  const html = `<div id="edit-task-modal-planning" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;">
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;background:white;flex-shrink:0;min-height:56px;">
+
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;background:white;flex-shrink:0;min-height:56px;">
       <button onclick="closeEditPlanningModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
       <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Modifier la tâche</span>
       <button onclick="saveEditPlanningTask(${taskId})" style="background:none;border:none;cursor:pointer;">
@@ -2063,9 +2092,13 @@ function openEditPlanningTaskModal(taskId){
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF1744" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
         </button>
       </div>
-    </div>
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend', html);
+    </div>`;
+
+  if (window.innerWidth >= 900) {
+    createDesktopDialog('edit-task-modal-planning', innerHtml, { desktopWidth: '520px' });
+  } else {
+    document.body.insertAdjacentHTML('beforeend', `<div id="edit-task-modal-planning" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;">${innerHtml}</div>`);
+  }
 }
 
 function closeEditPlanningModal(){ const m = document.getElementById('edit-task-modal-planning'); if(m) m.remove(); }
@@ -2074,42 +2107,18 @@ function openEditBottomSheet(key){
   const config = BOTTOM_SHEET_DATA[key];
   if(!config) return;
   const options = typeof config.options === 'function' ? config.options() : config.options;
-  const existing = document.getElementById('edit-bottom-sheet');
-  if(existing) existing.remove();
   const optionsHtml = options.map((opt, i) => `
     <div data-key="${key}" data-idx="${i}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
       ${opt.dot ? '<span style="width:12px;height:12px;border-radius:50%;background:' + opt.dot + ';flex-shrink:0;"></span>' : ''}
       <span style="font-size:16px;color:#1a1a1a;">${opt.label}</span>
     </div>`).join('');
-  const sheet = document.createElement('div');
-  sheet.id = 'edit-bottom-sheet';
-  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
-  sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;max-height:70vh;overflow-y:auto;">
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;">
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;">
       <span style="font-size:17px;font-weight:600;color:#1a1a1a;">${config.title}</span>
-      <button onclick="document.getElementById('edit-bottom-sheet').remove()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button>
-    </div><div>${optionsHtml}</div></div>`;
-  sheet.addEventListener('click', (e) => {
-    if(e.target === sheet) { sheet.remove(); return; }
-    const row = e.target.closest('[data-key]');
-    if(row){
-      const k = row.dataset.key, idx = parseInt(row.dataset.idx);
-      const cfg = BOTTOM_SHEET_DATA[k];
-      const opts = typeof cfg.options === 'function' ? cfg.options() : cfg.options;
-      const opt = opts[idx];
-      document['editTask' + k.charAt(0).toUpperCase() + k.slice(1)] = opt.val;
-      if(k === 'type'){
-        const dot = document.getElementById('edit-type-dot'); const lbl = document.getElementById('edit-type-label');
-        if(dot) dot.style.background = opt.dot; if(lbl) lbl.textContent = opt.label;
-      } else if(k === 'vehicle'){
-        const lbl = document.getElementById('edit-vehicle-label');
-        if(lbl){ lbl.textContent = opt.label; lbl.style.color = opt.val ? '#1a1a1a' : '#8e8e93'; }
-      }
-      sheet.remove();
-    }
-  });
-  document.body.appendChild(sheet);
+      <button onclick="closeEditBottomSheet()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button>
+    </div>${optionsHtml}`;
+  createDialogOrSheet('edit-bottom-sheet', innerHtml, {desktopWidth:'420px'});
 }
+
 
 function confirmDeleteEditTask(taskId){
   const sheet = document.createElement('div');
@@ -2144,19 +2153,15 @@ function saveEditPlanningTask(taskId){
 }
 
 function openEditTaskModal(vehicleId, taskId){
-  // Chercher d'abord dans les tâches du véhicule
   const v = vehicles.find(x => x.id === vehicleId);
   const task = v ? v.tasks.find(t => t.id === taskId) : null;
   if(task){
-    // C'est une tâche véhicule → modal simple
     const existing = document.getElementById('edit-simple-task-modal');
     if(existing) existing.remove();
-  const currentType = task.type || 'preparation';
-  const TASK_TYPE_MAP = {preparation:{label:'Préparation',dot:'#00FF88'}, sav:{label:'SAV',dot:'#FF1744'}, rappel:{label:'Rappel',dot:'#CCFF00'}, rdv:{label:'RDV',dot:'#00D4FF'}, appel:{label:'Appel',dot:'#7B68EE'}};
-  document.editSimpleTaskType = currentType;
-
-  const html = `<div id="edit-simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;flex-shrink:0;min-height:56px;">
+    const currentType = task.type || 'preparation';
+    const TASK_TYPE_MAP = {preparation:{label:'Préparation',dot:'#00FF88'}, sav:{label:'SAV',dot:'#FF1744'}, rappel:{label:'Rappel',dot:'#CCFF00'}, rdv:{label:'RDV',dot:'#00D4FF'}, appel:{label:'Appel',dot:'#7B68EE'}};
+    document.editSimpleTaskType = currentType;
+    const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;flex-shrink:0;min-height:56px;">
       <button onclick="document.getElementById('edit-simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
       <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Modifier la tâche</span>
       <button onclick="updateSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;">
@@ -2193,19 +2198,22 @@ function openEditTaskModal(vehicleId, taskId){
       <div style="display:flex;justify-content:center;margin-top:8px;">
         <button onclick="deleteSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;padding:12px;border-radius:50%;">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
           </svg>
         </button>
       </div>
-    </div>
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend', html);
-  return;
+    </div>`;
+    if (window.innerWidth >= 900) {
+      createDesktopDialog('edit-simple-task-modal', innerHtml, { desktopWidth: '520px' });
+    } else {
+      document.body.insertAdjacentHTML('beforeend', `<div id="edit-simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">${innerHtml}</div>`);
+    }
+    return;
   }
-  // Sinon c'est un événement planning
   const planningTask = planning.find(t => t.id === taskId);
   if(planningTask) openEditPlanningTaskModal(taskId);
 }
+
 
 function openSimpleTaskTypeSheet(mode){
   const TYPES = [
@@ -2218,22 +2226,15 @@ function openSimpleTaskTypeSheet(mode){
   const existing = document.getElementById('simple-type-sheet');
   if(existing) existing.remove();
   const optionsHtml = TYPES.map(t => `
-    <div onclick="selectSimpleTaskType('${mode}','${t.val}','${t.label}','${t.dot}')" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
+    <div onclick="selectSimpleTaskType('${mode}','${t.val}','${t.label}','${t.dot}')" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;" onmouseover="this.style.background='#f2f7f7'" onmouseout="this.style.background='white'">
       <span style="width:12px;height:12px;border-radius:50%;background:${t.dot};flex-shrink:0;"></span>
       <span style="font-size:16px;color:#1a1a1a;">${t.label}</span>
     </div>`).join('');
-  const sheet = document.createElement('div');
-  sheet.id = 'simple-type-sheet';
-  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
-  sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;animation:slideUpFull 0.25s ease;">
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;">
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;">
       <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Type de tâche</span>
-      <button onclick="document.getElementById('simple-type-sheet').remove()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button>
-    </div>
-    ${optionsHtml}
-  </div>`;
-  sheet.addEventListener('click', e => { if(e.target === sheet) sheet.remove(); });
-  document.body.appendChild(sheet);
+      <button onclick="document.getElementById('simple-type-sheet')?.remove()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button>
+    </div>${optionsHtml}`;
+  createDialogOrSheet('simple-type-sheet', innerHtml, {desktopWidth:'420px'});
 }
 
 function selectSimpleTaskType(mode, val, label, dot){
@@ -2275,17 +2276,13 @@ function updateSimpleTask(vehicleId, taskId){
 }
 
 function deleteSimpleTask(vehicleId, taskId){
-  const sheet = document.createElement('div');
-  sheet.className = 'desktop-popup-sheet';
-  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
-  sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
+  const html = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer cette tâche ?</div>
     <div style="color:#8e8e93;font-size:15px;margin-bottom:24px;">Cette action ne peut pas être annulée.</div>
-    <button onclick="DataLayer.deleteTask(${vehicleId},${taskId});save();document.getElementById('edit-simple-task-modal').remove();renderDetailTasks(${vehicleId},'all');showToast('✓ Tâche supprimée');this.closest('[style*=fixed]').remove();" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Supprimer</button>
-    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
+    <button onclick="DataLayer.deleteTask(${vehicleId},${taskId});save();document.getElementById('edit-simple-task-modal')?.remove();renderDetailTasks(${vehicleId},'all');showToast('✓ Tâche supprimée');document.getElementById('delete-simple-task-sheet')?.remove();" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Supprimer</button>
+    <button onclick="document.getElementById('delete-simple-task-sheet')?.remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
   </div>`;
-  sheet.addEventListener('click', e => { if(e.target === sheet) sheet.remove(); });
-  document.body.appendChild(sheet);
+  createDialogOrSheet('delete-simple-task-sheet', html, {desktopWidth:'420px'});
 }
 
 function closeEditTaskModal(){ document.getElementById('modal-edit-task').classList.remove('active'); }
@@ -2560,19 +2557,19 @@ function openBottomSheet(key){
   const config = BOTTOM_SHEET_DATA[key];
   if(!config) return;
   const options = typeof config.options === 'function' ? config.options() : config.options;
-  const existing = document.getElementById('ntask-bottom-sheet');
-  if(existing) existing.remove();
-  const optionsHtml = options.map((opt, i) => `<div data-key="${key}" data-idx="${i}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">${opt.dot ? '<span style="width:12px;height:12px;border-radius:50%;background:'+opt.dot+';flex-shrink:0;"></span>' : ''}<span style="font-size:16px;color:#1a1a1a;">${opt.label}</span></div>`).join('');
-  const sheet = document.createElement('div');
-  sheet.id = 'ntask-bottom-sheet';
-  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
-  sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;max-height:70vh;overflow-y:auto;"><div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;"><span style="font-size:17px;font-weight:600;color:#1a1a1a;">${config.title}</span><button onclick="closeBottomSheet()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button></div><div>${optionsHtml}</div></div>`;
-  sheet.addEventListener('click', (e) => {
-    if(e.target === sheet) { closeBottomSheet(); return; }
-    const row = e.target.closest('[data-key]');
-    if(row){ const k = row.dataset.key, idx = parseInt(row.dataset.idx); const cfg = BOTTOM_SHEET_DATA[k]; const opts = typeof cfg.options === 'function' ? cfg.options() : cfg.options; const opt = opts[idx]; if(cfg && cfg.onSelect) cfg.onSelect(opt.val, opt.label, opt.dot || ''); closeBottomSheet(); }
+  const optionsHtml = options.map((opt, i) => `<div data-key="${key}" data-idx="${i}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">${opt.dot ? '<span style="width:12px;height:12px;border-radius:50%;background:'+opt.dot+';flex-shrink:0;'></span>' : ''}<span style="font-size:16px;color:#1a1a1a;">${opt.label}</span></div>`).join('');
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;"><span style="font-size:17px;font-weight:600;color:#1a1a1a;">${config.title}</span><button onclick="closeBottomSheet()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button></div><div>${optionsHtml}</div>`;
+  const sheet = createDialogOrSheet('ntask-bottom-sheet', innerHtml, {desktopWidth:'420px'});
+  sheet.querySelectorAll('[data-key]').forEach(item => {
+    item.addEventListener('click', () => {
+      const idx = Number(item.getAttribute('data-idx'));
+      const selected = options[idx];
+      if(selected && typeof config.onSelect === 'function') {
+        config.onSelect(selected.val, selected.label, selected.dot || null);
+      }
+      closeBottomSheet();
+    });
   });
-  document.body.appendChild(sheet);
 }
 
 function closeBottomSheet(){ const sheet = document.getElementById('ntask-bottom-sheet'); if(sheet) sheet.remove(); }
