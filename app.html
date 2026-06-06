@@ -2557,21 +2557,33 @@ function openBottomSheet(key){
   const config = BOTTOM_SHEET_DATA[key];
   if(!config) return;
   const options = typeof config.options === 'function' ? config.options() : config.options;
-  const optionsHtml = options.map((opt, i) => `<div data-key="${key}" data-idx="${i}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">${opt.dot ? '<span style="width:12px;height:12px;border-radius:50%;background:'+opt.dot+';flex-shrink:0;'></span>' : ''}<span style="font-size:16px;color:#1a1a1a;">${opt.label}</span></div>`).join('');
-  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;"><span style="font-size:17px;font-weight:600;color:#1a1a1a;">${config.title}</span><button onclick="closeBottomSheet()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button></div><div>${optionsHtml}</div>`;
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;"><span style="font-size:17px;font-weight:600;color:#1a1a1a;">${config.title}</span><button onclick="closeBottomSheet()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button></div><div id="ntask-bottom-sheet-options"></div>`;
   const sheet = createDialogOrSheet('ntask-bottom-sheet', innerHtml, {desktopWidth:'420px'});
-  sheet.querySelectorAll('[data-key]').forEach(item => {
+  const container = sheet.querySelector('#ntask-bottom-sheet-options');
+  if(!container) return;
+  options.forEach((opt, i) => {
+    const item = document.createElement('div');
+    item.dataset.key = key;
+    item.dataset.idx = String(i);
+    item.style.cssText = 'display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;';
+    if(opt.dot){
+      const dot = document.createElement('span');
+      dot.style.cssText = 'width:12px;height:12px;border-radius:50%;background:' + opt.dot + ';flex-shrink:0;';
+      item.appendChild(dot);
+    }
+    const label = document.createElement('span');
+    label.style.cssText = 'font-size:16px;color:#1a1a1a;';
+    label.textContent = opt.label;
+    item.appendChild(label);
+    item.addEventListener('mouseover', () => item.style.background = '#f2f2f7');
+    item.addEventListener('mouseout', () => item.style.background = 'white');
     item.addEventListener('click', () => {
-      const idx = Number(item.getAttribute('data-idx'));
-      const selected = options[idx];
-      if(selected && typeof config.onSelect === 'function') {
-        config.onSelect(selected.val, selected.label, selected.dot || null);
-      }
+      if(typeof config.onSelect === 'function') config.onSelect(opt.val, opt.label, opt.dot || null);
       closeBottomSheet();
     });
+    container.appendChild(item);
   });
 }
-
 function closeBottomSheet(){ const sheet = document.getElementById('ntask-bottom-sheet'); if(sheet) sheet.remove(); }
 
 function saveNewTask(){
