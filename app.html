@@ -509,25 +509,29 @@
         right: auto !important;
         bottom: auto !important;
         width: auto !important;
-        flex: 1;
-        min-height: calc(100vh - 88px);
-        max-height: calc(100vh - 88px);
+        height: calc(100vh - 60px) !important;
+        min-height: unset !important;
+        max-height: unset !important;
         overflow: hidden;
+        background: transparent !important;
       }
       #planning > div:first-child {
-        position: sticky;
-        top: 0;
-        z-index: 2;
-        background: #eef2f7;
-        padding-top: 24px;
-        padding-bottom: 20px;
+        position: static;
+        z-index: auto;
+        background: transparent;
+        padding-top: 0;
+        padding-bottom: 0;
       }
       #planning #calendar-container {
-        border-radius: 24px;
+        border-radius: 16px;
         background: white;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        box-shadow: 0 1px 8px rgba(0,0,0,0.06);
         overflow: hidden;
-        min-height: calc(100vh - 180px);
+        flex: 1 !important;
+        min-height: 0 !important;
+      }
+      #calendar-scroll-area {
+        padding-bottom: 20px !important;
       }
       #planning .calendar-day {
         border-radius: 16px;
@@ -732,12 +736,12 @@
       }
       /* ── Desktop: planning nav ── */
       .desktop-plan-nav { display: flex !important; align-items: center; gap: 6px; }
-      .desktop-view-selector { display: flex !important; align-items: center; gap: 4px; }
+      .desktop-view-selector { display: flex !important; align-items: center; gap: 0 !important; background: #f2f2f7; border-radius: 10px; padding: 2px; }
       #planning-grid-icon-btn { display: none !important; }
-      .vsel-btn { transition: all 0.15s ease; }
-      .vsel-btn:hover { background: #f2f2f7 !important; color: #1a1a1a !important; }
-      .vsel-btn.vsel-active { background: #1a1a1a !important; color: white !important; border-color: transparent !important; }
-      .vsel-btn.vsel-active:hover { background: #333 !important; }
+      .vsel-btn { transition: none !important; border: none !important; border-radius: 8px !important; background: transparent !important; color: #1a1a1a !important; padding: 7px 12px !important; font-size: 13px !important; font-weight: 500 !important; cursor: pointer; }
+      .vsel-btn:hover { background: rgba(0,0,0,0.04) !important; }
+      .vsel-btn.vsel-active { background: white !important; color: #1a1a1a !important; box-shadow: 0 1px 3px rgba(0,0,0,0.12) !important; border-color: transparent !important; }
+      .vsel-btn.vsel-active:hover { background: white !important; }
       /* ── Desktop: hide mobile pill handle ── */
       #details-pill-handle { display: none !important; }
       /* ── Desktop: new-task modal centered ── */
@@ -758,9 +762,9 @@
       #modal-add-vehicle { z-index: 9998 !important; }
       /* ── Desktop: planning header bar nicer ── */
       #planning-header-bar {
-        padding: 10px 20px !important;
-        background: white;
-        border-bottom: 1px solid #f2f2f7 !important;
+        padding: 16px 24px !important;
+        background: white !important;
+        border-bottom: 0.5px solid rgba(0,0,0,0.08) !important;
       }
     }
   </style>
@@ -840,8 +844,7 @@
         <p>Planifiez et suivez tous les rendez-vous directement depuis le bureau, avec un accès rapide aux tâches et aux dates clés.</p>
       </div>
       <div class="desktop-header-actions">
-        <button class="desktop-card-btn" type="button" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')">Nouvelle tâche</button>
-        <button class="desktop-card-btn" type="button" onclick="openViewModal()">Filtrer</button>
+        <button class="desktop-card-btn" type="button" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')">Nouvel événement</button>
       </div>
     </div>
     <div id="planning-header-bar" style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:white;border-bottom:1px solid #e5e5e5;flex-shrink:0;gap:12px;">
@@ -2130,9 +2133,7 @@ function renderWeekView(date){
   let hoursHtml = `<div style="position:relative;height:${gridHeight}px;">`;
   for(let h = START_HOUR; h < END_HOUR; h++){
     const top = (h - START_HOUR) * HOUR_HEIGHT;
-    const isEven = h % 2 === 0;
-    hoursHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;height:${HOUR_HEIGHT}px;background:${isEven ? 'rgba(0,0,0,0.015)' : 'transparent'};border-radius:4px;"></div>`;
-    hoursHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;font-size:10px;font-weight:600;color:#8e8e93;line-height:1;padding-top:3px;">${String(h).padStart(2,'0')}</div>`;
+    hoursHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;font-size:10px;font-weight:400;color:#c7c7cc;line-height:1;padding-top:3px;">${String(h).padStart(2,'0')}</div>`;
   }
   hoursHtml += '</div>';
   gridHtml += hoursHtml;
@@ -2150,8 +2151,8 @@ function renderWeekView(date){
       const top = (h - START_HOUR) * HOUR_HEIGHT;
       const isEven = h % 2 === 0;
       const hour = String(h).padStart(2,'0') + ':00';
-      colHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;height:${HOUR_HEIGHT}px;background:${isEven ? 'rgba(0,0,0,0.015)' : 'transparent'};"></div>`;
-      colHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;height:1px;background:${h === START_HOUR ? 'transparent' : '#e5e5e5'};"></div>`;
+      colHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;height:${HOUR_HEIGHT}px;background:${isEven ? 'rgba(0,0,0,0.008)' : 'transparent'};"></div>`;
+      colHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;height:1px;background:${h === START_HOUR ? 'transparent' : 'rgba(0,0,0,0.05)'};"></div>`;
       colHtml += `<div onclick="event.stopPropagation();openPlanningTaskWithTime('${ds}','${hour}')" style="position:absolute;top:${top}px;left:0;right:0;height:${HOUR_HEIGHT}px;cursor:pointer;z-index:1;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'"></div>`;
     }
 
