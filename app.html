@@ -471,7 +471,7 @@
         font-weight: 600;
       }
       .desktop-only { display: block !important; }
-      .desktop-card-actions { display: flex !important; }
+      .desktop-card-actions { display: none !important; }
       .desktop-parc-toolbar { display: flex !important; }
       .desktop-view-header { display: block !important; }
       .desktop-view-header .desktop-header-actions { justify-content: flex-end; }
@@ -503,18 +503,20 @@
         padding: 28px;
       }
       #planning {
-        position: relative !important;
-        top: auto !important;
-        left: auto !important;
-        right: auto !important;
-        bottom: auto !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 280px !important;
+        right: 0 !important;
+        bottom: 0 !important;
         width: auto !important;
-        height: calc(100vh - 60px) !important;
+        height: auto !important;
         min-height: unset !important;
         max-height: unset !important;
         overflow: hidden;
-        background: transparent !important;
+        background: white !important;
+        z-index: 1 !important;
       }
+      #planning .desktop-view-header { display: none !important; }
       #planning > div:first-child {
         position: static;
         z-index: auto;
@@ -523,9 +525,8 @@
         padding-bottom: 0;
       }
       #planning #calendar-container {
-        border-radius: 16px;
+        border-radius: 0;
         background: white;
-        box-shadow: 0 1px 8px rgba(0,0,0,0.06);
         overflow: hidden;
         flex: 1 !important;
         min-height: 0 !important;
@@ -547,11 +548,11 @@
         top: 50% !important;
         left: 50% !important;
         transform: translate(-50%, -50%) !important;
-        width: min(980px, calc(100vw - 260px)) !important;
-        max-height: calc(100vh - 120px) !important;
-        border-radius: 28px !important;
-        box-shadow: 0 24px 60px rgba(0,0,0,0.12) !important;
-        background: rgba(255,255,255,0.98) !important;
+        width: min(1100px, calc(100vw - 280px)) !important;
+        max-height: calc(100vh - 60px) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.14) !important;
+        background: white !important;
         overflow: hidden !important;
         z-index: 10005 !important;
       }
@@ -669,17 +670,15 @@
         gap: 12px;
         justify-content: flex-start;
       }
-      .desktop-sidebar .nav-link::before {
-        content: attr(data-icon);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
-        border-radius: 10px;
-        background: #f2f2f7;
-        font-size: 14px;
+      .desktop-sidebar .nav-link svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+        opacity: 0.45;
+        transition: opacity 0.15s;
       }
+      .desktop-sidebar .nav-link:hover svg,
+      .desktop-sidebar .nav-link.active svg { opacity: 0.9; }
       .parc-filter {
         padding: 8px 16px;
         border: 1px solid #d1d1d6;
@@ -710,15 +709,23 @@
       .swipe-wrapper .trash-button {
         opacity: 0;
         pointer-events: none;
+        top: 10px !important;
+        right: 10px !important;
+        transform: none !important;
+        width: 30px !important;
+        height: 30px !important;
+        border-radius: 8px !important;
+        background: rgba(255,255,255,0.92) !important;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important;
       }
       #details {
         top: 50% !important;
         left: 50% !important;
         transform: translate(-50%, -50%) !important;
-        width: min(980px, calc(100vw - 320px)) !important;
-        max-height: calc(100vh - 120px) !important;
-        border-radius: 24px !important;
-        background: rgba(255,255,255,0.98) !important;
+        width: min(1100px, calc(100vw - 280px)) !important;
+        max-height: calc(100vh - 60px) !important;
+        border-radius: 20px !important;
+        background: white !important;
       }
       #details .detail-tab.active {
         background: #f2f2f7;
@@ -760,12 +767,57 @@
       }
       /* ── Desktop: add vehicle modal z-index ── */
       #modal-add-vehicle { z-index: 9998 !important; }
-      /* ── Desktop: planning header bar nicer ── */
+      /* ── Desktop: planning header bar ── */
       #planning-header-bar {
-        padding: 16px 24px !important;
+        height: 56px !important;
+        padding: 0 24px !important;
         background: white !important;
         border-bottom: 0.5px solid rgba(0,0,0,0.08) !important;
+        flex-shrink: 0;
       }
+      #planning-new-event-btn { display: flex !important; align-items: center; }
+      /* ── Desktop: details 2-column layout ── */
+      #tab-infos { display: none !important; }
+      #details > div:last-child {
+        display: grid !important;
+        grid-template-columns: 300px 1fr !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+      }
+      #detail-tab-infos {
+        display: block !important;
+        overflow-y: auto;
+        padding: 20px !important;
+        border-right: 0.5px solid #f0f0f5;
+        background: #fafafa;
+      }
+      #detail-tab-finances,
+      #detail-tab-taches,
+      #detail-tab-historique { overflow-y: auto; padding: 20px !important; }
+      /* ── Desktop: sidebar CTA ── */
+      .desktop-sidebar .sidebar-cta {
+        background: transparent !important;
+        color: #1a1a1a !important;
+        border: 1px solid #d1d1d6 !important;
+        box-shadow: none !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        transition: background 0.15s !important;
+      }
+      .desktop-sidebar .sidebar-cta:hover { background: #f2f2f7 !important; }
+      .desktop-sidebar .sidebar-logout { color: #8e8e93 !important; font-size: 13px !important; }
+      .desktop-sidebar .sidebar-logout:hover { color: #ff3b30 !important; }
+      /* ── Desktop: card hover lift ── */
+      .swipe-wrapper:hover .vehicle-card-swipeable {
+        box-shadow: 0 6px 24px rgba(0,0,0,0.08) !important;
+        transform: translateY(-1px);
+        transition: box-shadow 0.18s, transform 0.18s;
+      }
+      /* ── Desktop: thin scrollbar ── */
+      ::-webkit-scrollbar { width: 5px; height: 5px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.18); }
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
@@ -780,10 +832,10 @@
     </div>
   </div>
   <nav style="display:flex;flex-direction:column;gap:8px;margin-top:28px;">
-    <button class="nav-link active" type="button" onclick="switchView('planning')" data-icon="📅">Planning</button>
-    <button class="nav-link" type="button" onclick="switchView('parc')" data-icon="🚗">Parc</button>
-    <button class="nav-link" type="button" onclick="switchView('dashboard')" data-icon="📊">Dashboard</button>
-    <button class="nav-link" type="button" onclick="switchView('compte')" data-icon="👤">Compte</button>
+    <button class="nav-link active" type="button" onclick="switchView('planning')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="4" x2="9" y2="9"/><line x1="15" y1="4" x2="15" y2="9"/></svg>Planning</button>
+    <button class="nav-link" type="button" onclick="switchView('parc')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 14h14v4H5z"/><path d="M7 14V9.5C7 8.7 7.7 8 8.5 8h7c.8 0 1.5.7 1.5 1.5V14"/><circle cx="8" cy="18" r="1.4" fill="currentColor" stroke="none"/><circle cx="16" cy="18" r="1.4" fill="currentColor" stroke="none"/></svg>Parc</button>
+    <button class="nav-link" type="button" onclick="switchView('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4" height="10" rx="1"/><rect x="10" y="6" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg>Dashboard</button>
+    <button class="nav-link" type="button" onclick="switchView('compte')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Compte</button>
   </nav>
   <div class="sidebar-footer" style="margin-top:auto;display:flex;flex-direction:column;gap:12px;">
     <button class="sidebar-cta btn-primary" type="button" onclick="openAddModal()">Nouveau véhicule</button>
@@ -858,6 +910,7 @@
       <div style="font-weight:700;font-size:16px;color:#1a1a1a;flex:1;text-align:center;" id="planning-header-date">Planning</div>
       <!-- Right: desktop view selector + mobile grid icon -->
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+        <button id="planning-new-event-btn" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="display:none;padding:6px 14px;background:transparent;border:1px solid #d1d1d6;border-radius:8px;color:#1a1a1a;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">+ Événement</button>
         <div class="desktop-view-selector" style="display:none;">
           <button class="vsel-btn" onclick="setViewMode('1')" id="vsel-1" style="padding:6px 10px;border:1px solid #d1d1d6;border-radius:8px;background:transparent;color:#1a1a1a;font-size:13px;font-weight:500;cursor:pointer;">Jour</button>
           <button class="vsel-btn" onclick="setViewMode('3')" id="vsel-3" style="padding:6px 10px;border:1px solid #d1d1d6;border-radius:8px;background:transparent;color:#1a1a1a;font-size:13px;font-weight:500;cursor:pointer;">3 jours</button>
@@ -1295,7 +1348,7 @@ function createDesktopDialog(id, innerHtml, opts = {}) {
   const sheet = document.createElement('div');
   sheet.id = id;
   sheet.className = 'desktop-popup-sheet';
-  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.28);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
+  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.28);z-index:10010;display:flex;align-items:center;justify-content:center;padding:20px;';
   const width = opts.desktopWidth || '520px';
   const innerStyle = opts.innerStyle || '';
   sheet.innerHTML = `<div style="width:min(${width},calc(100vw - 320px));max-height:calc(100vh - 120px);overflow:auto;border-radius:24px;background:white;box-shadow:0 24px 80px rgba(0,0,0,0.14);${innerStyle}">${innerHtml}</div>`;
@@ -1659,7 +1712,7 @@ function openVehicleDetails(id){
   document.getElementById('detail-progress-text').textContent = progressPercent + '%';
   currentDetailTaskFilter = 'all';
   renderDetailTasks(id, 'all');
-  switchDetailTab('infos');
+  switchDetailTab(window.innerWidth >= 900 ? 'taches' : 'infos');
   const modal = document.getElementById('details');
   modal.style.display = 'flex';
   const fab = document.getElementById('fab-parc');
@@ -1851,7 +1904,12 @@ let planningIndex = {};
 const DETAIL_TABS = ['infos', 'taches', 'finances', 'historique'];
 
 function switchDetailTab(tab){
-  document.querySelectorAll('.detail-tab-content').forEach(el => el.style.display = 'none');
+  const isDesktop = window.innerWidth >= 900;
+  if(isDesktop && tab === 'infos') tab = 'taches';
+  document.querySelectorAll('.detail-tab-content').forEach(el => {
+    if(isDesktop && el.id === 'detail-tab-infos') return;
+    el.style.display = 'none';
+  });
   document.querySelectorAll('.detail-tab').forEach(el => { el.style.color = '#8e8e93'; el.style.borderBottomColor = 'transparent'; });
   const tabContent = document.getElementById('detail-tab-' + tab);
   const tabBtn = document.getElementById('tab-' + tab);
