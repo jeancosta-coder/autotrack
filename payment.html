@@ -516,7 +516,7 @@
         <div class="plan-label">Votre plan</div>
         <div class="plan-name">Trakoto Pro</div>
         <div class="plan-price-wrap">
-          <div class="plan-price">29€</div>
+          <div class="plan-price">49€</div>
           <div class="plan-period">/ mois</div>
         </div>
         <div class="plan-trial">✓ 14 jours gratuits</div>
@@ -612,7 +612,7 @@
 
       <!-- Paiement -->
       <div class="form-section-label">Paiement</div>
-      <div class="stripe-wrap" style="display:none">
+      <div class="stripe-wrap">
         <div class="stripe-label">Carte bancaire</div>
         <div id="card-element"></div>
         <div id="card-errors"></div>
@@ -669,7 +669,7 @@
   // ── CONFIG ──────────────────────────────────────────────
   const SUPABASE_URL = 'https://qfwbneqcnqmpwkyolxze.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_0PVpvCFraP4oUAvstn88hA_ZFmp2ekl';
-  const STRIPE_PUBLIC_KEY = 'pk_test_placeholder';
+  const STRIPE_PUBLIC_KEY = 'pk_live_51S7g4rLpRzz1JRDzLxowsLLPYHT4CURAt4v1sFCRbgwkBjZwIGOwFMZuwMAF5mBTGQEHxvZPt5OLdXSOzaHkfyol00dsa2hZnO';
   // ────────────────────────────────────────────────────────
 
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -744,7 +744,20 @@
     setLoading(true);
 
     try {
-      // Mode test : pas de Stripe pour le moment.
+      // ── ÉTAPE 1 : Créer le PaymentMethod Stripe ──
+      const { paymentMethod, error: pmError } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: { name, email }
+      });
+
+      if (pmError) {
+        showError(pmError.message);
+        setLoading(false);
+        return;
+      }
+
+      // ── ÉTAPE 2 : Créer le compte Supabase ──
       const { data, error: signUpError } = await sb.auth.signUp({
         email,
         password: pwd,
@@ -752,7 +765,7 @@
           data: {
             full_name: name,
             garage_name: garage,
-            stripe_payment_method: null
+            stripe_payment_method: paymentMethod.id
           }
         }
       });
@@ -768,15 +781,14 @@
       }
 
       // ── ÉTAPE 3 : Appeler la Netlify Function pour créer la subscription Stripe ──
-      // À activer quand la Netlify Function est en place (Phase 4 infrastructure)
-      /*
       const res = await fetch('/.netlify/functions/create-subscription', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
           paymentMethodId: paymentMethod.id,
-          userId: data.user.id
+          userId: data.user.id,
+          priceId: 'price_1TfnHnLpRzz1JRDzZhYkBBAe'
         })
       });
 
@@ -786,7 +798,6 @@
         setLoading(false);
         return;
       }
-      */
 
       // ── SUCCÈS ──
       document.getElementById('form-content').style.display = 'none';
