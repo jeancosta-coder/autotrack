@@ -943,7 +943,6 @@
       <div style="font-weight:700;font-size:16px;color:#1a1a1a;flex:1;text-align:center;" id="planning-header-date">Planning</div>
       <!-- Right: desktop view selector + mobile grid icon -->
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
-        <button id="planning-new-event-btn" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="display:none;padding:6px 14px;background:transparent;border:1px solid #d1d1d6;border-radius:8px;color:#1a1a1a;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">+ Événement</button>
         <div class="desktop-view-selector" style="display:none;">
           <select id="desktop-view-select" onchange="setViewMode(this.value)">
             <option value="1">Jour</option>
@@ -952,6 +951,7 @@
             <option value="month">Mois</option>
           </select>
         </div>
+        <button id="planning-new-event-btn" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="display:none;padding:6px 14px;background:transparent;border:1px solid #d1d1d6;border-radius:8px;color:#1a1a1a;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">+ Événement</button>
         <button onclick="openViewModal()" id="planning-grid-icon-btn" style="width:36px;height:36px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;color:#1a1a1a;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
             <rect x="2" y="2" width="6" height="6" rx="1.5"/>
@@ -2028,7 +2028,10 @@ function savePrices(){
 function renderPlanning(){
   planningIndex = RenderHelpers.indexPlanningBySlot(DataLayer.getPlanning());
   let currentViewMode = localStorage.getItem('at_planning_viewmode');
-  if(!currentViewMode && window.innerWidth >= 900) currentViewMode = '7';
+  if(!currentViewMode && window.innerWidth >= 900) {
+    currentViewMode = '7';
+    localStorage.setItem('at_planning_viewmode', '7');
+  }
   currentViewMode = currentViewMode || '3';
   let dateRangeStr = '';
   if(currentViewMode === 'month'){
