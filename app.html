@@ -821,11 +821,42 @@
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script>
+    (function(){
+      try {
+        var c = document.createElement('canvas');
+        c.width = c.height = 180;
+        var x = c.getContext('2d');
+        x.fillStyle = '#1a1a1a';
+        x.fillRect(0, 0, 180, 180);
+        var s = 6, ox = 18, oy = 9;
+        x.strokeStyle = '#fff';
+        x.lineWidth = 9;
+        x.lineCap = 'round';
+        x.lineJoin = 'round';
+        // Body
+        x.beginPath(); x.rect(ox+3*s, oy+13*s, 18*s, 4*s); x.stroke();
+        // Cabin
+        x.beginPath();
+        x.moveTo(ox+5*s, oy+13*s); x.lineTo(ox+8*s, oy+8*s);
+        x.lineTo(ox+16*s, oy+8*s); x.lineTo(ox+19*s, oy+13*s);
+        x.stroke();
+        // Window divider
+        x.beginPath(); x.moveTo(ox+12*s, oy+8*s); x.lineTo(ox+12*s, oy+13*s); x.stroke();
+        // Wheels
+        x.beginPath(); x.arc(ox+7.5*s, oy+17*s, 2*s, 0, Math.PI*2); x.stroke();
+        x.beginPath(); x.arc(ox+16.5*s, oy+17*s, 2*s, 0, Math.PI*2); x.stroke();
+        var l = document.createElement('link');
+        l.rel = 'apple-touch-icon'; l.href = c.toDataURL();
+        document.head.appendChild(l);
+      } catch(e) {}
+    })();
+  </script>
 </head>
 <body>
 <aside id="desktop-sidebar" class="desktop-sidebar" style="display:none;">
   <div class="brand" style="display:flex;align-items:center;gap:12px;">
-    <div style="width:40px;height:40px;border-radius:14px;background:#1a1a1a;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;">T</div>
+    <div style="width:40px;height:40px;border-radius:14px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><path d="M5 13l3-5h8l3 5"/><line x1="12" y1="8" x2="12" y2="13"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/></svg></div>
     <div>
       <div style="font-size:18px;font-weight:700;color:#1a1a1a;">Trakoto</div>
       <div style="font-size:13px;color:#6b7280;">Gestion de parc</div>
@@ -833,7 +864,7 @@
   </div>
   <nav style="display:flex;flex-direction:column;gap:8px;margin-top:28px;">
     <button class="nav-link active" type="button" onclick="switchView('planning')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="4" x2="9" y2="9"/><line x1="15" y1="4" x2="15" y2="9"/></svg>Planning</button>
-    <button class="nav-link" type="button" onclick="switchView('parc')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 14h14v4H5z"/><path d="M7 14V9.5C7 8.7 7.7 8 8.5 8h7c.8 0 1.5.7 1.5 1.5V14"/><circle cx="8" cy="18" r="1.4" fill="currentColor" stroke="none"/><circle cx="16" cy="18" r="1.4" fill="currentColor" stroke="none"/></svg>Parc</button>
+    <button class="nav-link" type="button" onclick="switchView('parc')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><path d="M5 13l3-5h8l3 5"/><line x1="12" y1="8" x2="12" y2="13"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/></svg>Parc</button>
     <button class="nav-link" type="button" onclick="switchView('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4" height="10" rx="1"/><rect x="10" y="6" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg>Dashboard</button>
     <button class="nav-link" type="button" onclick="switchView('compte')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Compte</button>
   </nav>
@@ -1459,8 +1490,7 @@ async function confirmLogout(){
   localStorage.removeItem('at_vehicles');
   localStorage.removeItem('at_planning');
   // Masquer l'app
-  document.querySelectorAll('.bottom-nav, #fab-parc, .app-container, #compte').forEach(el => { if(el) el.style.display='none'; });
-  showLoginScreen();
+  window.location.replace('/');
 }
 
 function openAddModal(){
@@ -2864,11 +2894,12 @@ function showLoginScreen(){
       <!-- Logo -->
       <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:48px;">
       <div style="width:88px;height:88px;background:#1a1a1a;border-radius:24px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 12px 32px rgba(0,0,0,0.18);">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
-          <path d="M5 13h14v5H5z"/>
-          <path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/>
-          <circle cx="8" cy="18" r="1.5" fill="white"/>
-          <circle cx="16" cy="18" r="1.5" fill="white"/>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/>
+          <path d="M5 13l3-5h8l3 5"/>
+          <line x1="12" y1="8" x2="12" y2="13"/>
+          <circle cx="7.5" cy="17" r="2"/>
+          <circle cx="16.5" cy="17" r="2"/>
         </svg>
       </div>
       <div style="font-size:34px;font-weight:700;color:#1a1a1a;letter-spacing:-1px;line-height:1;">Trakoto</div>
@@ -3003,8 +3034,8 @@ sb.auth.onAuthStateChange((event, session) => {
     <span class="bottom-nav-label">Planning</span>
   </button>
   <button class="bottom-nav-item" onclick="switchView('parc')" id="nav-parc">
-    <svg class="nav-icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:26px;height:26px;display:none;"><path d="M5 13h14v5H5z"/><path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/><circle cx="8" cy="18" r="1.5" fill="currentColor"/><circle cx="16" cy="18" r="1.5" fill="currentColor"/></svg>
-    <svg class="nav-icon-filled" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" style="width:26px;height:26px;"><path d="M5 13h14v5H5z"/><path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="18" r="1.5"/><circle cx="16" cy="18" r="1.5"/></svg>
+    <svg class="nav-icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px;display:none;"><path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><path d="M5 13l3-5h8l3 5"/><line x1="12" y1="8" x2="12" y2="13"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/></svg>
+    <svg class="nav-icon-filled" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px;"><path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><path d="M5 13l3-5h8l3 5"/><line x1="12" y1="8" x2="12" y2="13"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/></svg>
     <span class="bottom-nav-label">Parc</span>
   </button>
   <button class="bottom-nav-item" onclick="switchView('dashboard')" id="nav-dashboard">

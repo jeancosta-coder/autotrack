@@ -657,6 +657,33 @@
       .app-preview { margin: 0; }
     }
   </style>
+  <script>
+    (function(){
+      try {
+        var c = document.createElement('canvas');
+        c.width = c.height = 180;
+        var x = c.getContext('2d');
+        x.fillStyle = '#1a1a1a';
+        x.fillRect(0, 0, 180, 180);
+        var s = 6, ox = 18, oy = 9;
+        x.strokeStyle = '#fff';
+        x.lineWidth = 9;
+        x.lineCap = 'round';
+        x.lineJoin = 'round';
+        x.beginPath(); x.rect(ox+3*s, oy+13*s, 18*s, 4*s); x.stroke();
+        x.beginPath();
+        x.moveTo(ox+5*s, oy+13*s); x.lineTo(ox+8*s, oy+8*s);
+        x.lineTo(ox+16*s, oy+8*s); x.lineTo(ox+19*s, oy+13*s);
+        x.stroke();
+        x.beginPath(); x.moveTo(ox+12*s, oy+8*s); x.lineTo(ox+12*s, oy+13*s); x.stroke();
+        x.beginPath(); x.arc(ox+7.5*s, oy+17*s, 2*s, 0, Math.PI*2); x.stroke();
+        x.beginPath(); x.arc(ox+16.5*s, oy+17*s, 2*s, 0, Math.PI*2); x.stroke();
+        var l = document.createElement('link');
+        l.rel = 'apple-touch-icon'; l.href = c.toDataURL();
+        document.head.appendChild(l);
+      } catch(e) {}
+    })();
+  </script>
 </head>
 <style>body{visibility:hidden}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -682,11 +709,12 @@
 <header>
   <a href="#" class="logo">
     <div class="logo-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round">
-        <path d="M5 13h14v5H5z"/>
-        <path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/>
-        <circle cx="8" cy="18" r="1.5" fill="white" stroke="none"/>
-        <circle cx="16" cy="18" r="1.5" fill="white" stroke="none"/>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/>
+        <path d="M5 13l3-5h8l3 5"/>
+        <line x1="12" y1="8" x2="12" y2="13"/>
+        <circle cx="7.5" cy="17" r="2"/>
+        <circle cx="16.5" cy="17" r="2"/>
       </svg>
     </div>
     <span class="logo-name">Trakoto</span>
@@ -796,11 +824,12 @@
 
         <div class="feature-card">
           <div class="feature-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
-              <path d="M5 13h14v5H5z"/>
-              <path d="M7 13V9c0-1 1-2 2-2h6c1 0 2 1 2 2v4"/>
-              <circle cx="8" cy="18" r="1.5" fill="#1a1a1a" stroke="none"/>
-              <circle cx="16" cy="18" r="1.5" fill="#1a1a1a" stroke="none"/>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/>
+              <path d="M5 13l3-5h8l3 5"/>
+              <line x1="12" y1="8" x2="12" y2="13"/>
+              <circle cx="7.5" cy="17" r="2"/>
+              <circle cx="16.5" cy="17" r="2"/>
             </svg>
           </div>
           <div class="feature-title">Gestion du parc</div>
