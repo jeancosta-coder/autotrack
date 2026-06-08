@@ -617,7 +617,6 @@
     @media (max-width: 768px) {
       header { padding: 0 16px; }
       .logo-name { font-size: 20px; }
-      .btn-login { display: none; }
 
       .hero { padding: 52px 0 48px; }
       .hero h1 { letter-spacing: -1px; }
@@ -659,6 +658,24 @@
     }
   </style>
 </head>
+<style>body{visibility:hidden}</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  (function(){
+    var SUPABASE_URL = 'https://qfwbneqcnqmpwkyolxze.supabase.co';
+    var SUPABASE_KEY = 'sb_publishable_0PVpvCFraP4oUAvstn88hA_ZFmp2ekl';
+    var revealed = false;
+    function reveal(){ if(!revealed){ revealed=true; document.body.style.visibility='visible'; } }
+    setTimeout(reveal, 800);
+    try {
+      var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      sb.auth.getSession().then(function(r){
+        if(r.data && r.data.session){ window.location.replace('/app'); }
+        else { reveal(); }
+      }).catch(reveal);
+    } catch(e){ reveal(); }
+  })();
+</script>
 <body>
 
 <!-- HEADER -->
