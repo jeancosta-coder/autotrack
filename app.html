@@ -740,28 +740,29 @@
       }
       /* ── Desktop: planning nav ── */
       .desktop-plan-nav { display: flex !important; align-items: center; gap: 6px; }
-      .desktop-view-selector { display: flex !important; align-items: center; gap: 0 !important; background: #f2f2f7; border-radius: 10px; padding: 2px; }
+      .desktop-view-selector { display: flex !important; align-items: center; background: #f2f2f7; border-radius: 10px; padding: 5px 10px 5px 12px; }
       #planning-grid-icon-btn { display: none !important; }
-      .vsel-btn { transition: none !important; border: none !important; border-radius: 8px !important; background: transparent !important; color: #1a1a1a !important; padding: 7px 12px !important; font-size: 13px !important; font-weight: 500 !important; cursor: pointer; }
-      .vsel-btn:hover { background: rgba(0,0,0,0.04) !important; }
-      .vsel-btn.vsel-active { background: white !important; color: #1a1a1a !important; box-shadow: 0 1px 3px rgba(0,0,0,0.12) !important; border-color: transparent !important; }
-      .vsel-btn.vsel-active:hover { background: white !important; }
+      #desktop-view-select { appearance: none; -webkit-appearance: none; border: none; outline: none; background: transparent; font-size: 14px; font-weight: 600; color: #1a1a1a; cursor: pointer; padding: 0 20px 0 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 2px center; }
       /* ── Desktop: hide mobile pill handle ── */
       #details-pill-handle { display: none !important; }
-      /* ── Desktop: new-task modal centered ── */
+      /* ── Desktop: new-task panel — right side ── */
+      @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
       #new-task-modal {
         position: fixed !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        width: min(580px, calc(100vw - 320px)) !important;
-        max-height: calc(100vh - 80px) !important;
-        height: auto !important;
-        border-radius: 24px !important;
-        box-shadow: 0 24px 80px rgba(0,0,0,0.2) !important;
-        animation: none !important;
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: auto !important;
+        width: 380px !important;
+        height: 100% !important;
+        max-height: 100vh !important;
+        transform: none !important;
+        border-radius: 20px 0 0 20px !important;
+        box-shadow: -8px 0 40px rgba(0,0,0,0.12) !important;
+        animation: slideInRight 0.28s cubic-bezier(0.25,0.46,0.45,0.94) !important;
         overflow: hidden !important;
       }
+      #new-task-modal > * { max-height: 100vh !important; }
       /* ── Desktop: add vehicle modal z-index ── */
       #modal-add-vehicle { z-index: 9998 !important; }
       /* ── Desktop: planning header bar ── */
@@ -944,10 +945,12 @@
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
         <button id="planning-new-event-btn" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="display:none;padding:6px 14px;background:transparent;border:1px solid #d1d1d6;border-radius:8px;color:#1a1a1a;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">+ Événement</button>
         <div class="desktop-view-selector" style="display:none;">
-          <button class="vsel-btn" onclick="setViewMode('1')" id="vsel-1" style="padding:6px 10px;border:1px solid #d1d1d6;border-radius:8px;background:transparent;color:#1a1a1a;font-size:13px;font-weight:500;cursor:pointer;">Jour</button>
-          <button class="vsel-btn" onclick="setViewMode('3')" id="vsel-3" style="padding:6px 10px;border:1px solid #d1d1d6;border-radius:8px;background:transparent;color:#1a1a1a;font-size:13px;font-weight:500;cursor:pointer;">3 jours</button>
-          <button class="vsel-btn" onclick="setViewMode('7')" id="vsel-7" style="padding:6px 10px;border:1px solid #d1d1d6;border-radius:8px;background:transparent;color:#1a1a1a;font-size:13px;font-weight:500;cursor:pointer;">Semaine</button>
-          <button class="vsel-btn" onclick="setViewMode('month')" id="vsel-month" style="padding:6px 10px;border:1px solid #d1d1d6;border-radius:8px;background:transparent;color:#1a1a1a;font-size:13px;font-weight:500;cursor:pointer;">Mois</button>
+          <select id="desktop-view-select" onchange="setViewMode(this.value)">
+            <option value="1">Jour</option>
+            <option value="3">3 jours</option>
+            <option value="7">Semaine</option>
+            <option value="month">Mois</option>
+          </select>
         </div>
         <button onclick="openViewModal()" id="planning-grid-icon-btn" style="width:36px;height:36px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;color:#1a1a1a;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
@@ -2076,6 +2079,8 @@ function goToPlanningToday(){
 }
 
 function updateViewSelectorUI(mode){
+  const sel = document.getElementById('desktop-view-select');
+  if(sel) sel.value = mode;
   ['1','3','7','month'].forEach(m => {
     const btn = document.getElementById('vsel-' + m);
     if(!btn) return;
