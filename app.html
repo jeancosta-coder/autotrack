@@ -2885,6 +2885,7 @@ function openPlanningTaskWithTime(dateStr, timeStr){ openNewTaskModalOutlook(dat
 
 // ── AUTH ──────────────────────────────────────────────────────────────
 function showLoginScreen(){
+  if(document.getElementById('login-screen')) return;
   document.querySelectorAll('.bottom-nav, #fab-parc, #fab-planning, .app-container').forEach(el => { if(el) el.style.display='none'; });
   const loginDiv = document.createElement('div');
   loginDiv.id = 'login-screen';
@@ -3022,8 +3023,8 @@ sb.auth.getSession().then(({data:{session}}) => {
 });
 
 sb.auth.onAuthStateChange((event, session) => {
-  if(session){ sbUser = session.user; }
-  else { sbUser = null; showLoginScreen(); }
+  if(event === 'SIGNED_OUT'){ sbUser = null; showLoginScreen(); }
+  else if(session){ sbUser = session.user; }
 });
 </script>
 
