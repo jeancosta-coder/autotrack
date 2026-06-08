@@ -29,8 +29,12 @@ exports.handler = async (event) => {
       customer = await stripe.customers.create({ email });
     }
 
-    // 2. Attacher le paymentMethod au customer
-    await stripe.paymentMethods.attach(paymentMethodId, { customer: customer.id });
+    // 2. Attacher le paymentMethod au customer (idempotent: ignore si déjà attaché)
+    try {
+      await stripe.paymentMethods.attach(paymentMethodId, { customer: customer.id });
+    } catch (attachErr) {
+      if (attachErr.code !== 'resource_already_exists') throw attachErr;
+    }
 
     // 3. Définir ce paymentMethod comme défaut de facturation
     await stripe.customers.update(customer.id, {

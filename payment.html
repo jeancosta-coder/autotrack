@@ -696,6 +696,11 @@
 
   cardElement.mount('#card-element');
 
+  // Rediriger si déjà connecté
+  sb.auth.getSession().then(({ data: { session } }) => {
+    if (session) window.location.href = 'app.html';
+  });
+
   cardElement.on('change', (e) => {
     const errEl = document.getElementById('card-errors');
     if (e.error) {

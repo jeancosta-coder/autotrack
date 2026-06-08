@@ -2989,6 +2989,11 @@ sb.auth.getSession().then(({data:{session}}) => {
   if(session){ sbUser = session.user; loadFromSupabase().then(() => initApp()); }
   else { showLoginScreen(); }
 });
+
+sb.auth.onAuthStateChange((event, session) => {
+  if(session){ sbUser = session.user; }
+  else { sbUser = null; showLoginScreen(); }
+});
 </script>
 
 <nav class="bottom-nav">
