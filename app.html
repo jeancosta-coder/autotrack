@@ -588,6 +588,32 @@
       }
       #details > div:first-child { flex-shrink: 0 !important; border-bottom: 0.5px solid rgba(0,0,0,0.07) !important; }
       #details > div:nth-child(2) { flex-shrink: 0 !important; border-bottom: 0.5px solid rgba(0,0,0,0.07) !important; padding: 0 12px !important; }
+      /* Layout 2 colonnes desktop */
+      #tab-infos { display: none !important; }
+      #details > div:nth-child(3) {
+        display: flex !important;
+        flex-direction: row !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        flex: 1 !important;
+      }
+      #detail-tab-infos {
+        display: block !important;
+        width: 300px !important;
+        flex-shrink: 0 !important;
+        overflow-y: auto !important;
+        padding: 20px 16px !important;
+        border-right: 0.5px solid rgba(0,0,0,0.07) !important;
+        background: white !important;
+      }
+      #detail-tab-finances,
+      #detail-tab-taches,
+      #detail-tab-historique {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        padding: 20px 16px 32px !important;
+        min-width: 0 !important;
+      }
       #modal-add-vehicle,
       #simple-task-modal {
         position: fixed !important;
