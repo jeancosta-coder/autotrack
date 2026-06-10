@@ -728,16 +728,29 @@
         padding: 0 16px 24px !important;
         flex-shrink: 0 !important;
       }
-      /* Header Tâches desktop */
-      .taches-desktop-header {
+      /* Bouton ajout tâche inline desktop */
+      .add-task-desktop-btn {
         display: flex !important;
-        justify-content: space-between !important;
         align-items: center !important;
-        padding: 16px 20px 12px !important;
-        flex-shrink: 0 !important;
+        gap: 10px !important;
+        width: 100% !important;
+        background: white !important;
+        border: none !important;
+        border-radius: 14px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+        padding: 13px 16px !important;
+        margin-bottom: 8px !important;
+        cursor: pointer !important;
+        font-size: 15px !important;
+        font-weight: 400 !important;
+        color: #8e8e93 !important;
+        text-align: left !important;
+        transition: opacity 0.15s !important;
       }
+      .add-task-desktop-btn:hover { opacity: 0.7 !important; }
+      .add-task-desktop-btn span { color: #8e8e93 !important; }
       /* Bouton ajout tâche mobile : masqué sur desktop */
-      #detail-tab-taches > button[onclick="openDetailTaskModal()"] {
+      #detail-tab-taches > button:not(.add-task-desktop-btn) {
         display: none !important;
       }
       /* Onglets dans le wrapper droite */
@@ -1317,14 +1330,6 @@
       </div>
 
       <div id="detail-tab-taches" class="detail-tab-content" style="display:none;">
-        <!-- En-tête desktop uniquement -->
-        <div class="taches-desktop-header" style="display:none;">
-          <span style="font-size:15px;font-weight:600;color:#1a1a1a;">Tâches</span>
-          <button onclick="openDetailTaskModal()" style="display:flex;align-items:center;gap:6px;background:#1a1a1a;color:white;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-            Ajouter
-          </button>
-        </div>
         <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:14px 16px;margin-bottom:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:13px;color:#8e8e93;font-weight:600;">Progression</span><span id="detail-progress-text" style="font-size:13px;font-weight:700;color:#1a1a1a;">0%</span></div>
           <div class="progress-container" style="margin-bottom:0;"><div class="progress-bar" id="detail-progress-bar" style="width:0%;"></div></div>
@@ -1337,6 +1342,11 @@
           <button id="filter-rdv-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('rdv',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">RDV</button>
           <button id="filter-appel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('appel',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Appel</button>
         </div>
+        <!-- Bouton ajout desktop : inline au-dessus de la liste -->
+        <button class="add-task-desktop-btn" onclick="openDetailTaskModal()" style="display:none;">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="#007AFF" stroke-width="2" stroke-linecap="round"><line x1="7.5" y1="1" x2="7.5" y2="14"/><line x1="1" y1="7.5" x2="14" y2="7.5"/></svg>
+          <span>Ajouter une tâche</span>
+        </button>
         <div id="detail-tasks"></div>
         <button onclick="openDetailTaskModal()" style="position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:16px;right:16px;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);z-index:100;display:flex;align-items:center;justify-content:center;gap:8px;">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
