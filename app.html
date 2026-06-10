@@ -586,26 +586,22 @@
         z-index: 999 !important;
         display: grid !important;
         grid-template-columns: 35% 65% !important;
-        grid-template-rows: auto auto 1fr !important;
+        grid-template-rows: auto 1fr !important;
       }
+      /* Header principal : masqué sur desktop */
+      #details > div:first-child { display: none !important; }
       /* Pseudo-élément : remplit le blanc à gauche au niveau de la barre d'onglets */
       #details::before {
         content: '' !important;
         grid-column: 1 !important;
-        grid-row: 2 !important;
+        grid-row: 1 !important;
         background: white !important;
         border-right: 0.5px solid rgba(0,0,0,0.07) !important;
       }
-      /* Header : pleine largeur, row 1 */
-      #details > div:first-child {
-        grid-column: 1 / 3 !important;
-        grid-row: 1 !important;
-        border-bottom: 0.5px solid rgba(0,0,0,0.07) !important;
-      }
-      /* Barre d'onglets : colonne droite uniquement, row 2 */
+      /* Barre d'onglets : colonne droite uniquement, row 1 */
       #details > div:nth-child(2) {
         grid-column: 2 !important;
-        grid-row: 2 !important;
+        grid-row: 1 !important;
         border-bottom: none !important;
         background: white !important;
         display: flex !important;
@@ -644,23 +640,45 @@
       }
       /* Cacher l'onglet Infos dans la barre (toujours visible à gauche) */
       #tab-infos { display: none !important; }
-      /* Zone de contenu : pleine largeur, row 3, grille interne */
+      /* Zone de contenu : pleine largeur, row 2, grille interne */
       #details > div:nth-child(3) {
         grid-column: 1 / 3 !important;
-        grid-row: 3 !important;
+        grid-row: 2 !important;
         display: grid !important;
         grid-template-columns: 35% 65% !important;
         padding: 0 !important;
         overflow: hidden !important;
       }
-      /* Colonne gauche : Infos, toujours visible */
+      /* Colonne gauche : infos, toujours visible, flex pour réordonnancement */
       #detail-tab-infos {
-        display: block !important;
+        display: flex !important;
+        flex-direction: column !important;
         grid-column: 1 !important;
         overflow-y: auto !important;
-        padding: 20px 16px !important;
+        padding: 0 !important;
         border-right: 0.5px solid rgba(0,0,0,0.07) !important;
         background: white !important;
+      }
+      /* Nav desktop : visible, en premier */
+      #details-desktop-nav {
+        display: block !important;
+        order: 1 !important;
+        flex-shrink: 0 !important;
+      }
+      /* Infos véhicule : en deuxième */
+      .dt-infos-wrap {
+        order: 2 !important;
+        padding: 0 16px !important;
+      }
+      /* Statut : en troisième */
+      .dt-statut-wrap {
+        order: 3 !important;
+        padding: 0 16px !important;
+      }
+      /* Notes : en quatrième */
+      .dt-notes-wrap {
+        order: 4 !important;
+        padding: 0 16px !important;
       }
       /* Colonne droite : Tâches / Finances / Historique */
       #detail-tab-finances,
@@ -1158,32 +1176,62 @@
     </div>
     <div style="flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
       <div id="detail-tab-infos" class="detail-tab-content" style="display:block;">
-        <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Statut</span></div>
-        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-          <button class="statut-btn" id="btn-en-cours" onclick="changeStatut('En cours')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;border-bottom:1px solid #f2f2f7;font-size:15px;cursor:pointer;color:#1a1a1a;">
-            <div style="display:flex;align-items:center;gap:10px;"><span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-en-cours"></span><span>En cours</span></div>
-            <svg id="check-en-cours" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
-          </button>
-          <button class="statut-btn" id="btn-pret" onclick="changeStatut('Prêt à vendre')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;border-bottom:1px solid #f2f2f7;font-size:15px;cursor:pointer;color:#1a1a1a;">
-            <div style="display:flex;align-items:center;gap:10px;"><span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-pret"></span><span>Prêt à vendre</span></div>
-            <svg id="check-pret" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
-          </button>
-          <button class="statut-btn" id="btn-vendu" onclick="changeStatut('Vendu')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;font-size:15px;cursor:pointer;color:#1a1a1a;">
-            <div style="display:flex;align-items:center;gap:10px;"><span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-vendu"></span><span>Vendu</span></div>
-            <svg id="check-vendu" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
-          </button>
+
+        <!-- Nav desktop uniquement : caché sur mobile -->
+        <div id="details-desktop-nav" style="display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 16px 10px;">
+            <button onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;font-size:14px;font-weight:600;color:#1a1a1a;padding:6px 0;display:flex;align-items:center;gap:6px;">
+              <svg width="8" height="13" viewBox="0 0 8 13" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7,1 1,6.5 7,12"/></svg>
+              Parc
+            </button>
+            <button onclick="confirmDeleteCurrentVehicle()" style="background:none;border:none;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+          <div style="padding:0 16px 16px;">
+            <div id="detail-title-desktop" style="font-size:22px;font-weight:700;color:#1a1a1a;line-height:1.2;"></div>
+            <div id="detail-subtitle-desktop" style="font-size:13px;color:#8e8e93;margin-top:4px;"></div>
+          </div>
         </div>
-        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Marque</span><span id="detail-marque" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Modèle</span><span id="detail-modele" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Année</span><span id="detail-year" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Génération</span><span id="detail-gen" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:#8e8e93;">Kilométrage</span><span id="detail-km" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
+
+        <!-- Infos véhicule -->
+        <div class="dt-infos-wrap">
+          <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Marque</span><span id="detail-marque" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Modèle</span><span id="detail-modele" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Année</span><span id="detail-year" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Génération</span><span id="detail-gen" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:#8e8e93;">Kilométrage</span><span id="detail-km" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
+          </div>
         </div>
-        <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
-        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-          <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:#1a1a1a;background:transparent;padding:14px 16px;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
+
+        <!-- Statut -->
+        <div class="dt-statut-wrap">
+          <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Statut</span></div>
+          <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+            <button class="statut-btn" id="btn-en-cours" onclick="changeStatut('En cours')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;border-bottom:1px solid #f2f2f7;font-size:15px;cursor:pointer;color:#1a1a1a;">
+              <div style="display:flex;align-items:center;gap:10px;"><span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-en-cours"></span><span>En cours</span></div>
+              <svg id="check-en-cours" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
+            </button>
+            <button class="statut-btn" id="btn-pret" onclick="changeStatut('Prêt à vendre')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;border-bottom:1px solid #f2f2f7;font-size:15px;cursor:pointer;color:#1a1a1a;">
+              <div style="display:flex;align-items:center;gap:10px;"><span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-pret"></span><span>Prêt à vendre</span></div>
+              <svg id="check-pret" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
+            </button>
+            <button class="statut-btn" id="btn-vendu" onclick="changeStatut('Vendu')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;font-size:15px;cursor:pointer;color:#1a1a1a;">
+              <div style="display:flex;align-items:center;gap:10px;"><span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-vendu"></span><span>Vendu</span></div>
+              <svg id="check-vendu" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
+            </button>
+          </div>
         </div>
+
+        <!-- Notes -->
+        <div class="dt-notes-wrap">
+          <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
+          <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+            <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:#1a1a1a;background:transparent;padding:14px 16px;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
+          </div>
+        </div>
+
       </div>
 
       <div id="detail-tab-finances" class="detail-tab-content" style="display:none;">
@@ -1842,6 +1890,8 @@ function openVehicleDetails(id){
   if(!v) return;
   document.getElementById('detail-title').textContent = v.marque + ' ' + v.modele;
   document.getElementById('detail-subtitle').textContent = v.year + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
+  const dtD = document.getElementById('detail-title-desktop'); if(dtD) dtD.textContent = v.marque + ' ' + v.modele;
+  const dsD = document.getElementById('detail-subtitle-desktop'); if(dsD) dsD.textContent = v.year + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
   document.getElementById('detail-marque').textContent = v.marque;
   document.getElementById('detail-modele').textContent = v.modele;
   document.getElementById('detail-year').textContent = v.year;
