@@ -614,6 +614,38 @@
         padding: 20px 16px 32px !important;
         min-width: 0 !important;
       }
+      /* Segmented control iOS style */
+      #details > div:nth-child(2) {
+        background: #f2f2f7 !important;
+        border-bottom: none !important;
+        padding: 8px 16px !important;
+        gap: 0 !important;
+        background: #e5e5ea !important;
+        border-radius: 10px !important;
+        margin: 12px 16px !important;
+        padding: 2px !important;
+        width: fit-content !important;
+        align-self: flex-start !important;
+      }
+      #details > div:nth-child(2) .detail-tab {
+        flex: none !important;
+        padding: 6px 18px !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        border-radius: 8px !important;
+        border-bottom: none !important;
+        color: #3a3a3c !important;
+        background: transparent !important;
+        transition: all 0.2s !important;
+        border: none !important;
+      }
+      #details > div:nth-child(2) .detail-tab.detail-tab-active {
+        background: white !important;
+        color: #1a1a1a !important;
+        font-weight: 600 !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08) !important;
+        border-bottom: none !important;
+      }
       #modal-add-vehicle,
       #simple-task-modal {
         position: fixed !important;
@@ -2001,11 +2033,11 @@ function switchDetailTab(tab){
     if(isDesktop && el.id === 'detail-tab-infos') return;
     el.style.display = 'none';
   });
-  document.querySelectorAll('.detail-tab').forEach(el => { el.style.color = '#8e8e93'; el.style.borderBottomColor = 'transparent'; });
+  document.querySelectorAll('.detail-tab').forEach(el => { el.style.color = '#8e8e93'; el.style.borderBottomColor = 'transparent'; el.classList.remove('detail-tab-active'); });
   const tabContent = document.getElementById('detail-tab-' + tab);
   const tabBtn = document.getElementById('tab-' + tab);
   if(tabContent) tabContent.style.display = 'block';
-  if(tabBtn) { tabBtn.style.color = '#1a1a1a'; tabBtn.style.borderBottomColor = '#1a1a1a'; }
+  if(tabBtn) { tabBtn.style.color = '#1a1a1a'; tabBtn.style.borderBottomColor = '#1a1a1a'; tabBtn.classList.add('detail-tab-active'); }
   if(tab === 'historique') renderHistorique(currentDetailVehicleId);
   window._currentDetailTab = tab;
 }
