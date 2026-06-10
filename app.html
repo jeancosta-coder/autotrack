@@ -686,7 +686,7 @@
         overflow-y: auto !important;
         padding: 0 !important;
         border-right: 0.5px solid rgba(0,0,0,0.07) !important;
-        background: white !important;
+        background: #f2f2f7 !important;
       }
       /* Wrapper onglets droite : col 2, row 2 */
       #details-tab-wrapper {
@@ -703,6 +703,8 @@
         display: block !important;
         flex-shrink: 0 !important;
         padding-top: 8px !important;
+        background: white !important;
+        border-bottom: 0.5px solid rgba(0,0,0,0.07) !important;
       }
       /* Infos véhicule : masqué sur desktop */
       .dt-infos-wrap { display: none !important; }
@@ -726,14 +728,33 @@
         padding: 0 16px 24px !important;
         flex-shrink: 0 !important;
       }
+      /* Header Tâches desktop */
+      .taches-desktop-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 16px 20px 12px !important;
+        flex-shrink: 0 !important;
+      }
+      /* Bouton ajout tâche mobile : masqué sur desktop */
+      #detail-tab-taches > button[onclick="openDetailTaskModal()"] {
+        display: none !important;
+      }
       /* Onglets dans le wrapper droite */
       #detail-tab-finances,
-      #detail-tab-taches,
       #detail-tab-historique {
         flex: 1 !important;
         overflow-y: auto !important;
         padding: 20px 16px 32px !important;
         min-height: 0 !important;
+      }
+      #detail-tab-taches {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        padding: 0 16px 32px !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
       }
       #modal-add-vehicle,
       #simple-task-modal {
@@ -1296,6 +1317,14 @@
       </div>
 
       <div id="detail-tab-taches" class="detail-tab-content" style="display:none;">
+        <!-- En-tête desktop uniquement -->
+        <div class="taches-desktop-header" style="display:none;">
+          <span style="font-size:15px;font-weight:600;color:#1a1a1a;">Tâches</span>
+          <button onclick="openDetailTaskModal()" style="display:flex;align-items:center;gap:6px;background:#1a1a1a;color:white;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            Ajouter
+          </button>
+        </div>
         <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:14px 16px;margin-bottom:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:13px;color:#8e8e93;font-weight:600;">Progression</span><span id="detail-progress-text" style="font-size:13px;font-weight:700;color:#1a1a1a;">0%</span></div>
           <div class="progress-container" style="margin-bottom:0;"><div class="progress-bar" id="detail-progress-bar" style="width:0%;"></div></div>
