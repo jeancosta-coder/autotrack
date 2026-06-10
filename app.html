@@ -3031,7 +3031,7 @@ function initApp(){
   document.getElementById('auth-loader')?.remove();
   const ls = document.getElementById('login-screen');
   if(ls) ls.remove();
-  document.querySelectorAll('.bottom-nav, #fab-parc, .app-container').forEach(el => { if(el) el.style.display=''; });
+  document.querySelectorAll('.bottom-nav, #fab-parc, #fab-planning, .app-container').forEach(el => { if(el) el.style.display=''; });
   // Première connexion : aller sur Compte pour remplir l'historique
   const isFirstTime = !localStorage.getItem('at_historique');
   if(isFirstTime){
