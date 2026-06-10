@@ -183,6 +183,25 @@
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
     }
+    @keyframes shimmer {
+      0% { background-position: -600px 0; }
+      100% { background-position: 600px 0; }
+    }
+    .skeleton-card {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .skeleton-line {
+      border-radius: 6px;
+      background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
     .vehicle-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -3033,7 +3052,25 @@ document.addEventListener('keydown', function(e){
 });
 
 sb.auth.getSession().then(({data:{session}}) => {
-  if(session){ sbUser = session.user; loadFromSupabase().then(() => initApp()); }
+  if(session){
+    sbUser = session.user;
+    const grid = document.getElementById('parc-grid');
+    if(grid) grid.innerHTML = Array.from({length:6}).map(() => `
+      <div class="skeleton-card">
+        <div style="display:flex;justify-content:space-between;">
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+            <div class="skeleton-line" style="height:16px;width:60%;"></div>
+            <div class="skeleton-line" style="height:12px;width:80%;"></div>
+          </div>
+          <div class="skeleton-line" style="height:12px;width:50px;margin-left:12px;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:12px;margin-top:4px;">
+          <div class="skeleton-line" style="height:12px;flex:1;"></div>
+          <div class="skeleton-line" style="height:12px;flex:1;"></div>
+        </div>
+      </div>`).join('');
+    loadFromSupabase().then(() => initApp());
+  }
   else { showLoginScreen(); }
 });
 
