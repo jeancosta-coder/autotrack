@@ -665,11 +665,8 @@
         order: 1 !important;
         flex-shrink: 0 !important;
       }
-      /* Infos véhicule : en deuxième */
-      .dt-infos-wrap {
-        order: 2 !important;
-        padding: 0 16px !important;
-      }
+      /* Infos véhicule : masqué sur desktop (infos dans le sous-titre) */
+      .dt-infos-wrap { display: none !important; }
       /* Statut : en troisième */
       .dt-statut-wrap {
         order: 3 !important;
@@ -1891,7 +1888,7 @@ function openVehicleDetails(id){
   document.getElementById('detail-title').textContent = v.marque + ' ' + v.modele;
   document.getElementById('detail-subtitle').textContent = v.year + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
   const dtD = document.getElementById('detail-title-desktop'); if(dtD) dtD.textContent = v.marque + ' ' + v.modele;
-  const dsD = document.getElementById('detail-subtitle-desktop'); if(dsD) dsD.textContent = v.year + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
+  const dsD = document.getElementById('detail-subtitle-desktop'); if(dsD) dsD.textContent = v.year + (v.gen ? ' · ' + v.gen : '') + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
   document.getElementById('detail-marque').textContent = v.marque;
   document.getElementById('detail-modele').textContent = v.modele;
   document.getElementById('detail-year').textContent = v.year;
