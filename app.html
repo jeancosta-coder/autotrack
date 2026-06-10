@@ -698,23 +698,29 @@
         display: flex !important;
         flex-direction: column !important;
       }
-      /* Nav desktop : visible, en premier */
+      /* Nav desktop : ← Parc + titre + sous-titre */
       #details-desktop-nav {
         display: block !important;
-        order: 1 !important;
         flex-shrink: 0 !important;
+        padding-top: 8px !important;
       }
       /* Infos véhicule : masqué sur desktop */
       .dt-infos-wrap { display: none !important; }
       /* Statut */
       .dt-statut-wrap {
+        flex-shrink: 0 !important;
         padding: 0 16px !important;
       }
       /* Notes */
       .dt-notes-wrap {
+        flex-shrink: 0 !important;
         padding: 0 16px !important;
       }
-      /* Bouton supprimer : visible sous les notes */
+      /* Spacer : pousse le bouton supprimer en bas */
+      .dt-notes-wrap + .dt-delete-wrap {
+        margin-top: auto !important;
+      }
+      /* Bouton supprimer : tout en bas */
       .dt-delete-wrap {
         display: block !important;
         padding: 0 16px 24px !important;
