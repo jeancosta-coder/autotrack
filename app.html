@@ -722,16 +722,6 @@
         background: rgba(255,255,255,0.92) !important;
         box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important;
       }
-      #details {
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        width: min(1200px, calc(100vw - 260px)) !important;
-        height: calc(100vh - 40px) !important;
-        max-height: none !important;
-        border-radius: 20px !important;
-        background: white !important;
-      }
       #details .detail-tab.active {
         background: #f2f2f7;
         color: #1a1a1a;
@@ -753,6 +743,8 @@
       #desktop-view-select { appearance: none; -webkit-appearance: none; border: none; outline: none; background: transparent; font-size: 14px; font-weight: 600; color: #1a1a1a; cursor: pointer; padding: 0 20px 0 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 2px center; }
       /* ── Desktop: hide mobile pill handle ── */
       #details-pill-handle { display: none !important; }
+      #details-close-btn { display: none !important; }
+      #details-back-btn { display: flex !important; }
       /* ── Desktop: new-task panel — right side ── */
       @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
       #new-task-modal {
@@ -1037,7 +1029,7 @@
     <div style="background:white;border-bottom:1px solid #e5e5e5;flex-shrink:0;">
       <div id="details-pill-handle" style="display:flex;justify-content:center;padding:8px 0 4px 0;"><div style="width:36px;height:4px;border-radius:2px;background:#d1d1d6;"></div></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px 12px 16px;">
-        <button onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;color:#8e8e93;font-size:22px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>
+        <button onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;color:#8e8e93;font-size:22px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;" id="details-close-btn">✕</button><button onclick="closeVehicleDetails()" id="details-back-btn" style="display:none;background:none;border:none;cursor:pointer;color:#1a1a1a;font-size:14px;font-weight:600;padding:6px 12px;border-radius:10px;white-space:nowrap;">← Parc</button>
         <div><div id="detail-title" style="font-size:17px;font-weight:600;color:#1a1a1a;text-align:center;"></div><div id="detail-subtitle" style="font-size:12px;color:#8e8e93;text-align:center;margin-top:1px;"></div></div>
         <button onclick="confirmDeleteCurrentVehicle()" style="background:none;border:none;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
@@ -1758,20 +1750,18 @@ function openVehicleDetails(id){
   currentDetailTaskFilter = 'all';
   renderDetailTasks(id, 'all');
   switchDetailTab(window.innerWidth >= 900 ? 'taches' : 'infos');
-  const modal = document.getElementById('details');
-  modal.style.display = 'flex';
-  const fab = document.getElementById('fab-parc');
-  if(fab) fab.style.display = 'none';
-  if(window.innerWidth >= 900 && !document.getElementById('details-backdrop')){
-    const bd = document.createElement('div');
-    bd.id = 'details-backdrop';
-    bd.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10004;';
-    bd.addEventListener('click', closeVehicleDetails);
-    document.body.appendChild(bd);
+if(window.innerWidth >= 900) {
+    document.getElementById('parc').style.display = 'none';
+    const modal = document.getElementById('details');
+    modal.style.display = 'flex';
+  } else {
+    const modal = document.getElementById('details');
+    modal.style.display = 'flex';
+    const fab = document.getElementById('fab-parc');
+    if(fab) fab.style.display = 'none';
   }
   setTimeout(() => initDetailSwipe(), 100);
 }
-
 function updateMargePreview(){
   const achat = parseFloat(document.getElementById('detail-achat-input')?.value) || 0;
   const sansTva = parseFloat(document.getElementById('detail-sans-tva-input')?.value) || 0;
@@ -1805,15 +1795,16 @@ function updateStatutUI(statut){
     if(check) check.style.display = s === statut ? 'block' : 'none';
   });
 }
-
 function closeVehicleDetails(){
   const modal = document.getElementById('details');
   modal.style.display = 'none';
-  document.getElementById('details-backdrop')?.remove();
-  const fab = document.getElementById('fab-parc');
-  if(fab) fab.style.display = 'flex';
+  if(window.innerWidth >= 900) {
+    document.getElementById('parc').style.display = 'block';
+  } else {
+    const fab = document.getElementById('fab-parc');
+    if(fab) fab.style.display = 'flex';
+  }
 }
-
 function confirmDeleteCurrentVehicle(){
   const innerHtml = `<div style="background:white;border-radius:24px;padding:24px;max-width:460px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.14);">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer ce véhicule ?</div>
