@@ -713,18 +713,15 @@
       .dt-infos-wrap { display: none !important; }
       /* Statut */
       .dt-statut-wrap {
-        order: 2 !important;
         padding: 0 16px !important;
       }
       /* Notes */
       .dt-notes-wrap {
-        order: 3 !important;
         padding: 0 16px !important;
       }
-      /* Bouton supprimer : sous les notes */
+      /* Bouton supprimer : visible sous les notes */
       .dt-delete-wrap {
         display: block !important;
-        order: 4 !important;
         padding: 0 16px 24px !important;
         flex-shrink: 0 !important;
       }
@@ -1274,20 +1271,20 @@
           </div>
         </div>
 
-        <!-- Bouton supprimer (desktop uniquement, tout en bas) -->
-        <div class="dt-delete-wrap" style="display:none;">
-          <button onclick="confirmDeleteCurrentVehicle()" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;color:#FF3B30;font-size:14px;font-weight:500;padding:8px 0;width:100%;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-            Supprimer le véhicule
-          </button>
-        </div>
-
         <!-- Notes -->
         <div class="dt-notes-wrap">
           <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
           <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
             <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:#1a1a1a;background:transparent;padding:14px 16px;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
           </div>
+        </div>
+
+        <!-- Bouton supprimer (desktop uniquement, sous les notes) -->
+        <div class="dt-delete-wrap" style="display:none;">
+          <button onclick="confirmDeleteCurrentVehicle()" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;color:#FF3B30;font-size:14px;font-weight:500;padding:8px 0;width:100%;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Supprimer le véhicule
+          </button>
         </div>
 
       </div>
