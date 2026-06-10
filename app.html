@@ -183,6 +183,16 @@
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
     }
+    #details {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 500;
+      flex-direction: column;
+      background: #f2f2f7;
+    }
     @keyframes shimmer {
       0% { background-position: -600px 0; }
       100% { background-position: 600px 0; }
