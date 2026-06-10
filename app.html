@@ -1413,8 +1413,8 @@ function createDialogOrSheet(id, innerHtml, options = {}) {
 function switchView(view){
   // Fermer le détail véhicule s'il est ouvert
   const details = document.getElementById('details');
-  if(details && details.style.display !== 'none'){
-    details.style.display = 'none';
+  if(details){
+    details.style.setProperty('display', 'none', 'important');
   }
   // Fermer le FAB parc si on quitte parc
   const fabParc = document.getElementById('fab-parc');
@@ -1797,7 +1797,7 @@ function updateStatutUI(statut){
 }
 function closeVehicleDetails(){
   const modal = document.getElementById('details');
-  modal.style.display = 'none';
+  modal.style.setProperty('display', 'none', 'important');
   if(window.innerWidth >= 900) {
     document.getElementById('parc').style.display = 'block';
   } else {
