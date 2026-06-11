@@ -873,13 +873,18 @@
       .desktop-popup-sheet {
         align-items: center !important;
         justify-content: center !important;
-        background: rgba(0,0,0,0.28) !important;
+        background: transparent !important;
       }
       .desktop-popup-sheet > div {
         width: min(520px, calc(100vw - 320px));
         border-radius: 24px;
         max-height: calc(100vh - 120px);
         overflow: auto;
+        background: white !important;
+      }
+      .desktop-popup-sheet > div > div[style*="background:#f2f2f7"],
+      .desktop-popup-sheet > div > div[style*="background: #f2f2f7"] {
+        background: white !important;
       }
       #details button[onclick="savePrices()"],
       #details button[onclick="openDetailTaskModal()"] {
