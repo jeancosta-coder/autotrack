@@ -2199,11 +2199,6 @@ function openDetailTaskModal(){
             <span style="font-size:16px;color:#8e8e93;">€</span>
           </div>
         </div>
-        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:#1a1a1a;">Date</span>
-          <input type="date" id="stask-date" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;text-align:right;"/>
-        </div>
       </div>
     </div>`;
 
@@ -2746,7 +2741,7 @@ function openEditTaskModal(vehicleId, taskId){
     const TASK_TYPE_MAP = {preparation:{label:'Préparation',dot:'#00FF88'}, sav:{label:'SAV',dot:'#FF1744'}, rappel:{label:'Rappel',dot:'#CCFF00'}, rdv:{label:'RDV',dot:'#00D4FF'}, appel:{label:'Appel',dot:'#7B68EE'}};
     document.editSimpleTaskType = currentType;
     const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;flex-shrink:0;min-height:56px;">
-      <button onclick="document.getElementById('edit-simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
+      <button onclick="document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
       <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Modifier la tâche</span>
       <button onclick="updateSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg>
@@ -2773,22 +2768,18 @@ function openEditTaskModal(vehicleId, taskId){
             <span style="font-size:16px;color:#8e8e93;">€</span>
           </div>
         </div>
-        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:#1a1a1a;">Date</span>
-          <input type="date" id="etask-date" value="${task.date || ''}" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;text-align:right;"/>
-        </div>
       </div>
-      <div style="display:flex;justify-content:center;margin-top:8px;">
-        <button onclick="deleteSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;padding:12px;border-radius:50%;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-          </svg>
-        </button>
+      <div style="padding:20px 16px 4px;text-align:center;">
+        <button onclick="deleteSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;font-size:14px;font-weight:500;color:#FF3B30;padding:8px 16px;border-radius:8px;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.6'" onmouseout="this.style.opacity='1'">Supprimer la tâche</button>
       </div>
     </div>`;
     if (window.innerWidth >= 900) {
-      createDesktopDialog('edit-simple-task-modal', innerHtml, { desktopWidth: '520px' });
+      const innerHtmlDesktop = innerHtml.replace('background:#f2f2f7', 'background:white');
+      document.getElementById('edit-simple-task-modal-overlay')?.remove();
+      document.body.insertAdjacentHTML('beforeend',
+        `<div id="edit-simple-task-modal-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.18);z-index:10009;" onclick="document.getElementById('edit-simple-task-modal')?.remove();this.remove()"></div>` +
+        `<div id="edit-simple-task-modal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,calc(100vw - 320px));max-height:calc(100vh - 80px);border-radius:20px;background:white;box-shadow:0 24px 80px rgba(0,0,0,0.18);z-index:10010;display:flex;flex-direction:column;overflow:hidden;">${innerHtmlDesktop}</div>`
+      );
     } else {
       document.body.insertAdjacentHTML('beforeend', `<div id="edit-simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">${innerHtml}</div>`);
     }
@@ -2852,8 +2843,8 @@ function updateSimpleTask(vehicleId, taskId){
   task.type = document.editSimpleTaskType || task.type;
   task.desc = '';
   task.cost = Number(document.getElementById('etask-cost')?.value) || 0;
-  task.date = document.getElementById('etask-date')?.value || null;
   save();
+  document.getElementById('edit-simple-task-modal-overlay')?.remove();
   document.getElementById('edit-simple-task-modal').remove();
   renderDetailTasks(vehicleId, 'all');
   showToast('✓ Tâche modifiée');
@@ -2863,7 +2854,7 @@ function deleteSimpleTask(vehicleId, taskId){
   const html = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer cette tâche ?</div>
     <div style="color:#8e8e93;font-size:15px;margin-bottom:24px;">Cette action ne peut pas être annulée.</div>
-    <button onclick="DataLayer.deleteTask(${vehicleId},${taskId});save();document.getElementById('edit-simple-task-modal')?.remove();renderDetailTasks(${vehicleId},'all');showToast('✓ Tâche supprimée');document.getElementById('delete-simple-task-sheet')?.remove();" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Supprimer</button>
+    <button onclick="DataLayer.deleteTask(${vehicleId},${taskId});save();document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal')?.remove();renderDetailTasks(${vehicleId},'all');showToast('✓ Tâche supprimée');document.getElementById('delete-simple-task-sheet')?.remove();" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Supprimer</button>
     <button onclick="document.getElementById('delete-simple-task-sheet')?.remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
   </div>`;
   createDialogOrSheet('delete-simple-task-sheet', html, {desktopWidth:'420px'});
