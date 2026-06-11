@@ -882,10 +882,6 @@
         overflow: auto;
         background: white !important;
       }
-      .desktop-popup-sheet > div > div[style*="background:#f2f2f7"],
-      .desktop-popup-sheet > div > div[style*="background: #f2f2f7"] {
-        background: white !important;
-      }
       #details button[onclick="savePrices()"],
       #details button[onclick="openDetailTaskModal()"] {
         position: static !important;
@@ -2214,7 +2210,8 @@ function openDetailTaskModal(){
     </div>`;
 
   if (window.innerWidth >= 900) {
-    createDesktopDialog('simple-task-modal', innerHtml, { desktopWidth: '520px' });
+    const innerHtmlDesktop = innerHtml.replace('background:#f2f2f7', 'background:white');
+    createDesktopDialog('simple-task-modal', innerHtmlDesktop, { desktopWidth: '520px' });
   } else {
     document.body.insertAdjacentHTML('beforeend', `<div id="simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">${innerHtml}</div>`);
   }
