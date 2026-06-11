@@ -426,6 +426,19 @@
     .fin-marge-val { font-size:42px; font-weight:700; letter-spacing:-1.5px; line-height:1; }
     .fin-marge-pct { font-size:16px; color:#8e8e93; margin-top:6px; }
     .fin-dark { color:#1c1c1e; }
+    /* Finances classes - base mobile */
+    .fin-section-label { display:none; }
+    .fin-row { display:flex; justify-content:space-between; align-items:center; padding:13px 16px; min-height:50px; }
+    .fin-sep { border-top:0.5px solid #e5e5ea; }
+    .fin-label-text { font-size:17px; color:#1c1c1e; }
+    .fin-bold { font-size:17px; font-weight:600; color:#1c1c1e; }
+    .fin-input-wrap { display:flex; align-items:center; gap:4px; }
+    .fin-input { font-size:17px; color:#1c1c1e; text-align:right; border:none; outline:none; background:transparent; width:100px; }
+    .fin-unit { font-size:17px; color:#8e8e93; }
+    .fin-resultat-row { display:flex; justify-content:space-between; align-items:center; padding:28px 16px; }
+    .fin-resultat-row .fin-label-text { font-size:12px; color:#8e8e93; text-transform:uppercase; letter-spacing:0.5px; }
+    .fin-marge-pct { font-size:16px; color:#8e8e93; }
+    .fin-save-mobile { position:fixed; bottom:calc(90px + env(safe-area-inset-bottom)); left:16px; right:16px; padding:14px; background:white; color:#1a1a1a; border:none; border-radius:12px; font-size:15px; font-weight:500; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,0.1); z-index:100; display:flex; align-items:center; justify-content:center; gap:8px; }
     .fin-green { color:#34c759; }
     .fin-red { color:#ff3b30; }
     .desktop-sidebar { display:none; }
@@ -754,6 +767,42 @@
       #detail-tab-taches > button:not(.add-task-desktop-btn) {
         display: none !important;
       }
+      /* ── Finances desktop ── */
+      .fin-section-label {
+        display: block !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        color: #8e8e93 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        padding: 0 4px !important;
+        margin: 16px 0 6px !important;
+      }
+      .fin-section-label:first-child { margin-top: 4px !important; }
+      .fin-row {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 11px 16px !important;
+        min-height: 44px !important;
+      }
+      .fin-sep { border-top: 0.5px solid #f2f2f7 !important; }
+      .fin-label-text { font-size: 15px !important; color: #1c1c1e !important; }
+      .fin-bold { font-size: 15px !important; font-weight: 600 !important; color: #1c1c1e !important; }
+      .fin-input-wrap { display: flex !important; align-items: center !important; gap: 4px !important; }
+      .fin-input { font-size: 15px !important; color: #1c1c1e !important; text-align: right !important; border: none !important; outline: none !important; background: transparent !important; width: 90px !important; }
+      .fin-unit { font-size: 15px !important; color: #8e8e93 !important; }
+      .fin-total-row { background: #fafafa !important; }
+      .fin-resultat-row {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 14px 16px !important;
+      }
+      #detail-marge.fin-marge-val { font-size: 22px !important; font-weight: 700 !important; letter-spacing: -0.5px !important; }
+      .fin-marge-pct { font-size: 14px !important; color: #8e8e93 !important; }
+      .fin-save-mobile { display: none !important; }
+      /* ── Finances desktop ── */
       /* Onglets dans le wrapper droite */
       #detail-tab-finances,
       #detail-tab-historique {
@@ -1303,26 +1352,44 @@
 
     <div id="details-tab-wrapper" style="flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
       <div id="detail-tab-finances" class="detail-tab-content" style="display:none;">
+
+        <!-- ACQUISITION -->
+        <div class="fin-section-label">Acquisition</div>
         <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid #e5e5ea;min-height:50px;"><span style="font-size:17px;color:#1c1c1e;">Prix d'achat</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:100px;"><span style="font-size:17px;color:#8e8e93;">€</span></div></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid #e5e5ea;min-height:50px;"><span style="font-size:17px;color:#1c1c1e;">Coût sans TVA</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="detail-sans-tva-input" placeholder="0" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:100px;"><span style="font-size:17px;color:#8e8e93;">€</span></div></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid #e5e5ea;min-height:50px;"><span style="font-size:17px;color:#1c1c1e;">Coût soumis à la TVA</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="detail-avec-tva-input" placeholder="0" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:100px;"><span style="font-size:17px;color:#8e8e93;">€</span></div></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;min-height:50px;"><span style="font-size:17px;font-weight:600;color:#1c1c1e;">Prix de revient</span><span id="detail-cout-revient" style="font-size:17px;font-weight:600;color:#1c1c1e;">—</span></div>
+          <div class="fin-row"><span class="fin-label-text">Prix d'achat</span><div class="fin-input-wrap"><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="if(window.innerWidth>=900)savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
+          <div class="fin-row fin-sep"><span class="fin-label-text">Coût sans TVA</span><div class="fin-input-wrap"><input type="number" id="detail-sans-tva-input" placeholder="0" oninput="updateMargePreview()" onblur="if(window.innerWidth>=900)savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
+          <div class="fin-row fin-sep"><span class="fin-label-text">Coût soumis à la TVA</span><div class="fin-input-wrap"><input type="number" id="detail-avec-tva-input" placeholder="0" oninput="updateMargePreview()" onblur="if(window.innerWidth>=900)savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
+          <div class="fin-row fin-sep fin-total-row"><span class="fin-label-text fin-bold">Prix de revient</span><span id="detail-cout-revient" class="fin-bold">—</span></div>
         </div>
+
+        <!-- FRAIS -->
+        <div class="fin-section-label">Frais</div>
         <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;min-height:50px;"><span style="font-size:17px;color:#1c1c1e;">Carte grise</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:100px;"><span style="font-size:17px;color:#8e8e93;">€</span></div></div>
+          <div class="fin-row"><span class="fin-label-text">Carte grise</span><div class="fin-input-wrap"><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="if(window.innerWidth>=900)savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
         </div>
+
+        <!-- VENTE -->
+        <div class="fin-section-label">Vente</div>
         <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid #e5e5ea;min-height:50px;"><span style="font-size:17px;color:#1c1c1e;">Prix de vente</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:100px;"><span style="font-size:17px;color:#8e8e93;">€</span></div></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid #e5e5ea;min-height:50px;"><span style="font-size:17px;color:#1c1c1e;">Marge cible</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="detail-marge-cible-input" value="15" oninput="updateMargePreview()" style="font-size:17px;color:#1c1c1e;text-align:right;border:none;outline:none;background:transparent;width:60px;"><span style="font-size:17px;color:#8e8e93;">%</span></div></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;min-height:50px;"><span style="font-size:17px;color:#8e8e93;">Prix minimum recommandé</span><span id="detail-prix-min" style="font-size:17px;color:#8e8e93;">—</span></div>
+          <div class="fin-row"><span class="fin-label-text">Prix de vente</span><div class="fin-input-wrap"><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="if(window.innerWidth>=900)savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
+          <div class="fin-row fin-sep"><span class="fin-label-text">Marge cible</span><div class="fin-input-wrap"><input type="number" id="detail-marge-cible-input" value="15" oninput="updateMargePreview()" onblur="if(window.innerWidth>=900)savePrices()" class="fin-input" style="width:60px;"><span class="fin-unit">%</span></div></div>
+          <div class="fin-row fin-sep"><span class="fin-label-text" style="color:#8e8e93;">Prix minimum recommandé</span><span id="detail-prix-min" style="color:#8e8e93;">—</span></div>
         </div>
-        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:28px 16px;text-align:center;margin-bottom:12px;">
-          <div style="font-size:12px;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Marge réelle</div>
-          <div id="detail-marge" class="fin-marge-val fin-dark" style="font-size:42px;font-weight:700;letter-spacing:-1.5px;line-height:1;">—</div>
-          <div id="detail-marge-pct" style="font-size:16px;color:#8e8e93;margin-top:6px;"></div>
+
+        <!-- RÉSULTAT -->
+        <div class="fin-section-label">Résultat</div>
+        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <div class="fin-resultat-row">
+            <span class="fin-label-text">Marge réelle</span>
+            <div style="display:flex;align-items:baseline;gap:8px;">
+              <span id="detail-marge" class="fin-marge-val fin-dark">—</span>
+              <span id="detail-marge-pct" class="fin-marge-pct"></span>
+            </div>
+          </div>
         </div>
-        <button onclick="savePrices()" style="position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:16px;right:16px;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);z-index:100;display:flex;align-items:center;justify-content:center;gap:8px;">
+
+        <!-- Bouton Enregistrer : mobile uniquement -->
+        <button onclick="savePrices()" class="fin-save-mobile">
           <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,7 5,11 13,3"/></svg>
           Enregistrer
         </button>
