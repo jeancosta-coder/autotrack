@@ -887,7 +887,7 @@
         background: #f2f2f7 !important;
       }
       #details button[onclick="savePrices()"] svg,
-      #details button[onclick="openDetailTaskModal()"] svg {
+      #details button[onclick="openDetailTaskModal()"]:not(.add-task-desktop-btn) svg {
         margin-right: 8px;
       }
       .detail-tab,
@@ -1402,8 +1402,8 @@
         </div>
         <!-- Bouton ajout desktop : inline au-dessus de la liste -->
         <button class="add-task-desktop-btn" onclick="openDetailTaskModal()" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(30,64,175,0.07)'" onmouseout="this.style.background='none'">
-          <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" style="display:block;"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+          <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" style="display:block;"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg>
           </div>
           <span style="font-size:14px;font-weight:600;color:#1e3fae;">Ajouter une tâche</span>
         </button>
