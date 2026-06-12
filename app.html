@@ -441,6 +441,7 @@
     .fin-save-mobile { position:fixed; bottom:calc(90px + env(safe-area-inset-bottom)); left:16px; right:16px; padding:14px; background:white; color:#1a1a1a; border:none; border-radius:12px; font-size:15px; font-weight:500; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,0.1); z-index:100; display:flex; align-items:center; justify-content:center; gap:8px; }
     .add-task-desktop-btn { display: none; }
     .detail-vehicle-specs { display: none; }
+    #detail-header-trash { display: none; }
     .fin-green { color:#34c759; }
     .fin-red { color:#ff3b30; }
     .desktop-sidebar { display:none; }
@@ -733,6 +734,8 @@
         flex-shrink: 0 !important;
         padding: 0 16px !important;
       }
+      /* Masquer le bouton supprimer mobile sur desktop */
+      .dt-delete-mobile-wrap { display: none !important; }
       /* Spacer : pousse le bouton supprimer en bas */
       .dt-notes-wrap + .dt-delete-wrap {
         margin-top: auto !important;
@@ -1265,7 +1268,7 @@
       <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px 12px 16px;">
         <button onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;color:#8e8e93;font-size:22px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;" id="details-close-btn">✕</button><button onclick="closeVehicleDetails()" id="details-back-btn" style="display:none;background:none;border:none;cursor:pointer;color:#1a1a1a;font-size:14px;font-weight:600;padding:6px 12px;border-radius:10px;white-space:nowrap;">← Parc</button>
         <div><div id="detail-title" style="font-size:17px;font-weight:600;color:#1a1a1a;text-align:center;"></div><div id="detail-subtitle" style="font-size:12px;color:#8e8e93;text-align:center;margin-top:1px;"></div></div>
-        <button onclick="confirmDeleteCurrentVehicle()" style="background:none;border:none;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">
+        <button id="detail-header-trash" onclick="confirmDeleteCurrentVehicle()" style="background:none;border:none;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         </button>
       </div>
@@ -1331,6 +1334,13 @@
           <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
             <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:#1a1a1a;background:transparent;padding:14px 16px;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
           </div>
+        </div>
+
+        <!-- Bouton supprimer mobile : icône poubelle sous les notes -->
+        <div class="dt-delete-mobile-wrap" style="padding:8px 0 4px;text-align:center;">
+          <button onclick="confirmDeleteCurrentVehicle()" style="background:none;border:none;cursor:pointer;padding:8px;border-radius:50%;color:#FF3B30;display:inline-flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
         </div>
 
         <!-- Bouton supprimer (desktop uniquement, sous les notes) -->
