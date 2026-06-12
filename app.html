@@ -1281,7 +1281,7 @@
         <button id="tab-historique" class="detail-tab" onclick="switchDetailTab('historique')" style="flex:1;padding:11px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:#8e8e93;">Évènements</button>
       </div>
     </div>
-    <div id="detail-tab-infos" class="detail-tab-content" style="display:block;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
+    <div id="detail-tab-infos" class="detail-tab-content" style="display:flex;flex-direction:column;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
 
 
         <!-- Nav desktop uniquement : caché sur mobile -->
@@ -1336,8 +1336,8 @@
           </div>
         </div>
 
-        <!-- Bouton supprimer mobile : icône poubelle sous les notes -->
-        <div class="dt-delete-mobile-wrap" style="padding:8px 0 4px;text-align:center;">
+        <!-- Bouton supprimer mobile : icône poubelle tout en bas -->
+        <div class="dt-delete-mobile-wrap" style="margin-top:auto;padding:24px 0 32px;text-align:center;">
           <button onclick="confirmDeleteCurrentVehicle()" style="background:none;border:none;cursor:pointer;padding:8px;border-radius:50%;color:#FF3B30;display:inline-flex;align-items:center;justify-content:center;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
           </button>
