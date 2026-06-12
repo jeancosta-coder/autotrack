@@ -441,7 +441,7 @@
     .fin-save-mobile { position:fixed; bottom:calc(90px + env(safe-area-inset-bottom)); left:16px; right:16px; padding:14px; background:white; color:#1a1a1a; border:none; border-radius:12px; font-size:15px; font-weight:500; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,0.1); z-index:100; display:flex; align-items:center; justify-content:center; gap:8px; }
     .add-task-desktop-btn { display: none; }
     .detail-vehicle-specs { display: none; }
-    #detail-header-trash { display: none; }
+    #detail-header-trash { visibility: hidden; pointer-events: none; }
     .fin-green { color:#34c759; }
     .fin-red { color:#ff3b30; }
     .desktop-sidebar { display:none; }
@@ -736,7 +736,6 @@
       }
       /* Masquer le bouton supprimer mobile sur desktop */
       .dt-delete-mobile-wrap { display: none !important; }
-      #detail-header-trash { display: flex !important; }
       /* Spacer : pousse le bouton supprimer en bas */
       .dt-delete-wrap {
         margin-top: auto !important;
