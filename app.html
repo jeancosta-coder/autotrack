@@ -863,7 +863,7 @@
         background: white !important;
       }
       #details button[onclick="savePrices()"],
-      #details button[onclick="openDetailTaskModal()"] {
+      #details button[onclick="openDetailTaskModal()"]:not(.add-task-desktop-btn) {
         position: static !important;
         width: 100% !important;
         margin: 24px 0 0 !important;
@@ -873,7 +873,7 @@
         box-shadow: none !important;
         border-radius: 14px !important;
       }
-      #details button[onclick="openDetailTaskModal()"] {
+      #details button[onclick="openDetailTaskModal()"]:not(.add-task-desktop-btn) {
         background: transparent !important;
         border: 1px solid #d1d1d6 !important;
         color: #1a1a1a !important;
@@ -883,7 +883,7 @@
         transition: background 0.15s !important;
         cursor: pointer !important;
       }
-      #details button[onclick="openDetailTaskModal()"]:hover {
+      #details button[onclick="openDetailTaskModal()"]:not(.add-task-desktop-btn):hover {
         background: #f2f2f7 !important;
       }
       #details button[onclick="savePrices()"] svg,
