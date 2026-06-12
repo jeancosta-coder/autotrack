@@ -743,28 +743,7 @@
         flex-shrink: 0 !important;
       }
       /* Bouton ajout tâche desktop — même design que sidebar CTA */
-      .add-task-desktop-btn {
-        display: flex !important;
-        width: fit-content !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        gap: 8px !important;
-        background: none !important;
-        border: none !important;
-        border-radius: 20px !important;
-        box-shadow: none !important;
-        padding: 6px 14px 6px 8px !important;
-        margin-top: 8px !important;
-        margin-bottom: 4px !important;
-        cursor: pointer !important;
-        font-size: 14px !important;
-        font-weight: 600 !important;
-        color: #1e3fae !important;
-        transition: background 0.15s !important;
-        min-height: unset !important;
-      }
-      .add-task-desktop-btn:hover { background: rgba(30,64,175,0.07) !important; opacity: 1 !important; }
-      .add-task-desktop-btn span { color: #1e3fae !important; font-weight: 600 !important; }
+      .add-task-desktop-btn { display: inline-flex !important; -webkit-appearance: none !important; appearance: none !important; margin-top: 8px !important; margin-bottom: 4px !important; border: none !important; box-shadow: none !important; }
       /* Bouton ajout tâche mobile : masqué sur desktop */
       #detail-tab-taches > button:not(.add-task-desktop-btn) {
         display: none !important;
@@ -1422,11 +1401,11 @@
           <button id="filter-appel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('appel',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Appel</button>
         </div>
         <!-- Bouton ajout desktop : inline au-dessus de la liste -->
-        <button class="add-task-desktop-btn" onclick="openDetailTaskModal()">
+        <button class="add-task-desktop-btn" onclick="openDetailTaskModal()" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(30,64,175,0.07)'" onmouseout="this.style.background='none'">
           <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg>
           </div>
-          <span>Ajouter une tâche</span>
+          <span style="font-size:14px;font-weight:600;color:#1e3fae;">Ajouter une tâche</span>
         </button>
         <div id="detail-tasks"></div>
         <button onclick="openDetailTaskModal()" style="position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:16px;right:16px;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);z-index:100;display:flex;align-items:center;justify-content:center;gap:8px;">
