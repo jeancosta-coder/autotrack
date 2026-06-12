@@ -742,25 +742,29 @@
         padding: 0 16px 24px !important;
         flex-shrink: 0 !important;
       }
-      /* Bouton ajout tâche inline desktop — style iOS Reminders */
+      /* Bouton ajout tâche desktop — même design que sidebar CTA */
       .add-task-desktop-btn {
-        display: inline-flex !important;
-        width: max-content !important;
+        display: flex !important;
+        width: 100% !important;
         align-items: center !important;
+        justify-content: center !important;
         gap: 8px !important;
         background: transparent !important;
-        border: none !important;
-        border-radius: 0 !important;
+        border: 1px solid #d1d1d6 !important;
+        border-radius: 14px !important;
         box-shadow: none !important;
-        padding: 10px 4px !important;
-        margin-bottom: 12px !important;
+        padding: 14px 16px !important;
+        margin-top: 12px !important;
+        margin-bottom: 4px !important;
         cursor: pointer !important;
         font-size: 14px !important;
-        font-weight: 400 !important;
-        transition: opacity 0.15s !important;
+        font-weight: 500 !important;
+        color: #1a1a1a !important;
+        transition: background 0.15s !important;
+        min-height: 44px !important;
       }
-      .add-task-desktop-btn:hover { opacity: 0.6 !important; }
-      .add-task-desktop-btn svg { stroke: #007AFF !important; flex-shrink: 0 !important; }
+      .add-task-desktop-btn:hover { background: #f2f2f7 !important; opacity: 1 !important; }
+      .add-task-desktop-btn svg { stroke: currentColor !important; flex-shrink: 0 !important; }
       .add-task-desktop-btn span { color: #1a1a1a !important; font-weight: 500 !important; }
       /* Bouton ajout tâche mobile : masqué sur desktop */
       #detail-tab-taches > button:not(.add-task-desktop-btn) {
