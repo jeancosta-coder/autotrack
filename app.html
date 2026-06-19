@@ -2710,9 +2710,9 @@ function openEditPlanningTaskModal(taskId){
     </div>`;
 
   if (window.innerWidth >= 900) {
-    let innerHtmlDesktop = innerHtml.replace(/<button [^>]*onclick="saveEditPlanningTask\([\s\S]*?<\/button>/, `<button onclick="saveEditPlanningTask(${taskId})" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(30,64,175,0.07)'" onmouseout="this.style.background='none'"><div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div><span style="font-size:14px;font-weight:600;color:#1e3fae;">Enregistrer</span></button>`);
+    let innerHtmlDesktop = innerHtml.replace(/<button [^>]*onclick="saveEditPlanningTask\([\s\S]*?<\/button>/, `<button onclick="saveEditPlanningTask(${taskId})" style="background:none;border:none;cursor:pointer;"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#1e3fae" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg></button>`);
     innerHtmlDesktop = innerHtmlDesktop.replace(/<div style="display:flex;justify-content:center;margin-top:8px;">[\s\S]*?<\/div>/, '<div style="display:none;"></div>');
-    innerHtmlDesktop += `<div style="padding:16px;flex-shrink:0;"><button onclick="confirmDeleteEditTask(${taskId})" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Supprimer</button></div>`;
+    innerHtmlDesktop += `<div style="padding:16px 20px;border-top:1px solid #e5e5e5;flex-shrink:0;display:flex;justify-content:center;"><button onclick="confirmDeleteEditTask(${taskId})" style="background:none;border:none;cursor:pointer;font-size:15px;font-weight:500;color:#FF3B30;padding:10px 16px;">Supprimer</button></div>`;
     const bd = document.createElement('div');
     bd.id = 'edit-planning-backdrop';
     bd.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9997;';
@@ -3131,8 +3131,8 @@ function openNewTaskModalOutlook(dateStr, timeStr){
       modal.style.cssText = 'background:white;z-index:9999;display:flex;flex-direction:column;';
       const checkBtn = modal.querySelector('button[onclick="saveNewTask()"]');
       if(checkBtn){
-        checkBtn.innerHTML = `<div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div><span style="font-size:14px;font-weight:600;color:#1e3fae;">Enregistrer</span>`;
-        checkBtn.style.cssText = 'display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;';
+        checkBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#1e3fae" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg>`;
+        checkBtn.style.cssText = 'background:none;border:none;cursor:pointer;';
       }
     }
   }
