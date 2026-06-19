@@ -1018,6 +1018,22 @@
         overflow: hidden !important;
       }
       #new-task-modal > * { max-height: 100vh !important; }
+      #edit-task-modal-planning {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: auto !important;
+        width: 380px !important;
+        height: 100% !important;
+        max-height: 100vh !important;
+        transform: none !important;
+        border-radius: 20px 0 0 20px !important;
+        box-shadow: -8px 0 40px rgba(0,0,0,0.12) !important;
+        animation: slideInRight 0.28s cubic-bezier(0.25,0.46,0.45,0.94) !important;
+        overflow: hidden !important;
+      }
+      #edit-task-modal-planning > * { max-height: 100vh !important; }
       /* ── Desktop: add vehicle modal z-index ── */
       #modal-add-vehicle { z-index: 9998 !important; }
       #add-vehicle-check-btn { display: none !important; }
@@ -2694,15 +2710,21 @@ function openEditPlanningTaskModal(taskId){
     </div>`;
 
   if (window.innerWidth >= 900) {
-    let innerHtmlDesktop = innerHtml.replace(/<button [^>]*onclick="saveEditPlanningTask\([\s\S]*?<\/button>/, '<div style="width:36px;"></div>');
-    innerHtmlDesktop += `<div style="padding:16px 20px;border-top:1px solid #e5e5e5;flex-shrink:0;display:flex;justify-content:center;"><button onclick="saveEditPlanningTask(${taskId})" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(30,64,175,0.07)'" onmouseout="this.style.background='none'"><div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div><span style="font-size:14px;font-weight:600;color:#1e3fae;">Enregistrer</span></button></div>`;
-    createDesktopDialog('edit-task-modal-planning', innerHtmlDesktop, { desktopWidth: '520px' });
+    let innerHtmlDesktop = innerHtml.replace(/<button [^>]*onclick="saveEditPlanningTask\([\s\S]*?<\/button>/, `<button onclick="saveEditPlanningTask(${taskId})" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(30,64,175,0.07)'" onmouseout="this.style.background='none'"><div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div><span style="font-size:14px;font-weight:600;color:#1e3fae;">Enregistrer</span></button>`);
+    innerHtmlDesktop = innerHtmlDesktop.replace(/<div style="display:flex;justify-content:center;margin-top:8px;">[\s\S]*?<\/div>/, '<div style="display:none;"></div>');
+    innerHtmlDesktop += `<div style="padding:16px;flex-shrink:0;"><button onclick="confirmDeleteEditTask(${taskId})" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Supprimer</button></div>`;
+    const bd = document.createElement('div');
+    bd.id = 'edit-planning-backdrop';
+    bd.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9997;';
+    bd.addEventListener('click', closeEditPlanningModal);
+    document.body.appendChild(bd);
+    document.body.insertAdjacentHTML('beforeend', `<div id="edit-task-modal-planning" style="background:white;z-index:9999;display:flex;flex-direction:column;">${innerHtmlDesktop}</div>`);
   } else {
     document.body.insertAdjacentHTML('beforeend', `<div id="edit-task-modal-planning" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;">${innerHtml}</div>`);
   }
 }
 
-function closeEditPlanningModal(){ const m = document.getElementById('edit-task-modal-planning'); if(m) m.remove(); }
+function closeEditPlanningModal(){ const m = document.getElementById('edit-task-modal-planning'); if(m) m.remove(); const bd = document.getElementById('edit-planning-backdrop'); if(bd) bd.remove(); }
 
 function openEditBottomSheet(key){
   const config = BOTTOM_SHEET_DATA[key];
@@ -3106,10 +3128,12 @@ function openNewTaskModalOutlook(dateStr, timeStr){
     const modal = document.getElementById('new-task-modal');
     if(modal){
       document.body.insertBefore(bd, modal);
-      modal.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(520px,calc(100vw - 320px));max-height:calc(100vh - 80px);border-radius:20px;background:white;box-shadow:0 24px 80px rgba(0,0,0,0.18);z-index:9999;display:flex;flex-direction:column;overflow:hidden;animation:none;';
+      modal.style.cssText = 'background:white;z-index:9999;display:flex;flex-direction:column;';
       const checkBtn = modal.querySelector('button[onclick="saveNewTask()"]');
-      if(checkBtn) { const sp = document.createElement('div'); sp.style.width='36px'; checkBtn.replaceWith(sp); }
-      modal.insertAdjacentHTML('beforeend', `<div style="padding:16px 20px;border-top:1px solid #e5e5e5;flex-shrink:0;display:flex;justify-content:center;"><button onclick="saveNewTask()" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(30,64,175,0.07)'" onmouseout="this.style.background='none'"><div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div><span style="font-size:14px;font-weight:600;color:#1e3fae;">Enregistrer</span></button></div>`);
+      if(checkBtn){
+        checkBtn.innerHTML = `<div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div><span style="font-size:14px;font-weight:600;color:#1e3fae;">Enregistrer</span>`;
+        checkBtn.style.cssText = 'display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;';
+      }
     }
   }
 }
