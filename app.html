@@ -2710,7 +2710,7 @@ function openEditPlanningTaskModal(taskId){
     </div>`;
 
   if (window.innerWidth >= 900) {
-    let innerHtmlDesktop = innerHtml.replace(/<button [^>]*onclick="saveEditPlanningTask\([\s\S]*?<\/button>/, `<button onclick="saveEditPlanningTask(${taskId})" style="background:none;border:none;cursor:pointer;"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#1e3fae" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg></button>`);
+    let innerHtmlDesktop = innerHtml.replace(/<button [^>]*onclick="saveEditPlanningTask\([\s\S]*?<\/button>/, `<button onclick="saveEditPlanningTask(${taskId})" style="background:none;border:none;cursor:pointer;"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg></button>`);
     innerHtmlDesktop = innerHtmlDesktop.replace(/<div style="display:flex;justify-content:center;margin-top:8px;">[\s\S]*?<\/div>/, '<div style="display:none;"></div>');
     innerHtmlDesktop += `<div style="padding:16px 20px;border-top:1px solid #e5e5e5;flex-shrink:0;display:flex;justify-content:center;"><button onclick="confirmDeleteEditTask(${taskId})" style="background:none;border:none;cursor:pointer;font-size:15px;font-weight:500;color:#FF3B30;padding:10px 16px;">Supprimer</button></div>`;
     const bd = document.createElement('div');
@@ -3131,7 +3131,7 @@ function openNewTaskModalOutlook(dateStr, timeStr){
       modal.style.cssText = 'background:white;z-index:9999;display:flex;flex-direction:column;';
       const checkBtn = modal.querySelector('button[onclick="saveNewTask()"]');
       if(checkBtn){
-        checkBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#1e3fae" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg>`;
+        checkBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round"><polyline points="3,11 9,17 19,5"/></svg>`;
         checkBtn.style.cssText = 'background:none;border:none;cursor:pointer;';
       }
     }
