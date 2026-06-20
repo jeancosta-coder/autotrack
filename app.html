@@ -748,6 +748,8 @@
       }
       /* Bouton ajout tâche desktop — même design que sidebar CTA */
       .add-task-desktop-btn { display: inline-flex !important; -webkit-appearance: none !important; appearance: none !important; margin-top: 8px !important; margin-bottom: 4px !important; border: none !important; box-shadow: none !important; }
+      /* Bouton ajout tâche mobile inline : masqué sur desktop */
+      .add-task-mobile-inline-btn { display: none !important; }
       /* Bouton ajout tâche mobile : masqué sur desktop */
       #detail-tab-taches > button:not(.add-task-desktop-btn) {
         display: none !important;
@@ -1431,11 +1433,11 @@
           <span style="font-size:14px;font-weight:600;color:#1e3fae;">Ajouter une tâche</span>
         </button>
         <div id="detail-tasks"></div>
-        <button onclick="openDetailTaskModal()" style="position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:16px;right:16px;padding:12px 20px;background:none;border:none;border-radius:20px;font-size:15px;font-weight:600;cursor:pointer;z-index:100;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <button class="add-task-mobile-inline-btn" onclick="openDetailTaskModal()" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;margin-top:4px;">
           <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" style="display:block;"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg>
           </div>
-          <span style="color:#1e3fae;">Ajouter une tâche</span>
+          <span style="font-size:14px;font-weight:600;color:#1e3fae;">Ajouter une tâche</span>
         </button>
       </div>
 
