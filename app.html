@@ -1962,7 +1962,7 @@ const RenderHelpers = {
         will-change:transform;
       ">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-          <div><div style="font-size:16px;font-weight:700;color:#1a1a1a;">${v.marque} ${v.modele}</div><div style="font-size:13px;color:#8e8e93;margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen}</div></div>
+          <div><div style="font-size:16px;font-weight:700;color:#1a1a1a;">${v.pinned ? '<span style="font-size:11px;color:#1e3fae;font-weight:600;background:rgba(30,63,174,0.08);padding:2px 6px;border-radius:6px;margin-right:6px;">épinglé</span>' : ''}${v.marque} ${v.modele}</div><div style="font-size:13px;color:#8e8e93;margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen}</div></div>
           <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></div><div style="font-size:12px;font-weight:600;color:#8e8e93;">${STATUS_LABELS[v.statut] || v.statut}</div></div>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -2000,81 +2000,77 @@ function renderParc(){
   if(Utils.el('kpi-enc')) Utils.el('kpi-enc').textContent = counts['En cours'];
   if(Utils.el('kpi-prt')) Utils.el('kpi-prt').textContent = counts['Prêt à vendre'];
   if(Utils.el('kpi-vnd')) Utils.el('kpi-vnd').textContent = counts['Vendu'];
-  const filtered = RenderHelpers.filterVehicles(currentParcFilter);
+  let filtered = RenderHelpers.filterVehicles(currentParcFilter);
+  filtered = [...filtered.filter(v => v.pinned), ...filtered.filter(v => !v.pinned)];
   Utils.el('parc-grid').innerHTML = filtered.map(v => RenderHelpers.buildVehicleCard(v)).join('');
-  initSwipeCards();
+  initLongPressCards();
 }
 
-let _openSwipeId = null;
-
-function initSwipeCards(){
-  if (window.innerWidth >= 900) return;
+function initLongPressCards(){
+  if(window.innerWidth >= 900) return;
   document.querySelectorAll('.vehicle-card-swipeable').forEach(card => {
-    let startX = 0, startY = 0, isDragging = false, hasMoved = false;
     const id = parseInt(card.id.replace('card-',''));
-    const trash = document.getElementById('trash-' + id);
-
-    card.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      isDragging = true;
-      hasMoved = false;
-      card.style.transition = 'none';
+    let pressTimer = null;
+    let moved = false;
+    card.addEventListener('touchstart', () => {
+      moved = false;
+      pressTimer = setTimeout(() => { if(!moved) showVehicleContextMenu(id); }, 500);
     }, {passive: true});
-
-    card.addEventListener('touchmove', (e) => {
-      if(!isDragging) return;
-      const dx = e.touches[0].clientX - startX;
-      const dy = e.touches[0].clientY - startY;
-      if(!hasMoved && Math.abs(dy) > Math.abs(dx)) { isDragging = false; return; }
-      hasMoved = true;
-      const clamped = Math.max(-76, Math.min(0, dx));
-      card.style.transform = `translateX(${clamped}px)`;
-      // Afficher le bouton progressivement
-      if(trash) trash.style.opacity = Math.min(1, Math.abs(clamped) / 60) + '';
-    }, {passive: true});
-
-    card.addEventListener('touchend', () => {
-      if(!isDragging) return;
-      isDragging = false;
-      card.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
-      const currentX = new DOMMatrix(getComputedStyle(card).transform).m41;
-
-      if(currentX < -40){
-        card.style.transform = 'translateX(-76px)';
-        if(trash){ trash.style.opacity = '1'; trash.style.pointerEvents = 'auto'; }
-        // Fermer les autres
-        if(_openSwipeId && _openSwipeId !== id) closeSwipeCard(_openSwipeId);
-        _openSwipeId = id;
-      } else {
-        closeSwipeCard(id);
-      }
-    });
+    card.addEventListener('touchmove', () => { moved = true; clearTimeout(pressTimer); }, {passive: true});
+    card.addEventListener('touchend', () => clearTimeout(pressTimer), {passive: true});
+    card.addEventListener('touchcancel', () => clearTimeout(pressTimer), {passive: true});
+    card.addEventListener('contextmenu', e => e.preventDefault());
   });
-
-  // Tap ailleurs = referme tout
-  const grid = document.getElementById('parc-grid');
-  if(grid) grid.addEventListener('touchstart', (e) => {
-    if(_openSwipeId && !e.target.closest('#swipe-wrapper-' + _openSwipeId)){
-      closeSwipeCard(_openSwipeId);
-      _openSwipeId = null;
-    }
-  }, {passive: true});
 }
 
-function closeSwipeCard(id){
-  const card = document.getElementById('card-' + id);
-  const trash = document.getElementById('trash-' + id);
-  if(card){ card.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)'; card.style.transform = 'translateX(0)'; }
-  if(trash){ trash.style.opacity = '0'; trash.style.pointerEvents = 'none'; }
-  if(_openSwipeId === id) _openSwipeId = null;
+function showVehicleContextMenu(vehicleId){
+  const existing = document.getElementById('vehicle-context-sheet');
+  if(existing) existing.remove();
+  const v = vehicles.find(x => x.id === vehicleId);
+  if(!v) return;
+  const isPinned = v.pinned || false;
+  document.body.insertAdjacentHTML('beforeend', `
+    <div id="vehicle-context-sheet" style="position:fixed;inset:0;z-index:10000;">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,0.4);" onclick="closeVehicleContextSheet()"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;background:white;border-radius:20px 20px 0 0;padding:8px 0 calc(16px + env(safe-area-inset-bottom));">
+        <div style="width:36px;height:4px;background:#d1d1d6;border-radius:2px;margin:8px auto 16px;"></div>
+        <button onclick="pinVehicle(${vehicleId})" style="width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;color:#1a1a1a;">${isPinned ? 'Désépingler' : 'Épingler'}</button>
+        <div style="height:1px;background:#f2f2f7;margin:0 20px;"></div>
+        <button onclick="duplicateVehicle(${vehicleId})" style="width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;color:#1a1a1a;">Dupliquer</button>
+        <div style="height:1px;background:#f2f2f7;margin:0 20px;"></div>
+        <button onclick="closeVehicleContextSheet();deleteVehicle(${vehicleId})" style="width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;color:#FF3B30;">Supprimer</button>
+      </div>
+    </div>
+  `);
+}
+
+function closeVehicleContextSheet(){
+  const s = document.getElementById('vehicle-context-sheet');
+  if(s) s.remove();
+}
+
+function pinVehicle(vehicleId){
+  const v = vehicles.find(x => x.id === vehicleId);
+  if(!v) return;
+  v.pinned = !v.pinned;
+  save();
+  closeVehicleContextSheet();
+  renderParc();
+  showToast(v.pinned ? '✓ Véhicule épinglé' : '✓ Véhicule désépinglé');
+}
+
+function duplicateVehicle(vehicleId){
+  const v = vehicles.find(x => x.id === vehicleId);
+  if(!v) return;
+  const newV = {...v, id: Date.now(), modele: v.modele + ' (copie)', tasks: [], pinned: false};
+  vehicles.push(newV);
+  save();
+  closeVehicleContextSheet();
+  renderParc();
+  showToast('✓ Véhicule dupliqué');
 }
 
 function handleCardTap(e, id){
-  if(_openSwipeId === id){
-    closeSwipeCard(id);
-    return;
-  }
   openVehicleDetails(id);
 }
 
