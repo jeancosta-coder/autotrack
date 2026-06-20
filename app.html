@@ -1964,15 +1964,15 @@ const RenderHelpers = {
         will-change:transform;
       ">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-          <div style="flex:1;min-width:0;"><div style="font-size:16px;font-weight:700;color:#1a1a1a;">${v.pinned ? '<span style="font-size:11px;color:#1e3fae;font-weight:600;background:rgba(30,63,174,0.08);padding:2px 6px;border-radius:6px;margin-right:6px;">épinglé</span>' : ''}${v.marque} ${v.modele}</div><div style="font-size:13px;color:#8e8e93;margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen}</div></div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></div><div style="font-size:12px;font-weight:600;color:#8e8e93;">${STATUS_LABELS[v.statut] || v.statut}</div></div>
-            <button class="card-menu-btn" onclick="event.stopPropagation();showVehicleContextMenu(${v.id})" style="background:none;border:none;cursor:pointer;padding:4px 6px;color:#8e8e93;font-size:18px;line-height:1;letter-spacing:1px;">···</button>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:16px;font-weight:700;color:#1a1a1a;">${v.pinned ? '<span style="font-size:11px;color:#1e3fae;font-weight:600;background:rgba(30,63,174,0.08);padding:2px 6px;border-radius:6px;margin-right:6px;">épinglé</span>' : ''}${v.marque} ${v.modele}</div>
+            <div style="font-size:13px;color:#8e8e93;margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen}</div>
+            <div style="margin-top:8px;display:inline-flex;align-items:center;gap:5px;background:${color}18;padding:3px 8px;border-radius:20px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:${color};flex-shrink:0;"></div>
+              <span style="font-size:12px;font-weight:600;color:${color};">${STATUS_LABELS[v.statut] || v.statut}</span>
+            </div>
           </div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div><div style="font-size:11px;color:#8e8e93;margin-bottom:2px;">Prix vente</div><div style="font-size:17px;font-weight:700;color:#1a1a1a;">${Utils.formatCurrency(v.vente || 0)}</div></div>
-          <div style="text-align:right;"><div style="font-size:11px;color:#8e8e93;margin-bottom:2px;">Marge</div><div style="font-size:17px;font-weight:700;color:${margeColor};">${Utils.formatCurrency(marge)}</div></div>
+          <button class="card-menu-btn" onclick="event.stopPropagation();showVehicleContextMenu(${v.id})" style="background:#f2f2f7;border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#3a3a3c;font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;">···</button>
         </div>
         <div class="desktop-card-actions">
           <button class="desktop-card-btn" type="button" onclick="event.stopPropagation();openVehicleDetails(${v.id})">Voir</button>
