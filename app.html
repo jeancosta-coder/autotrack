@@ -1076,6 +1076,45 @@
       ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.18); }
     }
   </style>
+  <style>
+    /* Mobile: rendre les checkmarks bleus et ajuster le modal d'ajout de véhicule */
+    @media (max-width: 899px) {
+      .check svg, .check-sm svg, .statut-btn svg, .statut-btn svg polyline, button#add-vehicle-check-btn svg, #modal-add-vehicle svg polyline {
+        stroke: #1e3fae !important;
+      }
+      /* Masquer le check gris en haut à droite sur mobile */
+      #add-vehicle-check-btn { display: none !important; visibility: hidden !important; }
+      /* Afficher et agrandir la barre de validation en bas sur mobile */
+      #add-vehicle-desktop-footer {
+        display: flex !important;
+        padding: 16px 20px !important;
+        border-top: 1px solid #e5e5e5 !important;
+        position: fixed !important;
+        left: 16px !important;
+        right: 16px !important;
+        bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+        border-radius: 12px !important;
+        background: white !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+        z-index: 10001 !important;
+        justify-content: center !important;
+      }
+      #add-vehicle-desktop-footer button {
+        width: 100% !important;
+        padding: 14px !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        background: transparent; border: none; cursor: pointer;
+      }
+      #add-vehicle-desktop-footer button div {
+        width: 36px !important; height: 36px !important; border-radius: 50% !important; background: #1e3fae !important; display:flex;align-items:center;justify-content:center;
+      }
+      #add-vehicle-desktop-footer button span { color: #1e3fae !important; font-weight: 600 !important; }
+    }
+  </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <script>
     (function(){
