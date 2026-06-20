@@ -1083,36 +1083,14 @@
         stroke: #1e3fae !important;
       }
       /* Masquer le check gris en haut à droite sur mobile */
-      #add-vehicle-check-btn { display: none !important; visibility: hidden !important; }
-      /* Afficher et agrandir la barre de validation en bas sur mobile */
+      #add-vehicle-check-btn { visibility: hidden !important; }
+      /* Afficher la barre de validation en bas sur mobile, sans fond */
       #add-vehicle-desktop-footer {
         display: flex !important;
+        justify-content: center !important;
         padding: 16px 20px !important;
         border-top: 1px solid #e5e5e5 !important;
-        position: fixed !important;
-        left: 16px !important;
-        right: 16px !important;
-        bottom: calc(90px + env(safe-area-inset-bottom)) !important;
-        border-radius: 12px !important;
-        background: white !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
-        z-index: 10001 !important;
-        justify-content: center !important;
       }
-      #add-vehicle-desktop-footer button {
-        width: 100% !important;
-        padding: 14px !important;
-        border-radius: 12px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 8px !important;
-        background: transparent; border: none; cursor: pointer;
-      }
-      #add-vehicle-desktop-footer button div {
-        width: 36px !important; height: 36px !important; border-radius: 50% !important; background: #1e3fae !important; display:flex;align-items:center;justify-content:center;
-      }
-      #add-vehicle-desktop-footer button span { color: #1e3fae !important; font-weight: 600 !important; }
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
@@ -1594,7 +1572,7 @@
 <div id="modal-add-vehicle" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:none;flex-direction:column;animation:slideUpFull 0.3s ease;">
   <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;background:white;flex-shrink:0;min-height:56px;">
     <button onclick="closeAddModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>
-    <span style="font-size:17px;font-weight:600;color:#1a1a1a;text-align:center;">Nouveau véhicule</span>
+    <span style="font-size:17px;font-weight:600;color:#1a1a1a;flex:1;text-align:center;">Nouveau véhicule</span>
     <button id="add-vehicle-check-btn" onclick="addVehicle()" style="background:none;border:none;cursor:pointer;padding:4px;">
       <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div>
     </button>
