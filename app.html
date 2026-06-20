@@ -52,6 +52,7 @@
     .desktop-only { display: none; }
     .desktop-parc-toolbar { display: none; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 20px; }
     .desktop-card-actions { display: none; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .card-menu-btn { display: inline-block; }
     .desktop-card-btn {
       padding: 10px 12px;
       border: 1px solid #d1d1d6;
@@ -558,6 +559,7 @@
       }
       .desktop-only { display: block !important; }
       .desktop-card-actions { display: none !important; }
+      .card-menu-btn { display: none !important; }
       .desktop-parc-toolbar { display: flex !important; }
       .desktop-view-header { display: block !important; }
       .desktop-view-header .desktop-header-actions { justify-content: flex-end; }
@@ -1962,8 +1964,11 @@ const RenderHelpers = {
         will-change:transform;
       ">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-          <div><div style="font-size:16px;font-weight:700;color:#1a1a1a;">${v.pinned ? '<span style="font-size:11px;color:#1e3fae;font-weight:600;background:rgba(30,63,174,0.08);padding:2px 6px;border-radius:6px;margin-right:6px;">épinglé</span>' : ''}${v.marque} ${v.modele}</div><div style="font-size:13px;color:#8e8e93;margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen}</div></div>
-          <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></div><div style="font-size:12px;font-weight:600;color:#8e8e93;">${STATUS_LABELS[v.statut] || v.statut}</div></div>
+          <div style="flex:1;min-width:0;"><div style="font-size:16px;font-weight:700;color:#1a1a1a;">${v.pinned ? '<span style="font-size:11px;color:#1e3fae;font-weight:600;background:rgba(30,63,174,0.08);padding:2px 6px;border-radius:6px;margin-right:6px;">épinglé</span>' : ''}${v.marque} ${v.modele}</div><div style="font-size:13px;color:#8e8e93;margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen}</div></div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></div><div style="font-size:12px;font-weight:600;color:#8e8e93;">${STATUS_LABELS[v.statut] || v.statut}</div></div>
+            <button class="card-menu-btn" onclick="event.stopPropagation();showVehicleContextMenu(${v.id})" style="background:none;border:none;cursor:pointer;padding:4px 6px;color:#8e8e93;font-size:18px;line-height:1;letter-spacing:1px;">···</button>
+          </div>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <div><div style="font-size:11px;color:#8e8e93;margin-bottom:2px;">Prix vente</div><div style="font-size:17px;font-weight:700;color:#1a1a1a;">${Utils.formatCurrency(v.vente || 0)}</div></div>
@@ -2006,22 +2011,7 @@ function renderParc(){
   initLongPressCards();
 }
 
-function initLongPressCards(){
-  if(window.innerWidth >= 900) return;
-  document.querySelectorAll('.vehicle-card-swipeable').forEach(card => {
-    const id = parseInt(card.id.replace('card-',''));
-    let pressTimer = null;
-    let moved = false;
-    card.addEventListener('touchstart', () => {
-      moved = false;
-      pressTimer = setTimeout(() => { if(!moved) showVehicleContextMenu(id); }, 500);
-    }, {passive: true});
-    card.addEventListener('touchmove', () => { moved = true; clearTimeout(pressTimer); }, {passive: true});
-    card.addEventListener('touchend', () => clearTimeout(pressTimer), {passive: true});
-    card.addEventListener('touchcancel', () => clearTimeout(pressTimer), {passive: true});
-    card.addEventListener('contextmenu', e => e.preventDefault());
-  });
-}
+function initLongPressCards(){}
 
 function showVehicleContextMenu(vehicleId){
   const existing = document.getElementById('vehicle-context-sheet');
