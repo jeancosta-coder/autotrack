@@ -3472,11 +3472,16 @@ async function doResetPassword(){
   }, 1200);
 }
 
-sb.auth.getSession().then(({data:{session}}) => {
-  if(window.location.hash.includes('type=recovery')){
+sb.auth.onAuthStateChange((event, session) => {
+  if(event === 'PASSWORD_RECOVERY'){
     showResetPasswordScreen();
     return;
   }
+  if(event === 'SIGNED_OUT'){ sbUser = null; showLoginScreen(); return; }
+  if(session){ sbUser = session.user; }
+});
+
+sb.auth.getSession().then(({data:{session}}) => {
   if(session){
     sbUser = session.user;
     const grid = document.getElementById('parc-grid');
@@ -3497,11 +3502,6 @@ sb.auth.getSession().then(({data:{session}}) => {
     loadFromSupabase().then(() => initApp());
   }
   else { showLoginScreen(); }
-});
-
-sb.auth.onAuthStateChange((event, session) => {
-  if(event === 'SIGNED_OUT'){ sbUser = null; showLoginScreen(); }
-  else if(session){ sbUser = session.user; }
 });
 </script>
 
