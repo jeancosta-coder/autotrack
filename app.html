@@ -3364,7 +3364,7 @@ async function forgotPassword(){
   const msg = document.getElementById('auth-msg');
   if(!email){ msg.style.color='#FF3B30'; msg.textContent='Entrez votre email d\'abord.'; return; }
   msg.style.color='#8e8e93'; msg.textContent='Envoi en cours…';
-  const {error} = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+  const {error} = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
   if(error){ msg.style.color='#FF3B30'; msg.textContent=error.message; return; }
   msg.style.color='#34C759'; msg.textContent='Lien envoyé ! Vérifiez votre email.';
 }
