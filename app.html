@@ -1041,6 +1041,9 @@
       /* ── Desktop: statut badge + popover, cacher mobile badges ── */
       #statut-mobile-badges { display: none !important; }
       #statut-active-badge { display: inline-flex !important; }
+      #statut-popover button[data-statut="En cours"]:hover { background: #FF950022 !important; color: #FF9500 !important; }
+      #statut-popover button[data-statut="Prêt à vendre"]:hover { background: #34C75922 !important; color: #34C759 !important; }
+      #statut-popover button[data-statut="Vendu"]:hover { background: #FF174422 !important; color: #FF1744 !important; }
       /* ── Desktop: add vehicle modal z-index ── */
       #modal-add-vehicle { z-index: 9998 !important; }
       #add-vehicle-check-btn { visibility: hidden !important; }
@@ -1394,13 +1397,13 @@
               </button>
             </div>
             <div id="statut-popover" style="display:none;position:absolute;left:0;top:calc(100% + 6px);z-index:100;background:white;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,0.13);padding:8px;flex-direction:column;align-items:flex-start;gap:4px;width:fit-content;">
-              <button onclick="changeStatut('En cours');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:#1a1a1a;white-space:nowrap;">
+              <button data-statut="En cours" onclick="changeStatut('En cours');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:#1a1a1a;white-space:nowrap;transition:background 0.15s,color 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF9500;flex-shrink:0;"></span><span>En cours</span>
               </button>
-              <button onclick="changeStatut('Prêt à vendre');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:#1a1a1a;white-space:nowrap;">
+              <button data-statut="Prêt à vendre" onclick="changeStatut('Prêt à vendre');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:#1a1a1a;white-space:nowrap;transition:background 0.15s,color 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#34C759;flex-shrink:0;"></span><span>Prêt à vendre</span>
               </button>
-              <button onclick="changeStatut('Vendu');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:#1a1a1a;white-space:nowrap;">
+              <button data-statut="Vendu" onclick="changeStatut('Vendu');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:#1a1a1a;white-space:nowrap;transition:background 0.15s,color 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF1744;flex-shrink:0;"></span><span>Vendu</span>
               </button>
             </div>
