@@ -833,8 +833,58 @@
       #detail-tab-taches {
         flex: 1 !important;
         overflow-y: auto !important;
-        padding: 16px 16px 32px !important;
+        padding: 24px 28px 32px !important;
         min-height: 0 !important;
+      }
+      /* Progression : fine et élégante */
+      #detail-tab-taches .progress-container {
+        height: 4px !important;
+        border-radius: 2px !important;
+        background: #e5e5ea !important;
+      }
+      #detail-tab-taches .progress-bar {
+        height: 4px !important;
+        border-radius: 2px !important;
+        background: #1a1a1a !important;
+      }
+      #detail-tab-taches > div:first-child {
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 0 16px !important;
+        border-bottom: 1px solid rgba(0,0,0,0.06) !important;
+        margin-bottom: 16px !important;
+      }
+      /* Filtres tâches : style cohérent */
+      #detail-tab-taches > div:nth-child(2) {
+        gap: 6px !important;
+        margin-bottom: 20px !important;
+      }
+      #detail-tab-taches .task-filter-btn {
+        padding: 6px 16px !important;
+        font-size: 13px !important;
+        border-radius: 20px !important;
+        border: 1px solid #e5e5e5 !important;
+        background: white !important;
+        color: #6e6e73 !important;
+        font-weight: 500 !important;
+        transition: all 0.15s !important;
+      }
+      #detail-tab-taches .task-filter-btn.active,
+      #detail-tab-taches #filter-all-tasks {
+        background: #1a1a1a !important;
+        color: white !important;
+        border-color: #1a1a1a !important;
+        font-weight: 600 !important;
+      }
+      /* Items de tâches : plus d'espace */
+      #detail-tasks > div > div {
+        padding: 14px 16px !important;
+        transition: background 0.12s !important;
+      }
+      #detail-tasks > div > div:hover {
+        background: #fafafa !important;
+        cursor: pointer !important;
       }
       #modal-add-vehicle {
         position: fixed !important;
