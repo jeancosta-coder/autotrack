@@ -1367,19 +1367,16 @@
 
         <!-- Statut -->
         <div class="dt-statut-wrap">
-          <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Statut</span></div>
-          <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-            <button class="statut-btn" id="btn-en-cours" onclick="changeStatut('En cours')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;border-bottom:1px solid #f2f2f7;font-size:15px;cursor:pointer;color:#1a1a1a;">
-              <div style="display:flex;align-items:center;gap:10px;"><span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-en-cours"></span><span>En cours</span></div>
-              <svg id="check-en-cours" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
+          <div style="margin-bottom:8px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Statut</span></div>
+          <div style="display:flex;gap:8px;margin-bottom:12px;" id="statut-badges-row">
+            <button id="badge-en-cours" onclick="changeStatut('En cours')" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 10px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:opacity 0.15s;">
+              <span style="width:7px;height:7px;border-radius:50%;flex-shrink:0;"></span><span>En cours</span>
             </button>
-            <button class="statut-btn" id="btn-pret" onclick="changeStatut('Prêt à vendre')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;border-bottom:1px solid #f2f2f7;font-size:15px;cursor:pointer;color:#1a1a1a;">
-              <div style="display:flex;align-items:center;gap:10px;"><span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-pret"></span><span>Prêt à vendre</span></div>
-              <svg id="check-pret" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
+            <button id="badge-pret" onclick="changeStatut('Prêt à vendre')" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 10px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:opacity 0.15s;">
+              <span style="width:7px;height:7px;border-radius:50%;flex-shrink:0;"></span><span>Prêt à vendre</span>
             </button>
-            <button class="statut-btn" id="btn-vendu" onclick="changeStatut('Vendu')" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:transparent;border:none;font-size:15px;cursor:pointer;color:#1a1a1a;">
-              <div style="display:flex;align-items:center;gap:10px;"><span style="width:8px;height:8px;border-radius:50%;background:#8e8e93;flex-shrink:0;" id="stat-dot-vendu"></span><span>Vendu</span></div>
-              <svg id="check-vendu" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" style="display:none;"><polyline points="2,8 6,12 14,4"/></svg>
+            <button id="badge-vendu" onclick="changeStatut('Vendu')" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 10px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:opacity 0.15s;">
+              <span style="width:7px;height:7px;border-radius:50%;flex-shrink:0;"></span><span>Vendu</span>
             </button>
           </div>
         </div>
@@ -2142,10 +2139,20 @@ function updateStatutUI(statut){
   const keys = {'En cours':'en-cours','Prêt à vendre':'pret','Vendu':'vendu'};
   Object.keys(keys).forEach(s => {
     const key = keys[s];
-    const dot = document.getElementById('stat-dot-' + key);
-    const check = document.getElementById('check-' + key);
-    if(dot) dot.style.background = STATUS_COLORS[s];
-    if(check) check.style.display = s === statut ? 'block' : 'none';
+    const color = STATUS_COLORS[s];
+    const btn = document.getElementById('badge-' + key);
+    if(!btn) return;
+    const dot = btn.querySelector('span');
+    if(dot) dot.style.background = color;
+    if(s === statut){
+      btn.style.background = color + '22';
+      btn.style.color = color;
+      btn.style.opacity = '1';
+    } else {
+      btn.style.background = '#f2f2f7';
+      btn.style.color = '#8e8e93';
+      btn.style.opacity = '0.7';
+    }
   });
 }
 function closeVehicleDetails(){
