@@ -2182,7 +2182,7 @@ function toggleStatutPopover(e){
   const pop = document.getElementById('statut-popover');
   if(!pop) return;
   const isOpen = pop.style.display !== 'none';
-  pop.style.display = isOpen ? 'none' : 'block';
+  pop.style.display = isOpen ? 'none' : 'flex';
   if(!isOpen){
     setTimeout(() => document.addEventListener('click', closeStatutPopover, {once:true}), 0);
   }
