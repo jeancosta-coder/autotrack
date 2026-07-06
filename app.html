@@ -2472,8 +2472,8 @@ function renderHistorique(vehicleId){
 
 function filterDetailTasksByType(type, btn){
   currentDetailTaskFilter = type;
-  document.querySelectorAll('.task-filter-btn').forEach(b => b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.background='rgba(0,0,0,0.06)';b.style.color='#3a3a3c';b.style.fontWeight='500'; });
+  if(btn){ btn.style.background='#1a1a1a';btn.style.color='white';btn.style.fontWeight='600'; }
   if(currentDetailVehicleId) renderDetailTasks(currentDetailVehicleId, 'all');
 }
 
