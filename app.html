@@ -980,21 +980,31 @@
       .detail-tab,
       .task-filter-btn,
       .chart-filter,
-      .filter-btn {
-        border-radius: 16px;
-      }
-      .task-filter-btn,
       .filter-btn,
-      .chart-filter {
-        background: #f2f2f7;
-        border: 1px solid #e5e5e5;
-        color: #1a1a1a;
+      .parc-filter {
+        border-radius: 20px;
+        border: none;
+        background: transparent;
+        color: #8e8e93;
+        font-weight: 500;
+        font-size: 13px;
+        transition: all 0.15s;
+        cursor: pointer;
       }
       .task-filter-btn.active,
       .filter-btn.active,
-      .chart-filter.active {
-        background: #1a1a1a;
-        color: #fff;
+      .chart-filter.active,
+      .parc-filter.active {
+        background: #1a1a1a !important;
+        color: white !important;
+        font-weight: 600 !important;
+      }
+      .task-filter-btn:not(.active):hover,
+      .filter-btn:not(.active):hover,
+      .chart-filter:not(.active):hover,
+      .parc-filter:not(.active):hover {
+        color: #1a1a1a;
+        background: rgba(0,0,0,0.05);
       }
       .btn-primary {
         background: transparent;
@@ -2179,8 +2189,8 @@ function handleCardTap(e, id){
 function filterParc(status, btn){
   currentParcFilter = status;
   if(status !== 'search'){
-    document.querySelectorAll('.parc-filter').forEach(b => { b.style.background = 'rgba(0,0,0,0.06)'; b.style.color = '#3a3a3c'; b.style.fontWeight = '500'; });
-    if(btn) { btn.style.background = '#1a1a1a'; btn.style.color = 'white'; btn.style.fontWeight = '600'; }
+    document.querySelectorAll('.parc-filter').forEach(b => { b.style.cssText = ''; b.classList.remove('active'); });
+    if(btn) { btn.classList.add('active'); }
   }
   renderParc();
 }
@@ -2413,9 +2423,9 @@ function saveSimpleTask(){
   document.getElementById('simple-task-modal-overlay')?.remove();
   document.getElementById('simple-task-modal').remove();
   renderDetailTasks(currentDetailVehicleId, 'all');
-  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.background='rgba(0,0,0,0.06)';b.style.color='#3a3a3c';b.style.fontWeight='500'; });
+  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.cssText = ''; b.classList.remove('active'); });
   const allBtn = document.getElementById('filter-all-tasks');
-  if(allBtn){ allBtn.style.background='#1a1a1a';allBtn.style.color='white';allBtn.style.fontWeight='600'; }
+  if(allBtn){ allBtn.classList.add('active'); }
   currentDetailTaskFilter = 'all';
   showToast('✓ Tâche ajoutée');
 }
@@ -2492,8 +2502,8 @@ function renderHistorique(vehicleId){
 
 function filterDetailTasksByType(type, btn){
   currentDetailTaskFilter = type;
-  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.background = 'rgba(0,0,0,0.06)'; b.style.color = '#3a3a3c'; b.style.fontWeight = '500'; });
-  if(btn) { btn.style.background = '#1a1a1a'; btn.style.color = 'white'; btn.style.fontWeight = '600'; }
+  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.cssText = ''; b.classList.remove('active'); });
+  if(btn) { btn.classList.add('active'); }
   if(currentDetailVehicleId) renderDetailTasks(currentDetailVehicleId, 'all');
 }
 
@@ -3097,8 +3107,8 @@ function deleteVehicle(vehicleId){
 
 function switchChart(type, btn){
   currentChartType = type;
-  document.querySelectorAll('.chart-filter').forEach(b => { b.style.background = 'rgba(0,0,0,0.06)'; b.style.color = '#3a3a3c'; b.style.fontWeight = '500'; });
-  if(btn){ btn.style.background = '#1a1a1a'; btn.style.color = 'white'; btn.style.fontWeight = '600'; }
+  document.querySelectorAll('.chart-filter').forEach(b => { b.style.cssText = ''; b.classList.remove('active'); });
+  if(btn){ btn.classList.add('active'); }
   drawChart();
 }
 
