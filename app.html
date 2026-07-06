@@ -1022,27 +1022,34 @@
       .desktop-sidebar .nav-link:hover svg,
       .desktop-sidebar .nav-link.active svg { opacity: 0.9; }
       .parc-filter {
-        padding: 8px 16px;
-        border: 1px solid #d1d1d6;
-        border-radius: 16px;
+        padding: 7px 16px;
+        border: none;
+        border-radius: 20px;
         background: transparent;
-        color: #1a1a1a;
-        font-weight: 600;
+        color: #8e8e93;
+        font-weight: 500;
+        font-size: 13px;
+        transition: all 0.15s;
       }
       .parc-filter.active {
-        background: #f2f2f7;
+        background: #1a1a1a;
+        color: white;
+        font-weight: 600;
+      }
+      .parc-filter:not(.active):hover {
         color: #1a1a1a;
-        border-color: transparent;
+        background: rgba(0,0,0,0.05);
       }
       .chart-filter.active {
-        background: #f2f2f7;
-        color: #1a1a1a;
-        border-color: #d1d1d6;
+        background: #1a1a1a;
+        color: white;
+        border-color: transparent;
       }
       .task-filter-btn.active,
       .filter-btn.active {
-        background: #f2f2f7;
-        color: #1a1a1a;
+        background: #1a1a1a;
+        color: white;
+        border-color: #1a1a1a;
       }
       .swipe-wrapper:hover .trash-button {
         opacity: 1;
