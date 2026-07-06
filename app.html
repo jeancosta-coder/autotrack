@@ -982,14 +982,14 @@
       .chart-filter,
       .filter-btn,
       .parc-filter {
-        border-radius: 20px;
-        border: none;
-        background: transparent;
-        color: #8e8e93;
-        font-weight: 500;
-        font-size: 13px;
-        transition: all 0.15s;
-        cursor: pointer;
+        border-radius: 20px !important;
+        border: none !important;
+        background: rgba(0,0,0,0.06) !important;
+        color: #3a3a3c !important;
+        font-weight: 500 !important;
+        font-size: 13px !important;
+        transition: all 0.15s !important;
+        cursor: pointer !important;
       }
       .task-filter-btn.active,
       .filter-btn.active,
@@ -1003,8 +1003,8 @@
       .filter-btn:not(.active):hover,
       .chart-filter:not(.active):hover,
       .parc-filter:not(.active):hover {
-        color: #1a1a1a;
-        background: rgba(0,0,0,0.05);
+        background: rgba(0,0,0,0.1) !important;
+        color: #1a1a1a !important;
       }
       .btn-primary {
         background: transparent;
@@ -1304,10 +1304,10 @@
 
     <!-- FILTRES -->
     <div style="display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
-      <button class="parc-filter active" onclick="filterParc('all',this)" style="padding:6px 16px;border:none;border-radius:20px;background:#1a1a1a;color:white;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Tous</button>
-      <button class="parc-filter" onclick="filterParc('En cours',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">En cours</button>
-      <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Prêt</button>
-      <button class="parc-filter" onclick="filterParc('Vendu',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Vendu</button>
+      <button class="parc-filter active" onclick="filterParc('all',this)" style="padding:6px 16px;white-space:nowrap;flex-shrink:0;">Tous</button>
+      <button class="parc-filter" onclick="filterParc('En cours',this)" style="padding:6px 16px;white-space:nowrap;flex-shrink:0;">En cours</button>
+      <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)" style="padding:6px 16px;white-space:nowrap;flex-shrink:0;">Prêt</button>
+      <button class="parc-filter" onclick="filterParc('Vendu',this)" style="padding:6px 16px;white-space:nowrap;flex-shrink:0;">Vendu</button>
     </div>
 
     <div class="desktop-parc-toolbar desktop-only" style="flex-direction:column;align-items:flex-start;gap:10px;">
@@ -1576,12 +1576,12 @@
           <div class="progress-container" style="margin-bottom:0;"><div class="progress-bar" id="detail-progress-bar" style="width:0%;"></div></div>
         </div>
         <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;">
-          <button id="filter-all-tasks" class="task-filter-btn active" onclick="filterDetailTasksByType('all',this)" style="padding:6px 16px;border:none;border-radius:20px;background:#1a1a1a;color:white;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Toutes</button>
-          <button id="filter-rappel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('rappel',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Rappels</button>
-          <button id="filter-prep-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('preparation',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Préparation</button>
-          <button id="filter-sav-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('sav',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">SAV</button>
-          <button id="filter-rdv-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('rdv',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">RDV</button>
-          <button id="filter-appel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('appel',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Appel</button>
+          <button id="filter-all-tasks" class="task-filter-btn active" onclick="filterDetailTasksByType('all',this)" style="padding:6px 16px;white-space:nowrap;flex-shrink:0;">Toutes</button>
+          <button id="filter-rappel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('rappel',this)" style="padding:6px 16px;white-space:nowrap;flex-shrink:0;">Rappels</button>
+          <button id="filter-prep-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('preparation',this)" style="padding:6px 16px;white-space:nowrap;flex-shrink:0;">Préparation</button>
+          <button id="filter-sav-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('sav',this)" style="padding:6px 16px;white-space:nowrap;flex-shrink:0;">SAV</button>
+          <button id="filter-rdv-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('rdv',this)" style="padding:6px 16px;white-space:nowrap;flex-shrink:0;">RDV</button>
+          <button id="filter-appel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('appel',this)" style="padding:6px 16px;white-space:nowrap;flex-shrink:0;">Appel</button>
         </div>
         <!-- Bouton ajout desktop : inline au-dessus de la liste -->
         <button class="add-task-desktop-btn" onclick="openDetailTaskModal()" style="align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(30,64,175,0.07)'" onmouseout="this.style.background='none'">
@@ -2189,8 +2189,8 @@ function handleCardTap(e, id){
 function filterParc(status, btn){
   currentParcFilter = status;
   if(status !== 'search'){
-    document.querySelectorAll('.parc-filter').forEach(b => { b.style.cssText = ''; b.classList.remove('active'); });
-    if(btn) { btn.classList.add('active'); }
+    document.querySelectorAll('.parc-filter').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
   }
   renderParc();
 }
@@ -2423,9 +2423,9 @@ function saveSimpleTask(){
   document.getElementById('simple-task-modal-overlay')?.remove();
   document.getElementById('simple-task-modal').remove();
   renderDetailTasks(currentDetailVehicleId, 'all');
-  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.background='rgba(0,0,0,0.06)';b.style.color='#3a3a3c';b.style.fontWeight='500'; });
+  document.querySelectorAll('.task-filter-btn').forEach(b => b.classList.remove('active'));
   const allBtn = document.getElementById('filter-all-tasks');
-  if(allBtn){ allBtn.style.background='#1a1a1a';allBtn.style.color='white';allBtn.style.fontWeight='600'; }
+  if(allBtn) allBtn.classList.add('active');
   currentDetailTaskFilter = 'all';
   showToast('✓ Tâche ajoutée');
 }
@@ -2502,8 +2502,8 @@ function renderHistorique(vehicleId){
 
 function filterDetailTasksByType(type, btn){
   currentDetailTaskFilter = type;
-  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.background='rgba(0,0,0,0.06)';b.style.color='#3a3a3c';b.style.fontWeight='500'; });
-  if(btn) { btn.style.background='#1a1a1a';btn.style.color='white';btn.style.fontWeight='600'; }
+  document.querySelectorAll('.task-filter-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
   if(currentDetailVehicleId) renderDetailTasks(currentDetailVehicleId, 'all');
 }
 
