@@ -654,12 +654,12 @@
       #details > div:first-child { display: none !important; }
       #details::before { display: none !important; }
 
-      /* === COLONNE GAUCHE === */
+      /* === COLONNE GAUCHE : span les 2 rows === */
       #detail-tab-infos {
         display: flex !important;
         flex-direction: column !important;
         grid-column: 1 !important;
-        grid-row: 1 !important;
+        grid-row: 1 / 3 !important;
         overflow-y: auto !important;
         padding: 0 !important;
         background: white !important;
