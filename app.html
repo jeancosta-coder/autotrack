@@ -2423,9 +2423,9 @@ function saveSimpleTask(){
   document.getElementById('simple-task-modal-overlay')?.remove();
   document.getElementById('simple-task-modal').remove();
   renderDetailTasks(currentDetailVehicleId, 'all');
-  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.cssText = ''; b.classList.remove('active'); });
+  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.background='rgba(0,0,0,0.06)';b.style.color='#3a3a3c';b.style.fontWeight='500'; });
   const allBtn = document.getElementById('filter-all-tasks');
-  if(allBtn){ allBtn.classList.add('active'); }
+  if(allBtn){ allBtn.style.background='#1a1a1a';allBtn.style.color='white';allBtn.style.fontWeight='600'; }
   currentDetailTaskFilter = 'all';
   showToast('✓ Tâche ajoutée');
 }
@@ -2502,8 +2502,8 @@ function renderHistorique(vehicleId){
 
 function filterDetailTasksByType(type, btn){
   currentDetailTaskFilter = type;
-  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.cssText = ''; b.classList.remove('active'); });
-  if(btn) { btn.classList.add('active'); }
+  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.background='rgba(0,0,0,0.06)';b.style.color='#3a3a3c';b.style.fontWeight='500'; });
+  if(btn) { btn.style.background='#1a1a1a';btn.style.color='white';btn.style.fontWeight='600'; }
   if(currentDetailVehicleId) renderDetailTasks(currentDetailVehicleId, 'all');
 }
 
