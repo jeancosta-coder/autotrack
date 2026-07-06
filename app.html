@@ -1038,6 +1038,9 @@
         overflow: hidden !important;
       }
       #edit-task-modal-planning > * { max-height: 100vh !important; }
+      /* ── Desktop: statut badge + popover, cacher mobile badges ── */
+      #statut-mobile-badges { display: none !important; }
+      #statut-active-badge { display: inline-flex !important; }
       /* ── Desktop: add vehicle modal z-index ── */
       #modal-add-vehicle { z-index: 9998 !important; }
       #add-vehicle-check-btn { visibility: hidden !important; }
@@ -1081,6 +1084,9 @@
   <style>
     /* Mobile: rendre les checkmarks bleus et ajuster le modal d'ajout de véhicule */
     @media (max-width: 899px) {
+      /* Statut: cacher badge+popover, montrer 3 badges directs */
+      #statut-active-badge { display: none !important; }
+      #statut-mobile-badges { display: flex !important; }
       .check svg, .check-sm svg, .statut-btn svg, .statut-btn svg polyline {
         stroke: #1e3fae !important;
       }
@@ -1369,11 +1375,24 @@
         <div class="dt-statut-wrap" style="position:relative;">
           <div style="margin-bottom:8px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Statut</span></div>
           <div style="margin-bottom:12px;">
+            <!-- Desktop: badge actif + popover -->
             <button id="statut-active-badge" onclick="toggleStatutPopover(event)" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;">
               <span id="statut-badge-dot" style="width:7px;height:7px;border-radius:50%;flex-shrink:0;"></span>
               <span id="statut-badge-label"></span>
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="margin-left:2px;opacity:0.6;"><polyline points="2,3 5,7 8,3"/></svg>
             </button>
+            <!-- Mobile: 3 badges directs -->
+            <div id="statut-mobile-badges" style="display:none;flex-wrap:wrap;gap:8px;">
+              <button id="mbadge-en-cours" onclick="changeStatut('En cours')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:#FF950022;color:#FF9500;">
+                <span style="width:7px;height:7px;border-radius:50%;background:#FF9500;flex-shrink:0;"></span><span>En cours</span>
+              </button>
+              <button id="mbadge-pret" onclick="changeStatut('Prêt à vendre')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:#34C75922;color:#34C759;">
+                <span style="width:7px;height:7px;border-radius:50%;background:#34C759;flex-shrink:0;"></span><span>Prêt à vendre</span>
+              </button>
+              <button id="mbadge-vendu" onclick="changeStatut('Vendu')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:#FF174422;color:#FF1744;">
+                <span style="width:7px;height:7px;border-radius:50%;background:#FF1744;flex-shrink:0;"></span><span>Vendu</span>
+              </button>
+            </div>
             <div id="statut-popover" style="display:none;position:absolute;left:0;top:calc(100% + 6px);z-index:100;background:white;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,0.13);overflow:hidden;padding:6px;display:none;flex-direction:column;gap:4px;min-width:160px;">
               <button onclick="changeStatut('En cours');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:#FF950022;color:#FF9500;width:100%;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF9500;flex-shrink:0;"></span><span>En cours</span>
@@ -2144,12 +2163,19 @@ function updateMargePreview(){
 function updateStatutUI(statut){
   const STATUS_COLORS = {'En cours':'#FF9500','Prêt à vendre':'#34C759','Vendu':'#FF1744'};
   const color = STATUS_COLORS[statut] || '#8e8e93';
+  // Desktop: badge actif
   const badge = document.getElementById('statut-active-badge');
   const dot = document.getElementById('statut-badge-dot');
   const label = document.getElementById('statut-badge-label');
   if(badge){ badge.style.background = color + '22'; badge.style.color = color; }
   if(dot) dot.style.background = color;
   if(label) label.textContent = statut;
+  // Mobile: opacité sur les badges inactifs
+  const mkeys = {'En cours':'en-cours','Prêt à vendre':'pret','Vendu':'vendu'};
+  Object.keys(mkeys).forEach(s => {
+    const btn = document.getElementById('mbadge-' + mkeys[s]);
+    if(btn) btn.style.opacity = s === statut ? '1' : '0.4';
+  });
 }
 function toggleStatutPopover(e){
   e.stopPropagation();
