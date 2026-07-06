@@ -1374,14 +1374,14 @@
               <span id="statut-badge-label"></span>
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="margin-left:2px;opacity:0.6;"><polyline points="2,3 5,7 8,3"/></svg>
             </button>
-            <div id="statut-popover" style="display:none;position:absolute;left:0;top:100%;z-index:100;background:white;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,0.13);overflow:hidden;min-width:180px;">
-              <button onclick="changeStatut('En cours');closeStatutPopover()" id="pop-en-cours" style="width:100%;display:flex;align-items:center;gap:10px;padding:13px 16px;background:transparent;border:none;border-bottom:1px solid #f2f2f7;font-size:15px;cursor:pointer;color:#1a1a1a;">
+            <div id="statut-popover" style="display:none;position:absolute;left:0;top:calc(100% + 6px);z-index:100;background:white;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,0.13);overflow:hidden;padding:6px;display:none;flex-direction:column;gap:4px;min-width:160px;">
+              <button onclick="changeStatut('En cours');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:#FF950022;color:#FF9500;width:100%;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF9500;flex-shrink:0;"></span><span>En cours</span>
               </button>
-              <button onclick="changeStatut('Prêt à vendre');closeStatutPopover()" id="pop-pret" style="width:100%;display:flex;align-items:center;gap:10px;padding:13px 16px;background:transparent;border:none;border-bottom:1px solid #f2f2f7;font-size:15px;cursor:pointer;color:#1a1a1a;">
+              <button onclick="changeStatut('Prêt à vendre');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:#34C75922;color:#34C759;width:100%;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#34C759;flex-shrink:0;"></span><span>Prêt à vendre</span>
               </button>
-              <button onclick="changeStatut('Vendu');closeStatutPopover()" id="pop-vendu" style="width:100%;display:flex;align-items:center;gap:10px;padding:13px 16px;background:transparent;border:none;font-size:15px;cursor:pointer;color:#1a1a1a;">
+              <button onclick="changeStatut('Vendu');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:#FF174422;color:#FF1744;width:100%;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF1744;flex-shrink:0;"></span><span>Vendu</span>
               </button>
             </div>
