@@ -984,8 +984,8 @@
       .parc-filter {
         border-radius: 20px !important;
         border: none !important;
-        background: rgba(0,0,0,0.06) !important;
-        color: #3a3a3c !important;
+        background: transparent !important;
+        color: #8e8e93 !important;
         font-weight: 500 !important;
         font-size: 13px !important;
         transition: all 0.15s !important;
@@ -1003,7 +1003,7 @@
       .filter-btn:not(.active):hover,
       .chart-filter:not(.active):hover,
       .parc-filter:not(.active):hover {
-        background: rgba(0,0,0,0.1) !important;
+        background: rgba(0,0,0,0.06) !important;
         color: #1a1a1a !important;
       }
       .btn-primary {
@@ -1031,36 +1031,6 @@
       }
       .desktop-sidebar .nav-link:hover svg,
       .desktop-sidebar .nav-link.active svg { opacity: 0.9; }
-      .parc-filter {
-        padding: 7px 16px;
-        border: none;
-        border-radius: 20px;
-        background: transparent;
-        color: #8e8e93;
-        font-weight: 500;
-        font-size: 13px;
-        transition: all 0.15s;
-      }
-      .parc-filter.active {
-        background: #1a1a1a;
-        color: white;
-        font-weight: 600;
-      }
-      .parc-filter:not(.active):hover {
-        color: #1a1a1a;
-        background: rgba(0,0,0,0.05);
-      }
-      .chart-filter.active {
-        background: #1a1a1a;
-        color: white;
-        border-color: transparent;
-      }
-      .task-filter-btn.active,
-      .filter-btn.active {
-        background: #1a1a1a;
-        color: white;
-        border-color: #1a1a1a;
-      }
       .swipe-wrapper:hover .trash-button {
         opacity: 1;
         pointer-events: auto;
