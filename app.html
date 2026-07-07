@@ -372,7 +372,7 @@
       .filter-btn { padding: 10px 12px; gap: 6px; }
       input, textarea, select { font-size: 16px; }
       div[style*="grid-template-columns:1fr 1fr"] { display: grid !important; grid-template-columns: 1fr !important; gap: 16px !important; margin-bottom: 20px !important; }
-      .details-segment-wrap { display: flex; gap: 0; margin: 4px 10px 8px; overflow-x: auto; scrollbar-width: none; }
+      .details-segment-wrap { display: flex; gap: 0; margin: 4px 10px 8px; overflow-x: auto; scrollbar-width: none; justify-content: center; }
       #details > div:nth-child(2) { border-bottom: none !important; background: white; }
       .progress-container { margin-bottom: 0.5rem; }
       .modal-actions button { font-size: 13px; padding: 10px 14px; }
@@ -1413,7 +1413,7 @@
         <button onclick="closeVehicleDetails()" id="details-close-btn" style="background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
           <svg width="10" height="17" viewBox="0 0 10 17" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,1 1,8.5 9,16"/></svg>
         </button>
-        <div style="flex:1;min-width:0;">
+        <div style="flex:1;min-width:0;text-align:center;">
           <div id="detail-title" style="font-size:18px;font-weight:700;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
           <div id="detail-subtitle" style="font-size:13px;color:#8e8e93;margin-top:2px;"></div>
         </div>
