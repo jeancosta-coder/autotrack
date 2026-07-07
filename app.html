@@ -345,6 +345,7 @@
     .filter-btn:hover { background-color: #E5E7EB; }
     .filter-btn:active { transform: scale(0.95); background-color: #D1D5DB; }
     .filter-btn.active { background-color: var(--navy); color: white; border-color: var(--navy); }
+    .parc-filter.active, .task-filter-btn.active { background: #1a1a1a; color: white; font-weight: 600; }
     .tab { transition: all 0.2s ease; }
     .tab:hover { color: var(--navy); }
     .modal { animation: fadeIn 0.2s ease; }
@@ -1284,10 +1285,10 @@
 
     <!-- FILTRES -->
     <div style="display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
-      <button class="parc-filter" onclick="filterParc('all',this)" style="padding:6px 16px;border:none;border-radius:20px;background:#1a1a1a;color:white;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Tous</button>
-      <button class="parc-filter" onclick="filterParc('En cours',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">En cours</button>
-      <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Prêt</button>
-      <button class="parc-filter" onclick="filterParc('Vendu',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Vendu</button>
+      <button class="parc-filter active" onclick="filterParc('all',this)">Tous</button>
+      <button class="parc-filter" onclick="filterParc('En cours',this)">En cours</button>
+      <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)">Prêt</button>
+      <button class="parc-filter" onclick="filterParc('Vendu',this)">Vendu</button>
     </div>
 
     <div class="desktop-parc-toolbar desktop-only" style="flex-direction:column;align-items:flex-start;gap:10px;">
