@@ -1547,12 +1547,12 @@
           <div class="progress-container" style="margin-bottom:0;"><div class="progress-bar" id="detail-progress-bar" style="width:0%;"></div></div>
         </div>
         <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;">
-          <button id="filter-all-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('all',this)" style="padding:6px 16px;border:none;border-radius:20px;background:#1a1a1a;color:white;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Toutes</button>
-          <button id="filter-rappel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('rappel',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Rappels</button>
-          <button id="filter-prep-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('preparation',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Préparation</button>
-          <button id="filter-sav-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('sav',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">SAV</button>
-          <button id="filter-rdv-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('rdv',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">RDV</button>
-          <button id="filter-appel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('appel',this)" style="padding:6px 16px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Appel</button>
+          <button id="filter-all-tasks" class="task-filter-btn active" onclick="filterDetailTasksByType('all',this)">Toutes</button>
+          <button id="filter-rappel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('rappel',this)">Rappels</button>
+          <button id="filter-prep-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('preparation',this)">Préparation</button>
+          <button id="filter-sav-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('sav',this)">SAV</button>
+          <button id="filter-rdv-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('rdv',this)">RDV</button>
+          <button id="filter-appel-tasks" class="task-filter-btn" onclick="filterDetailTasksByType('appel',this)">Appel</button>
         </div>
         <!-- Bouton ajout desktop : inline au-dessus de la liste -->
         <button class="add-task-desktop-btn" onclick="openDetailTaskModal()" style="align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(30,64,175,0.07)'" onmouseout="this.style.background='none'">
@@ -2479,8 +2479,8 @@ function renderHistorique(vehicleId){
 
 function filterDetailTasksByType(type, btn){
   currentDetailTaskFilter = type;
-  document.querySelectorAll('.task-filter-btn').forEach(b => { b.style.background='rgba(0,0,0,0.06)';b.style.color='#3a3a3c';b.style.fontWeight='500'; });
-  if(btn){ btn.style.background='#1a1a1a';btn.style.color='white';btn.style.fontWeight='600'; }
+  document.querySelectorAll('.task-filter-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
   if(currentDetailVehicleId) renderDetailTasks(currentDetailVehicleId, 'all');
 }
 
