@@ -350,8 +350,8 @@
     .tab:hover { color: var(--navy); }
     .modal { animation: fadeIn 0.2s ease; }
     .task-group { animation: slideIn 0.3s ease; }
-    .progress-container { width: 100%; height: 8px; background-color: #E5E7EB; border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem; }
-    .progress-bar { height: 100%; background: #0066FF; border-radius: 4px; transition: width 0.3s ease; }
+    .progress-container { width: 100%; height: 4px; background-color: #e5e5ea; border-radius: 2px; overflow: hidden; margin-bottom: 0.5rem; }
+    .progress-bar { height: 100%; background: #1a1a1a; border-radius: 2px; transition: width 0.3s ease; }
     input[type="date"], input[type="time"] { font-family: inherit; font-size: 14px; font-weight: 500; }
     @media (max-width: 768px) {
       .app-container { padding: 16px 12px; }
@@ -371,7 +371,10 @@
       .filter-btn { padding: 10px 12px; gap: 6px; }
       input, textarea, select { font-size: 16px; }
       div[style*="grid-template-columns:1fr 1fr"] { display: grid !important; grid-template-columns: 1fr !important; gap: 16px !important; margin-bottom: 20px !important; }
-      .detail-tab { padding: 10px 14px; font-size: 12px; }
+      .detail-tab { flex: 1; padding: 7px 4px; font-size: 12px; font-weight: 500; color: #6e6e73; border-radius: 9px; background: none; border: none; cursor: pointer; transition: all 0.2s; white-space: nowrap; text-align: center; }
+      .detail-tab.detail-tab-active { background: white; color: #1a1a1a; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+      .details-segment-wrap { background: #f2f2f7; border-radius: 12px; padding: 3px; display: flex; margin: 8px 16px 12px; }
+      #details > div:nth-child(2) { border-bottom: none !important; background: white; }
       .progress-container { margin-bottom: 0.5rem; }
       .modal-actions button { font-size: 13px; padding: 10px 14px; }
       .vehicle-card, .task-group { padding: 12px !important; }
@@ -1405,22 +1408,24 @@
   </div>
 
   <div id="details" style="background:#f2f2f7;display:none;flex-direction:column;">
-    <div style="background:white;border-bottom:1px solid #e5e5e5;flex-shrink:0;">
+    <div style="background:white;flex-shrink:0;">
       <div id="details-pill-handle" style="display:flex;justify-content:center;padding:8px 0 4px 0;"><div style="width:36px;height:4px;border-radius:2px;background:#d1d1d6;"></div></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px 12px 16px;">
-        <button onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;color:#8e8e93;font-size:22px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;" id="details-close-btn">✕</button><button onclick="closeVehicleDetails()" id="details-back-btn" style="display:none;background:none;border:none;cursor:pointer;color:#1a1a1a;font-size:14px;font-weight:600;padding:6px 12px;border-radius:10px;white-space:nowrap;">← Parc</button>
-        <div><div id="detail-title" style="font-size:17px;font-weight:600;color:#1a1a1a;text-align:center;"></div><div id="detail-subtitle" style="font-size:12px;color:#8e8e93;text-align:center;margin-top:1px;"></div></div>
-        <button id="detail-header-trash" onclick="confirmDeleteCurrentVehicle()" style="background:none;border:none;cursor:pointer;width:36px;height:36px;align-items:center;justify-content:center;border-radius:50%;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px 14px;">
+        <button onclick="closeVehicleDetails()" id="details-close-btn" style="background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+          <svg width="10" height="17" viewBox="0 0 10 17" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,1 1,8.5 9,16"/></svg>
         </button>
+        <div style="flex:1;min-width:0;">
+          <div id="detail-title" style="font-size:18px;font-weight:700;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+          <div id="detail-subtitle" style="font-size:13px;color:#8e8e93;margin-top:2px;"></div>
+        </div>
       </div>
     </div>
-    <div style="display:flex;background:white;border-bottom:1px solid #e5e5e5;flex-shrink:0;">
-      <div class="details-segment-wrap" style="display:flex;flex:1;">
-        <button id="tab-infos" class="detail-tab" onclick="switchDetailTab('infos')" style="flex:1;padding:11px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:2px solid #1a1a1a;color:#1a1a1a;">Infos</button>
-        <button id="tab-taches" class="detail-tab" onclick="switchDetailTab('taches')" style="flex:1;padding:11px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:#8e8e93;">Tâches</button>
-        <button id="tab-finances" class="detail-tab" onclick="switchDetailTab('finances')" style="flex:1;padding:11px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:#8e8e93;">Finances</button>
-        <button id="tab-historique" class="detail-tab" onclick="switchDetailTab('historique')" style="flex:1;padding:11px;font-weight:600;font-size:13px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:#8e8e93;">Évènements</button>
+    <div style="background:white;flex-shrink:0;">
+      <div class="details-segment-wrap">
+        <button id="tab-infos" class="detail-tab detail-tab-active" onclick="switchDetailTab('infos')">Infos</button>
+        <button id="tab-taches" class="detail-tab" onclick="switchDetailTab('taches')">Tâches</button>
+        <button id="tab-finances" class="detail-tab" onclick="switchDetailTab('finances')">Finances</button>
+        <button id="tab-historique" class="detail-tab" onclick="switchDetailTab('historique')">Évènements</button>
       </div>
     </div>
     <div id="detail-tab-infos" class="detail-tab-content" style="display:flex;flex-direction:column;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
@@ -2432,11 +2437,11 @@ function switchDetailTab(tab){
   });
   const wrapper = document.getElementById('details-tab-wrapper');
   if(wrapper && !isDesktop) wrapper.style.display = tab === 'infos' ? 'none' : '';
-  document.querySelectorAll('.detail-tab').forEach(el => { el.style.color = '#8e8e93'; el.style.borderBottomColor = 'transparent'; el.classList.remove('detail-tab-active'); });
+  document.querySelectorAll('.detail-tab').forEach(el => { el.classList.remove('detail-tab-active'); });
   const tabContent = document.getElementById('detail-tab-' + tab);
   const tabBtn = document.getElementById('tab-' + tab);
   if(tabContent) tabContent.style.display = 'block';
-  if(tabBtn) { tabBtn.style.color = '#1a1a1a'; tabBtn.style.borderBottomColor = '#1a1a1a'; tabBtn.classList.add('detail-tab-active'); }
+  if(tabBtn) tabBtn.classList.add('detail-tab-active');
   if(tab === 'historique') renderHistorique(currentDetailVehicleId);
   window._currentDetailTab = tab;
 }
