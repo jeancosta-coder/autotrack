@@ -1445,17 +1445,6 @@
           </div>
         </div>
 
-        <!-- Infos véhicule -->
-        <div class="dt-infos-wrap">
-          <div class="detail-vehicle-specs" style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Marque</span><span id="detail-marque" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Modèle</span><span id="detail-modele" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Année</span><span id="detail-year" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Génération</span><span id="detail-gen" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:#8e8e93;">Kilométrage</span><span id="detail-km" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
-          </div>
-        </div>
-
         <!-- Statut -->
         <div class="dt-statut-wrap" style="position:relative;">
           <div style="margin-bottom:8px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Statut</span></div>
@@ -1489,6 +1478,18 @@
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF1744;flex-shrink:0;"></span><span>Vendu</span>
               </button>
             </div>
+          </div>
+        </div>
+
+        <!-- Infos véhicule -->
+        <div class="dt-infos-wrap">
+          <div class="detail-vehicle-specs" style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Marque</span><span id="detail-marque" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Modèle</span><span id="detail-modele" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Année</span><span id="detail-year" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Génération</span><span id="detail-gen" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Kilométrage</span><span id="detail-km" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:#8e8e93;">Prix d'achat</span><span id="detail-achat-display" style="font-size:15px;font-weight:500;color:#1a1a1a;"></span></div>
           </div>
         </div>
 
@@ -2200,6 +2201,8 @@ function openVehicleDetails(id){
   document.getElementById('detail-year').textContent = v.year;
   document.getElementById('detail-gen').textContent = v.gen;
   document.getElementById('detail-km').textContent = Number(v.km).toLocaleString('fr-FR') + ' km';
+  const achatDisplay = document.getElementById('detail-achat-display');
+  if(achatDisplay) achatDisplay.textContent = v.achat ? Number(v.achat).toLocaleString('fr-FR') + ' €' : '—';
   document.getElementById('detail-achat-input').value = v.achat || '';
   document.getElementById('detail-vente-input').value = v.vente || '';
   document.getElementById('detail-sans-tva-input').value = v.sansTva || '';
