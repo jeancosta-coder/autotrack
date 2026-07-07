@@ -1464,9 +1464,9 @@
     <div id="planning-header-bar" style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;gap:12px;">
       <!-- Desktop: prev / Aujourd'hui / next (hidden on mobile via CSS) -->
       <div class="desktop-plan-nav" style="display:none;flex-shrink:0;">
-        <button onclick="shiftPlanningDate(-1)" title="Précédent" style="width:32px;height:32px;border-radius:8px;background:var(--surface-2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text);line-height:1;transition:background 0.15s;" onmouseover="this.style.background='#e5e5ea'" onmouseout="this.style.background='#f2f2f7'">‹</button>
-        <button onclick="goToPlanningToday()" style="padding:6px 12px;border:1px solid #d1d1d6;border-radius:8px;background:transparent;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background 0.15s;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">Aujourd'hui</button>
-        <button onclick="shiftPlanningDate(1)" title="Suivant" style="width:32px;height:32px;border-radius:8px;background:var(--surface-2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text);line-height:1;transition:background 0.15s;" onmouseover="this.style.background='#e5e5ea'" onmouseout="this.style.background='#f2f2f7'">›</button>
+        <button onclick="shiftPlanningDate(-1)" title="Précédent" style="width:32px;height:32px;border-radius:8px;background:var(--surface-2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text);line-height:1;transition:background 0.15s;" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='var(--surface-3)'">‹</button>
+        <button onclick="goToPlanningToday()" style="padding:6px 12px;border:1px solid #d1d1d6;border-radius:8px;background:transparent;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background 0.15s;" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='transparent'">Aujourd'hui</button>
+        <button onclick="shiftPlanningDate(1)" title="Suivant" style="width:32px;height:32px;border-radius:8px;background:var(--surface-2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text);line-height:1;transition:background 0.15s;" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='var(--surface-3)'">›</button>
       </div>
       <!-- Date label -->
       <div style="font-weight:700;font-size:16px;color:var(--text);flex:1;text-align:center;" id="planning-header-date">Planning</div>
@@ -1480,8 +1480,8 @@
             <option value="month">Mois</option>
           </select>
         </div>
-        <button id="planning-new-event-btn" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="display:none;padding:6px 14px;background:transparent;border:1px solid #d1d1d6;border-radius:8px;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">+ Événement</button>
-        <button onclick="openViewModal()" id="planning-grid-icon-btn" style="width:36px;height:36px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;color:var(--text);" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">
+        <button id="planning-new-event-btn" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="display:none;padding:6px 14px;background:transparent;border:1px solid #d1d1d6;border-radius:8px;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='transparent'">+ Événement</button>
+        <button onclick="openViewModal()" id="planning-grid-icon-btn" style="width:36px;height:36px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;color:var(--text);" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='none'">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
             <rect x="2" y="2" width="6" height="6" rx="1.5"/>
             <rect x="12" y="2" width="6" height="6" rx="1.5"/>
@@ -2444,7 +2444,7 @@ function updateStatutUI(statut){
       btn.style.color = MBADGE_COLORS[s];
     } else {
       btn.style.background = 'transparent';
-      btn.style.color = '#1a1a1a';
+      btn.style.color = 'var(--text)';
     }
   });
 }
@@ -2773,7 +2773,7 @@ function openViewModal(){
   ];
   const optionsHtml = options.map(opt => {
     const isActive = viewMode === opt.val;
-    return `<div onclick="setViewMode('${opt.val}'); closeViewModal();" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
+    return `<div onclick="setViewMode('${opt.val}'); closeViewModal();" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='var(--surface)'">
       <span style="font-size:16px;font-weight:${isActive ? '600' : '400'};color:var(--text);">${opt.label}</span>
       ${isActive ? '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}
     </div>`;
@@ -3066,7 +3066,7 @@ function openEditBottomSheet(key){
   if(!config) return;
   const options = typeof config.options === 'function' ? config.options() : config.options;
   const optionsHtml = options.map((opt, i) => `
-    <div data-key="${key}" data-idx="${i}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
+    <div data-key="${key}" data-idx="${i}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='var(--surface)'">
       ${opt.dot ? '<span style="width:12px;height:12px;border-radius:50%;background:' + opt.dot + ';flex-shrink:0;"></span>' : ''}
       <span style="font-size:16px;color:var(--text);">${opt.label}</span>
     </div>`).join('');
@@ -3179,7 +3179,7 @@ function openSimpleTaskTypeSheet(mode){
   const existing = document.getElementById('simple-type-sheet');
   if(existing) existing.remove();
   const optionsHtml = TYPES.map(t => `
-    <div onclick="selectSimpleTaskType('${mode}','${t.val}','${t.label}','${t.dot}')" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);" onmouseover="this.style.background='#f2f7f7'" onmouseout="this.style.background='white'">
+    <div onclick="selectSimpleTaskType('${mode}','${t.val}','${t.label}','${t.dot}')" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='var(--surface)'">
       <span style="width:12px;height:12px;border-radius:50%;background:${t.dot};flex-shrink:0;"></span>
       <span style="font-size:16px;color:var(--text);">${t.label}</span>
     </div>`).join('');
@@ -3345,7 +3345,7 @@ const BOTTOM_SHEET_DATA = {
   type: {
     title: 'Type de tâche',
     options: [{val:'rappel', label:'Rappel', dot:'#CCFF00'},{val:'preparation', label:'Préparation', dot:'#00FF88'},{val:'sav', label:'SAV', dot:'#FF1744'},{val:'rdv', label:'RDV', dot:'#00D4FF'},{val:'appel', label:'Appel', dot:'#7B68EE'}],
-    onSelect: (val, label, extra) => { document.newTaskType = val; const dot = document.getElementById('ntask-type-dot'); const lbl = document.getElementById('ntask-type-label'); if(dot) dot.style.background = extra; if(lbl) { lbl.textContent = label; lbl.style.color = '#1a1a1a'; } }
+    onSelect: (val, label, extra) => { document.newTaskType = val; const dot = document.getElementById('ntask-type-dot'); const lbl = document.getElementById('ntask-type-label'); if(dot) dot.style.background = extra; if(lbl) { lbl.textContent = label; lbl.style.color = 'var(--text)'; } }
   },
   vehicle: {
     title: 'Véhicule',
@@ -3368,7 +3368,7 @@ let _ntaskCalDate = new Date();
 
 function openNewTaskModalOutlookForVehicle(dateStr, timeStr, vehicleId){
   openNewTaskModalOutlook(dateStr, timeStr);
-  setTimeout(() => { if(vehicleId) { document.newTaskVehicleId = String(vehicleId); const lbl = document.getElementById('ntask-vehicle-label'); const v = vehicles.find(x => x.id == vehicleId); if(lbl && v) { lbl.textContent = v.marque + ' ' + v.modele; lbl.style.color = '#1a1a1a'; } } }, 10);
+  setTimeout(() => { if(vehicleId) { document.newTaskVehicleId = String(vehicleId); const lbl = document.getElementById('ntask-vehicle-label'); const v = vehicles.find(x => x.id == vehicleId); if(lbl && v) { lbl.textContent = v.marque + ' ' + v.modele; lbl.style.color = 'var(--text)'; } } }, 10);
 }
 
 function openNewTaskModalOutlook(dateStr, timeStr){
@@ -3512,7 +3512,7 @@ function selectDateNew(dateStr, target){
   const formatted = new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
   if(target === 'start') document.newTaskDate = dateStr;
   else document.newTaskDateEnd = dateStr;
-  if(label) { label.textContent = formatted; label.style.color = '#1a1a1a'; }
+  if(label) { label.textContent = formatted; label.style.color = 'var(--text)'; }
   renderCalNew(target);
 }
 
@@ -3540,8 +3540,8 @@ function openBottomSheet(key){
     label.style.cssText = 'font-size:16px;color:var(--text);';
     label.textContent = opt.label;
     item.appendChild(label);
-    item.addEventListener('mouseover', () => item.style.background = '#f2f2f7');
-    item.addEventListener('mouseout', () => item.style.background = 'white');
+    item.addEventListener('mouseover', () => item.style.background = 'var(--surface-3)');
+    item.addEventListener('mouseout', () => item.style.background = 'var(--surface)');
     item.addEventListener('click', () => {
       if(typeof config.onSelect === 'function') config.onSelect(opt.val, opt.label, opt.dot || null);
       closeBottomSheet();
@@ -3678,7 +3678,7 @@ async function forgotPassword(){
   const email = document.getElementById('inp-email').value.trim();
   const msg = document.getElementById('auth-msg');
   if(!email){ msg.style.color='#FF3B30'; msg.textContent='Entrez votre email d\'abord.'; return; }
-  msg.style.color='#8e8e93'; msg.textContent='Envoi en cours…';
+  msg.style.color='var(--text2)'; msg.textContent='Envoi en cours…';
   const {error} = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
   if(error){ msg.style.color='#FF3B30'; msg.textContent=error.message; return; }
   msg.style.color='#34C759'; msg.textContent='Lien envoyé ! Vérifiez votre email.';
