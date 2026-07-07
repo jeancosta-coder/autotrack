@@ -110,42 +110,7 @@
       color: var(--accent);
       box-shadow: var(--shadow-sm);
     }
-    /* ============================================================
-       PONT DARK MODE (temporaire — Phase 1)
-       Remappe les couleurs inline hardcodées les plus fréquentes
-       pour que le dark soit cohérent tout de suite. Sera retiré
-       en Phase 2 quand les inline seront convertis en tokens.
-       ============================================================ */
-    [data-theme="dark"] [style*="background:white"],
-    [data-theme="dark"] [style*="background: white"],
-    [data-theme="dark"] [style*="background:#fff"],
-    [data-theme="dark"] [style*="background: #fff"],
-    [data-theme="dark"] [style*="background:#FFF"],
-    [data-theme="dark"] [style*="background:#ffffff"],
-    [data-theme="dark"] [style*="background: #ffffff"] { background-color: var(--surface) !important; border-color: var(--border) !important; }
-    [data-theme="dark"] [style*="background:#f2f2f7"],
-    [data-theme="dark"] [style*="background: #f2f2f7"],
-    [data-theme="dark"] [style*="background:#F2F2F7"],
-    [data-theme="dark"] [style*="background:#f5f5f7"],
-    [data-theme="dark"] [style*="background: #f5f5f7"],
-    [data-theme="dark"] [style*="background:#f0f2f5"],
-    [data-theme="dark"] [style*="background: #f0f2f5"],
-    [data-theme="dark"] [style*="background:#eef2f7"] { background-color: var(--surface-2) !important; }
-    [data-theme="dark"] [style*="color:#1a1a1a"],
-    [data-theme="dark"] [style*="color: #1a1a1a"],
-    [data-theme="dark"] [style*="color:#1c1c1e"],
-    [data-theme="dark"] [style*="color: #1c1c1e"],
-    [data-theme="dark"] [style*="color:#000"],
-    [data-theme="dark"] [style*="color: #000"] { color: var(--text) !important; }
-    [data-theme="dark"] [style*="color:#8e8e93"],
-    [data-theme="dark"] [style*="color: #8e8e93"],
-    [data-theme="dark"] [style*="color:#6b7280"],
-    [data-theme="dark"] [style*="color: #6b7280"],
-    [data-theme="dark"] [style*="color:#3a3a3c"],
-    [data-theme="dark"] [style*="color:#4a4a4a"] { color: var(--text2) !important; }
-    [data-theme="dark"] [style*="#e5e5ea"],
-    [data-theme="dark"] [style*="#e5e5e5"] { border-color: var(--border) !important; }
-    /* Cartes : en dark, la bordure remplace l'ombre */
+    /* Cartes : en dark, la bordure remplace l'ombre (Phase 2) */
     [data-theme="dark"] .vehicle-card,
     [data-theme="dark"] .task-group,
     [data-theme="dark"] .modal-box { border: 1px solid var(--border) !important; }
@@ -173,20 +138,20 @@
       padding: 10px 12px;
       border: 1px solid #d1d1d6;
       border-radius: 14px;
-      background: white;
-      color: #1a1a1a;
+      background:var(--surface);
+      color:var(--text);
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
     }
-    .desktop-card-btn:hover { background: #f2f2f7; }
+    .desktop-card-btn:hover { background:var(--surface-2); }
     .desktop-card-btn.danger { border-color: #ff3b30; color: #ff3b30; }
     .desktop-view-header { display: none; }
     .desktop-view-header {
       padding: 24px 24px 22px;
       border-radius: 24px;
-      background: white;
+      background:var(--surface);
       box-shadow: 0 24px 60px rgba(0,0,0,0.08);
       margin-bottom: 24px;
     }
@@ -194,10 +159,10 @@
       font-size: 28px;
       font-weight: 800;
       margin-bottom: 10px;
-      color: #1a1a1a;
+      color:var(--text);
     }
     .desktop-view-header p {
-      color: #6b7280;
+      color:var(--text2);
       max-width: 56ch;
       line-height: 1.6;
       margin-bottom: 18px;
@@ -222,7 +187,7 @@
       outline: none;
       border-color: var(--border);
       box-shadow: none;
-      background: white;
+      background:var(--surface);
     }
     input:focus, textarea:focus, select:focus {
       outline: none !important;
@@ -308,7 +273,7 @@
       bottom: 0;
       z-index: 500;
       flex-direction: column;
-      background: #f2f2f7;
+      background:var(--surface-2);
       overflow: hidden;
     }
     @keyframes shimmer {
@@ -316,7 +281,7 @@
       100% { background-position: 600px 0; }
     }
     .skeleton-card {
-      background: white;
+      background:var(--surface);
       border-radius: 14px;
       padding: 16px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
@@ -341,7 +306,7 @@
     }
     .vehicle-card:hover {
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      border-color: #1a1a1a;
+      border-color:var(--text);
     }
     .vehicle-badge {
       display: inline-block;
@@ -355,7 +320,7 @@
     .statut-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
     .btn-primary {
       padding: 12px 24px;
-      background: #1a1a1a;
+      background:var(--navy);
       color: white;
       border: 1px solid #1a1a1a;
       border-radius: 10px;
@@ -373,7 +338,7 @@
     .btn-outline {
       padding: 12px 24px;
       background: transparent;
-      color: #1a1a1a;
+      color:var(--text);
       border: 1px solid #1a1a1a;
       border-radius: 10px;
       font-weight: 600;
@@ -385,7 +350,7 @@
       justify-content: center;
       transition: all 0.2s ease;
     }
-    .btn-outline:hover { background: #f0f2f5; }
+    .btn-outline:hover { background:var(--surface-2); }
     .btn-outline:active { transform: scale(0.95); }
     .modal {
       display: none;
@@ -432,7 +397,7 @@
       border: 2px solid #D1D5DB;
       border-radius: 6px;
       cursor: pointer;
-      background: white;
+      background:var(--surface);
       transition: all 0.2s ease;
       flex-shrink: 0;
     }
@@ -462,14 +427,14 @@
     .filter-btn:hover { background-color: #E5E7EB; }
     .filter-btn:active { transform: scale(0.95); background-color: #D1D5DB; }
     .filter-btn.active { background-color: var(--navy); color: white; border-color: var(--navy); }
-    .parc-filter, .task-filter-btn, .detail-tab { padding: 7px 14px; font-size: 13px; font-weight: 500; border-radius: 20px; border: none; background: transparent; color: #8e8e93; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
-    .parc-filter.active, .task-filter-btn.active, .detail-tab.detail-tab-active { background: #1a1a1a; color: white; font-weight: 600; }
+    .parc-filter, .task-filter-btn, .detail-tab { padding: 7px 14px; font-size: 13px; font-weight: 500; border-radius: 20px; border: none; background: transparent; color:var(--text2); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .parc-filter.active, .task-filter-btn.active, .detail-tab.detail-tab-active { background:var(--navy); color: white; font-weight: 600; }
     .tab { transition: all 0.2s ease; }
     .tab:hover { color: var(--navy); }
     .modal { animation: fadeIn 0.2s ease; }
     .task-group { animation: slideIn 0.3s ease; }
-    .progress-container { width: 100%; height: 4px; background-color: #e5e5ea; border-radius: 2px; overflow: hidden; margin-bottom: 0.5rem; }
-    .progress-bar { height: 100%; background: #1a1a1a; border-radius: 2px; transition: width 0.3s ease; }
+    .progress-container { width: 100%; height: 4px; background-color:var(--surface-3); border-radius: 2px; overflow: hidden; margin-bottom: 0.5rem; }
+    .progress-bar { height: 100%; background:var(--navy); border-radius: 2px; transition: width 0.3s ease; }
     input[type="date"], input[type="time"] { font-family: inherit; font-size: 14px; font-weight: 500; }
     @media (max-width: 768px) {
       .app-container { padding: 16px 12px; }
@@ -491,8 +456,8 @@
       div[style*="grid-template-columns:1fr 1fr"] { display: grid !important; grid-template-columns: 1fr !important; gap: 16px !important; margin-bottom: 20px !important; }
       .details-segment-wrap { display: flex; gap: 0; margin: 18px 12px 10px; overflow-x: auto; scrollbar-width: none; }
       .details-segment-wrap .detail-tab { flex: 1; text-align: center; }
-      #details > div:nth-child(2) { border-bottom: none !important; background: white; }
-      #detail-tab-infos { background: #f5f5f7 !important; }
+      #details > div:nth-child(2) { border-bottom: none !important; background:var(--surface); }
+      #detail-tab-infos { background:var(--surface-2) !important; }
       .progress-container { margin-bottom: 0.5rem; }
       #detail-tab-taches > div:first-child { background: transparent !important; box-shadow: none !important; border-radius: 0 !important; padding: 0 16px 16px !important; border-bottom: 1px solid rgba(0,0,0,0.06) !important; margin-bottom: 16px !important; }
       .modal-actions button { font-size: 13px; padding: 10px 14px; }
@@ -522,53 +487,53 @@
       background: transparent;
       border: none;
       cursor: pointer;
-      color: #8e8e93;
+      color:var(--text2);
       transition: color 0.2s ease;
     }
     .bottom-nav-item:active { opacity: 0.6; }
-    .bottom-nav-item.active { color: #1a1a1a; }
+    .bottom-nav-item.active { color:var(--text); }
     .bottom-nav-label { font-size: 10px; font-weight: 500; letter-spacing: -0.1px; }
     .app-container { padding-bottom: 160px; }
 
     /* ── Finances ── */
-    .fin-section-label { font-size:13px; color:#8e8e93; margin:20px 0 6px 20px; }
-    .fin-card { background:white; border-radius:12px; overflow:hidden; margin:0 16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
-    .fin-row { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:0.5px solid #e5e5ea; min-height:50px; }
+    .fin-section-label { font-size:13px; color:var(--text2); margin:20px 0 6px 20px; }
+    .fin-card { background:var(--surface); border-radius:12px; overflow:hidden; margin:0 16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+    .fin-row { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:0.5px solid var(--border); min-height:50px; }
     .fin-row:last-child { border-bottom:none; }
-    .fin-row-left { font-size:17px; color:#1c1c1e; }
+    .fin-row-left { font-size:17px; color:var(--text); }
     .fin-bold { font-weight:600; }
-    .fin-muted { color:#8e8e93 !important; font-weight:400 !important; }
+    .fin-muted { color:var(--text2) !important; font-weight:400 !important; }
     .fin-row-right { display:flex; align-items:center; gap:4px; }
-    .fin-row-right input { font-size:17px; color:#1c1c1e; text-align:right; border:none; outline:none; background:transparent; width:100px; appearance:textfield; -webkit-appearance:textfield; -moz-appearance:textfield; }
+    .fin-row-right input { font-size:17px; color:var(--text); text-align:right; border:none; outline:none; background:transparent; width:100px; appearance:textfield; -webkit-appearance:textfield; -moz-appearance:textfield; }
     .fin-row-right input::-webkit-outer-spin-button,
     .fin-row-right input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
     .fin-row-right input::placeholder { color:#c7c7cc; }
-    .fin-unit { font-size:17px; color:#8e8e93; }
-    .fin-val { font-size:17px; font-weight:500; color:#1c1c1e; }
-    .fin-marge-card { background:white; border-radius:12px; padding:28px 16px; text-align:center; margin:0 16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
-    .fin-marge-label { font-size:12px; color:#8e8e93; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+    .fin-unit { font-size:17px; color:var(--text2); }
+    .fin-val { font-size:17px; font-weight:500; color:var(--text); }
+    .fin-marge-card { background:var(--surface); border-radius:12px; padding:28px 16px; text-align:center; margin:0 16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+    .fin-marge-label { font-size:12px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
     .fin-marge-val { font-size:42px; font-weight:700; letter-spacing:-1.5px; line-height:1; }
-    .fin-marge-pct { font-size:16px; color:#8e8e93; margin-top:6px; }
-    .fin-dark { color:#1c1c1e; }
+    .fin-marge-pct { font-size:16px; color:var(--text2); margin-top:6px; }
+    .fin-dark { color:var(--text); }
     /* Finances classes - base mobile */
     .fin-section-label { display:none; }
     .fin-row { display:flex; justify-content:space-between; align-items:center; padding:13px 16px; min-height:50px; }
-    .fin-sep { border-top:0.5px solid #e5e5ea; }
-    .fin-label-text { font-size:17px; color:#1c1c1e; }
-    .fin-bold { font-size:17px; font-weight:600; color:#1c1c1e; }
+    .fin-sep { border-top:0.5px solid var(--border); }
+    .fin-label-text { font-size:17px; color:var(--text); }
+    .fin-bold { font-size:17px; font-weight:600; color:var(--text); }
     .fin-input-wrap { display:flex; align-items:center; gap:4px; }
-    .fin-input { font-size:17px; color:#1c1c1e; text-align:right; border:none; outline:none; background:transparent; width:100px; }
-    .fin-unit { font-size:17px; color:#8e8e93; }
+    .fin-input { font-size:17px; color:var(--text); text-align:right; border:none; outline:none; background:transparent; width:100px; }
+    .fin-unit { font-size:17px; color:var(--text2); }
     .fin-resultat-row { display:flex; justify-content:space-between; align-items:center; padding:28px 16px; }
-    .fin-resultat-row .fin-label-text { font-size:12px; color:#8e8e93; text-transform:uppercase; letter-spacing:0.5px; }
-    .fin-marge-pct { font-size:16px; color:#8e8e93; }
-    .fin-save-mobile { position:fixed; bottom:calc(90px + env(safe-area-inset-bottom)); left:16px; right:16px; padding:14px; background:white; color:#1a1a1a; border:none; border-radius:12px; font-size:15px; font-weight:500; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,0.1); z-index:100; display:flex; align-items:center; justify-content:center; gap:8px; }
+    .fin-resultat-row .fin-label-text { font-size:12px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; }
+    .fin-marge-pct { font-size:16px; color:var(--text2); }
+    .fin-save-mobile { position:fixed; bottom:calc(90px + env(safe-area-inset-bottom)); left:16px; right:16px; padding:14px; background:var(--surface); color:var(--text); border:none; border-radius:12px; font-size:15px; font-weight:500; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,0.1); z-index:100; display:flex; align-items:center; justify-content:center; gap:8px; }
     .add-task-desktop-btn { display: none; }
     .detail-vehicle-specs { display: block; }
-    .vehicle-specs-grid { display: grid; grid-template-columns: 1fr 1fr; background: white; border-radius: 14px; overflow: hidden; gap: 0; margin-bottom: 12px; }
-    .vsg-cell { background: white; padding: 10px 12px; }
-    .vsg-label { font-size: 11px; color: #8e8e93; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px; }
-    .vsg-value { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+    .vehicle-specs-grid { display: grid; grid-template-columns: 1fr 1fr; background:var(--surface); border-radius: 14px; overflow: hidden; gap: 0; margin-bottom: 12px; }
+    .vsg-cell { background:var(--surface); padding: 10px 12px; }
+    .vsg-label { font-size: 11px; color:var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px; }
+    .vsg-value { font-size: 14px; font-weight: 600; color:var(--text); }
     #detail-header-trash { visibility: hidden; pointer-events: none; }
     .fin-green { color:#34c759; }
     .fin-red { color:#ff3b30; }
@@ -710,7 +675,7 @@
       }
       .vehicle-card {
         min-height: 180px;
-        border: 0.5px solid #e5e5e5;
+        border: 0.5px solid var(--border);
       }
       .vehicle-card:hover {
         box-shadow: 0 10px 24px rgba(0,0,0,0.06);
@@ -732,7 +697,7 @@
         min-height: unset !important;
         max-height: unset !important;
         overflow: hidden;
-        background: white !important;
+        background:var(--surface) !important;
         z-index: 1 !important;
       }
       #planning .desktop-view-header { display: none !important; }
@@ -745,7 +710,7 @@
       }
       #planning #calendar-container {
         border-radius: 0;
-        background: white;
+        background:var(--surface);
         overflow: hidden;
         flex: 1 !important;
         min-height: 0 !important;
@@ -758,7 +723,7 @@
       }
       #planning .planning-section {
         border-radius: 24px;
-        background: white;
+        background:var(--surface);
         box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         padding: 22px;
       }
@@ -774,7 +739,7 @@
         max-height: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
-        background: #f5f5f7 !important;
+        background:var(--surface-2) !important;
         overflow: hidden !important;
         z-index: 999 !important;
         display: grid !important;
@@ -793,7 +758,7 @@
         grid-row: 1 / 3 !important;
         overflow-y: auto !important;
         padding: 0 !important;
-        background: white !important;
+        background:var(--surface) !important;
         border-right: 1px solid rgba(0,0,0,0.06) !important;
       }
       /* Nav desktop : ← Parc + titre */
@@ -802,8 +767,8 @@
         flex-direction: column !important;
         flex-shrink: 0 !important;
         padding: 24px 20px 16px !important;
-        background: white !important;
-        border-bottom: 1px solid #f2f2f7 !important;
+        background:var(--surface) !important;
+        border-bottom: 1px solid var(--border) !important;
       }
       #details-desktop-nav button {
         margin-bottom: 16px !important;
@@ -811,13 +776,13 @@
       #detail-title-desktop {
         font-size: 22px !important;
         font-weight: 700 !important;
-        color: #1a1a1a !important;
+        color:var(--text) !important;
         text-align: left !important;
         letter-spacing: -0.4px !important;
       }
       #detail-subtitle-desktop {
         font-size: 13px !important;
-        color: #8e8e93 !important;
+        color:var(--text2) !important;
         text-align: left !important;
         margin-top: 3px !important;
       }
@@ -871,7 +836,7 @@
         display: flex !important;
         align-items: center !important;
         padding: 16px 24px !important;
-        background: white !important;
+        background:var(--surface) !important;
         border-bottom: 1px solid rgba(0,0,0,0.06) !important;
         gap: 4px !important;
       }
@@ -897,14 +862,14 @@
         cursor: pointer !important;
       }
       #details > div:nth-child(2) .detail-tab.detail-tab-active {
-        background: #1a1a1a !important;
+        background:var(--navy) !important;
         color: white !important;
         font-weight: 600 !important;
         box-shadow: none !important;
       }
       #details > div:nth-child(2) .detail-tab:not(.detail-tab-active):hover {
         background: rgba(0,0,0,0.06) !important;
-        color: #1a1a1a !important;
+        color:var(--text) !important;
       }
       /* Onglets contenu : col 2, row 2 */
       #detail-tab-taches,
@@ -930,7 +895,7 @@
         display: block !important;
         font-size: 11px !important;
         font-weight: 600 !important;
-        color: #8e8e93 !important;
+        color:var(--text2) !important;
         text-transform: uppercase !important;
         letter-spacing: 0.5px !important;
         padding: 0 4px !important;
@@ -944,12 +909,12 @@
         padding: 11px 16px !important;
         min-height: 44px !important;
       }
-      .fin-sep { border-top: 0.5px solid #f2f2f7 !important; }
-      .fin-label-text { font-size: 15px !important; color: #1c1c1e !important; }
-      .fin-bold { font-size: 15px !important; font-weight: 600 !important; color: #1c1c1e !important; }
+      .fin-sep { border-top: 0.5px solid var(--border) !important; }
+      .fin-label-text { font-size: 15px !important; color:var(--text) !important; }
+      .fin-bold { font-size: 15px !important; font-weight: 600 !important; color:var(--text) !important; }
       .fin-input-wrap { display: flex !important; align-items: center !important; gap: 4px !important; }
-      .fin-input { font-size: 15px !important; color: #1c1c1e !important; text-align: right !important; border: none !important; outline: none !important; background: transparent !important; width: 90px !important; }
-      .fin-unit { font-size: 15px !important; color: #8e8e93 !important; }
+      .fin-input { font-size: 15px !important; color:var(--text) !important; text-align: right !important; border: none !important; outline: none !important; background: transparent !important; width: 90px !important; }
+      .fin-unit { font-size: 15px !important; color:var(--text2) !important; }
       .fin-total-row { background: #fafafa !important; }
       .fin-resultat-row {
         display: flex !important;
@@ -958,7 +923,7 @@
         padding: 14px 16px !important;
       }
       #detail-marge.fin-marge-val { font-size: 22px !important; font-weight: 700 !important; letter-spacing: -0.5px !important; }
-      .fin-marge-pct { font-size: 14px !important; color: #8e8e93 !important; }
+      .fin-marge-pct { font-size: 14px !important; color:var(--text2) !important; }
       .fin-save-mobile { display: none !important; }
       /* ── Finances desktop ── */
       /* Onglets dans le wrapper droite */
@@ -979,12 +944,12 @@
       #detail-tab-taches .progress-container {
         height: 4px !important;
         border-radius: 2px !important;
-        background: #e5e5ea !important;
+        background:var(--surface-3) !important;
       }
       #detail-tab-taches .progress-bar {
         height: 4px !important;
         border-radius: 2px !important;
-        background: #1a1a1a !important;
+        background:var(--navy) !important;
       }
       #detail-tab-taches > div:first-child {
         background: transparent !important;
@@ -1005,20 +970,20 @@
         border-radius: 20px !important;
         border: none !important;
         background: transparent !important;
-        color: #8e8e93 !important;
+        color:var(--text2) !important;
         font-weight: 500 !important;
         transition: all 0.2s !important;
       }
       #detail-tab-taches .task-filter-btn.active,
       #detail-tab-taches #filter-all-tasks[style*="1a1a1a"] {
-        background: #1a1a1a !important;
+        background:var(--navy) !important;
         color: white !important;
         border: none !important;
         font-weight: 600 !important;
       }
       #detail-tab-taches .task-filter-btn:not(.active):hover {
         background: rgba(0,0,0,0.06) !important;
-        color: #1a1a1a !important;
+        color:var(--text) !important;
       }
       /* Items de tâches : plus d'espace */
       #detail-tasks > div > div {
@@ -1091,7 +1056,7 @@
         border-radius: 24px;
         max-height: calc(100vh - 120px);
         overflow: auto;
-        background: white !important;
+        background:var(--surface) !important;
       }
       #details button[onclick="savePrices()"],
       #details button[onclick="openDetailTaskModal()"]:not(.add-task-desktop-btn) {
@@ -1107,7 +1072,7 @@
       #details button[onclick="openDetailTaskModal()"]:not(.add-task-desktop-btn) {
         background: transparent !important;
         border: 1px solid #d1d1d6 !important;
-        color: #1a1a1a !important;
+        color:var(--text) !important;
         font-size: 14px !important;
         font-weight: 600 !important;
         padding: 14px 16px !important;
@@ -1115,7 +1080,7 @@
         cursor: pointer !important;
       }
       #details button[onclick="openDetailTaskModal()"]:not(.add-task-desktop-btn):hover {
-        background: #f2f2f7 !important;
+        background:var(--surface-2) !important;
       }
       #details button[onclick="savePrices()"] svg,
       #details button[onclick="openDetailTaskModal()"]:not(.add-task-desktop-btn) svg {
@@ -1129,7 +1094,7 @@
         border-radius: 20px !important;
         border: none !important;
         background: transparent !important;
-        color: #8e8e93 !important;
+        color:var(--text2) !important;
         font-weight: 500 !important;
         font-size: 13px !important;
         transition: all 0.15s !important;
@@ -1139,7 +1104,7 @@
       .filter-btn.active,
       .chart-filter.active,
       .parc-filter.active {
-        background: #1a1a1a !important;
+        background:var(--navy) !important;
         color: white !important;
         font-weight: 600 !important;
       }
@@ -1149,11 +1114,11 @@
       .parc-filter:not(.active):hover,
       .detail-tab:not(.detail-tab-active):hover {
         background: rgba(0,0,0,0.06) !important;
-        color: #1a1a1a !important;
+        color:var(--text) !important;
       }
       .btn-primary {
         background: transparent;
-        color: #1a1a1a;
+        color:var(--text);
         border: 1px solid #1a1a1a;
         box-shadow: none;
       }
@@ -1193,8 +1158,8 @@
         box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important;
       }
       #details .detail-tab.active {
-        background: #f2f2f7;
-        color: #1a1a1a;
+        background:var(--surface-2);
+        color:var(--text);
       }
       #login-screen {
         background: rgba(245,245,247,0.95) !important;
@@ -1208,9 +1173,9 @@
       }
       /* ── Desktop: planning nav ── */
       .desktop-plan-nav { display: flex !important; align-items: center; gap: 6px; }
-      .desktop-view-selector { display: flex !important; align-items: center; background: #f2f2f7; border-radius: 10px; padding: 5px 10px 5px 12px; }
+      .desktop-view-selector { display: flex !important; align-items: center; background:var(--surface-2); border-radius: 10px; padding: 5px 10px 5px 12px; }
       #planning-grid-icon-btn { display: none !important; }
-      #desktop-view-select { appearance: none; -webkit-appearance: none; border: none; outline: none; background: transparent; font-size: 14px; font-weight: 600; color: #1a1a1a; cursor: pointer; padding: 0 20px 0 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 2px center; }
+      #desktop-view-select { appearance: none; -webkit-appearance: none; border: none; outline: none; background: transparent; font-size: 14px; font-weight: 600; color:var(--text); cursor: pointer; padding: 0 20px 0 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 2px center; }
       /* ── Desktop: hide mobile pill handle ── */
       #details-pill-handle { display: none !important; }
       #details-close-btn { display: none !important; }
@@ -1263,7 +1228,7 @@
       #planning-header-bar {
         height: 56px !important;
         padding: 0 24px !important;
-        background: white !important;
+        background:var(--surface) !important;
         border-bottom: 0.5px solid rgba(0,0,0,0.08) !important;
         flex-shrink: 0;
       }
@@ -1311,7 +1276,7 @@
         justify-content: center !important;
         padding: 28px 20px !important;
         border-top: none !important;
-        background: #f2f2f7 !important;
+        background:var(--surface-2) !important;
       }
       #add-vehicle-desktop-footer button {
         padding: 14px 28px 14px 20px !important;
@@ -1442,24 +1407,24 @@
 
     <!-- KPI CARDS iOS -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
-      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-        <div style="font-size:11px;font-weight:600;color:#8e8e93;margin-bottom:6px;">En cours</div>
+      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+        <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;">En cours</div>
         <div style="font-size:24px;font-weight:700;color:#FF9500;" id="kpi-enc">0</div>
       </div>
-      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-        <div style="font-size:11px;font-weight:600;color:#8e8e93;margin-bottom:6px;">Prêt</div>
+      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+        <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;">Prêt</div>
         <div style="font-size:24px;font-weight:700;color:#34C759;" id="kpi-prt">0</div>
       </div>
-      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-        <div style="font-size:11px;font-weight:600;color:#8e8e93;margin-bottom:6px;">Vendus</div>
+      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+        <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;">Vendus</div>
         <div style="font-size:24px;font-weight:700;color:#FF1744;" id="kpi-vnd">0</div>
       </div>
     </div>
 
     <!-- RECHERCHE iOS -->
     <div style="position:relative;margin-bottom:14px;">
-      <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#8e8e93;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="search-input" placeholder="Rechercher..." style="width:100%;padding:10px 12px 10px 36px;background:#f2f2f7;border:none;border-radius:10px;font-size:15px;color:#1a1a1a;outline:none;box-sizing:border-box;" onkeyup="filterParc('search')"/>
+      <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text2);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="Rechercher..." style="width:100%;padding:10px 12px 10px 36px;background:var(--surface-2);border:none;border-radius:10px;font-size:15px;color:var(--text);outline:none;box-sizing:border-box;" onkeyup="filterParc('search')"/>
     </div>
 
     <!-- FILTRES -->
@@ -1471,7 +1436,7 @@
     </div>
 
     <div class="desktop-parc-toolbar desktop-only" style="flex-direction:column;align-items:flex-start;gap:10px;">
-      <div style="font-size:24px;font-weight:700;color:#1a1a1a;">Parc</div>
+      <div style="font-size:24px;font-weight:700;color:var(--text);">Parc</div>
       <button type="button" onclick="openAddModal()" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(30,64,175,0.07)'" onmouseout="this.style.background='none'">
         <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg>
@@ -1483,7 +1448,7 @@
     <div id="parc-grid" style="padding-bottom:160px;"></div>
   </div>
 
-  <div id="planning" class="view" style="position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;background:#f2f2f7;z-index:1;">
+  <div id="planning" class="view" style="position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;background:var(--surface-2);z-index:1;">
     <div class="desktop-view-header desktop-only">
       <div>
         <h1>Planning</h1>
@@ -1493,15 +1458,15 @@
         <button class="desktop-card-btn" type="button" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')">Nouvel événement</button>
       </div>
     </div>
-    <div id="planning-header-bar" style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:white;border-bottom:1px solid #e5e5e5;flex-shrink:0;gap:12px;">
+    <div id="planning-header-bar" style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;gap:12px;">
       <!-- Desktop: prev / Aujourd'hui / next (hidden on mobile via CSS) -->
       <div class="desktop-plan-nav" style="display:none;flex-shrink:0;">
-        <button onclick="shiftPlanningDate(-1)" title="Précédent" style="width:32px;height:32px;border-radius:8px;background:#f2f2f7;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:#1a1a1a;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='#e5e5ea'" onmouseout="this.style.background='#f2f2f7'">‹</button>
-        <button onclick="goToPlanningToday()" style="padding:6px 12px;border:1px solid #d1d1d6;border-radius:8px;background:transparent;color:#1a1a1a;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background 0.15s;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">Aujourd'hui</button>
-        <button onclick="shiftPlanningDate(1)" title="Suivant" style="width:32px;height:32px;border-radius:8px;background:#f2f2f7;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:#1a1a1a;line-height:1;transition:background 0.15s;" onmouseover="this.style.background='#e5e5ea'" onmouseout="this.style.background='#f2f2f7'">›</button>
+        <button onclick="shiftPlanningDate(-1)" title="Précédent" style="width:32px;height:32px;border-radius:8px;background:var(--surface-2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text);line-height:1;transition:background 0.15s;" onmouseover="this.style.background='#e5e5ea'" onmouseout="this.style.background='#f2f2f7'">‹</button>
+        <button onclick="goToPlanningToday()" style="padding:6px 12px;border:1px solid #d1d1d6;border-radius:8px;background:transparent;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background 0.15s;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">Aujourd'hui</button>
+        <button onclick="shiftPlanningDate(1)" title="Suivant" style="width:32px;height:32px;border-radius:8px;background:var(--surface-2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text);line-height:1;transition:background 0.15s;" onmouseover="this.style.background='#e5e5ea'" onmouseout="this.style.background='#f2f2f7'">›</button>
       </div>
       <!-- Date label -->
-      <div style="font-weight:700;font-size:16px;color:#1a1a1a;flex:1;text-align:center;" id="planning-header-date">Planning</div>
+      <div style="font-weight:700;font-size:16px;color:var(--text);flex:1;text-align:center;" id="planning-header-date">Planning</div>
       <!-- Right: desktop view selector + mobile grid icon -->
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
         <div class="desktop-view-selector" style="display:none;">
@@ -1512,8 +1477,8 @@
             <option value="month">Mois</option>
           </select>
         </div>
-        <button id="planning-new-event-btn" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="display:none;padding:6px 14px;background:transparent;border:1px solid #d1d1d6;border-radius:8px;color:#1a1a1a;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">+ Événement</button>
-        <button onclick="openViewModal()" id="planning-grid-icon-btn" style="width:36px;height:36px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;color:#1a1a1a;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">
+        <button id="planning-new-event-btn" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="display:none;padding:6px 14px;background:transparent;border:1px solid #d1d1d6;border-radius:8px;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='transparent'">+ Événement</button>
+        <button onclick="openViewModal()" id="planning-grid-icon-btn" style="width:36px;height:36px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;color:var(--text);" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='none'">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
             <rect x="2" y="2" width="6" height="6" rx="1.5"/>
             <rect x="12" y="2" width="6" height="6" rx="1.5"/>
@@ -1523,7 +1488,7 @@
         </button>
       </div>
     </div>
-    <div id="calendar-container" style="flex:1;overflow:hidden;position:relative;background:#f2f2f7;">
+    <div id="calendar-container" style="flex:1;overflow:hidden;position:relative;background:var(--surface-2);">
       <p style="color:var(--text2);text-align:center;padding-top:40px;">Chargement...</p>
     </div>
     <button id="fab-planning" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="position:fixed;bottom:130px;right:20px;width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid rgba(255,255,255,0.6);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);cursor:pointer;z-index:100;transition:transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">
@@ -1543,60 +1508,60 @@
       </div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
-      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-        <div style="font-size:10px;font-weight:600;color:#8e8e93;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">Trésorerie</div>
-        <div style="font-size:20px;font-weight:700;color:#1a1a1a;letter-spacing:-0.5px;" id="dash-tresorerie">0€</div>
+      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <div style="font-size:10px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">Trésorerie</div>
+        <div style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px;" id="dash-tresorerie">0€</div>
       </div>
-      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-        <div style="font-size:10px;font-weight:600;color:#8e8e93;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">CA réalisé</div>
-        <div style="font-size:20px;font-weight:700;color:#1a1a1a;letter-spacing:-0.5px;" id="dash-ca">0€</div>
+      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <div style="font-size:10px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">CA réalisé</div>
+        <div style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px;" id="dash-ca">0€</div>
       </div>
-      <div style="background:white;border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-        <div style="font-size:10px;font-weight:600;color:#8e8e93;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">Profit</div>
+      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <div style="font-size:10px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">Profit</div>
         <div style="font-size:20px;font-weight:700;color:#34C759;letter-spacing:-0.5px;" id="dash-profit-real">0€</div>
       </div>
     </div>
     <div style="margin-bottom:20px;">
       <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
-        <button class="chart-filter active" onclick="switchChart('ca',this)" style="padding:6px 14px;border:none;border-radius:20px;background:#1a1a1a;color:white;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">CA</button>
-        <button class="chart-filter" onclick="switchChart('prep-profit',this)" style="padding:6px 14px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Prep vs Profit</button>
-        <button class="chart-filter" onclick="switchChart('temps-vente',this)" style="padding:6px 14px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:#3a3a3c;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Temps de vente</button>
+        <button class="chart-filter active" onclick="switchChart('ca',this)" style="padding:6px 14px;border:none;border-radius:20px;background:var(--navy);color:white;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">CA</button>
+        <button class="chart-filter" onclick="switchChart('prep-profit',this)" style="padding:6px 14px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Prep vs Profit</button>
+        <button class="chart-filter" onclick="switchChart('temps-vente',this)" style="padding:6px 14px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Temps de vente</button>
       </div>
-      <div style="background:white;border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+      <div style="background:var(--surface);border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
         <canvas id="chart-canvas" style="max-height:220px;"></canvas>
       </div>
     </div>
-    <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Finances</span></div>
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Profit moyen / véhicule</span><span id="dash-avg-profit" style="font-size:15px;font-weight:600;color:#34C759;"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Marge moyenne</span><span id="dash-avg-margin" style="font-size:15px;font-weight:600;color:#34C759;"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Trésorerie bloquée</span><span id="dash-cash-blocked" style="font-size:15px;font-weight:600;color:#1a1a1a;"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:#8e8e93;">Chiffre d'affaires</span><span id="dash-revenue" style="font-size:15px;font-weight:600;color:#1a1a1a;"></span></div>
+    <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Finances</span></div>
+    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Profit moyen / véhicule</span><span id="dash-avg-profit" style="font-size:15px;font-weight:600;color:#34C759;"></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Marge moyenne</span><span id="dash-avg-margin" style="font-size:15px;font-weight:600;color:#34C759;"></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Trésorerie bloquée</span><span id="dash-cash-blocked" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:var(--text2);">Chiffre d'affaires</span><span id="dash-revenue" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
     </div>
-    <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Opérations</span></div>
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Rotation</span><span id="dash-rotation" style="font-size:15px;font-weight:600;color:#1a1a1a;"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Temps moyen de vente</span><span id="dash-avg-time" style="font-size:15px;font-weight:600;color:#1a1a1a;"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7;"><span style="font-size:15px;color:#8e8e93;">Coût moyen préparation</span><span id="dash-avg-prep" style="font-size:15px;font-weight:600;color:#1a1a1a;"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:#8e8e93;">Tâches urgentes</span><span id="dash-urgent-tasks" style="font-size:15px;font-weight:600;color:#FF3B30;"></span></div>
+    <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Opérations</span></div>
+    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Rotation</span><span id="dash-rotation" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Temps moyen de vente</span><span id="dash-avg-time" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Coût moyen préparation</span><span id="dash-avg-prep" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:var(--text2);">Tâches urgentes</span><span id="dash-urgent-tasks" style="font-size:15px;font-weight:600;color:#FF3B30;"></span></div>
     </div>
     <div style="height:160px;flex-shrink:0;"></div>
   </div>
 
-  <div id="details" style="background:#f2f2f7;display:none;flex-direction:column;">
-    <div style="background:white;flex-shrink:0;">
+  <div id="details" style="background:var(--surface-2);display:none;flex-direction:column;">
+    <div style="background:var(--surface);flex-shrink:0;">
       <div style="display:flex;align-items:center;padding:14px 16px 10px;position:relative;">
         <button onclick="closeVehicleDetails()" id="details-close-btn" style="background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;width:30px;">
           <svg width="10" height="17" viewBox="0 0 10 17" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,1 1,8.5 9,16"/></svg>
         </button>
         <div style="position:absolute;left:0;right:0;text-align:center;pointer-events:none;">
-          <div id="detail-title" style="font-size:17px;font-weight:700;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 50px;"></div>
-          <div id="detail-subtitle" style="font-size:12px;color:#8e8e93;margin-top:1px;"></div>
+          <div id="detail-title" style="font-size:17px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 50px;"></div>
+          <div id="detail-subtitle" style="font-size:12px;color:var(--text2);margin-top:1px;"></div>
         </div>
         <div style="width:30px;flex-shrink:0;margin-left:auto;"></div>
       </div>
     </div>
-    <div style="background:white;flex-shrink:0;">
+    <div style="background:var(--surface);flex-shrink:0;">
       <div class="details-segment-wrap">
         <button id="tab-infos" class="detail-tab detail-tab-active" onclick="switchDetailTab('infos')">Infos</button>
         <button id="tab-taches" class="detail-tab" onclick="switchDetailTab('taches')">Tâches</button>
@@ -1610,20 +1575,20 @@
         <!-- Nav desktop uniquement : caché sur mobile -->
         <div id="details-desktop-nav" style="display:none;">
           <div style="padding:14px 16px 8px;">
-            <button onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:500;color:#8e8e93;padding:0;display:flex;align-items:center;gap:4px;letter-spacing:0.1px;">
+            <button onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:500;color:var(--text2);padding:0;display:flex;align-items:center;gap:4px;letter-spacing:0.1px;">
               <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="#8e8e93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="5,1 1,5 5,9"/></svg>
               Parc
             </button>
           </div>
           <div style="padding:6px 16px 20px;">
-            <div id="detail-title-desktop" style="font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.25;text-align:center;"></div>
-            <div id="detail-subtitle-desktop" style="font-size:12px;color:#8e8e93;margin-top:5px;letter-spacing:0.1px;text-align:center;"></div>
+            <div id="detail-title-desktop" style="font-size:20px;font-weight:700;color:var(--text);line-height:1.25;text-align:center;"></div>
+            <div id="detail-subtitle-desktop" style="font-size:12px;color:var(--text2);margin-top:5px;letter-spacing:0.1px;text-align:center;"></div>
           </div>
         </div>
 
         <!-- Statut -->
         <div class="dt-statut-wrap" style="position:relative;">
-          <div style="margin-bottom:8px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Statut</span></div>
+          <div style="margin-bottom:8px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Statut</span></div>
           <div style="margin-bottom:12px;">
             <!-- Desktop: badge actif + popover -->
             <button id="statut-active-badge" onclick="toggleStatutPopover(event)" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;">
@@ -1633,24 +1598,24 @@
             </button>
             <!-- Mobile: 3 badges directs -->
             <div id="statut-mobile-badges" style="display:none;flex-wrap:wrap;gap:8px;justify-content:center;">
-              <button id="mbadge-en-cours" onclick="changeStatut('En cours')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:#1a1a1a;transition:all 0.15s;">
+              <button id="mbadge-en-cours" onclick="changeStatut('En cours')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:var(--text);transition:all 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF9500;flex-shrink:0;"></span><span>En cours</span>
               </button>
-              <button id="mbadge-pret" onclick="changeStatut('Prêt à vendre')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:#1a1a1a;transition:all 0.15s;">
+              <button id="mbadge-pret" onclick="changeStatut('Prêt à vendre')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:var(--text);transition:all 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#34C759;flex-shrink:0;"></span><span>Prêt à vendre</span>
               </button>
-              <button id="mbadge-vendu" onclick="changeStatut('Vendu')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:#1a1a1a;transition:all 0.15s;">
+              <button id="mbadge-vendu" onclick="changeStatut('Vendu')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:var(--text);transition:all 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF1744;flex-shrink:0;"></span><span>Vendu</span>
               </button>
             </div>
-            <div id="statut-popover" style="display:none;position:absolute;left:0;top:calc(100% + 6px);z-index:100;background:white;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,0.13);padding:8px;flex-direction:column;align-items:flex-start;gap:4px;width:fit-content;">
-              <button data-statut="En cours" onclick="changeStatut('En cours');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:#1a1a1a;white-space:nowrap;transition:background 0.15s,color 0.15s;">
+            <div id="statut-popover" style="display:none;position:absolute;left:0;top:calc(100% + 6px);z-index:100;background:var(--surface);border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,0.13);padding:8px;flex-direction:column;align-items:flex-start;gap:4px;width:fit-content;">
+              <button data-statut="En cours" onclick="changeStatut('En cours');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:var(--text);white-space:nowrap;transition:background 0.15s,color 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF9500;flex-shrink:0;"></span><span>En cours</span>
               </button>
-              <button data-statut="Prêt à vendre" onclick="changeStatut('Prêt à vendre');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:#1a1a1a;white-space:nowrap;transition:background 0.15s,color 0.15s;">
+              <button data-statut="Prêt à vendre" onclick="changeStatut('Prêt à vendre');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:var(--text);white-space:nowrap;transition:background 0.15s,color 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#34C759;flex-shrink:0;"></span><span>Prêt à vendre</span>
               </button>
-              <button data-statut="Vendu" onclick="changeStatut('Vendu');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:#1a1a1a;white-space:nowrap;transition:background 0.15s,color 0.15s;">
+              <button data-statut="Vendu" onclick="changeStatut('Vendu');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:var(--text);white-space:nowrap;transition:background 0.15s,color 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF1744;flex-shrink:0;"></span><span>Vendu</span>
               </button>
             </div>
@@ -1670,14 +1635,14 @@
         </div>
 
         <!-- Préconisations constructeur IA -->
-        <button disabled style="width:100%;display:flex;align-items:center;justify-content:space-between;background:white;border:none;border-radius:14px;padding:14px 16px;margin-bottom:12px;cursor:not-allowed;box-shadow:0 1px 3px rgba(0,0,0,0.06);opacity:0.6;">
+        <button disabled style="width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:none;border-radius:14px;padding:14px 16px;margin-bottom:12px;cursor:not-allowed;box-shadow:0 1px 3px rgba(0,0,0,0.06);opacity:0.6;">
           <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:32px;height:32px;border-radius:50%;background:#f2f2f7;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="18" cy="6" r="3" fill="#8e8e93" stroke="none"/></svg>
             </div>
             <div style="text-align:left;">
-              <div style="font-size:14px;font-weight:600;color:#1a1a1a;">Préconisations constructeur IA</div>
-              <div style="font-size:12px;color:#8e8e93;margin-top:1px;">Entretiens, rappels, points de vigilance</div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">Préconisations constructeur IA</div>
+              <div style="font-size:12px;color:var(--text2);margin-top:1px;">Entretiens, rappels, points de vigilance</div>
             </div>
           </div>
           <span style="font-size:11px;font-weight:600;color:white;background:#8e8e93;padding:3px 8px;border-radius:20px;">Bientôt</span>
@@ -1685,9 +1650,9 @@
 
         <!-- Notes -->
         <div class="dt-notes-wrap">
-          <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
-          <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-            <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:#1a1a1a;background:transparent;padding:14px 16px;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
+          <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
+          <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+            <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:14px 16px;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
           </div>
         </div>
 
@@ -1711,7 +1676,7 @@
 
         <!-- ACQUISITION -->
         <div class="fin-section-label">Acquisition</div>
-        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Prix d'achat</span><div class="fin-input-wrap"><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
           <div class="fin-row fin-sep"><span class="fin-label-text">Coût sans TVA</span><div class="fin-input-wrap"><input type="number" id="detail-sans-tva-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
           <div class="fin-row fin-sep"><span class="fin-label-text">Coût soumis à la TVA</span><div class="fin-input-wrap"><input type="number" id="detail-avec-tva-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
@@ -1720,21 +1685,21 @@
 
         <!-- FRAIS -->
         <div class="fin-section-label">Frais</div>
-        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Carte grise</span><div class="fin-input-wrap"><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
         </div>
 
         <!-- VENTE -->
         <div class="fin-section-label">Vente</div>
-        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Prix de vente</span><div class="fin-input-wrap"><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
           <div class="fin-row fin-sep"><span class="fin-label-text">Marge cible</span><div class="fin-input-wrap"><input type="number" id="detail-marge-cible-input" value="15" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input" style="width:60px;"><span class="fin-unit">%</span></div></div>
-          <div class="fin-row fin-sep"><span class="fin-label-text" style="color:#8e8e93;">Prix minimum recommandé</span><span id="detail-prix-min" style="color:#8e8e93;">—</span></div>
+          <div class="fin-row fin-sep"><span class="fin-label-text" style="color:var(--text2);">Prix minimum recommandé</span><span id="detail-prix-min" style="color:var(--text2);">—</span></div>
         </div>
 
         <!-- RÉSULTAT -->
         <div class="fin-section-label">Résultat</div>
-        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
           <div class="fin-resultat-row">
             <span class="fin-label-text">Marge réelle</span>
             <div style="display:flex;align-items:baseline;gap:8px;">
@@ -1747,8 +1712,8 @@
       </div>
 
       <div id="detail-tab-taches" class="detail-tab-content" style="display:none;flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
-        <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:14px 16px;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:13px;color:#8e8e93;font-weight:600;">Progression</span><span id="detail-progress-text" style="font-size:13px;font-weight:700;color:#1a1a1a;">0%</span></div>
+        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:14px 16px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:13px;color:var(--text2);font-weight:600;">Progression</span><span id="detail-progress-text" style="font-size:13px;font-weight:700;color:var(--text);">0%</span></div>
           <div class="progress-container" style="margin-bottom:0;"><div class="progress-bar" id="detail-progress-bar" style="width:0%;"></div></div>
         </div>
         <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;">
@@ -1776,7 +1741,7 @@
       </div>
 
       <div id="detail-tab-historique" class="detail-tab-content" style="display:none;flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
-        <div id="detail-historique-content"><div style="text-align:center;padding:40px 20px;color:#8e8e93;font-size:15px;">Aucun événement lié à ce véhicule</div></div>
+        <div id="detail-historique-content"><div style="text-align:center;padding:40px 20px;color:var(--text2);font-size:15px;">Aucun événement lié à ce véhicule</div></div>
       </div>
   </div>
 
@@ -1794,30 +1759,30 @@
 
     <!-- Avatar + nom -->
     <div style="display:flex;flex-direction:column;align-items:center;padding:32px 16px 24px 16px;">
-      <div style="width:72px;height:72px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
+      <div style="width:72px;height:72px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
           <circle cx="12" cy="8" r="4"/>
           <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
         </svg>
       </div>
-      <div id="compte-nom-header" style="font-size:20px;font-weight:700;color:#1a1a1a;letter-spacing:-0.3px;">—</div>
-      <div id="compte-société-header" style="font-size:14px;color:#8e8e93;margin-top:3px;">—</div>
+      <div id="compte-nom-header" style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.3px;">—</div>
+      <div id="compte-société-header" style="font-size:14px;color:var(--text2);margin-top:3px;">—</div>
     </div>
 
     <!-- Profil -->
-    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Profil</span></div>
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 24px 16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid #e5e5ea;">
-        <span style="font-size:15px;color:#1c1c1e;">Nom</span>
-        <span id="compte-nom" style="font-size:15px;color:#8e8e93;">—</span>
+    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Profil</span></div>
+    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 24px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid var(--border);">
+        <span style="font-size:15px;color:var(--text);">Nom</span>
+        <span id="compte-nom" style="font-size:15px;color:var(--text2);">—</span>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid #e5e5ea;">
-        <span style="font-size:15px;color:#1c1c1e;">Société</span>
-        <span id="compte-garage" style="font-size:15px;color:#8e8e93;">—</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid var(--border);">
+        <span style="font-size:15px;color:var(--text);">Société</span>
+        <span id="compte-garage" style="font-size:15px;color:var(--text2);">—</span>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
-        <span style="font-size:15px;color:#1c1c1e;">Email</span>
-        <span id="compte-email" style="font-size:13px;color:#8e8e93;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span>
+        <span style="font-size:15px;color:var(--text);">Email</span>
+        <span id="compte-email" style="font-size:13px;color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span>
       </div>
     </div>
 
@@ -1836,58 +1801,58 @@
 
     <!-- Abonnement -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Abonnement</span></div>
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 24px 16px;">
+    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 24px 16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
-        <span style="font-size:15px;color:#1c1c1e;">Plan actuel</span>
+        <span style="font-size:15px;color:var(--text);">Plan actuel</span>
         <span style="font-size:12px;font-weight:600;color:#34C759;background:rgba(52,199,89,0.12);padding:4px 10px;border-radius:20px;letter-spacing:0.2px;">GRATUIT</span>
       </div>
     </div>
 
     <!-- Historique -->
-    <div id="section-historique" style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Données avant Trakoto</span></div>
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 8px 16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid #e5e5ea;">
-        <span style="font-size:15px;color:#1c1c1e;">Véhicules vendus</span>
-        <input type="number" id="hist-nb-ventes" placeholder="0" style="border:none;outline:none;font-size:15px;color:#8e8e93;text-align:right;width:80px;background:transparent;"/>
+    <div id="section-historique" style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Données avant Trakoto</span></div>
+    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 8px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
+        <span style="font-size:15px;color:var(--text);">Véhicules vendus</span>
+        <input type="number" id="hist-nb-ventes" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:80px;background:transparent;"/>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid #e5e5ea;">
-        <span style="font-size:15px;color:#1c1c1e;">CA total</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
+        <span style="font-size:15px;color:var(--text);">CA total</span>
         <div style="display:flex;align-items:center;gap:4px;">
-          <input type="number" id="hist-ca" placeholder="0" style="border:none;outline:none;font-size:15px;color:#8e8e93;text-align:right;width:100px;background:transparent;"/>
-          <span style="font-size:15px;color:#8e8e93;">€</span>
+          <input type="number" id="hist-ca" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
+          <span style="font-size:15px;color:var(--text2);">€</span>
         </div>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid #e5e5ea;">
-        <span style="font-size:15px;color:#1c1c1e;">Marge totale</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
+        <span style="font-size:15px;color:var(--text);">Marge totale</span>
         <div style="display:flex;align-items:center;gap:4px;">
-          <input type="number" id="hist-marge" placeholder="0" style="border:none;outline:none;font-size:15px;color:#8e8e93;text-align:right;width:100px;background:transparent;"/>
-          <span style="font-size:15px;color:#8e8e93;">€</span>
+          <input type="number" id="hist-marge" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
+          <span style="font-size:15px;color:var(--text2);">€</span>
         </div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-        <span style="font-size:15px;color:#1c1c1e;">Coût moyen prépa</span>
+        <span style="font-size:15px;color:var(--text);">Coût moyen prépa</span>
         <div style="display:flex;align-items:center;gap:4px;">
-          <input type="number" id="hist-prep" placeholder="0" style="border:none;outline:none;font-size:15px;color:#8e8e93;text-align:right;width:100px;background:transparent;"/>
-          <span style="font-size:15px;color:#8e8e93;">€</span>
+          <input type="number" id="hist-prep" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
+          <span style="font-size:15px;color:var(--text2);">€</span>
         </div>
       </div>
     </div>
     <div style="margin:0 16px 24px 16px;">
-      <button onclick="saveHistorique()" style="width:100%;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;">Enregistrer</button>
+      <button onclick="saveHistorique()" style="width:100%;padding:14px;background:var(--surface);color:var(--text);border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;">Enregistrer</button>
     </div>
 
     <!-- App -->
-    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 32px 16px;">
+    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
+    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 32px 16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
-        <span style="font-size:15px;color:#1c1c1e;">Version</span>
-        <span style="font-size:15px;color:#8e8e93;">1.0.0</span>
+        <span style="font-size:15px;color:var(--text);">Version</span>
+        <span style="font-size:15px;color:var(--text2);">1.0.0</span>
       </div>
     </div>
 
     <!-- Déconnexion -->
     <div style="margin:0 16px;">
-      <button onclick="doLogout()" style="width:100%;padding:15px;background:white;color:#FF3B30;border:none;border-radius:14px;font-size:16px;font-weight:500;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.06);letter-spacing:-0.2px;">
+      <button onclick="doLogout()" style="width:100%;padding:15px;background:var(--surface);color:#FF3B30;border:none;border-radius:14px;font-size:16px;font-weight:500;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.06);letter-spacing:-0.2px;">
         Se déconnecter
       </button>
     </div>
@@ -1898,32 +1863,32 @@
 
 <!-- VUE COMPTE (ancien emplacement supprimé) -->
 
-<div id="modal-add-vehicle" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:none;flex-direction:column;animation:slideUpFull 0.3s ease;">
-  <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;background:white;flex-shrink:0;min-height:56px;">
-    <button onclick="closeAddModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>
-    <span style="font-size:17px;font-weight:600;color:#1a1a1a;flex:1;text-align:center;">Nouveau véhicule</span>
+<div id="modal-add-vehicle" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:none;flex-direction:column;animation:slideUpFull 0.3s ease;">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
+    <button onclick="closeAddModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>
+    <span style="font-size:17px;font-weight:600;color:var(--text);flex:1;text-align:center;">Nouveau véhicule</span>
     <button id="add-vehicle-check-btn" onclick="addVehicle()" style="background:none;border:none;cursor:pointer;padding:4px;">
       <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div>
     </button>
   </div>
-  <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px 24px 16px;">
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
-      <div style="padding:0 16px;"><input type="text" id="f-marque" placeholder="Marque" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;box-sizing:border-box;"/></div>
-      <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
-      <div style="padding:0 16px;"><input type="text" id="f-modele" placeholder="Modèle" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;box-sizing:border-box;"/></div>
+  <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px 24px 16px;">
+    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+      <div style="padding:0 16px;"><input type="text" id="f-marque" placeholder="Marque" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;box-sizing:border-box;"/></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="padding:0 16px;"><input type="text" id="f-modele" placeholder="Modèle" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;box-sizing:border-box;"/></div>
     </div>
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:#8e8e93;flex-shrink:0;">Année</span><input type="number" id="f-year" placeholder="2022" style="border:none;outline:none;font-size:16px;color:#1a1a1a;padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
-      <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:#8e8e93;flex-shrink:0;">Génération</span><input type="text" id="f-gen" placeholder="W206" style="border:none;outline:none;font-size:16px;color:#1a1a1a;padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
-      <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:#8e8e93;flex-shrink:0;">Kilométrage</span><input type="number" id="f-km" placeholder="45 000" style="border:none;outline:none;font-size:16px;color:#1a1a1a;padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
+    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Année</span><input type="number" id="f-year" placeholder="2022" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Génération</span><input type="text" id="f-gen" placeholder="W206" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Kilométrage</span><input type="number" id="f-km" placeholder="45 000" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
     </div>
-    <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:#8e8e93;flex-shrink:0;">Prix achat</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-achat" placeholder="0" style="border:none;outline:none;font-size:16px;color:#1a1a1a;padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:#8e8e93;">€</span></div></div>
+    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix achat</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-achat" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
     </div>
   </div>
-  <div id="add-vehicle-desktop-footer" style="display:none;padding:16px 20px;border-top:1px solid #e5e5e5;flex-shrink:0;display:flex;justify-content:center;">
+  <div id="add-vehicle-desktop-footer" style="display:none;padding:16px 20px;border-top:1px solid var(--border);flex-shrink:0;display:flex;justify-content:center;">
     <button onclick="addVehicle()" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(30,64,175,0.07)'" onmouseout="this.style.background='none'">
       <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;">
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg>
@@ -2066,7 +2031,7 @@ function createDesktopDialog(id, innerHtml, opts = {}) {
   sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:transparent;z-index:10010;display:flex;align-items:center;justify-content:center;padding:20px;pointer-events:none;';
   const width = opts.desktopWidth || '520px';
   const innerStyle = opts.innerStyle || '';
-  sheet.innerHTML = `<div style="width:min(${width},calc(100vw - 320px));max-height:calc(100vh - 120px);overflow:auto;border-radius:24px;background:white;box-shadow:0 24px 80px rgba(0,0,0,0.18);pointer-events:auto;${innerStyle}">${innerHtml}</div>`;
+  sheet.innerHTML = `<div style="width:min(${width},calc(100vw - 320px));max-height:calc(100vh - 120px);overflow:auto;border-radius:24px;background:var(--surface);box-shadow:0 24px 80px rgba(0,0,0,0.18);pointer-events:auto;${innerStyle}">${innerHtml}</div>`;
   sheet.addEventListener('click', e => { if (e.target === sheet) sheet.remove(); });
   document.body.appendChild(sheet);
   return sheet;
@@ -2081,7 +2046,7 @@ function createDialogOrSheet(id, innerHtml, options = {}) {
   const sheet = document.createElement('div');
   sheet.id = id;
   sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:flex-end;';
-  sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;animation:slideUpFull 0.25s ease;${options.innerStyle || ''}">${innerHtml}</div>`;
+  sheet.innerHTML = `<div style="background:var(--surface);width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;animation:slideUpFull 0.25s ease;${options.innerStyle || ''}">${innerHtml}</div>`;
   sheet.addEventListener('click', e => { if (e.target === sheet) sheet.remove(); });
   document.body.appendChild(sheet);
   return sheet;
@@ -2164,10 +2129,10 @@ function renderCompte(){
 
 async function doLogout(){
   const innerHtml = `<div style="padding:24px 20px 40px 20px;">
-    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Se déconnecter ?</div>
-    <div style="color:#8e8e93;font-size:15px;margin-bottom:24px;">Vous devrez vous reconnecter pour accéder à vos données.</div>
+    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Se déconnecter ?</div>
+    <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Vous devrez vous reconnecter pour accéder à vos données.</div>
     <button onclick="confirmLogout();document.getElementById('logout-sheet')?.remove();" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Se déconnecter</button>
-    <button onclick="document.getElementById('logout-sheet')?.remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
+    <button onclick="document.getElementById('logout-sheet')?.remove()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
   </div>`;
   createDialogOrSheet('logout-sheet', innerHtml, {desktopWidth:'420px'});
 }
@@ -2258,7 +2223,7 @@ const RenderHelpers = {
         position:absolute;top:50%;right:16px;
         transform:translateY(-50%);
         width:44px;height:44px;border-radius:50%;
-        background:white;
+        background:var(--surface);
         display:flex;align-items:center;justify-content:center;
         box-shadow:0 2px 8px rgba(0,0,0,0.15);
         cursor:pointer;z-index:2;
@@ -2273,7 +2238,7 @@ const RenderHelpers = {
       <!-- Carte -->
       <div class="vehicle-card-swipeable" id="card-${v.id}" onclick="handleCardTap(event, ${v.id})" style="
         position:relative;z-index:1;
-        background:white;border-radius:14px;padding:16px;
+        background:var(--surface);border-radius:14px;padding:16px;
         box-shadow:0 1px 3px rgba(0,0,0,0.08);
         cursor:pointer;display:flex;flex-direction:column;gap:10px;
         transform:translateX(0);transition:transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
@@ -2281,14 +2246,14 @@ const RenderHelpers = {
       ">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div style="flex:1;min-width:0;">
-            <div style="font-size:16px;font-weight:700;color:#1a1a1a;">${v.pinned ? '<span style="font-size:11px;color:#1e3fae;font-weight:600;background:rgba(30,63,174,0.08);padding:2px 6px;border-radius:6px;margin-right:6px;">épinglé</span>' : ''}${v.marque} ${v.modele}</div>
-            <div style="font-size:13px;color:#8e8e93;margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen}</div>
+            <div style="font-size:16px;font-weight:700;color:var(--text);">${v.pinned ? '<span style="font-size:11px;color:#1e3fae;font-weight:600;background:rgba(30,63,174,0.08);padding:2px 6px;border-radius:6px;margin-right:6px;">épinglé</span>' : ''}${v.marque} ${v.modele}</div>
+            <div style="font-size:13px;color:var(--text2);margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen}</div>
             <div style="margin-top:8px;display:inline-flex;align-items:center;gap:5px;background:${color}18;padding:3px 8px;border-radius:20px;">
               <div style="width:6px;height:6px;border-radius:50%;background:${color};flex-shrink:0;"></div>
               <span style="font-size:12px;font-weight:600;color:${color};">${STATUS_LABELS[v.statut] || v.statut}</span>
             </div>
           </div>
-          <button class="card-menu-btn" onclick="event.stopPropagation();showVehicleContextMenu(${v.id})" style="background:#f2f2f7;border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#3a3a3c;font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;">···</button>
+          <button class="card-menu-btn" onclick="event.stopPropagation();showVehicleContextMenu(${v.id})" style="background:var(--surface-2);border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;">···</button>
         </div>
         <div class="desktop-card-actions">
           <button class="desktop-card-btn" type="button" onclick="event.stopPropagation();openVehicleDetails(${v.id})">Voir</button>
@@ -2338,12 +2303,12 @@ function showVehicleContextMenu(vehicleId){
   document.body.insertAdjacentHTML('beforeend', `
     <div id="vehicle-context-sheet" style="position:fixed;inset:0;z-index:10000;">
       <div style="position:absolute;inset:0;background:rgba(0,0,0,0.4);" onclick="closeVehicleContextSheet()"></div>
-      <div style="position:absolute;bottom:0;left:0;right:0;background:white;border-radius:20px 20px 0 0;padding:8px 0 calc(16px + env(safe-area-inset-bottom));">
+      <div style="position:absolute;bottom:0;left:0;right:0;background:var(--surface);border-radius:20px 20px 0 0;padding:8px 0 calc(16px + env(safe-area-inset-bottom));">
         <div style="width:36px;height:4px;background:#d1d1d6;border-radius:2px;margin:8px auto 16px;"></div>
-        <button onclick="pinVehicle(${vehicleId})" style="width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;color:#1a1a1a;">${isPinned ? 'Désépingler' : 'Épingler'}</button>
-        <div style="height:1px;background:#f2f2f7;margin:0 20px;"></div>
-        <button onclick="duplicateVehicle(${vehicleId})" style="width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;color:#1a1a1a;">Dupliquer</button>
-        <div style="height:1px;background:#f2f2f7;margin:0 20px;"></div>
+        <button onclick="pinVehicle(${vehicleId})" style="width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;color:var(--text);">${isPinned ? 'Désépingler' : 'Épingler'}</button>
+        <div style="height:1px;background:var(--surface-2);margin:0 20px;"></div>
+        <button onclick="duplicateVehicle(${vehicleId})" style="width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;color:var(--text);">Dupliquer</button>
+        <div style="height:1px;background:var(--surface-2);margin:0 20px;"></div>
         <button onclick="closeVehicleContextSheet();deleteVehicle(${vehicleId})" style="width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;color:#FF3B30;">Supprimer</button>
       </div>
     </div>
@@ -2505,11 +2470,11 @@ function closeVehicleDetails(){
   }
 }
 function confirmDeleteCurrentVehicle(){
-  const innerHtml = `<div style="background:white;border-radius:24px;padding:24px;max-width:460px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.14);">
-    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer ce véhicule ?</div>
-    <div style="color:#8e8e93;font-size:15px;margin-bottom:24px;">Toutes les tâches associées seront supprimées.</div>
+  const innerHtml = `<div style="background:var(--surface);border-radius:24px;padding:24px;max-width:460px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.14);">
+    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Supprimer ce véhicule ?</div>
+    <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Toutes les tâches associées seront supprimées.</div>
     <button onclick="DataLayer.deleteVehicle(${currentDetailVehicleId});showToast('✓ Véhicule supprimé');closeVehicleDetails();renderParc();this.closest('[style*=fixed]').remove();" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Supprimer</button>
-    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
+    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
   </div>`;
   createDialogOrSheet('confirm-delete-current-vehicle-sheet', innerHtml, {desktopWidth:'480px'});
 }
@@ -2520,7 +2485,7 @@ function renderDetailTasks(id, filter){
   let filtered = RenderHelpers.filterTasksByDate(v.tasks, filter);
   const typeFilter = currentDetailTaskFilter || 'all';
   filtered = RenderHelpers.filterTasks(filtered, typeFilter);
-  if(filtered.length === 0){ document.getElementById('detail-tasks').innerHTML = '<div style="text-align:center;padding:2rem;color:#8e8e93;font-size:15px;">Aucune tâche</div>'; return; }
+  if(filtered.length === 0){ document.getElementById('detail-tasks').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text2);font-size:15px;">Aucune tâche</div>'; return; }
   const grouped = {};
   filtered.forEach(t => { const key = t.date || 'Sans date'; if(!grouped[key]) grouped[key] = []; grouped[key].push(t); });
   const typeColors = {'preparation':'#00FF88','sav':'#FF1744','rappel':'#CCFF00','prep':'#00FF88','rdv':'#00D4FF','appel':'#7B68EE'};
@@ -2528,16 +2493,16 @@ function renderDetailTasks(id, filter){
   Object.keys(grouped).sort().forEach(date => {
     const dateObj = new Date(date + 'T00:00:00');
     const dayName = date === 'Sans date' ? 'Sans date' : dateObj.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
-    html += `<div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:capitalize;">${dayName}</span></div>`;
-    html += `<div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">`;
+    html += `<div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:capitalize;">${dayName}</span></div>`;
+    html += `<div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">`;
     grouped[date].forEach((t, idx) => {
       const color = typeColors[t.type] || '#8e8e93';
       const isLast = idx === grouped[date].length - 1;
       const title = t.cat || t.desc || '';
-      html += `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;${isLast ? '' : 'border-bottom:1px solid #f2f2f7;'}opacity:${t.completed ? '0.45' : '1'};" onclick="openEditTaskModal(${id}, ${t.id})">`;
+      html += `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;${isLast ? '' : 'border-bottom:1px solid var(--border);'}opacity:${t.completed ? '0.45' : '1'};" onclick="openEditTaskModal(${id}, ${t.id})">`;
       html += `<div onclick="event.stopPropagation();const v=vehicles.find(x=>x.id===${id});const t=v.tasks.find(s=>s.id===${t.id});t.completed=!t.completed;save();renderDetailTasks(${id},'${filter}');" style="width:24px;height:24px;border-radius:50%;flex-shrink:0;cursor:pointer;border:2px solid ${t.completed ? color : '#d1d1d6'};background:${t.completed ? color : 'transparent'};display:flex;align-items:center;justify-content:center;transition:all 0.2s;">${t.completed ? `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><polyline points="1,6 4,9 11,3"/></svg>` : ''}</div>`;
-      html += `<div style="flex:1;min-width:0;"><div style="font-size:15px;color:#1a1a1a;text-decoration:${t.completed ? 'line-through' : 'none'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${title}</div>`;
-      if(t.cost) html += `<div style="font-size:12px;color:#8e8e93;margin-top:2px;">${Number(t.cost).toLocaleString('fr-FR')}€</div>`;
+      html += `<div style="flex:1;min-width:0;"><div style="font-size:15px;color:var(--text);text-decoration:${t.completed ? 'line-through' : 'none'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${title}</div>`;
+      if(t.cost) html += `<div style="font-size:12px;color:var(--text2);margin-top:2px;">${Number(t.cost).toLocaleString('fr-FR')}€</div>`;
       html += `</div>`;
       html += `<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></span><svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="#c7c7cc" stroke-width="1.5" stroke-linecap="round"><polyline points="1,1 7,7 1,13"/></svg></div>`;
       html += `</div>`;
@@ -2568,47 +2533,47 @@ function openDetailTaskModal(){
   document.newSimpleTaskTypeLabel = 'Préparation';
   document.newSimpleTaskTypeDot = '#00FF88';
 
-  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;flex-shrink:0;min-height:56px;">
-      <button onclick="document.getElementById('simple-task-modal-overlay')?.remove();document.getElementById('simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
-      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Nouvelle tâche</span>
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;min-height:56px;">
+      <button onclick="document.getElementById('simple-task-modal-overlay')?.remove();document.getElementById('simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
+      <span style="font-size:17px;font-weight:600;color:var(--text);">Nouvelle tâche</span>
       <button onclick="saveSimpleTask()" style="background:none;border:none;cursor:pointer;padding:4px;">
         <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div>
       </button>
     </div>
-    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px;">
-      <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
-        <input type="text" id="stask-title" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;"/>
+    <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px;">
+      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
+        <input type="text" id="stask-title" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
       </div>
-      <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openSimpleTaskTypeSheet('new')">
-          <span style="font-size:16px;color:#1a1a1a;">Type</span>
+          <span style="font-size:16px;color:var(--text);">Type</span>
           <div style="display:flex;align-items:center;gap:8px;">
             <span id="stask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#00FF88;flex-shrink:0;"></span>
-            <span id="stask-type-label" style="font-size:16px;color:#1a1a1a;">Préparation</span>
+            <span id="stask-type-label" style="font-size:16px;color:var(--text);">Préparation</span>
             <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
           </div>
         </div>
-        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:#1a1a1a;">Coût</span>
+          <span style="font-size:16px;color:var(--text);">Coût</span>
           <div style="display:flex;align-items:center;gap:4px;">
-            <input type="number" id="stask-cost" placeholder="0" style="border:none;outline:none;font-size:16px;color:#1a1a1a;text-align:right;width:100px;background:transparent;"/>
-            <span style="font-size:16px;color:#8e8e93;">€</span>
+            <input type="number" id="stask-cost" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);text-align:right;width:100px;background:transparent;"/>
+            <span style="font-size:16px;color:var(--text2);">€</span>
           </div>
         </div>
       </div>
     </div>`;
 
   if (window.innerWidth >= 900) {
-    let innerHtmlDesktop = innerHtml.replace('background:#f2f2f7', 'background:white');
+    let innerHtmlDesktop = innerHtml.replace('background:var(--surface-2)', 'background:var(--surface)');
     innerHtmlDesktop = innerHtmlDesktop.replace(/<button [^>]*onclick="saveSimpleTask\(\)"[\s\S]*?<\/button>/, '<button onclick="saveSimpleTask()" style="background:none;border:none;cursor:pointer;padding:4px;"><div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div></button>');
     document.getElementById('simple-task-modal-overlay')?.remove();
     document.body.insertAdjacentHTML('beforeend',
       `<div id="simple-task-modal-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.18);z-index:10009;" onclick="document.getElementById('simple-task-modal')?.remove();this.remove()"></div>` +
-      `<div id="simple-task-modal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,calc(100vw - 320px));max-height:calc(100vh - 80px);border-radius:20px;background:white;box-shadow:0 24px 80px rgba(0,0,0,0.18);z-index:10010;display:flex;flex-direction:column;overflow:hidden;">${innerHtmlDesktop}</div>`
+      `<div id="simple-task-modal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,calc(100vw - 320px));max-height:calc(100vh - 80px);border-radius:20px;background:var(--surface);box-shadow:0 24px 80px rgba(0,0,0,0.18);z-index:10010;display:flex;flex-direction:column;overflow:hidden;">${innerHtmlDesktop}</div>`
     );
   } else {
-    document.body.insertAdjacentHTML('beforeend', `<div id="simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">${innerHtml}</div>`);
+    document.body.insertAdjacentHTML('beforeend', `<div id="simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">${innerHtml}</div>`);
   }
   setTimeout(() => document.getElementById('stask-title')?.focus(), 300);
 }
@@ -2682,23 +2647,23 @@ function renderHistorique(vehicleId){
   const el = document.getElementById('detail-historique-content');
   if(!el) return;
   const events = planning.filter(t => t.vehicleId == vehicleId).sort((a,b) => (b.date || '').localeCompare(a.date || ''));
-  if(events.length === 0){ el.innerHTML = '<div style="text-align:center;padding:40px 20px;color:#8e8e93;font-size:15px;">Aucun événement lié à ce véhicule</div>'; return; }
+  if(events.length === 0){ el.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text2);font-size:15px;">Aucun événement lié à ce véhicule</div>'; return; }
   const grouped = {};
   events.forEach(t => { const key = t.date ? t.date.substring(0,7) : 'Sans date'; if(!grouped[key]) grouped[key] = []; grouped[key].push(t); });
   let html = '';
   Object.keys(grouped).sort().reverse().forEach(monthKey => {
     const monthLabel = monthKey === 'Sans date' ? 'Sans date' : (() => { const [y, m] = monthKey.split('-'); return new Date(parseInt(y), parseInt(m)-1, 1).toLocaleDateString('fr-FR', {month:'long', year:'numeric'}); })();
-    html += '<div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:capitalize;">' + monthLabel + '</span></div>';
-    html += '<div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">';
+    html += '<div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:capitalize;">' + monthLabel + '</span></div>';
+    html += '<div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">';
     grouped[monthKey].forEach((t, idx) => {
       const color = EVENT_COLORS[t.type] || '#8e8e93';
       const label = EVENT_LABELS[t.type] || t.type;
       const isLast = idx === grouped[monthKey].length - 1;
       const dateStr = t.date ? new Date(t.date + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) : '';
-      html += '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;' + (isLast ? '' : 'border-bottom:1px solid #f2f2f7;') + '">';
+      html += '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;' + (isLast ? '' : 'border-bottom:1px solid var(--border);') + '">';
       html += '<div style="width:8px;height:8px;border-radius:50%;background:' + color + ';flex-shrink:0;"></div>';
-      html += '<div style="flex:1;"><div style="font-size:15px;color:#1a1a1a;">' + t.description + '</div>';
-      html += '<div style="font-size:12px;color:#8e8e93;margin-top:2px;">' + label + (dateStr ? ' · ' + dateStr : '') + '</div></div></div>';
+      html += '<div style="flex:1;"><div style="font-size:15px;color:var(--text);">' + t.description + '</div>';
+      html += '<div style="font-size:12px;color:var(--text2);margin-top:2px;">' + label + (dateStr ? ' · ' + dateStr : '') + '</div></div></div>';
     });
     html += '</div>';
   });
@@ -2756,7 +2721,7 @@ function renderPlanning(){
   }
   const headerDate = document.getElementById('planning-header-date');
   if(headerDate) headerDate.textContent = dateRangeStr;
-  document.getElementById('calendar-container').innerHTML = `<div id="calendar-content" style="width:100%;height:100%;background:white;overflow:hidden;position:relative;" ontouchstart="handleSwipeStart(event)" ontouchend="handleSwipeEnd(event)"></div>`;
+  document.getElementById('calendar-container').innerHTML = `<div id="calendar-content" style="width:100%;height:100%;background:var(--surface);overflow:hidden;position:relative;" ontouchstart="handleSwipeStart(event)" ontouchend="handleSwipeEnd(event)"></div>`;
   const viewMode = localStorage.getItem('at_planning_viewmode') || '3';
   if(viewMode === 'month') renderMonthView(currentDisplayDate);
   else renderWeekView(currentDisplayDate);
@@ -2805,18 +2770,18 @@ function openViewModal(){
   ];
   const optionsHtml = options.map(opt => {
     const isActive = viewMode === opt.val;
-    return `<div onclick="setViewMode('${opt.val}'); closeViewModal();" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
-      <span style="font-size:16px;font-weight:${isActive ? '600' : '400'};color:#1a1a1a;">${opt.label}</span>
+    return `<div onclick="setViewMode('${opt.val}'); closeViewModal();" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
+      <span style="font-size:16px;font-weight:${isActive ? '600' : '400'};color:var(--text);">${opt.label}</span>
       ${isActive ? '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}
     </div>`;
   }).join('');
   const sheet = document.createElement('div');
   sheet.id = 'view-modal';
   sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9999;display:flex;align-items:flex-end;';
-  sheet.innerHTML = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;">
-      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Vue</span>
-      <button onclick="closeViewModal()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button>
+  sheet.innerHTML = `<div style="background:var(--surface);width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
+      <span style="font-size:17px;font-weight:600;color:var(--text);">Vue</span>
+      <button onclick="closeViewModal()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button>
     </div>${optionsHtml}</div>`;
   sheet.addEventListener('click', (e) => { if(e.target === sheet) closeViewModal(); });
   document.body.appendChild(sheet);
@@ -2846,7 +2811,7 @@ function renderMonthView(date){
   const dayNames = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
   let html = '<div style="padding:12px;height:100%;display:flex;flex-direction:column;overflow:auto;">';
   html += '<div style="display:grid;grid-template-columns:repeat(7, 1fr);gap:2px;margin-bottom:8px;">';
-  dayNames.forEach(day => { html += '<div style="text-align:center;font-weight:600;font-size:11px;padding:6px;color:#8e8e93;">' + day + '</div>'; });
+  dayNames.forEach(day => { html += '<div style="text-align:center;font-weight:600;font-size:11px;padding:6px;color:var(--text2);">' + day + '</div>'; });
   html += '</div><div style="display:grid;grid-template-columns:repeat(7, 1fr);gap:2px;flex:1;">';
   for(let i = 0; i < firstDay.getDay(); i++) html += '<div></div>';
   for(let day = 1; day <= lastDay.getDate(); day++){
@@ -2856,8 +2821,8 @@ function renderMonthView(date){
     const plannings = DataLayer.getPlanning().filter(p => p.date === dateStr);
     html += '<div onclick="setDateAndViewDay(\'' + dateStr + '\')" style="min-height:60px;padding:4px;border:' + (isToday ? '2px solid #1a1a1a' : '1px solid #e8eaed') + ';background:' + (isToday ? 'rgba(26,26,26,0.05)' : '#f0f2f5') + ';border-radius:6px;cursor:pointer;display:flex;flex-direction:column;gap:2px;">';
     html += '<div style="font-weight:600;font-size:11px;">' + day + '</div>';
-    plannings.slice(0, 2).forEach(task => { html += '<div style="background:#CCFF00;color:#1a1a1a;padding:1px 4px;border-radius:2px;font-size:9px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + task.description.substring(0, 10) + '</div>'; });
-    if(plannings.length > 2) html += '<div style="font-size:9px;color:#8e8e93;">+' + (plannings.length - 2) + '</div>';
+    plannings.slice(0, 2).forEach(task => { html += '<div style="background:#CCFF00;color:var(--text);padding:1px 4px;border-radius:2px;font-size:9px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + task.description.substring(0, 10) + '</div>'; });
+    if(plannings.length > 2) html += '<div style="font-size:9px;color:var(--text2);">+' + (plannings.length - 2) + '</div>';
     html += '</div>';
   }
   html += '</div></div>';
@@ -2973,7 +2938,7 @@ function renderWeekView(date){
       const height = Math.max(((endMins - startMins) / 60) * HOUR_HEIGHT - 2, 20);
       const color = typeColors[task.type] || '#aaa';
       colHtml += `<div onclick="event.stopPropagation();openEditPlanningTaskModal(${task.id})" style="position:absolute;top:${top}px;left:3px;right:2px;height:${height}px;background:${color}22;border-left:3px solid ${color};border-radius:0 6px 6px 0;padding:4px 6px;overflow:hidden;cursor:pointer;z-index:10;">
-        <div style="font-size:11px;font-weight:700;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${task.description}</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${task.description}</div>
       </div>`;
     });
 
@@ -3030,42 +2995,42 @@ function openEditPlanningTaskModal(taskId){
   document.editTaskDateEnd = task.dateEnd || taskDate;
   document.editTaskAllDay = task.allDay || false;
 
-  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;background:white;flex-shrink:0;min-height:56px;">
-      <button onclick="closeEditPlanningModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
-      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Modifier la tâche</span>
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
+      <button onclick="closeEditPlanningModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
+      <span style="font-size:17px;font-weight:600;color:var(--text);">Modifier la tâche</span>
       <button onclick="saveEditPlanningTask(${taskId})" style="background:none;border:none;cursor:pointer;padding:4px;">
         <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div>
       </button>
     </div>
-    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
-      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;padding:0 16px;">
-        <input type="text" id="edit-task-title" value="${task.description || ''}" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;"/>
+    <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
+      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;padding:0 16px;">
+        <input type="text" id="edit-task-title" value="${task.description || ''}" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
       </div>
-      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openEditBottomSheet('type')">
-          <span style="font-size:16px;color:#1a1a1a;">Type</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="edit-type-dot" style="width:10px;height:10px;border-radius:50%;background:${dotColor};"></span><span id="edit-type-label" style="font-size:16px;color:#1a1a1a;">${typeLabel}</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
+          <span style="font-size:16px;color:var(--text);">Type</span>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="edit-type-dot" style="width:10px;height:10px;border-radius:50%;background:${dotColor};"></span><span id="edit-type-label" style="font-size:16px;color:var(--text);">${typeLabel}</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
         </div>
-        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openEditBottomSheet('vehicle')">
-          <span style="font-size:16px;color:#1a1a1a;">Véhicule</span>
+          <span style="font-size:16px;color:var(--text);">Véhicule</span>
           <div style="display:flex;align-items:center;gap:8px;"><span id="edit-vehicle-label" style="font-size:16px;color:${task.vehicleId ? '#1a1a1a' : '#8e8e93'};">${vehicleLabel}</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
         </div>
       </div>
-      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:#1a1a1a;">Début</span>
+          <span style="font-size:16px;color:var(--text);">Début</span>
           <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:16px;color:#1a1a1a;">${dateFormatted(taskDate)}</span>
-            <input type="time" id="edit-start-time" value="${taskTimeStart}" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;"/>
+            <span style="font-size:16px;color:var(--text);">${dateFormatted(taskDate)}</span>
+            <input type="time" id="edit-start-time" value="${taskTimeStart}" style="border:none;outline:none;font-size:16px;color:var(--text2);background:transparent;"/>
           </div>
         </div>
-        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:#1a1a1a;">Fin</span>
+          <span style="font-size:16px;color:var(--text);">Fin</span>
           <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:16px;color:#1a1a1a;">${dateFormatted(task.dateEnd || taskDate)}</span>
-            <input type="time" id="edit-end-time" value="${taskTimeEnd}" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;"/>
+            <span style="font-size:16px;color:var(--text);">${dateFormatted(task.dateEnd || taskDate)}</span>
+            <input type="time" id="edit-end-time" value="${taskTimeEnd}" style="border:none;outline:none;font-size:16px;color:var(--text2);background:transparent;"/>
           </div>
         </div>
       </div>
@@ -3079,15 +3044,15 @@ function openEditPlanningTaskModal(taskId){
   if (window.innerWidth >= 900) {
     let innerHtmlDesktop = innerHtml.replace(/<button [^>]*onclick="saveEditPlanningTask\([\s\S]*?<\/button>/, `<button onclick="saveEditPlanningTask(${taskId})" style="background:none;border:none;cursor:pointer;padding:4px;"><div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div></button>`);
     innerHtmlDesktop = innerHtmlDesktop.replace(/<div style="display:flex;justify-content:center;margin-top:8px;">[\s\S]*?<\/div>/, '<div style="display:none;"></div>');
-    innerHtmlDesktop += `<div style="padding:16px 20px;border-top:1px solid #e5e5e5;flex-shrink:0;display:flex;justify-content:center;"><button onclick="confirmDeleteEditTask(${taskId})" style="background:none;border:none;cursor:pointer;font-size:15px;font-weight:500;color:#FF3B30;padding:10px 16px;">Supprimer</button></div>`;
+    innerHtmlDesktop += `<div style="padding:16px 20px;border-top:1px solid var(--border);flex-shrink:0;display:flex;justify-content:center;"><button onclick="confirmDeleteEditTask(${taskId})" style="background:none;border:none;cursor:pointer;font-size:15px;font-weight:500;color:#FF3B30;padding:10px 16px;">Supprimer</button></div>`;
     const bd = document.createElement('div');
     bd.id = 'edit-planning-backdrop';
     bd.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9997;';
     bd.addEventListener('click', closeEditPlanningModal);
     document.body.appendChild(bd);
-    document.body.insertAdjacentHTML('beforeend', `<div id="edit-task-modal-planning" style="background:white;z-index:9999;display:flex;flex-direction:column;">${innerHtmlDesktop}</div>`);
+    document.body.insertAdjacentHTML('beforeend', `<div id="edit-task-modal-planning" style="background:var(--surface);z-index:9999;display:flex;flex-direction:column;">${innerHtmlDesktop}</div>`);
   } else {
-    document.body.insertAdjacentHTML('beforeend', `<div id="edit-task-modal-planning" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;">${innerHtml}</div>`);
+    document.body.insertAdjacentHTML('beforeend', `<div id="edit-task-modal-planning" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:flex;flex-direction:column;">${innerHtml}</div>`);
   }
 }
 
@@ -3098,13 +3063,13 @@ function openEditBottomSheet(key){
   if(!config) return;
   const options = typeof config.options === 'function' ? config.options() : config.options;
   const optionsHtml = options.map((opt, i) => `
-    <div data-key="${key}" data-idx="${i}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
+    <div data-key="${key}" data-idx="${i}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);" onmouseover="this.style.background='#f2f2f7'" onmouseout="this.style.background='white'">
       ${opt.dot ? '<span style="width:12px;height:12px;border-radius:50%;background:' + opt.dot + ';flex-shrink:0;"></span>' : ''}
-      <span style="font-size:16px;color:#1a1a1a;">${opt.label}</span>
+      <span style="font-size:16px;color:var(--text);">${opt.label}</span>
     </div>`).join('');
-  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;">
-      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">${config.title}</span>
-      <button onclick="closeEditBottomSheet()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button>
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
+      <span style="font-size:17px;font-weight:600;color:var(--text);">${config.title}</span>
+      <button onclick="closeEditBottomSheet()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button>
     </div>${optionsHtml}`;
   createDialogOrSheet('edit-bottom-sheet', innerHtml, {desktopWidth:'420px'});
 }
@@ -3112,10 +3077,10 @@ function openEditBottomSheet(key){
 
 function confirmDeleteEditTask(taskId){
   const innerHtml = `<div style="padding:24px 20px 32px 20px;">
-    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer cette tâche ?</div>
-    <div style="color:#8e8e93;font-size:15px;margin-bottom:24px;">Cette action ne peut pas être annulée.</div>
+    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Supprimer cette tâche ?</div>
+    <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Cette action ne peut pas être annulée.</div>
     <button onclick="DataLayer.deletePlanningTask(${taskId});vehicles.forEach(v=>{const i=v.tasks.findIndex(t=>t.id===${taskId});if(i!==-1)v.tasks.splice(i,1);});save();showToast('✓ Tâche supprimée');closeEditPlanningModal();renderPlanning();if(currentDetailVehicleId)renderDetailTasks(currentDetailVehicleId,currentDetailTaskFilter);this.closest('[style*=fixed]').remove();" style="width:100%;padding:14px;background:#FF1744;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Supprimer</button>
-    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
+    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
   </div>`;
   createDialogOrSheet('confirm-delete-edit-task', innerHtml, {desktopWidth:'420px'});
 }
@@ -3147,32 +3112,32 @@ function openEditTaskModal(vehicleId, taskId){
     const currentType = task.type || 'preparation';
     const TASK_TYPE_MAP = {preparation:{label:'Préparation',dot:'#00FF88'}, sav:{label:'SAV',dot:'#FF1744'}, rappel:{label:'Rappel',dot:'#CCFF00'}, rdv:{label:'RDV',dot:'#00D4FF'}, appel:{label:'Appel',dot:'#7B68EE'}};
     document.editSimpleTaskType = currentType;
-    const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;flex-shrink:0;min-height:56px;">
-      <button onclick="document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
-      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Modifier la tâche</span>
+    const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;min-height:56px;">
+      <button onclick="document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
+      <span style="font-size:17px;font-weight:600;color:var(--text);">Modifier la tâche</span>
       <button onclick="updateSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;padding:4px;">
         <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div>
       </button>
     </div>
-    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px;">
-      <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
-        <input type="text" id="etask-title" value="${task.cat || task.desc || ''}" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;"/>
+    <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px;">
+      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
+        <input type="text" id="etask-title" value="${task.cat || task.desc || ''}" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
       </div>
-      <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openSimpleTaskTypeSheet('edit')">
-          <span style="font-size:16px;color:#1a1a1a;">Type</span>
+          <span style="font-size:16px;color:var(--text);">Type</span>
           <div style="display:flex;align-items:center;gap:8px;">
             <span id="etask-type-dot" style="width:10px;height:10px;border-radius:50%;background:${TASK_TYPE_MAP[currentType]?.dot||'#00FF88'};flex-shrink:0;"></span>
-            <span id="etask-type-label" style="font-size:16px;color:#1a1a1a;">${TASK_TYPE_MAP[currentType]?.label||'Préparation'}</span>
+            <span id="etask-type-label" style="font-size:16px;color:var(--text);">${TASK_TYPE_MAP[currentType]?.label||'Préparation'}</span>
             <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
           </div>
         </div>
-        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:#1a1a1a;">Coût</span>
+          <span style="font-size:16px;color:var(--text);">Coût</span>
           <div style="display:flex;align-items:center;gap:4px;">
-            <input type="number" id="etask-cost" value="${task.cost || ''}" placeholder="0" style="border:none;outline:none;font-size:16px;color:#1a1a1a;text-align:right;width:100px;background:transparent;"/>
-            <span style="font-size:16px;color:#8e8e93;">€</span>
+            <input type="number" id="etask-cost" value="${task.cost || ''}" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);text-align:right;width:100px;background:transparent;"/>
+            <span style="font-size:16px;color:var(--text2);">€</span>
           </div>
         </div>
       </div>
@@ -3181,17 +3146,17 @@ function openEditTaskModal(vehicleId, taskId){
       </div>
     </div>`;
     if (window.innerWidth >= 900) {
-      let innerHtmlDesktop = innerHtml.replace('background:#f2f2f7', 'background:white');
+      let innerHtmlDesktop = innerHtml.replace('background:var(--surface-2)', 'background:var(--surface)');
       innerHtmlDesktop = innerHtmlDesktop.replace(/<button [^>]*onclick="updateSimpleTask\([\s\S]*?<\/button>/, `<button onclick="updateSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;padding:4px;"><div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div></button>`);
       innerHtmlDesktop = innerHtmlDesktop.replace(/<div style="padding:20px 16px 4px;text-align:center;">[\s\S]*?<\/div>/, '<div style="display:none;"></div>');
-      innerHtmlDesktop += `<div style="padding:16px 20px;border-top:1px solid #e5e5e5;flex-shrink:0;display:flex;justify-content:center;"><button onclick="deleteSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;font-size:15px;font-weight:500;color:#FF3B30;padding:10px 16px;">Supprimer</button></div>`;
+      innerHtmlDesktop += `<div style="padding:16px 20px;border-top:1px solid var(--border);flex-shrink:0;display:flex;justify-content:center;"><button onclick="deleteSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;font-size:15px;font-weight:500;color:#FF3B30;padding:10px 16px;">Supprimer</button></div>`;
       document.getElementById('edit-simple-task-modal-overlay')?.remove();
       document.body.insertAdjacentHTML('beforeend',
         `<div id="edit-simple-task-modal-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.18);z-index:10009;" onclick="document.getElementById('edit-simple-task-modal')?.remove();this.remove()"></div>` +
-        `<div id="edit-simple-task-modal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,calc(100vw - 320px));max-height:calc(100vh - 80px);border-radius:20px;background:white;box-shadow:0 24px 80px rgba(0,0,0,0.18);z-index:10010;display:flex;flex-direction:column;overflow:hidden;">${innerHtmlDesktop}</div>`
+        `<div id="edit-simple-task-modal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,calc(100vw - 320px));max-height:calc(100vh - 80px);border-radius:20px;background:var(--surface);box-shadow:0 24px 80px rgba(0,0,0,0.18);z-index:10010;display:flex;flex-direction:column;overflow:hidden;">${innerHtmlDesktop}</div>`
       );
     } else {
-      document.body.insertAdjacentHTML('beforeend', `<div id="edit-simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">${innerHtml}</div>`);
+      document.body.insertAdjacentHTML('beforeend', `<div id="edit-simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">${innerHtml}</div>`);
     }
     return;
   }
@@ -3211,13 +3176,13 @@ function openSimpleTaskTypeSheet(mode){
   const existing = document.getElementById('simple-type-sheet');
   if(existing) existing.remove();
   const optionsHtml = TYPES.map(t => `
-    <div onclick="selectSimpleTaskType('${mode}','${t.val}','${t.label}','${t.dot}')" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;" onmouseover="this.style.background='#f2f7f7'" onmouseout="this.style.background='white'">
+    <div onclick="selectSimpleTaskType('${mode}','${t.val}','${t.label}','${t.dot}')" style="display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);" onmouseover="this.style.background='#f2f7f7'" onmouseout="this.style.background='white'">
       <span style="width:12px;height:12px;border-radius:50%;background:${t.dot};flex-shrink:0;"></span>
-      <span style="font-size:16px;color:#1a1a1a;">${t.label}</span>
+      <span style="font-size:16px;color:var(--text);">${t.label}</span>
     </div>`).join('');
-  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;">
-      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Type de tâche</span>
-      <button onclick="document.getElementById('simple-type-sheet')?.remove()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button>
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
+      <span style="font-size:17px;font-weight:600;color:var(--text);">Type de tâche</span>
+      <button onclick="document.getElementById('simple-type-sheet')?.remove()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button>
     </div>${optionsHtml}`;
   createDialogOrSheet('simple-type-sheet', innerHtml, {desktopWidth:'420px'});
 }
@@ -3261,11 +3226,11 @@ function updateSimpleTask(vehicleId, taskId){
 }
 
 function deleteSimpleTask(vehicleId, taskId){
-  const html = `<div style="background:white;width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
-    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer cette tâche ?</div>
-    <div style="color:#8e8e93;font-size:15px;margin-bottom:24px;">Cette action ne peut pas être annulée.</div>
+  const html = `<div style="background:var(--surface);width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
+    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Supprimer cette tâche ?</div>
+    <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Cette action ne peut pas être annulée.</div>
     <button onclick="DataLayer.deleteTask(${vehicleId},${taskId});save();document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal')?.remove();renderDetailTasks(${vehicleId},'all');showToast('✓ Tâche supprimée');document.getElementById('delete-simple-task-sheet')?.remove();" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Supprimer</button>
-    <button onclick="document.getElementById('delete-simple-task-sheet')?.remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
+    <button onclick="document.getElementById('delete-simple-task-sheet')?.remove()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
   </div>`;
   createDialogOrSheet('delete-simple-task-sheet', html, {desktopWidth:'420px'});
 }
@@ -3301,11 +3266,11 @@ function deleteTask(vehicleId, taskId, filter){
 }
 
 function deleteVehicle(vehicleId){
-  const innerHtml = `<div style="background:white;border-radius:24px;padding:24px;max-width:460px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.14);">
-    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:#1a1a1a;">Supprimer ce véhicule ?</div>
-    <div style="color:#8e8e93;font-size:15px;margin-bottom:24px;">Toutes les tâches associées seront supprimées.</div>
+  const innerHtml = `<div style="background:var(--surface);border-radius:24px;padding:24px;max-width:460px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.14);">
+    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Supprimer ce véhicule ?</div>
+    <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Toutes les tâches associées seront supprimées.</div>
     <button onclick="DataLayer.deleteVehicle(${vehicleId});showToast('✓ Véhicule supprimé');if(currentDetailVehicleId===${vehicleId})switchView('parc');renderParc();this.closest('[style*=fixed]').remove();" style="width:100%;padding:14px;background:#FF1744;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Supprimer</button>
-    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:#f2f2f7;color:#1a1a1a;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
+    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
   </div>`;
   createDialogOrSheet('confirm-delete-vehicle-sheet', innerHtml, {desktopWidth:'480px'});
 }
@@ -3419,70 +3384,70 @@ function openNewTaskModalOutlook(dateStr, timeStr){
     style.textContent = '@keyframes slideUpFull{from{transform:translateY(100%);opacity:0;}to{transform:translateY(0);opacity:1;}}@keyframes slideDownFull{from{transform:translateY(0);opacity:1;}to{transform:translateY(100%);opacity:0;}}';
     document.head.appendChild(style);
   }
-  const html = `<div id="new-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;background:white;flex-shrink:0;min-height:56px;">
-      <button onclick="closeNewTaskModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:#8e8e93;">✕</button>
-      <span style="font-size:17px;font-weight:600;color:#1a1a1a;">Nouvel événement</span>
+  const html = `<div id="new-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
+      <button onclick="closeNewTaskModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
+      <span style="font-size:17px;font-weight:600;color:var(--text);">Nouvel événement</span>
       <button onclick="saveNewTask()" style="background:none;border:none;cursor:pointer;padding:4px;"><div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div></button>
     </div>
-    <div style="flex:1;overflow-y:auto;background:#f2f2f7;padding:24px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
-      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;padding:0 16px;">
-        <input type="text" id="ntask-title" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:#1a1a1a;padding:15px 0;background:transparent;"/>
+    <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
+      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;padding:0 16px;">
+        <input type="text" id="ntask-title" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
       </div>
-      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('type')">
-          <span style="font-size:16px;color:#1a1a1a;">Type</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#CCFF00;"></span><span id="ntask-type-label" style="font-size:16px;color:#8e8e93;">Rappel</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
+          <span style="font-size:16px;color:var(--text);">Type</span>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#CCFF00;"></span><span id="ntask-type-label" style="font-size:16px;color:var(--text2);">Rappel</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
         </div>
-        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('vehicle')">
-          <span style="font-size:16px;color:#1a1a1a;">Véhicule</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-vehicle-label" style="font-size:16px;color:#8e8e93;">Aucun</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
+          <span style="font-size:16px;color:var(--text);">Véhicule</span>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-vehicle-label" style="font-size:16px;color:var(--text2);">Aucun</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
         </div>
       </div>
-      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:#1a1a1a;flex-shrink:0;">Début</span>
+          <span style="font-size:16px;color:var(--text);flex-shrink:0;">Début</span>
           <div style="display:flex;align-items:center;gap:12px;">
-            <span id="ntask-start-date-label" onclick="toggleDatePickerNew('start')" style="font-size:16px;color:#8e8e93;cursor:pointer;">${new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'})}</span>
-            <input type="time" id="ntask-start-time" value="${timeStr}" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;" onchange="document.newTaskTime=this.value"/>
+            <span id="ntask-start-date-label" onclick="toggleDatePickerNew('start')" style="font-size:16px;color:var(--text2);cursor:pointer;">${new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'})}</span>
+            <input type="time" id="ntask-start-time" value="${timeStr}" style="border:none;outline:none;font-size:16px;color:var(--text2);background:transparent;" onchange="document.newTaskTime=this.value"/>
           </div>
         </div>
-        <div id="ntask-date-picker-start" style="display:none;padding:0 16px 16px 16px;border-top:1px solid #e5e5e5;">
+        <div id="ntask-date-picker-start" style="display:none;padding:0 16px 16px 16px;border-top:1px solid var(--border);">
           <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
-            <button onclick="shiftMonthNew(-1,'start')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">‹</button>
-            <span id="ntask-cal-month-start" style="font-weight:600;font-size:15px;color:#1a1a1a;"></span>
-            <button onclick="shiftMonthNew(1,'start')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">›</button>
+            <button onclick="shiftMonthNew(-1,'start')" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px 10px;">‹</button>
+            <span id="ntask-cal-month-start" style="font-weight:600;font-size:15px;color:var(--text);"></span>
+            <button onclick="shiftMonthNew(1,'start')" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px 10px;">›</button>
           </div>
           <div id="ntask-cal-grid-start" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
         </div>
-        <div style="height:1px;background:#e5e5e5;margin-left:16px;"></div>
+        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:#1a1a1a;flex-shrink:0;">Fin</span>
+          <span style="font-size:16px;color:var(--text);flex-shrink:0;">Fin</span>
           <div style="display:flex;align-items:center;gap:12px;">
-            <span id="ntask-end-date-label" onclick="toggleDatePickerNew('end')" style="font-size:16px;color:#8e8e93;cursor:pointer;">${new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'})}</span>
-            <input type="time" id="ntask-end-time" value="${(() => { const [h,m] = timeStr.split(':'); return String((parseInt(h)+1)%24).padStart(2,'0')+':'+m; })()}" style="border:none;outline:none;font-size:16px;color:#8e8e93;background:transparent;" onchange="document.newTaskTimeEnd=this.value"/>
+            <span id="ntask-end-date-label" onclick="toggleDatePickerNew('end')" style="font-size:16px;color:var(--text2);cursor:pointer;">${new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'})}</span>
+            <input type="time" id="ntask-end-time" value="${(() => { const [h,m] = timeStr.split(':'); return String((parseInt(h)+1)%24).padStart(2,'0')+':'+m; })()}" style="border:none;outline:none;font-size:16px;color:var(--text2);background:transparent;" onchange="document.newTaskTimeEnd=this.value"/>
           </div>
         </div>
-        <div id="ntask-date-picker-end" style="display:none;padding:0 16px 16px 16px;border-top:1px solid #e5e5e5;">
+        <div id="ntask-date-picker-end" style="display:none;padding:0 16px 16px 16px;border-top:1px solid var(--border);">
           <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
-            <button onclick="shiftMonthNew(-1,'end')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">‹</button>
-            <span id="ntask-cal-month-end" style="font-weight:600;font-size:15px;color:#1a1a1a;"></span>
-            <button onclick="shiftMonthNew(1,'end')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a1a1a;padding:4px 10px;">›</button>
+            <button onclick="shiftMonthNew(-1,'end')" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px 10px;">‹</button>
+            <span id="ntask-cal-month-end" style="font-weight:600;font-size:15px;color:var(--text);"></span>
+            <button onclick="shiftMonthNew(1,'end')" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px 10px;">›</button>
           </div>
           <div id="ntask-cal-grid-end" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
         </div>
       </div>
-      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('notif')">
-          <span style="font-size:16px;color:#1a1a1a;">Notification</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-notif-label" style="font-size:16px;color:#8e8e93;">Aucune</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
+          <span style="font-size:16px;color:var(--text);">Notification</span>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-notif-label" style="font-size:16px;color:var(--text2);">Aucune</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
         </div>
       </div>
-      <div style="background:white;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
+      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('repeat')">
-          <span style="font-size:16px;color:#1a1a1a;">Répétition</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-repeat-label" style="font-size:16px;color:#8e8e93;">Jamais</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
+          <span style="font-size:16px;color:var(--text);">Répétition</span>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-repeat-label" style="font-size:16px;color:var(--text2);">Jamais</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
         </div>
       </div>
     </div>
@@ -3496,7 +3461,7 @@ function openNewTaskModalOutlook(dateStr, timeStr){
     const modal = document.getElementById('new-task-modal');
     if(modal){
       document.body.insertBefore(bd, modal);
-      modal.style.cssText = 'background:white;z-index:9999;display:flex;flex-direction:column;';
+      modal.style.cssText = 'background:var(--surface);z-index:9999;display:flex;flex-direction:column;';
       const checkBtn = modal.querySelector('button[onclick="saveNewTask()"]');
       if(checkBtn){
         checkBtn.innerHTML = `<div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div>`;
@@ -3526,7 +3491,7 @@ function renderCalNew(target){
   if(!monthEl || !grid) return;
   monthEl.textContent = monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1);
   const dayNames = ['L','M','M','J','V','S','D'];
-  let html = dayNames.map(d => `<div style="font-size:11px;font-weight:600;color:#8e8e93;padding:4px 0;">${d}</div>`).join('');
+  let html = dayNames.map(d => `<div style="font-size:11px;font-weight:600;color:var(--text2);padding:4px 0;">${d}</div>`).join('');
   let startDow = firstDay.getDay(); startDow = startDow === 0 ? 6 : startDow - 1;
   for(let i = 0; i < startDow; i++) html += '<div></div>';
   const selectedDate = target === 'start' ? document.newTaskDate : document.newTaskDateEnd;
@@ -3554,7 +3519,7 @@ function openBottomSheet(key){
   const config = BOTTOM_SHEET_DATA[key];
   if(!config) return;
   const options = typeof config.options === 'function' ? config.options() : config.options;
-  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5e5;"><span style="font-size:17px;font-weight:600;color:#1a1a1a;">${config.title}</span><button onclick="closeBottomSheet()" style="background:none;border:none;font-size:22px;color:#8e8e93;cursor:pointer;">✕</button></div><div id="ntask-bottom-sheet-options"></div>`;
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);"><span style="font-size:17px;font-weight:600;color:var(--text);">${config.title}</span><button onclick="closeBottomSheet()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button></div><div id="ntask-bottom-sheet-options"></div>`;
   const sheet = createDialogOrSheet('ntask-bottom-sheet', innerHtml, {desktopWidth:'420px'});
   const container = sheet.querySelector('#ntask-bottom-sheet-options');
   if(!container) return;
@@ -3562,14 +3527,14 @@ function openBottomSheet(key){
     const item = document.createElement('div');
     item.dataset.key = key;
     item.dataset.idx = String(i);
-    item.style.cssText = 'display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #f2f2f7;min-height:52px;background:white;';
+    item.style.cssText = 'display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);';
     if(opt.dot){
       const dot = document.createElement('span');
       dot.style.cssText = 'width:12px;height:12px;border-radius:50%;background:' + opt.dot + ';flex-shrink:0;';
       item.appendChild(dot);
     }
     const label = document.createElement('span');
-    label.style.cssText = 'font-size:16px;color:#1a1a1a;';
+    label.style.cssText = 'font-size:16px;color:var(--text);';
     label.textContent = opt.label;
     item.appendChild(label);
     item.addEventListener('mouseover', () => item.style.background = '#f2f2f7');
@@ -3645,30 +3610,30 @@ function showLoginScreen(){
 
       <!-- Tabs iOS segmented -->
       <div style="display:flex;background:rgba(118,118,128,0.12);border-radius:10px;padding:2px;margin-bottom:28px;">
-        <button onclick="authTab('login')" id="tab-login" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:white;color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,0.12);transition:all 0.2s;">Connexion</button>
-        <button onclick="authTab('register')" id="tab-register" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:transparent;color:#8e8e93;transition:all 0.2s;">Créer un compte</button>
+        <button onclick="authTab('login')" id="tab-login" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.12);transition:all 0.2s;">Connexion</button>
+        <button onclick="authTab('register')" id="tab-register" style="flex:1;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:transparent;color:var(--text2);transition:all 0.2s;">Créer un compte</button>
       </div>
 
       <!-- Champs -->
-      <div style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:12px;">
+      <div style="background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:12px;">
         
         <div id="field-name" style="display:none;">
           <div style="padding:0 16px;">
-            <input id="inp-name" type="text" placeholder="Nom complet" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;"/>
+            <input id="inp-name" type="text" placeholder="Nom complet" style="width:100%;border:none;outline:none;font-size:16px;color:var(--text);padding:16px 0;background:transparent;"/>
           </div>
-          <div style="height:0.5px;background:#e5e5ea;margin-left:16px;"></div>
+          <div style="height:0.5px;background:var(--surface-3);margin-left:16px;"></div>
           <div style="padding:0 16px;">
-            <input id="inp-garage" type="text" placeholder="Nom de la société" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;"/>
+            <input id="inp-garage" type="text" placeholder="Nom de la société" style="width:100%;border:none;outline:none;font-size:16px;color:var(--text);padding:16px 0;background:transparent;"/>
           </div>
-          <div style="height:0.5px;background:#e5e5ea;margin-left:16px;"></div>
+          <div style="height:0.5px;background:var(--surface-3);margin-left:16px;"></div>
         </div>
 
         <div style="padding:0 16px;">
-          <input id="inp-email" type="email" placeholder="Email" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;" onkeydown="if(event.key==='Enter')doAuth()"/>
+          <input id="inp-email" type="email" placeholder="Email" style="width:100%;border:none;outline:none;font-size:16px;color:var(--text);padding:16px 0;background:transparent;" onkeydown="if(event.key==='Enter')doAuth()"/>
         </div>
-        <div style="height:0.5px;background:#e5e5ea;margin-left:16px;"></div>
+        <div style="height:0.5px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="padding:0 16px;">
-          <input id="inp-pwd" type="password" placeholder="Mot de passe" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;" onkeydown="if(event.key==='Enter')doAuth()"/>
+          <input id="inp-pwd" type="password" placeholder="Mot de passe" style="width:100%;border:none;outline:none;font-size:16px;color:var(--text);padding:16px 0;background:transparent;" onkeydown="if(event.key==='Enter')doAuth()"/>
         </div>
       </div>
 
@@ -3678,7 +3643,7 @@ function showLoginScreen(){
       <!-- Bouton -->
       <button onclick="doAuth()" id="auth-btn" style="
         width:100%;padding:14px;
-        background:white;color:#1a1a1a;
+        background:var(--surface);color:var(--text);
         border:none;border-radius:12px;
         font-size:15px;font-weight:500;
         cursor:pointer;
@@ -3687,7 +3652,7 @@ function showLoginScreen(){
         display:flex;align-items:center;justify-content:center;
       " onmousedown="this.style.opacity='0.7'" onmouseup="this.style.opacity='1'" onmouseout="this.style.opacity='1'">Se connecter</button>
 
-      <button id="forgot-pwd-link" onclick="forgotPassword()" style="background:none;border:none;cursor:pointer;color:#8e8e93;font-size:13px;margin-top:14px;padding:0;display:block;width:100%;text-align:center;">Mot de passe oublié ?</button>
+      <button id="forgot-pwd-link" onclick="forgotPassword()" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:13px;margin-top:14px;padding:0;display:block;width:100%;text-align:center;">Mot de passe oublié ?</button>
 
     </div></div>`;
   document.body.appendChild(loginDiv);
@@ -3772,9 +3737,9 @@ function showResetPasswordScreen(){
   div.id = 'reset-screen';
   div.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:99999;';
   div.innerHTML = `
-    <div style="width:100%;max-width:420px;background:white;border-radius:24px;box-shadow:0 24px 60px rgba(0,0,0,0.08);padding:32px;display:flex;flex-direction:column;align-items:center;">
+    <div style="width:100%;max-width:420px;background:var(--surface);border-radius:24px;box-shadow:0 24px 60px rgba(0,0,0,0.08);padding:32px;display:flex;flex-direction:column;align-items:center;">
       <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:36px;">
-        <div style="width:88px;height:88px;background:#1a1a1a;border-radius:24px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 12px 32px rgba(0,0,0,0.18);">
+        <div style="width:88px;height:88px;background:var(--navy);border-radius:24px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 12px 32px rgba(0,0,0,0.18);">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/>
             <path d="M5 13l3-5h8l3 5"/>
@@ -3782,21 +3747,21 @@ function showResetPasswordScreen(){
             <circle cx="16.5" cy="17" r="1.5" fill="black"/>
           </svg>
         </div>
-        <div style="font-size:34px;font-weight:700;color:#1a1a1a;letter-spacing:-1px;line-height:1;">Trakoto</div>
-        <div style="font-size:15px;color:#8e8e93;margin-top:6px;">Nouveau mot de passe</div>
+        <div style="font-size:34px;font-weight:700;color:var(--text);letter-spacing:-1px;line-height:1;">Trakoto</div>
+        <div style="font-size:15px;color:var(--text2);margin-top:6px;">Nouveau mot de passe</div>
       </div>
       <div style="width:100%;max-width:360px;">
-        <div style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:12px;">
           <div style="padding:0 16px;">
-            <input id="inp-newpwd" type="password" placeholder="Nouveau mot de passe" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;"/>
+            <input id="inp-newpwd" type="password" placeholder="Nouveau mot de passe" style="width:100%;border:none;outline:none;font-size:16px;color:var(--text);padding:16px 0;background:transparent;"/>
           </div>
-          <div style="height:0.5px;background:#e5e5ea;margin-left:16px;"></div>
+          <div style="height:0.5px;background:var(--surface-3);margin-left:16px;"></div>
           <div style="padding:0 16px;">
-            <input id="inp-confirmpwd" type="password" placeholder="Confirmer le mot de passe" style="width:100%;border:none;outline:none;font-size:16px;color:#1a1a1a;padding:16px 0;background:transparent;" onkeydown="if(event.key==='Enter')doResetPassword()"/>
+            <input id="inp-confirmpwd" type="password" placeholder="Confirmer le mot de passe" style="width:100%;border:none;outline:none;font-size:16px;color:var(--text);padding:16px 0;background:transparent;" onkeydown="if(event.key==='Enter')doResetPassword()"/>
           </div>
         </div>
         <div id="reset-msg" style="min-height:20px;font-size:13px;color:#FF3B30;margin-bottom:16px;text-align:center;padding:0 4px;"></div>
-        <button onclick="doResetPassword()" id="reset-btn" style="width:100%;padding:14px;background:white;color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);transition:opacity 0.15s;" onmousedown="this.style.opacity='0.7'" onmouseup="this.style.opacity='1'" onmouseout="this.style.opacity='1'">Enregistrer</button>
+        <button onclick="doResetPassword()" id="reset-btn" style="width:100%;padding:14px;background:var(--surface);color:var(--text);border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);transition:opacity 0.15s;" onmousedown="this.style.opacity='0.7'" onmouseup="this.style.opacity='1'" onmouseout="this.style.opacity='1'">Enregistrer</button>
       </div>
     </div>`;
   document.body.appendChild(div);
