@@ -110,10 +110,13 @@
       color: var(--accent);
       box-shadow: var(--shadow-sm);
     }
-    /* Cartes : en dark, la bordure remplace l'ombre (Phase 2) */
+    /* Cartes : en dark, la bordure remplace l'ombre (Phase 2 step 3).
+       Les ombres deviennent none en dark → toute surface claire prend
+       une bordure subtile pour rester lisible sur fond noir. */
     [data-theme="dark"] .vehicle-card,
     [data-theme="dark"] .task-group,
-    [data-theme="dark"] .modal-box { border: 1px solid var(--border) !important; }
+    [data-theme="dark"] .modal-box,
+    [data-theme="dark"] [style*="background:var(--surface)"] { border: 1px solid var(--border); }
     .app-container {
       max-width: 1200px;
       margin: 0 auto;
