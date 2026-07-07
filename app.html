@@ -11,28 +11,144 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ============================================================
+       DESIGN TOKENS — Trakoto
+       Light = défaut. Dark via [data-theme="dark"].
+       Les anciens noms (--bg, --surface, --text, --text2, --border,
+       --navy, --accent, --green, --red, --orange) sont conservés et
+       deviennent thémables : tout ce qui les utilise suit le thème.
+       ============================================================ */
     :root {
-      --navy: #1a1a1a;
-      --blue: #2d2d2d;
-      --orange: #FF6B35;
-      --green: #00D084;
-      --red: #FF3E41;
-      --bg: #f0f2f5;
-      --surface: #ffffff;
-      --border: #e8eaed;
-      --text: #1a1a1a;
-      --text2: #4a4a4a;
-      --accent: #00B8E6;
+      /* Surfaces */
+      --bg: #F5F6F8;            /* fond de page */
+      --surface: #FFFFFF;       /* cartes */
+      --surface-2: #F2F3F5;     /* surfaces secondaires / inputs */
+      --surface-3: #E9EBEE;     /* survol subtil */
+      /* Bordures */
+      --border: #E5E7EB;
+      --border-strong: #D1D5DB;
+      /* Texte */
+      --text: #111827;
+      --text2: #6B7280;         /* secondaire */
+      --text3: #9CA3AF;         /* hints */
+      /* Accent (bleu profond) */
+      --accent: #1E40AF;
+      --accent-hover: #1E3A8A;
+      --accent-contrast: #FFFFFF;
+      --accent-soft: rgba(30,64,175,0.08);
+      /* Boutons primaires (ex-#1a1a1a) → deviennent l'accent */
+      --navy: #1E40AF;
+      --navy-hover: #1E3A8A;
+      /* Sémantique */
+      --success: #16A34A;  --success-soft: rgba(22,163,74,0.10);
+      --warning: #EA580C;  --warning-soft: rgba(234,88,12,0.10);
+      --danger:  #DC2626;  --danger-soft:  rgba(220,38,38,0.10);
+      --neutral: #6B7280;  --neutral-soft: rgba(107,114,128,0.10);
+      /* Alias legacy pour compat */
+      --green: var(--success);
+      --red: var(--danger);
+      --orange: var(--warning);
+      --blue: var(--accent);
+      /* Ombres (désactivées en dark, remplacées par bordures) */
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
+      /* Rayons */
+      --r-sm: 10px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px;
+      /* Typographie */
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
     }
+    [data-theme="dark"] {
+      --bg: #0B0D11;
+      --surface: #161A21;
+      --surface-2: #1F242D;
+      --surface-3: #262C36;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.16);
+      --text: #F3F4F6;
+      --text2: #9CA3AF;
+      --text3: #6B7280;
+      --accent: #3B82F6;        /* éclairci pour ressortir sur fond noir */
+      --accent-hover: #60A5FA;
+      --accent-contrast: #FFFFFF;
+      --accent-soft: rgba(59,130,246,0.16);
+      --navy: #3B82F6;
+      --navy-hover: #60A5FA;
+      --success: #22C55E;  --success-soft: rgba(34,197,94,0.16);
+      --warning: #F97316;  --warning-soft: rgba(249,115,22,0.16);
+      --danger:  #EF4444;  --danger-soft:  rgba(239,68,68,0.16);
+      --neutral: #9CA3AF;  --neutral-soft: rgba(156,163,175,0.16);
+      --shadow-sm: none;
+      --shadow-md: none;
+    }
+    html { color-scheme: light; }
+    [data-theme="dark"] { color-scheme: dark; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
+      font-family: var(--font);
+      background-color: var(--bg);
       color: var(--text);
-      line-height: 1.6;
-      font-size: 15px;
+      line-height: 1.55;
+      font-size: 14px;
       -webkit-tap-highlight-color: transparent;
       -webkit-touch-callout: none;
+      transition: background 0.2s ease, color 0.2s ease;
     }
+    /* Sélecteur de thème segmenté (Compte > Apparence) */
+    .theme-seg-btn {
+      border: none;
+      background: transparent;
+      color: var(--text2);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .theme-seg-btn:hover { color: var(--text); }
+    .theme-seg-btn.active {
+      background: var(--surface);
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+    /* ============================================================
+       PONT DARK MODE (temporaire — Phase 1)
+       Remappe les couleurs inline hardcodées les plus fréquentes
+       pour que le dark soit cohérent tout de suite. Sera retiré
+       en Phase 2 quand les inline seront convertis en tokens.
+       ============================================================ */
+    [data-theme="dark"] [style*="background:white"],
+    [data-theme="dark"] [style*="background: white"],
+    [data-theme="dark"] [style*="background:#fff"],
+    [data-theme="dark"] [style*="background: #fff"],
+    [data-theme="dark"] [style*="background:#FFF"],
+    [data-theme="dark"] [style*="background:#ffffff"],
+    [data-theme="dark"] [style*="background: #ffffff"] { background-color: var(--surface) !important; border-color: var(--border) !important; }
+    [data-theme="dark"] [style*="background:#f2f2f7"],
+    [data-theme="dark"] [style*="background: #f2f2f7"],
+    [data-theme="dark"] [style*="background:#F2F2F7"],
+    [data-theme="dark"] [style*="background:#f5f5f7"],
+    [data-theme="dark"] [style*="background: #f5f5f7"],
+    [data-theme="dark"] [style*="background:#f0f2f5"],
+    [data-theme="dark"] [style*="background: #f0f2f5"],
+    [data-theme="dark"] [style*="background:#eef2f7"] { background-color: var(--surface-2) !important; }
+    [data-theme="dark"] [style*="color:#1a1a1a"],
+    [data-theme="dark"] [style*="color: #1a1a1a"],
+    [data-theme="dark"] [style*="color:#1c1c1e"],
+    [data-theme="dark"] [style*="color: #1c1c1e"],
+    [data-theme="dark"] [style*="color:#000"],
+    [data-theme="dark"] [style*="color: #000"] { color: var(--text) !important; }
+    [data-theme="dark"] [style*="color:#8e8e93"],
+    [data-theme="dark"] [style*="color: #8e8e93"],
+    [data-theme="dark"] [style*="color:#6b7280"],
+    [data-theme="dark"] [style*="color: #6b7280"],
+    [data-theme="dark"] [style*="color:#3a3a3c"],
+    [data-theme="dark"] [style*="color:#4a4a4a"] { color: var(--text2) !important; }
+    [data-theme="dark"] [style*="#e5e5ea"],
+    [data-theme="dark"] [style*="#e5e5e5"] { border-color: var(--border) !important; }
+    /* Cartes : en dark, la bordure remplace l'ombre */
+    [data-theme="dark"] .vehicle-card,
+    [data-theme="dark"] .task-group,
+    [data-theme="dark"] .modal-box { border: 1px solid var(--border) !important; }
     .app-container {
       max-width: 1200px;
       margin: 0 auto;
@@ -458,31 +574,31 @@
     .fin-red { color:#ff3b30; }
     .desktop-sidebar { display:none; }
     @media (min-width: 900px) {
-      body { background: #eef2f7; }
+      body { background-color: var(--bg); }
       .desktop-sidebar {
         display: flex !important;
         position: fixed;
         top: 0;
         left: 0;
         bottom: 0;
-        width: 64px;
-        padding: 28px 12px;
-        background: white;
-        border-right: 1px solid #f2f2f7;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        width: 60px;
+        padding: 18px 10px;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        box-shadow: none;
         z-index: 1000;
         flex-direction: column;
         overflow: hidden;
-        transition: width 0.25s ease, padding 0.25s ease;
+        transition: width 0.25s ease, padding 0.25s ease, background 0.2s ease, border-color 0.2s ease;
       }
       .desktop-sidebar:hover {
-        width: 240px;
-        padding: 28px 16px;
+        width: 220px;
+        padding: 18px 12px;
       }
       .desktop-sidebar .brand {
-        padding-bottom: 20px;
-        border-bottom: 1px solid #f2f2f7;
-        margin-bottom: 8px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 6px;
         overflow: hidden;
       }
       /* Labels cachés par défaut, visibles au hover */
@@ -530,22 +646,24 @@
       }
       .desktop-sidebar .nav-link {
         background: transparent;
-        color: #1a1a1a;
+        color: var(--text2);
         border: 1px solid transparent;
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-size: 15px;
-        font-weight: 600;
+        border-radius: 10px;
+        padding: 9px 12px;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.1px;
         cursor: pointer;
-        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        transition: background 0.18s ease, color 0.18s ease;
       }
       .desktop-sidebar .nav-link:hover {
-        background: #f2f2f7;
+        background: var(--surface-2);
+        color: var(--text);
       }
       .desktop-sidebar .nav-link.active {
-        background: #f2f2f7;
-        color: #1a1a1a;
-        border-color: #e5e5e5;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-color: transparent;
       }
       .desktop-sidebar .sidebar-footer {
         margin-top: auto;
@@ -554,19 +672,21 @@
         gap: 12px;
       }
       .desktop-sidebar .sidebar-cta {
-        padding: 14px 16px;
-        border: 1px solid #d1d1d6;
+        padding: 10px 12px;
+        border: 1px solid var(--border-strong);
         background: transparent;
-        color: #1a1a1a;
-        border-radius: 14px;
-        font-weight: 600;
+        color: var(--text);
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
       }
       .desktop-sidebar .sidebar-logout {
-        padding: 14px 16px;
+        padding: 10px 12px;
         background: transparent;
-        color: #ff3b30;
+        color: var(--text2);
         border: none;
-        font-weight: 600;
+        font-size: 13px;
+        font-weight: 500;
       }
       .desktop-only { display: block !important; }
       .desktop-card-actions { display: none !important; }
@@ -1151,17 +1271,17 @@
       /* ── Desktop: details 2-column layout (anciens sélecteurs nettoyés) ── */
       /* ── Desktop: sidebar CTA ── */
       .desktop-sidebar .sidebar-cta {
-        background: transparent !important;
-        color: #1a1a1a !important;
-        border: 1px solid #d1d1d6 !important;
+        background: var(--accent) !important;
+        color: var(--accent-contrast) !important;
+        border: 1px solid var(--accent) !important;
         box-shadow: none !important;
-        font-size: 14px !important;
+        font-size: 13px !important;
         font-weight: 500 !important;
         transition: background 0.15s !important;
       }
-      .desktop-sidebar .sidebar-cta:hover { background: #f2f2f7 !important; }
-      .desktop-sidebar .sidebar-logout { color: #8e8e93 !important; font-size: 13px !important; }
-      .desktop-sidebar .sidebar-logout:hover { color: #ff3b30 !important; }
+      .desktop-sidebar .sidebar-cta:hover { background: var(--accent-hover) !important; border-color: var(--accent-hover) !important; }
+      .desktop-sidebar .sidebar-logout { color: var(--text2) !important; font-size: 13px !important; }
+      .desktop-sidebar .sidebar-logout:hover { color: var(--danger) !important; }
       /* ── Desktop: card hover lift ── */
       .swipe-wrapper:hover .vehicle-card-swipeable {
         box-shadow: 0 6px 24px rgba(0,0,0,0.08) !important;
@@ -1246,15 +1366,61 @@
       } catch(e) {}
     })();
   </script>
+  <script>
+    /* Init thème AVANT le rendu pour éviter le flash (FOUC).
+       Priorité : choix mémorisé > réglage OS. */
+    (function(){
+      try {
+        var saved = localStorage.getItem('trakoto-theme');
+        var theme = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch(e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+    function osPrefersDark(){
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    /* choice = 'light' | 'dark' | 'system' */
+    function chooseTheme(choice){
+      try {
+        if(choice === 'system'){ localStorage.removeItem('trakoto-theme'); }
+        else { localStorage.setItem('trakoto-theme', choice); }
+      } catch(e) {}
+      var effective = choice === 'system' ? (osPrefersDark() ? 'dark' : 'light') : choice;
+      document.documentElement.setAttribute('data-theme', effective);
+      syncThemeSegment();
+    }
+    /* Met à jour l'état visuel du sélecteur segmenté */
+    function syncThemeSegment(){
+      var saved = null;
+      try { saved = localStorage.getItem('trakoto-theme'); } catch(e) {}
+      var active = saved || 'system';
+      document.querySelectorAll('.theme-seg-btn').forEach(function(b){
+        b.classList.toggle('active', b.getAttribute('data-theme-choice') === active);
+      });
+    }
+    /* Suivi live de l'OS tant que l'utilisateur n'a pas fait de choix manuel */
+    try {
+      if(window.matchMedia){
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e){
+          if(!localStorage.getItem('trakoto-theme')){
+            document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            if(typeof syncThemeSegment === 'function') syncThemeSegment();
+          }
+        });
+      }
+    } catch(e) {}
+  </script>
 </head>
 <body>
-<div id="auth-loader" style="position:fixed;inset:0;background:#f0f2f5;z-index:99998;"></div>
+<div id="auth-loader" style="position:fixed;inset:0;background:var(--bg);z-index:99998;"></div>
 <aside id="desktop-sidebar" class="desktop-sidebar" style="display:none;">
   <div class="brand" style="display:flex;align-items:center;gap:12px;">
-    <div style="flex-shrink:0;width:40px;height:40px;border-radius:14px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><path d="M5 13l3-5h8l3 5"/><line x1="3" y1="17" x2="6" y2="17"/><circle cx="7.5" cy="17" r="1.5" fill="black"/><line x1="9" y1="17" x2="15" y2="17"/><circle cx="16.5" cy="17" r="1.5" fill="black"/><line x1="18" y1="17" x2="21" y2="17"/></svg></div>
+    <div style="flex-shrink:0;width:34px;height:34px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><path d="M5 13l3-5h8l3 5"/><line x1="3" y1="17" x2="6" y2="17"/><circle cx="7.5" cy="17" r="1.5"/><line x1="9" y1="17" x2="15" y2="17"/><circle cx="16.5" cy="17" r="1.5"/><line x1="18" y1="17" x2="21" y2="17"/></svg></div>
     <div class="brand-text-wrap">
-      <div style="font-size:18px;font-weight:700;color:#1a1a1a;white-space:nowrap;">Trakoto</div>
-      <div style="font-size:13px;color:#6b7280;white-space:nowrap;">Gestion de parc</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;letter-spacing:-0.2px;">Trakoto</div>
+      <div style="font-size:12px;color:var(--text2);white-space:nowrap;">Gestion de parc</div>
     </div>
   </div>
   <nav style="display:flex;flex-direction:column;gap:8px;margin-top:28px;">
@@ -1655,8 +1821,21 @@
       </div>
     </div>
 
+    <!-- Apparence -->
+    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Apparence</span></div>
+    <div style="background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;margin:0 16px 24px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;gap:12px;">
+        <span style="font-size:15px;color:var(--text);">Thème</span>
+        <div id="theme-segment" style="display:inline-flex;background:var(--surface-2);border-radius:10px;padding:3px;gap:2px;">
+          <button type="button" data-theme-choice="light" onclick="chooseTheme('light')" class="theme-seg-btn">Clair</button>
+          <button type="button" data-theme-choice="dark" onclick="chooseTheme('dark')" class="theme-seg-btn">Sombre</button>
+          <button type="button" data-theme-choice="system" onclick="chooseTheme('system')" class="theme-seg-btn">Système</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Abonnement -->
-    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Abonnement</span></div>
+    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Abonnement</span></div>
     <div style="background:white;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 24px 16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
         <span style="font-size:15px;color:#1c1c1e;">Plan actuel</span>
@@ -3441,12 +3620,12 @@ function showLoginScreen(){
   document.querySelectorAll('.bottom-nav, #fab-parc, #fab-planning, .app-container').forEach(el => { if(el) el.style.display='none'; });
   const loginDiv = document.createElement('div');
   loginDiv.id = 'login-screen';
-  loginDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f7;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:99999;';
+  loginDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:99999;';
   loginDiv.innerHTML = `
-    <div class="login-card" style="width:100%;max-width:420px;background:white;border-radius:24px;box-shadow:0 24px 60px rgba(0,0,0,0.08);padding:32px;display:flex;flex-direction:column;align-items:center;">
+    <div class="login-card" style="width:100%;max-width:420px;background:var(--surface);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow-md);padding:32px;display:flex;flex-direction:column;align-items:center;">
       <!-- Logo -->
       <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:48px;">
-      <div style="width:88px;height:88px;background:#1a1a1a;border-radius:24px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 12px 32px rgba(0,0,0,0.18);">
+      <div style="width:88px;height:88px;background:var(--accent);border-radius:24px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 12px 32px rgba(30,64,175,0.28);">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/>
           <path d="M5 13l3-5h8l3 5"/>
@@ -3457,8 +3636,8 @@ function showLoginScreen(){
           <line x1="18" y1="17" x2="21" y2="17"/>
         </svg>
       </div>
-      <div style="font-size:34px;font-weight:700;color:#1a1a1a;letter-spacing:-1px;line-height:1;">Trakoto</div>
-      <div style="font-size:15px;color:#8e8e93;margin-top:6px;">Gestion de parc automobile</div>
+      <div style="font-size:34px;font-weight:700;color:var(--text);letter-spacing:-1px;line-height:1;">Trakoto</div>
+      <div style="font-size:15px;color:var(--text2);margin-top:6px;">Gestion de parc automobile</div>
     </div>
 
     <!-- Formulaire -->
@@ -3564,6 +3743,7 @@ async function doAuth(){
 
 function initApp(){
   document.getElementById('auth-loader')?.remove();
+  if(typeof syncThemeSegment === 'function') syncThemeSegment();
   const ls = document.getElementById('login-screen');
   if(ls) ls.remove();
   document.querySelectorAll('.bottom-nav, #fab-parc, #fab-planning, .app-container').forEach(el => { if(el) el.style.display=''; });
@@ -3590,7 +3770,7 @@ function showResetPasswordScreen(){
   document.getElementById('auth-loader')?.remove();
   const div = document.createElement('div');
   div.id = 'reset-screen';
-  div.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f7;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:99999;';
+  div.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:99999;';
   div.innerHTML = `
     <div style="width:100%;max-width:420px;background:white;border-radius:24px;box-shadow:0 24px 60px rgba(0,0,0,0.08);padding:32px;display:flex;flex-direction:column;align-items:center;">
       <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:36px;">
