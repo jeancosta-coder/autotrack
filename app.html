@@ -1898,7 +1898,13 @@ function switchView(view){
       btn.classList.add('active');
     }
   });
-  if(view === 'parc') renderParc();
+  if(view === 'parc') {
+    currentParcFilter = 'all';
+    document.querySelectorAll('.parc-filter').forEach(b => { b.style.background = 'rgba(0,0,0,0.06)'; b.style.color = '#3a3a3c'; b.style.fontWeight = '500'; });
+    const allBtn = document.querySelector('.parc-filter[onclick*="all"]');
+    if(allBtn) { allBtn.style.background = '#1a1a1a'; allBtn.style.color = 'white'; allBtn.style.fontWeight = '600'; }
+    renderParc();
+  }
   else if(view === 'planning') renderPlanning();
   else if(view === 'dashboard') renderDashboard();
   else if(view === 'compte') renderCompte();
