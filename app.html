@@ -1468,13 +1468,13 @@
             </button>
             <!-- Mobile: 3 badges directs -->
             <div id="statut-mobile-badges" style="display:none;flex-wrap:wrap;gap:8px;">
-              <button id="mbadge-en-cours" onclick="changeStatut('En cours')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:#FF950022;color:#FF9500;">
+              <button id="mbadge-en-cours" onclick="changeStatut('En cours')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:#1a1a1a;transition:all 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF9500;flex-shrink:0;"></span><span>En cours</span>
               </button>
-              <button id="mbadge-pret" onclick="changeStatut('Prêt à vendre')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:#34C75922;color:#34C759;">
+              <button id="mbadge-pret" onclick="changeStatut('Prêt à vendre')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:#1a1a1a;transition:all 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#34C759;flex-shrink:0;"></span><span>Prêt à vendre</span>
               </button>
-              <button id="mbadge-vendu" onclick="changeStatut('Vendu')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:#FF174422;color:#FF1744;">
+              <button id="mbadge-vendu" onclick="changeStatut('Vendu')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:#1a1a1a;transition:all 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:#FF1744;flex-shrink:0;"></span><span>Vendu</span>
               </button>
             </div>
@@ -2261,11 +2261,19 @@ function updateStatutUI(statut){
   if(badge){ badge.style.background = color + '22'; badge.style.color = color; }
   if(dot) dot.style.background = color;
   if(label) label.textContent = statut;
-  // Mobile: opacité sur les badges inactifs
+  // Mobile: actif = fond coloré + texte coloré, inactif = transparent + noir
+  const MBADGE_COLORS = {'En cours':'#FF9500','Prêt à vendre':'#34C759','Vendu':'#FF1744'};
   const mkeys = {'En cours':'en-cours','Prêt à vendre':'pret','Vendu':'vendu'};
   Object.keys(mkeys).forEach(s => {
     const btn = document.getElementById('mbadge-' + mkeys[s]);
-    if(btn) btn.style.opacity = s === statut ? '1' : '0.4';
+    if(!btn) return;
+    if(s === statut){
+      btn.style.background = MBADGE_COLORS[s] + '22';
+      btn.style.color = MBADGE_COLORS[s];
+    } else {
+      btn.style.background = 'transparent';
+      btn.style.color = '#1a1a1a';
+    }
   });
 }
 function toggleStatutPopover(e){
