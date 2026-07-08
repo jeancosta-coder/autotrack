@@ -44,6 +44,7 @@
       --warning: #EA580C;  --warning-soft: rgba(234,88,12,0.10);
       --danger:  #DC2626;  --danger-soft:  rgba(220,38,38,0.10);
       --neutral: #6B7280;  --neutral-soft: rgba(107,114,128,0.10);
+      --info: #2563EB;  --info-soft: rgba(37,99,235,0.10);
       /* Alias legacy pour compat */
       --green: var(--success);
       --red: var(--danger);
@@ -83,6 +84,7 @@
       --warning: #F97316;  --warning-soft: rgba(249,115,22,0.16);
       --danger:  #EF4444;  --danger-soft:  rgba(239,68,68,0.16);
       --neutral: #9CA3AF;  --neutral-soft: rgba(156,163,175,0.16);
+      --info: #3B82F6;  --info-soft: rgba(59,130,246,0.16);
       --shadow-sm: none;
       --shadow-md: none;
       --nav-glass: rgba(22,26,33,0.72);
@@ -1316,7 +1318,7 @@
       #statut-mobile-badges { display: none !important; }
       #statut-active-badge { display: inline-flex !important; }
       #statut-popover button[data-statut="En cours"]:hover { background: var(--warning-soft) !important; color: var(--warning) !important; }
-      #statut-popover button[data-statut="Prêt à vendre"]:hover { background: var(--accent-soft) !important; color: var(--accent) !important; }
+      #statut-popover button[data-statut="Prêt à vendre"]:hover { background: var(--info-soft) !important; color: var(--info) !important; }
       #statut-popover button[data-statut="Vendu"]:hover { background: var(--success-soft) !important; color: var(--success) !important; }
       /* ── Desktop: add vehicle modal z-index ── */
       #modal-add-vehicle { z-index: 9998 !important; }
@@ -1517,7 +1519,7 @@
       </div>
       <div class="kpi-card">
         <div class="kpi-head">
-          <span class="kpi-icon" style="background:var(--accent-soft);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <span class="kpi-icon" style="background:var(--info-soft);color:var(--info);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
         </div>
         <div class="kpi-val" id="kpi-prt">0</div>
         <div class="kpi-label">Prêt à vendre</div>
@@ -1726,7 +1728,7 @@
                 <span style="width:7px;height:7px;border-radius:50%;background:var(--warning);flex-shrink:0;"></span><span>En cours</span>
               </button>
               <button id="mbadge-pret" onclick="changeStatut('Prêt à vendre')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:var(--text);transition:all 0.15s;">
-                <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span><span>Prêt à vendre</span>
+                <span style="width:7px;height:7px;border-radius:50%;background:var(--info);flex-shrink:0;"></span><span>Prêt à vendre</span>
               </button>
               <button id="mbadge-vendu" onclick="changeStatut('Vendu')" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:transparent;color:var(--text);transition:all 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:var(--success);flex-shrink:0;"></span><span>Vendu</span>
@@ -1737,7 +1739,7 @@
                 <span style="width:7px;height:7px;border-radius:50%;background:var(--warning);flex-shrink:0;"></span><span>En cours</span>
               </button>
               <button data-statut="Prêt à vendre" onclick="changeStatut('Prêt à vendre');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:var(--text);white-space:nowrap;transition:background 0.15s,color 0.15s;">
-                <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span><span>Prêt à vendre</span>
+                <span style="width:7px;height:7px;border-radius:50%;background:var(--info);flex-shrink:0;"></span><span>Prêt à vendre</span>
               </button>
               <button data-statut="Vendu" onclick="changeStatut('Vendu');closeStatutPopover()" style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:var(--text);white-space:nowrap;transition:background 0.15s,color 0.15s;">
                 <span style="width:7px;height:7px;border-radius:50%;background:var(--success);flex-shrink:0;"></span><span>Vendu</span>
@@ -2045,7 +2047,7 @@ const SVG_ICONS = {
 
 /* ── Couleurs unifiées (résolues depuis les tokens CSS → theme-aware) ── */
 function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#888888'; }
-const STATUS_TOKEN = {'En cours':'--warning','En attente':'--neutral','Prêt à vendre':'--accent','Vendu':'--success'};
+const STATUS_TOKEN = {'En cours':'--warning','En attente':'--neutral','Prêt à vendre':'--info','Vendu':'--success'};
 function statusColor(s){ return cssVar(STATUS_TOKEN[s] || '--neutral'); }
 const STATUS_COLORS = new Proxy({}, { get: (_, k) => statusColor(k) });
 /* Palette unique des types d'événements/tâches (B · vif moderne) */
