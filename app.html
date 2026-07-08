@@ -3010,9 +3010,9 @@ function renderWeekView(date){
       const ds = [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
       const isToday = ds === todayStr;
       const isSelected = ds === selectedDateStr;
-      const circleBg = isSelected && isToday ? '#FF3B30' : isSelected ? 'var(--surface-3)' : 'transparent';
-      const circleColor = isSelected && isToday ? 'white' : isToday ? '#FF3B30' : 'var(--text)';
-      const labelColor = isToday ? '#FF3B30' : 'var(--text2)';
+      const circleBg = isSelected && isToday ? 'var(--accent)' : isSelected ? 'var(--surface-3)' : 'transparent';
+      const circleColor = isSelected && isToday ? 'var(--accent-contrast)' : isToday ? 'var(--accent)' : 'var(--text)';
+      const labelColor = isToday ? 'var(--accent)' : 'var(--text2)';
       weekStripHtml += `<button onclick="setDateAndViewDay('${ds}')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px;border:none;cursor:pointer;border-radius:10px;background:transparent;">
         <div style="font-size:10px;font-weight:500;color:${labelColor};">${dayNames[d.getDay()]}</div>
         <div style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${circleBg};font-size:15px;font-weight:${isSelected || isToday ? '700' : '400'};color:${circleColor};margin-top:2px;">${d.getDate()}</div>
@@ -3030,9 +3030,9 @@ function renderWeekView(date){
       const ds = [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
       const isToday = ds === todayStr;
       const isSelected = ds === selectedDateStr;
-      const circleBg = isSelected && isToday ? '#FF3B30' : isSelected ? 'var(--surface-3)' : 'transparent';
-      const circleColor = isSelected && isToday ? 'white' : isToday ? '#FF3B30' : 'var(--text)';
-      const labelColor = isToday ? '#FF3B30' : 'var(--text2)';
+      const circleBg = isSelected && isToday ? 'var(--accent)' : isSelected ? 'var(--surface-3)' : 'transparent';
+      const circleColor = isSelected && isToday ? 'var(--accent-contrast)' : isToday ? 'var(--accent)' : 'var(--text)';
+      const labelColor = isToday ? 'var(--accent)' : 'var(--text2)';
       headerHtml += `<button onclick="setDateAndViewDay('${ds}')" style="display:flex;flex-direction:column;align-items:center;padding:4px 2px;border:none;cursor:pointer;background:transparent;border-radius:8px;">
         <div style="font-size:10px;font-weight:500;color:${labelColor};">${dayNames[d.getDay()]}</div>
         <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;background:${circleBg};color:${circleColor};margin-top:2px;">${d.getDate()}</div>
@@ -3096,8 +3096,8 @@ function renderWeekView(date){
       const nowMins = Math.max(Math.min(now.getHours() * 60 + now.getMinutes(), END_HOUR * 60), START_HOUR * 60);
       const nowTop = ((nowMins - START_HOUR * 60) / 60) * HOUR_HEIGHT;
       colHtml += `<div id="now-indicator" style="position:absolute;top:${nowTop}px;left:-8px;right:0;display:flex;align-items:center;z-index:20;pointer-events:none;">
-        <div style="width:12px;height:12px;border-radius:50%;background:#FF3B30;flex-shrink:0;box-shadow:0 0 0 3px rgba(255,59,48,0.25);"></div>
-        <div style="flex:1;height:2px;background:linear-gradient(90deg, #FF3B30, rgba(255,59,48,0.3));"></div>
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--accent);flex-shrink:0;box-shadow:0 0 0 3px var(--accent-soft);"></div>
+        <div style="flex:1;height:2px;background:linear-gradient(90deg, var(--accent), transparent);"></div>
       </div>`;
     }
     colHtml += '</div>';
