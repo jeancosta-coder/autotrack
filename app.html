@@ -52,6 +52,8 @@
       /* Ombres (désactivées en dark, remplacées par bordures) */
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
       --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
+      /* Barre nav flottante translucide */
+      --nav-glass: rgba(255,255,255,0.72);
       /* Grille agenda (theme-aware) */
       --cal-band: rgba(0,0,0,0.02);
       --cal-line: rgba(0,0,0,0.06);
@@ -83,6 +85,7 @@
       --neutral: #9CA3AF;  --neutral-soft: rgba(156,163,175,0.16);
       --shadow-sm: none;
       --shadow-md: none;
+      --nav-glass: rgba(22,26,33,0.72);
       --cal-band: rgba(255,255,255,0.025);
       --cal-line: rgba(255,255,255,0.07);
       --cal-hover: rgba(255,255,255,0.05);
@@ -528,34 +531,35 @@
     }
     .bottom-nav {
       position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: rgba(248,248,248,0.92);
-      backdrop-filter: saturate(180%) blur(30px);
-      -webkit-backdrop-filter: saturate(180%) blur(30px);
-      border-top: 0.33px solid rgba(0,0,0,0.18);
+      bottom: calc(12px + env(safe-area-inset-bottom));
+      left: 18px; right: 18px;
+      background: var(--nav-glass);
+      backdrop-filter: saturate(180%) blur(24px);
+      -webkit-backdrop-filter: saturate(180%) blur(24px);
+      border: 1px solid var(--border);
+      border-radius: 28px;
       display: flex;
       justify-content: space-around;
-      align-items: flex-start;
+      align-items: center;
       z-index: 1000;
-      padding: 10px 0 calc(24px + env(safe-area-inset-bottom)) 0;
+      padding: 11px 8px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.20);
     }
     .bottom-nav-item {
       flex: 1;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      padding: 0;
+      padding: 4px 0;
       background: transparent;
       border: none;
       cursor: pointer;
       color:var(--text2);
-      transition: color 0.2s ease;
+      transition: color 0.2s ease, transform 0.15s ease;
     }
-    .bottom-nav-item:active { opacity: 0.6; }
-    .bottom-nav-item.active { color:var(--text); }
-    .bottom-nav-label { font-size: 10px; font-weight: 500; letter-spacing: -0.1px; }
+    .bottom-nav-item:active { transform: scale(0.88); }
+    .bottom-nav-item.active { color:var(--accent); }
+    .bottom-nav-label { display: none; }
     .app-container { padding-bottom: 160px; }
 
     /* ── Finances ── */
