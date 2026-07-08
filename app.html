@@ -268,6 +268,18 @@
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
     }
+    /* KPI cards enrichies (Phase 3) */
+    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px 14px 12px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+    .kpi-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; min-height: 30px; }
+    .kpi-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .kpi-icon svg { width: 16px; height: 16px; }
+    .kpi-delta { font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
+    .kpi-val { font-size: 24px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; color: var(--text); }
+    .kpi-label { font-size: 12px; color: var(--text2); margin-top: 5px; }
+    .kpi-spark { width: 100%; height: 22px; margin-top: 10px; display: block; }
+    .kpi-hero .kpi-val { font-size: 34px; }
+    .kpi-hero .kpi-spark { height: 34px; }
+    @media (min-width: 900px) { .kpi-hero .kpi-val { font-size: 40px; } }
     #details {
       position: fixed;
       top: 0;
@@ -1408,19 +1420,30 @@
 <div class="app-container">
   <div id="parc" class="view active">
 
-    <!-- KPI CARDS iOS -->
+    <!-- KPI CARDS enrichies -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
-      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-        <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;">En cours</div>
-        <div style="font-size:24px;font-weight:700;color:#FF9500;" id="kpi-enc">0</div>
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <span class="kpi-icon" style="background:var(--warning-soft);color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        </div>
+        <div class="kpi-val" id="kpi-enc">0</div>
+        <div class="kpi-label">En cours</div>
       </div>
-      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-        <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;">Prêt</div>
-        <div style="font-size:24px;font-weight:700;color:#34C759;" id="kpi-prt">0</div>
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <span class="kpi-icon" style="background:var(--accent-soft);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        </div>
+        <div class="kpi-val" id="kpi-prt">0</div>
+        <div class="kpi-label">Prêt à vendre</div>
       </div>
-      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-        <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;">Vendus</div>
-        <div style="font-size:24px;font-weight:700;color:#FF1744;" id="kpi-vnd">0</div>
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <span class="kpi-icon" style="background:var(--success-soft);color:var(--success);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><path d="M5 13l3-5h8l3 5"/></svg></span>
+          <span id="kpi-vnd-delta"></span>
+        </div>
+        <div class="kpi-val" id="kpi-vnd">0</div>
+        <div class="kpi-label">Vendus</div>
+        <div id="kpi-vnd-spark"></div>
       </div>
     </div>
 
@@ -1510,18 +1533,29 @@
         <button class="desktop-card-btn" type="button" onclick="drawChart()">Actualiser</button>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
-      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-        <div style="font-size:10px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">Trésorerie</div>
-        <div style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px;" id="dash-tresorerie">0€</div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+      <div class="kpi-card kpi-hero">
+        <div class="kpi-head">
+          <span class="kpi-icon" style="background:var(--accent-soft);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+          <span id="dash-profit-delta"></span>
+        </div>
+        <div class="kpi-val" id="dash-profit-real">0€</div>
+        <div class="kpi-label">Profit total réalisé</div>
+        <div id="dash-profit-spark"></div>
       </div>
-      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-        <div style="font-size:10px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">CA réalisé</div>
-        <div style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px;" id="dash-ca">0€</div>
-      </div>
-      <div style="background:var(--surface);border-radius:14px;padding:14px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-        <div style="font-size:10px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">Profit</div>
-        <div style="font-size:20px;font-weight:700;color:#34C759;letter-spacing:-0.5px;" id="dash-profit-real">0€</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="kpi-card">
+          <div class="kpi-label" style="margin-top:0;margin-bottom:6px;">Trésorerie</div>
+          <div class="kpi-val" style="font-size:20px;" id="dash-tresorerie">0€</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
+            <span class="kpi-label" style="margin-top:0;">CA réalisé</span>
+            <span id="dash-ca-delta"></span>
+          </div>
+          <div class="kpi-val" style="font-size:20px;" id="dash-ca">0€</div>
+          <div id="dash-ca-spark"></div>
+        </div>
       </div>
     </div>
     <div style="margin-bottom:20px;">
@@ -2289,6 +2323,11 @@ function renderParc(){
   if(Utils.el('kpi-enc')) Utils.el('kpi-enc').textContent = counts['En cours'];
   if(Utils.el('kpi-prt')) Utils.el('kpi-prt').textContent = counts['Prêt à vendre'];
   if(Utils.el('kpi-vnd')) Utils.el('kpi-vnd').textContent = counts['Vendu'];
+  const _ss = monthlySoldSeries(6);
+  const _vd = document.getElementById('kpi-vnd-delta');
+  if(_vd) _vd.innerHTML = deltaBadgeHTML(_ss[_ss.length-1].count, _ss[_ss.length-2].count);
+  const _vs = document.getElementById('kpi-vnd-spark');
+  if(_vs) _vs.innerHTML = sparklineSVG(_ss.map(m => m.count), 'var(--success)');
   let filtered = RenderHelpers.filterVehicles(currentParcFilter);
   filtered = [...filtered.filter(v => v.pinned), ...filtered.filter(v => !v.pinned)];
   Utils.el('parc-grid').innerHTML = filtered.map(v => RenderHelpers.buildVehicleCard(v)).join('');
@@ -3306,6 +3345,33 @@ function drawChart(){
   }
 }
 
+/* ── Helpers KPI enrichies (Phase 3) ── */
+function _moKey(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'); }
+function _soldMonth(v){ const h = v.statusHistory ? v.statusHistory.find(x => x.statut === 'Vendu') : null; return (h && h.date) ? h.date.substring(0,7) : null; }
+function monthlySoldSeries(n){
+  const now = new Date(); const arr = []; const idx = {};
+  for(let i = n-1; i >= 0; i--){ const d = new Date(now.getFullYear(), now.getMonth()-i, 1); const k = _moKey(d); idx[k] = arr.length; arr.push({key:k, profit:0, ca:0, count:0}); }
+  vehicles.filter(v => v.statut === 'Vendu').forEach(v => {
+    const k = _soldMonth(v);
+    if(k != null && k in idx){ const m = arr[idx[k]]; m.profit += (v.vente||0) - (v.achat||0) - (v.prepCost||0); m.ca += (v.vente||0); m.count++; }
+  });
+  return arr;
+}
+function sparklineSVG(values, color){
+  if(!values || values.length < 2) return '';
+  if(values.every(v => v === values[0])) return '<svg viewBox="0 0 100 22" preserveAspectRatio="none" class="kpi-spark"><line x1="0" y1="11" x2="100" y2="11" stroke="' + color + '" stroke-width="2" vector-effect="non-scaling-stroke" opacity="0.4"/></svg>';
+  const max = Math.max(...values), min = Math.min(...values), range = (max-min) || 1;
+  const pts = values.map((v,i) => { const x = (i/(values.length-1))*100; const y = 21 - ((v-min)/range)*20; return x.toFixed(1) + ',' + y.toFixed(1); }).join(' ');
+  return '<svg viewBox="0 0 100 22" preserveAspectRatio="none" class="kpi-spark"><polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>';
+}
+function deltaBadgeHTML(cur, prev){
+  if(prev === 0 && cur === 0) return '';
+  const up = cur >= prev;
+  const txt = prev === 0 ? 'nouveau' : ((cur-prev)/Math.abs(prev)*100 >= 0 ? '+' : '') + Math.round((cur-prev)/Math.abs(prev)*100) + '%';
+  const col = up ? 'var(--success)' : 'var(--danger)';
+  const arrow = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="' + (up ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6') + '"/></svg>';
+  return '<span class="kpi-delta" style="color:' + col + ';">' + arrow + txt + '</span>';
+}
 function renderDashboard(){
   const hist = loadHistorique();
   const sold = vehicles.filter(v => v.statut === 'Vendu');
@@ -3338,6 +3404,12 @@ function renderDashboard(){
   Utils.el('dash-avg-time').textContent = avgTime;
   Utils.el('dash-avg-prep').textContent = avgPrep + '€';
   Utils.el('dash-urgent-tasks').textContent = urgentTasks;
+  const _series = monthlySoldSeries(6);
+  const _last = _series[_series.length-1], _prev = _series[_series.length-2];
+  const _pd = document.getElementById('dash-profit-delta'); if(_pd) _pd.innerHTML = deltaBadgeHTML(_last.profit, _prev.profit);
+  const _ps = document.getElementById('dash-profit-spark'); if(_ps) _ps.innerHTML = sparklineSVG(_series.map(m => m.profit), 'var(--accent)');
+  const _cd = document.getElementById('dash-ca-delta'); if(_cd) _cd.innerHTML = deltaBadgeHTML(_last.ca, _prev.ca);
+  const _cs = document.getElementById('dash-ca-spark'); if(_cs) _cs.innerHTML = sparklineSVG(_series.map(m => m.ca), 'var(--text2)');
   setTimeout(() => drawChart(), 100);
 }
 
