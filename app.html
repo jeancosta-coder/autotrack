@@ -141,6 +141,27 @@
       width: 100%;
     }
     .desktop-only { display: none; }
+    /* ── Modale tâche : pills type, panneaux inline, créneaux, barre save ── */
+    .ntask-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-bottom: 16px; }
+    .ntask-sep { height: 1px; background: var(--border); margin-left: 16px; }
+    .ntask-row { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; min-height: 50px; cursor: pointer; gap: 12px; }
+    .ntask-row-label { font-size: 16px; color: var(--text); flex-shrink: 0; }
+    .ntask-row-val { display: flex; align-items: center; gap: 8px; font-size: 16px; color: var(--text2); }
+    .ntask-row-val .chev { color: var(--text3); font-size: 18px; transition: transform 0.2s ease; }
+    .ntask-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 13px; font-weight: 500; border-radius: 20px; cursor: pointer; white-space: nowrap; transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease; }
+    .ntask-inline-panel { display: none; border-top: 1px solid var(--border); background: var(--surface-2); }
+    .ntask-opt { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; cursor: pointer; }
+    .ntask-opt:hover { background: var(--surface-3); }
+    .ntask-opt span { font-size: 14px; color: var(--text); }
+    .ntask-slots { max-height: 240px; overflow-y: auto; }
+    .ntask-slot { padding: 10px 16px; cursor: pointer; font-size: 14px; color: var(--text); }
+    .ntask-slot:hover { background: var(--surface-3); }
+    .ntask-slot.sel { color: var(--accent); font-weight: 600; }
+    .ntask-dur { padding: 5px 12px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 12px; font-weight: 500; border-radius: 16px; cursor: pointer; transition: all 0.15s ease; }
+    .ntask-dur:hover { border-color: var(--accent); color: var(--accent); }
+    .ntask-save-bar { flex-shrink: 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: var(--surface); border-top: 1px solid var(--border); }
+    .ntask-save-btn { width: 100%; padding: 14px; background: var(--accent); color: var(--accent-contrast); border: none; border-radius: var(--r-md); font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.15s ease; }
+    .ntask-save-btn:hover { background: var(--accent-hover); }
     /* Rail Planning "À venir" — masqué par défaut (mobile), visible desktop */
     #planning-rail { display: none; }
     .planning-rail-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
@@ -3564,6 +3585,61 @@ const BOTTOM_SHEET_DATA = {
 
 let _ntaskCalDate = new Date();
 
+/* ── Helpers modale tâche (pills, panneaux inline, créneaux, durée) ── */
+const NTASK_NOTIF_OPTS = [{v:'none',l:'Aucune'},{v:'15',l:'15 minutes avant'},{v:'30',l:'30 minutes avant'},{v:'60',l:'1 heure avant'},{v:'1440',l:'1 jour avant'}];
+const NTASK_REPEAT_OPTS = [{v:'never',l:'Jamais'},{v:'daily',l:'Tous les jours'},{v:'weekly',l:'Toutes les semaines'},{v:'monthly',l:'Tous les mois'}];
+const NTASK_TYPES = [{v:'rappel',l:'Rappel'},{v:'preparation',l:'Préparation'},{v:'sav',l:'SAV'},{v:'rdv',l:'RDV'},{v:'appel',l:'Appel'}];
+function ntaskTypePills(current){
+  return NTASK_TYPES.map(t => {
+    const c = eventColor(t.v); const active = t.v === current ? `background:${c}1F;color:${c};border-color:${c};` : '';
+    return `<button type="button" class="ntask-pill" data-type="${t.v}" onclick="ntaskSetType('${t.v}')" style="${active}"><span style="width:8px;height:8px;border-radius:50%;background:${c};flex-shrink:0;"></span>${t.l}</button>`;
+  }).join('');
+}
+function ntaskSetType(v){
+  document.newTaskType = v;
+  document.querySelectorAll('#ntask-type-pills .ntask-pill').forEach(b => {
+    const c = eventColor(b.dataset.type);
+    if(b.dataset.type === v){ b.style.background = c + '1F'; b.style.color = c; b.style.borderColor = c; }
+    else { b.style.background = 'transparent'; b.style.color = 'var(--text2)'; b.style.borderColor = 'var(--border)'; }
+  });
+}
+function ntaskToggle(id){
+  document.querySelectorAll('.ntask-inline-panel').forEach(p => { if(p.id !== id) p.style.display = 'none'; });
+  const p = document.getElementById(id); if(p) p.style.display = (p.style.display === 'block') ? 'none' : 'block';
+}
+function ntaskToggleTime(target){ ntaskToggle('ntask-' + target + '-time-panel'); }
+function ntaskTimeSlots(target){
+  const cur = target === 'start' ? (document.newTaskTime || '') : (document.newTaskTimeEnd || '');
+  let h = '';
+  for(let hh = 0; hh < 24; hh++){ for(let mm = 0; mm < 60; mm += 15){ const v = String(hh).padStart(2,'0') + ':' + String(mm).padStart(2,'0'); h += `<div class="ntask-slot${v === cur ? ' sel' : ''}" onclick="ntaskSelectTime('${target}','${v}')">${v}</div>`; } }
+  return h;
+}
+function ntaskSelectTime(target, v){
+  if(target === 'start') document.newTaskTime = v; else document.newTaskTimeEnd = v;
+  const lbl = document.getElementById('ntask-' + target + '-time-label'); if(lbl) lbl.textContent = v;
+  ntaskToggle('ntask-' + target + '-time-panel');
+}
+function ntaskSetDuration(mins){
+  const start = document.newTaskTime || '09:00'; const [h, m] = start.split(':').map(Number);
+  let tot = (h * 60 + m + mins) % (24 * 60); if(tot < 0) tot += 24 * 60;
+  const v = String(Math.floor(tot / 60)).padStart(2,'0') + ':' + String(tot % 60).padStart(2,'0');
+  document.newTaskTimeEnd = v; const lbl = document.getElementById('ntask-end-time-label'); if(lbl) lbl.textContent = v;
+}
+function ntaskOptList(opts, current, fn){
+  return opts.map(o => `<div class="ntask-opt" onclick="${fn}('${o.v}')"><span>${o.l}</span>${o.v === current ? '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}</div>`).join('');
+}
+function ntaskSelectNotif(v){
+  document.newTaskNotif = v; const o = NTASK_NOTIF_OPTS.find(x => x.v === v);
+  const lbl = document.getElementById('ntask-notif-label'); if(lbl){ lbl.textContent = o ? o.l : 'Aucune'; lbl.style.color = v === 'none' ? 'var(--text2)' : 'var(--text)'; }
+  const panel = document.getElementById('ntask-notif-panel'); if(panel) panel.innerHTML = ntaskOptList(NTASK_NOTIF_OPTS, v, 'ntaskSelectNotif');
+  ntaskToggle('ntask-notif-panel');
+}
+function ntaskSelectRepeat(v){
+  document.newTaskRepeat = v; const o = NTASK_REPEAT_OPTS.find(x => x.v === v);
+  const lbl = document.getElementById('ntask-repeat-label'); if(lbl){ lbl.textContent = o ? o.l : 'Jamais'; lbl.style.color = v === 'never' ? 'var(--text2)' : 'var(--text)'; }
+  const panel = document.getElementById('ntask-repeat-panel'); if(panel) panel.innerHTML = ntaskOptList(NTASK_REPEAT_OPTS, v, 'ntaskSelectRepeat');
+  ntaskToggle('ntask-repeat-panel');
+}
 function openNewTaskModalOutlookForVehicle(dateStr, timeStr, vehicleId){
   openNewTaskModalOutlook(dateStr, timeStr);
   setTimeout(() => { if(vehicleId) { document.newTaskVehicleId = String(vehicleId); const lbl = document.getElementById('ntask-vehicle-label'); const v = vehicles.find(x => x.id == vehicleId); if(lbl && v) { lbl.textContent = v.marque + ' ' + v.modele; lbl.style.color = 'var(--text)'; } } }, 10);
@@ -3585,73 +3661,84 @@ function openNewTaskModalOutlook(dateStr, timeStr){
     style.textContent = '@keyframes slideUpFull{from{transform:translateY(100%);opacity:0;}to{transform:translateY(0);opacity:1;}}@keyframes slideDownFull{from{transform:translateY(0);opacity:1;}to{transform:translateY(100%);opacity:0;}}';
     document.head.appendChild(style);
   }
-  const html = `<div id="new-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
+  const endDefault = (() => { const [h,m] = timeStr.split(':'); return String((parseInt(h)+1)%24).padStart(2,'0')+':'+m; })();
+  document.newTaskTimeEnd = endDefault;
+  const dfmt = (d) => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
+  const html = `<div id="new-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface-2);z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
       <button onclick="closeNewTaskModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
       <span style="font-size:17px;font-weight:600;color:var(--text);">Nouvel événement</span>
-      <button onclick="saveNewTask()" style="background:none;border:none;cursor:pointer;padding:4px;"><div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div></button>
+      <span style="width:22px;"></span>
     </div>
-    <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
-      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;padding:0 16px;">
+    <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:20px 16px 24px 16px;">
+      <div class="ntask-card" style="padding:0 16px;">
         <input type="text" id="ntask-title" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
       </div>
-      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('type')">
-          <span style="font-size:16px;color:var(--text);">Type</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#F59E0B;"></span><span id="ntask-type-label" style="font-size:16px;color:var(--text2);">Rappel</span><span style="color:var(--text3);font-size:18px;">›</span></div>
-        </div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('vehicle')">
-          <span style="font-size:16px;color:var(--text);">Véhicule</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-vehicle-label" style="font-size:16px;color:var(--text2);">Aucun</span><span style="color:var(--text3);font-size:18px;">›</span></div>
+      <div style="margin:0 2px 8px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;">Type</div>
+      <div id="ntask-type-pills" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;scrollbar-width:none;">${ntaskTypePills(document.newTaskType)}</div>
+      <div class="ntask-card">
+        <div class="ntask-row" onclick="openBottomSheet('vehicle')">
+          <span class="ntask-row-label">Véhicule</span>
+          <span class="ntask-row-val"><span id="ntask-vehicle-label" style="color:var(--text2);">Aucun</span><span class="chev">›</span></span>
         </div>
       </div>
-      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:var(--text);flex-shrink:0;">Début</span>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span id="ntask-start-date-label" onclick="toggleDatePickerNew('start')" style="font-size:16px;color:var(--text2);cursor:pointer;">${new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'})}</span>
-            <input type="time" id="ntask-start-time" value="${timeStr}" style="border:none;outline:none;font-size:16px;color:var(--text2);background:transparent;" onchange="document.newTaskTime=this.value"/>
-          </div>
+      <div class="ntask-card">
+        <div class="ntask-row" style="cursor:default;">
+          <span class="ntask-row-label">Début</span>
+          <span class="ntask-row-val">
+            <span id="ntask-start-date-label" onclick="toggleDatePickerNew('start')" style="cursor:pointer;">${dfmt(dateStr)}</span>
+            <span id="ntask-start-time-label" onclick="ntaskToggleTime('start')" style="cursor:pointer;color:var(--text);font-weight:500;background:var(--surface-2);padding:4px 10px;border-radius:8px;">${timeStr}</span>
+          </span>
         </div>
-        <div id="ntask-date-picker-start" style="display:none;padding:0 16px 16px 16px;border-top:1px solid var(--border);">
+        <div id="ntask-date-picker-start" class="ntask-inline-panel" style="padding:0 16px 16px 16px;">
           <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
-            <button onclick="shiftMonthNew(-1,'start')" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px 10px;">‹</button>
+            <button onclick="shiftMonthNew(-1,'start')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,1 1,6 6,11"/></svg></button>
             <span id="ntask-cal-month-start" style="font-weight:600;font-size:15px;color:var(--text);"></span>
-            <button onclick="shiftMonthNew(1,'start')" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px 10px;">›</button>
+            <button onclick="shiftMonthNew(1,'start')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 6,6 1,11"/></svg></button>
           </div>
           <div id="ntask-cal-grid-start" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
         </div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:var(--text);flex-shrink:0;">Fin</span>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span id="ntask-end-date-label" onclick="toggleDatePickerNew('end')" style="font-size:16px;color:var(--text2);cursor:pointer;">${new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'})}</span>
-            <input type="time" id="ntask-end-time" value="${(() => { const [h,m] = timeStr.split(':'); return String((parseInt(h)+1)%24).padStart(2,'0')+':'+m; })()}" style="border:none;outline:none;font-size:16px;color:var(--text2);background:transparent;" onchange="document.newTaskTimeEnd=this.value"/>
-          </div>
+        <div id="ntask-start-time-panel" class="ntask-inline-panel"><div class="ntask-slots">${ntaskTimeSlots('start')}</div></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;">
+          <span class="ntask-row-label">Fin</span>
+          <span class="ntask-row-val">
+            <span id="ntask-end-date-label" onclick="toggleDatePickerNew('end')" style="cursor:pointer;">${dfmt(dateStr)}</span>
+            <span id="ntask-end-time-label" onclick="ntaskToggleTime('end')" style="cursor:pointer;color:var(--text);font-weight:500;background:var(--surface-2);padding:4px 10px;border-radius:8px;">${endDefault}</span>
+          </span>
         </div>
-        <div id="ntask-date-picker-end" style="display:none;padding:0 16px 16px 16px;border-top:1px solid var(--border);">
+        <div id="ntask-date-picker-end" class="ntask-inline-panel" style="padding:0 16px 16px 16px;">
           <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
-            <button onclick="shiftMonthNew(-1,'end')" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px 10px;">‹</button>
+            <button onclick="shiftMonthNew(-1,'end')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,1 1,6 6,11"/></svg></button>
             <span id="ntask-cal-month-end" style="font-weight:600;font-size:15px;color:var(--text);"></span>
-            <button onclick="shiftMonthNew(1,'end')" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px 10px;">›</button>
+            <button onclick="shiftMonthNew(1,'end')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 6,6 1,11"/></svg></button>
           </div>
           <div id="ntask-cal-grid-end" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
         </div>
-      </div>
-      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('notif')">
-          <span style="font-size:16px;color:var(--text);">Notification</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-notif-label" style="font-size:16px;color:var(--text2);">Aucune</span><span style="color:var(--text3);font-size:18px;">›</span></div>
+        <div id="ntask-end-time-panel" class="ntask-inline-panel"><div class="ntask-slots">${ntaskTimeSlots('end')}</div></div>
+        <div class="ntask-sep"></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:12px 16px;">
+          <span style="font-size:13px;color:var(--text2);margin-right:2px;">Durée</span>
+          <button type="button" class="ntask-dur" onclick="ntaskSetDuration(30)">30 min</button>
+          <button type="button" class="ntask-dur" onclick="ntaskSetDuration(60)">1 h</button>
+          <button type="button" class="ntask-dur" onclick="ntaskSetDuration(120)">2 h</button>
         </div>
       </div>
-      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('repeat')">
-          <span style="font-size:16px;color:var(--text);">Répétition</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-repeat-label" style="font-size:16px;color:var(--text2);">Jamais</span><span style="color:var(--text3);font-size:18px;">›</span></div>
+      <div class="ntask-card">
+        <div class="ntask-row" onclick="ntaskToggle('ntask-notif-panel')">
+          <span class="ntask-row-label">Notification</span>
+          <span class="ntask-row-val"><span id="ntask-notif-label" style="color:var(--text2);">Aucune</span><span class="chev">›</span></span>
         </div>
+        <div id="ntask-notif-panel" class="ntask-inline-panel">${ntaskOptList(NTASK_NOTIF_OPTS, document.newTaskNotif, 'ntaskSelectNotif')}</div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" onclick="ntaskToggle('ntask-repeat-panel')">
+          <span class="ntask-row-label">Répétition</span>
+          <span class="ntask-row-val"><span id="ntask-repeat-label" style="color:var(--text2);">Jamais</span><span class="chev">›</span></span>
+        </div>
+        <div id="ntask-repeat-panel" class="ntask-inline-panel">${ntaskOptList(NTASK_REPEAT_OPTS, document.newTaskRepeat, 'ntaskSelectRepeat')}</div>
       </div>
     </div>
+    <div class="ntask-save-bar"><button class="ntask-save-btn" onclick="saveNewTask()">Enregistrer</button></div>
   </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
   if(window.innerWidth >= 900){
@@ -3660,25 +3747,15 @@ function openNewTaskModalOutlook(dateStr, timeStr){
     bd.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9997;';
     bd.addEventListener('click', closeNewTaskModal);
     const modal = document.getElementById('new-task-modal');
-    if(modal){
-      document.body.insertBefore(bd, modal);
-      modal.style.cssText = 'background:var(--surface);z-index:9999;display:flex;flex-direction:column;';
-      const checkBtn = modal.querySelector('button[onclick="saveNewTask()"]');
-      if(checkBtn){
-        checkBtn.innerHTML = `<div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div>`;
-        checkBtn.style.cssText = 'background:none;border:none;cursor:pointer;padding:4px;';
-      }
-    }
+    if(modal) document.body.insertBefore(bd, modal);
   }
 }
 
 function toggleDatePickerNew(target){
-  const other = target === 'start' ? 'end' : 'start';
   const picker = document.getElementById('ntask-date-picker-' + target);
-  const otherPicker = document.getElementById('ntask-date-picker-' + other);
   if(!picker) return;
-  if(otherPicker) otherPicker.style.display = 'none';
-  const isHidden = picker.style.display === 'none';
+  document.querySelectorAll('.ntask-inline-panel').forEach(p => { if(p.id !== 'ntask-date-picker-' + target) p.style.display = 'none'; });
+  const isHidden = picker.style.display === 'none' || picker.style.display === '';
   picker.style.display = isHidden ? 'block' : 'none';
   if(isHidden){ const dateStr = target === 'start' ? (document.newTaskDate || Utils.today()) : (document.newTaskDateEnd || document.newTaskDate || Utils.today()); _ntaskCalDate = new Date(dateStr + 'T00:00:00'); renderCalNew(target); }
 }
@@ -3754,10 +3831,8 @@ function saveNewTask(){
   const titleEl = document.getElementById('ntask-title');
   const title = titleEl ? titleEl.value.trim() : '';
   const date = document.newTaskDate || null;
-  const timeStartEl = document.getElementById('ntask-start-time');
-  const timeStart = timeStartEl ? timeStartEl.value : (document.newTaskTime || '09:00');
-  const timeEndEl = document.getElementById('ntask-end-time');
-  const timeEnd = timeEndEl ? timeEndEl.value : '';
+  const timeStart = document.newTaskTime || '09:00';
+  const timeEnd = document.newTaskTimeEnd || '';
   const dateEnd = document.newTaskDateEnd || date;
   const vehicleId = document.newTaskVehicleId || '';
   if(!title) { showToast('⚠️ Titre requis'); return; }
