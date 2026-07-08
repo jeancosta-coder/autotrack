@@ -1985,7 +1985,9 @@ function cssVar(name){ return getComputedStyle(document.documentElement).getProp
 const STATUS_TOKEN = {'En cours':'--warning','En attente':'--neutral','Prêt à vendre':'--accent','Vendu':'--success'};
 function statusColor(s){ return cssVar(STATUS_TOKEN[s] || '--neutral'); }
 const STATUS_COLORS = new Proxy({}, { get: (_, k) => statusColor(k) });
-const EVENT_COLORS = {rdv:'#007AFF', appel:'#34C759', rappel:'#FF9500', livraison:'#AF52DE', autre:'#8e8e93'};
+/* Palette unique des types d'événements/tâches (B · vif moderne) */
+const EVENT_COLORS = {rappel:'#F59E0B', preparation:'#06B6D4', prep:'#06B6D4', sav:'#F43F5E', rdv:'#6366F1', appel:'#10B981', livraison:'#A855F7', autre:'#94A3B8'};
+function eventColor(type){ return EVENT_COLORS[type] || '#94A3B8'; }
 const EVENT_LABELS = {rdv:'RDV', appel:'Appel', rappel:'Rappel', livraison:'Livraison', autre:'Autre'};
 const TASK_COLORS = {mecanique:'#FF9500', carrosserie:'#007AFF', administratif:'#AF52DE', preparation:'#34C759', sav:'#FF3B30'};
 const TASK_LABELS = {mecanique:'Mécanique', carrosserie:'Carrosserie', administratif:'Administratif', preparation:'Préparation', sav:'SAV'};
@@ -2561,7 +2563,7 @@ function renderDetailTasks(id, filter){
   if(filtered.length === 0){ document.getElementById('detail-tasks').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text2);font-size:15px;">Aucune tâche</div>'; return; }
   const grouped = {};
   filtered.forEach(t => { const key = t.date || 'Sans date'; if(!grouped[key]) grouped[key] = []; grouped[key].push(t); });
-  const typeColors = {'preparation':'#00FF88','sav':'#FF1744','rappel':'#CCFF00','prep':'#00FF88','rdv':'#00D4FF','appel':'#7B68EE'};
+  const typeColors = EVENT_COLORS;
   let html = '';
   Object.keys(grouped).sort().forEach(date => {
     const dateObj = new Date(date + 'T00:00:00');
@@ -2604,7 +2606,7 @@ function openDetailTaskModal(){
 
   document.newSimpleTaskType = 'preparation';
   document.newSimpleTaskTypeLabel = 'Préparation';
-  document.newSimpleTaskTypeDot = '#00FF88';
+  document.newSimpleTaskTypeDot = '#06B6D4';
 
   const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;min-height:56px;">
       <button onclick="document.getElementById('simple-task-modal-overlay')?.remove();document.getElementById('simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
@@ -2621,7 +2623,7 @@ function openDetailTaskModal(){
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openSimpleTaskTypeSheet('new')">
           <span style="font-size:16px;color:var(--text);">Type</span>
           <div style="display:flex;align-items:center;gap:8px;">
-            <span id="stask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#00FF88;flex-shrink:0;"></span>
+            <span id="stask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#06B6D4;flex-shrink:0;"></span>
             <span id="stask-type-label" style="font-size:16px;color:var(--text);">Préparation</span>
             <span style="color:var(--text3);font-size:18px;line-height:1;">›</span>
           </div>
@@ -2919,7 +2921,7 @@ function renderWeekView(date){
   for(let i = 0; i < daysCount; i++){ const d = new Date(startDate); d.setDate(startDate.getDate() + i); days.push(d); }
   const dayNames = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
   const allTasks = DataLayer.getPlanning();
-  const typeColors = {rappel:'#CCFF00', preparation:'#00FF88', sav:'#FF1744', rdv:'#00D4FF', appel:'#7B68EE'};
+  const typeColors = EVENT_COLORS;
 
   const selectedDateStr = [date.getFullYear(), String(date.getMonth()+1).padStart(2,'0'), String(date.getDate()).padStart(2,'0')].join('-');
 
@@ -3055,9 +3057,9 @@ function openEditPlanningTaskModal(taskId){
   const taskDate = task.date || Utils.today();
   const taskTimeStart = task.timeStart || task.time || '09:00';
   const taskTimeEnd = task.timeEnd || (() => { const [h,m] = taskTimeStart.split(':'); return String((parseInt(h)+1)%24).padStart(2,'0')+':'+m; })();
-  const TYPE_COLORS = {rappel:'#CCFF00', preparation:'#00FF88', sav:'#FF1744', rdv:'#00D4FF', appel:'#7B68EE'};
+  const TYPE_COLORS = EVENT_COLORS;
   const TYPE_LABELS = {rappel:'Rappel', preparation:'Préparation', sav:'SAV', rdv:'RDV', appel:'Appel'};
-  const dotColor = TYPE_COLORS[taskType] || '#CCFF00';
+  const dotColor = TYPE_COLORS[taskType] || EVENT_COLORS.rappel;
   const typeLabel = TYPE_LABELS[taskType] || 'Rappel';
   const vehicleLabel = task.vehicleId ? ((vehicles.find(v => v.id == task.vehicleId)?.marque + ' ' + vehicles.find(v => v.id == task.vehicleId)?.modele) || 'Aucun') : 'Aucun';
   const dateFormatted = (d) => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
@@ -3183,7 +3185,7 @@ function openEditTaskModal(vehicleId, taskId){
     const existing = document.getElementById('edit-simple-task-modal');
     if(existing) existing.remove();
     const currentType = task.type || 'preparation';
-    const TASK_TYPE_MAP = {preparation:{label:'Préparation',dot:'#00FF88'}, sav:{label:'SAV',dot:'#FF1744'}, rappel:{label:'Rappel',dot:'#CCFF00'}, rdv:{label:'RDV',dot:'#00D4FF'}, appel:{label:'Appel',dot:'#7B68EE'}};
+    const TASK_TYPE_MAP = {preparation:{label:'Préparation',dot:EVENT_COLORS.preparation}, sav:{label:'SAV',dot:EVENT_COLORS.sav}, rappel:{label:'Rappel',dot:EVENT_COLORS.rappel}, rdv:{label:'RDV',dot:EVENT_COLORS.rdv}, appel:{label:'Appel',dot:EVENT_COLORS.appel}};
     document.editSimpleTaskType = currentType;
     const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;min-height:56px;">
       <button onclick="document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
@@ -3200,7 +3202,7 @@ function openEditTaskModal(vehicleId, taskId){
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openSimpleTaskTypeSheet('edit')">
           <span style="font-size:16px;color:var(--text);">Type</span>
           <div style="display:flex;align-items:center;gap:8px;">
-            <span id="etask-type-dot" style="width:10px;height:10px;border-radius:50%;background:${TASK_TYPE_MAP[currentType]?.dot||'#00FF88'};flex-shrink:0;"></span>
+            <span id="etask-type-dot" style="width:10px;height:10px;border-radius:50%;background:${TASK_TYPE_MAP[currentType]?.dot||'#06B6D4'};flex-shrink:0;"></span>
             <span id="etask-type-label" style="font-size:16px;color:var(--text);">${TASK_TYPE_MAP[currentType]?.label||'Préparation'}</span>
             <span style="color:var(--text3);font-size:18px;line-height:1;">›</span>
           </div>
@@ -3240,11 +3242,11 @@ function openEditTaskModal(vehicleId, taskId){
 
 function openSimpleTaskTypeSheet(mode){
   const TYPES = [
-    {val:'preparation', label:'Préparation', dot:'#00FF88'},
-    {val:'sav', label:'SAV', dot:'#FF1744'},
-    {val:'rappel', label:'Rappel', dot:'#CCFF00'},
-    {val:'rdv', label:'RDV', dot:'#00D4FF'},
-    {val:'appel', label:'Appel', dot:'#7B68EE'}
+    {val:'preparation', label:'Préparation', dot:'#06B6D4'},
+    {val:'sav', label:'SAV', dot:'#F43F5E'},
+    {val:'rappel', label:'Rappel', dot:'#F59E0B'},
+    {val:'rdv', label:'RDV', dot:'#6366F1'},
+    {val:'appel', label:'Appel', dot:'#10B981'}
   ];
   const existing = document.getElementById('simple-type-sheet');
   if(existing) existing.remove();
@@ -3447,7 +3449,7 @@ function renderDashboard(){
 const BOTTOM_SHEET_DATA = {
   type: {
     title: 'Type de tâche',
-    options: [{val:'rappel', label:'Rappel', dot:'#CCFF00'},{val:'preparation', label:'Préparation', dot:'#00FF88'},{val:'sav', label:'SAV', dot:'#FF1744'},{val:'rdv', label:'RDV', dot:'#00D4FF'},{val:'appel', label:'Appel', dot:'#7B68EE'}],
+    options: [{val:'rappel', label:'Rappel', dot:'#F59E0B'},{val:'preparation', label:'Préparation', dot:'#06B6D4'},{val:'sav', label:'SAV', dot:'#F43F5E'},{val:'rdv', label:'RDV', dot:'#6366F1'},{val:'appel', label:'Appel', dot:'#10B981'}],
     onSelect: (val, label, extra) => { document.newTaskType = val; const dot = document.getElementById('ntask-type-dot'); const lbl = document.getElementById('ntask-type-label'); if(dot) dot.style.background = extra; if(lbl) { lbl.textContent = label; lbl.style.color = 'var(--text)'; } }
   },
   vehicle: {
@@ -3503,7 +3505,7 @@ function openNewTaskModalOutlook(dateStr, timeStr){
       <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('type')">
           <span style="font-size:16px;color:var(--text);">Type</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#CCFF00;"></span><span id="ntask-type-label" style="font-size:16px;color:var(--text2);">Rappel</span><span style="color:var(--text3);font-size:18px;">›</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#F59E0B;"></span><span id="ntask-type-label" style="font-size:16px;color:var(--text2);">Rappel</span><span style="color:var(--text3);font-size:18px;">›</span></div>
         </div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('vehicle')">
