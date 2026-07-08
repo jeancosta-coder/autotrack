@@ -510,7 +510,7 @@
     .fin-row-right input { font-size:17px; color:var(--text); text-align:right; border:none; outline:none; background:transparent; width:100px; appearance:textfield; -webkit-appearance:textfield; -moz-appearance:textfield; }
     .fin-row-right input::-webkit-outer-spin-button,
     .fin-row-right input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
-    .fin-row-right input::placeholder { color:#c7c7cc; }
+    .fin-row-right input::placeholder { color:var(--text3); }
     .fin-unit { font-size:17px; color:var(--text2); }
     .fin-val { font-size:17px; font-weight:500; color:var(--text); }
     .fin-marge-card { background:var(--surface); border-radius:12px; padding:28px 16px; text-align:center; margin:0 16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
@@ -1494,8 +1494,8 @@
     <div id="calendar-container" style="flex:1;overflow:hidden;position:relative;background:var(--surface-2);">
       <p style="color:var(--text2);text-align:center;padding-top:40px;">Chargement...</p>
     </div>
-    <button id="fab-planning" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="position:fixed;bottom:130px;right:20px;width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid rgba(255,255,255,0.6);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);cursor:pointer;z-index:100;transition:transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"><line x1="9" y1="2" x2="9" y2="16"/><line x1="2" y1="9" x2="16" y2="9"/></svg>
+    <button id="fab-planning" onclick="openNewTaskModalOutlook(Utils.today(), '09:00')" style="position:fixed;bottom:130px;right:20px;width:62px;height:62px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.14);cursor:pointer;z-index:100;transition:transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--text)" stroke-width="1.6" stroke-linecap="round"><line x1="9" y1="2" x2="9" y2="16"/><line x1="2" y1="9" x2="16" y2="9"/></svg>
     </button>
   </div>
 
@@ -1555,7 +1555,7 @@
     <div style="background:var(--surface);flex-shrink:0;">
       <div style="display:flex;align-items:center;padding:14px 16px 10px;position:relative;">
         <button onclick="closeVehicleDetails()" id="details-close-btn" style="background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;width:30px;">
-          <svg width="10" height="17" viewBox="0 0 10 17" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,1 1,8.5 9,16"/></svg>
+          <svg width="10" height="17" viewBox="0 0 10 17" fill="none" stroke="var(--text)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,1 1,8.5 9,16"/></svg>
         </button>
         <div style="position:absolute;left:0;right:0;text-align:center;pointer-events:none;">
           <div id="detail-title" style="font-size:17px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 50px;"></div>
@@ -1579,7 +1579,7 @@
         <div id="details-desktop-nav" style="display:none;">
           <div style="padding:14px 16px 8px;">
             <button onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:500;color:var(--text2);padding:0;display:flex;align-items:center;gap:4px;letter-spacing:0.1px;">
-              <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="#8e8e93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="5,1 1,5 5,9"/></svg>
+              <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="5,1 1,5 5,9"/></svg>
               Parc
             </button>
           </div>
@@ -1641,14 +1641,14 @@
         <button disabled style="width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:none;border-radius:14px;padding:14px 16px;margin-bottom:12px;cursor:not-allowed;box-shadow:0 1px 3px rgba(0,0,0,0.06);opacity:0.6;">
           <div style="display:flex;align-items:center;gap:10px;">
             <div style="width:32px;height:32px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="18" cy="6" r="3" fill="#8e8e93" stroke="none"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="18" cy="6" r="3" fill="var(--text2)" stroke="none"/></svg>
             </div>
             <div style="text-align:left;">
               <div style="font-size:14px;font-weight:600;color:var(--text);">Préconisations constructeur IA</div>
               <div style="font-size:12px;color:var(--text2);margin-top:1px;">Entretiens, rappels, points de vigilance</div>
             </div>
           </div>
-          <span style="font-size:11px;font-weight:600;color:white;background:#8e8e93;padding:3px 8px;border-radius:20px;">Bientôt</span>
+          <span style="font-size:11px;font-weight:600;color:white;background:var(--neutral);padding:3px 8px;border-radius:20px;">Bientôt</span>
         </button>
 
         <!-- Notes -->
@@ -2507,7 +2507,7 @@ function renderDetailTasks(id, filter){
       html += `<div style="flex:1;min-width:0;"><div style="font-size:15px;color:var(--text);text-decoration:${t.completed ? 'line-through' : 'none'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${title}</div>`;
       if(t.cost) html += `<div style="font-size:12px;color:var(--text2);margin-top:2px;">${Number(t.cost).toLocaleString('fr-FR')}€</div>`;
       html += `</div>`;
-      html += `<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></span><svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="#c7c7cc" stroke-width="1.5" stroke-linecap="round"><polyline points="1,1 7,7 1,13"/></svg></div>`;
+      html += `<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></span><svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round"><polyline points="1,1 7,7 1,13"/></svg></div>`;
       html += `</div>`;
     });
     html += `</div>`;
@@ -2553,7 +2553,7 @@ function openDetailTaskModal(){
           <div style="display:flex;align-items:center;gap:8px;">
             <span id="stask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#00FF88;flex-shrink:0;"></span>
             <span id="stask-type-label" style="font-size:16px;color:var(--text);">Préparation</span>
-            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+            <span style="color:var(--text3);font-size:18px;line-height:1;">›</span>
           </div>
         </div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
@@ -2775,7 +2775,7 @@ function openViewModal(){
     const isActive = viewMode === opt.val;
     return `<div onclick="setViewMode('${opt.val}'); closeViewModal();" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='var(--surface)'">
       <span style="font-size:16px;font-weight:${isActive ? '600' : '400'};color:var(--text);">${opt.label}</span>
-      ${isActive ? '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}
+      ${isActive ? '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}
     </div>`;
   }).join('');
   const sheet = document.createElement('div');
@@ -2822,9 +2822,9 @@ function renderMonthView(date){
     const todayStr = [today.getFullYear(), String(today.getMonth()+1).padStart(2,'0'), String(today.getDate()).padStart(2,'0')].join('-');
     const isToday = dateStr === todayStr;
     const plannings = DataLayer.getPlanning().filter(p => p.date === dateStr);
-    html += '<div onclick="setDateAndViewDay(\'' + dateStr + '\')" style="min-height:60px;padding:4px;border:' + (isToday ? '2px solid #1a1a1a' : '1px solid #e8eaed') + ';background:' + (isToday ? 'rgba(26,26,26,0.05)' : '#f0f2f5') + ';border-radius:6px;cursor:pointer;display:flex;flex-direction:column;gap:2px;">';
+    html += '<div onclick="setDateAndViewDay(\'' + dateStr + '\')" style="min-height:60px;padding:4px;border:' + (isToday ? '2px solid var(--accent)' : '1px solid var(--border)') + ';background:' + (isToday ? 'var(--accent-soft)' : 'var(--surface-2)') + ';border-radius:6px;cursor:pointer;display:flex;flex-direction:column;gap:2px;">';
     html += '<div style="font-weight:600;font-size:11px;">' + day + '</div>';
-    plannings.slice(0, 2).forEach(task => { html += '<div style="background:#CCFF00;color:var(--text);padding:1px 4px;border-radius:2px;font-size:9px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + task.description.substring(0, 10) + '</div>'; });
+    plannings.slice(0, 2).forEach(task => { html += '<div style="background:var(--accent);color:var(--accent-contrast);padding:1px 4px;border-radius:2px;font-size:9px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + task.description.substring(0, 10) + '</div>'; });
     if(plannings.length > 2) html += '<div style="font-size:9px;color:var(--text2);">+' + (plannings.length - 2) + '</div>';
     html += '</div>';
   }
@@ -2865,9 +2865,9 @@ function renderWeekView(date){
       const ds = [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
       const isToday = ds === todayStr;
       const isSelected = ds === selectedDateStr;
-      const circleBg = isSelected && isToday ? '#FF3B30' : isSelected ? '#e5e5ea' : 'transparent';
-      const circleColor = isSelected && isToday ? 'white' : isToday ? '#FF3B30' : '#1a1a1a';
-      const labelColor = isToday ? '#FF3B30' : '#8e8e93';
+      const circleBg = isSelected && isToday ? '#FF3B30' : isSelected ? 'var(--surface-3)' : 'transparent';
+      const circleColor = isSelected && isToday ? 'white' : isToday ? '#FF3B30' : 'var(--text)';
+      const labelColor = isToday ? '#FF3B30' : 'var(--text2)';
       weekStripHtml += `<button onclick="setDateAndViewDay('${ds}')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px;border:none;cursor:pointer;border-radius:10px;background:transparent;">
         <div style="font-size:10px;font-weight:500;color:${labelColor};">${dayNames[d.getDay()]}</div>
         <div style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${circleBg};font-size:15px;font-weight:${isSelected || isToday ? '700' : '400'};color:${circleColor};margin-top:2px;">${d.getDate()}</div>
@@ -2885,9 +2885,9 @@ function renderWeekView(date){
       const ds = [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
       const isToday = ds === todayStr;
       const isSelected = ds === selectedDateStr;
-      const circleBg = isSelected && isToday ? '#FF3B30' : isSelected ? '#e5e5ea' : 'transparent';
-      const circleColor = isSelected && isToday ? 'white' : isToday ? '#FF3B30' : '#1a1a1a';
-      const labelColor = isToday ? '#FF3B30' : '#8e8e93';
+      const circleBg = isSelected && isToday ? '#FF3B30' : isSelected ? 'var(--surface-3)' : 'transparent';
+      const circleColor = isSelected && isToday ? 'white' : isToday ? '#FF3B30' : 'var(--text)';
+      const labelColor = isToday ? '#FF3B30' : 'var(--text2)';
       headerHtml += `<button onclick="setDateAndViewDay('${ds}')" style="display:flex;flex-direction:column;align-items:center;padding:4px 2px;border:none;cursor:pointer;background:transparent;border-radius:8px;">
         <div style="font-size:10px;font-weight:500;color:${labelColor};">${dayNames[d.getDay()]}</div>
         <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;background:${circleBg};color:${circleColor};margin-top:2px;">${d.getDate()}</div>
@@ -2904,7 +2904,7 @@ function renderWeekView(date){
   let hoursHtml = `<div style="position:relative;height:${gridHeight}px;">`;
   for(let h = START_HOUR; h < END_HOUR; h++){
     const top = (h - START_HOUR) * HOUR_HEIGHT;
-    hoursHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;font-size:10px;font-weight:400;color:#c7c7cc;line-height:1;padding-top:3px;">${String(h).padStart(2,'0')}</div>`;
+    hoursHtml += `<div style="position:absolute;top:${top}px;left:0;right:0;font-size:10px;font-weight:400;color:var(--text3);line-height:1;padding-top:3px;">${String(h).padStart(2,'0')}</div>`;
   }
   hoursHtml += '</div>';
   gridHtml += hoursHtml;
@@ -3012,12 +3012,12 @@ function openEditPlanningTaskModal(taskId){
       <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openEditBottomSheet('type')">
           <span style="font-size:16px;color:var(--text);">Type</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="edit-type-dot" style="width:10px;height:10px;border-radius:50%;background:${dotColor};"></span><span id="edit-type-label" style="font-size:16px;color:var(--text);">${typeLabel}</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="edit-type-dot" style="width:10px;height:10px;border-radius:50%;background:${dotColor};"></span><span id="edit-type-label" style="font-size:16px;color:var(--text);">${typeLabel}</span><span style="color:var(--text3);font-size:18px;">›</span></div>
         </div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openEditBottomSheet('vehicle')">
           <span style="font-size:16px;color:var(--text);">Véhicule</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="edit-vehicle-label" style="font-size:16px;color:${task.vehicleId ? '#1a1a1a' : '#8e8e93'};">${vehicleLabel}</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="edit-vehicle-label" style="font-size:16px;color:${task.vehicleId ? 'var(--text)' : 'var(--text2)'};">${vehicleLabel}</span><span style="color:var(--text3);font-size:18px;">›</span></div>
         </div>
       </div>
       <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
@@ -3132,7 +3132,7 @@ function openEditTaskModal(vehicleId, taskId){
           <div style="display:flex;align-items:center;gap:8px;">
             <span id="etask-type-dot" style="width:10px;height:10px;border-radius:50%;background:${TASK_TYPE_MAP[currentType]?.dot||'#00FF88'};flex-shrink:0;"></span>
             <span id="etask-type-label" style="font-size:16px;color:var(--text);">${TASK_TYPE_MAP[currentType]?.label||'Préparation'}</span>
-            <span style="color:#c7c7cc;font-size:18px;line-height:1;">›</span>
+            <span style="color:var(--text3);font-size:18px;line-height:1;">›</span>
           </div>
         </div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
@@ -3350,17 +3350,17 @@ const BOTTOM_SHEET_DATA = {
   vehicle: {
     title: 'Véhicule',
     options: () => { const opts = [{val:'', label:'Aucun', dot:null}]; vehicles.forEach(v => opts.push({val: String(v.id), label: v.marque + ' ' + v.modele, dot:null})); return opts; },
-    onSelect: (val, label) => { document.newTaskVehicleId = val; const lbl = document.getElementById('ntask-vehicle-label'); if(lbl) { lbl.textContent = label; lbl.style.color = val ? '#1a1a1a' : '#8e8e93'; } }
+    onSelect: (val, label) => { document.newTaskVehicleId = val; const lbl = document.getElementById('ntask-vehicle-label'); if(lbl) { lbl.textContent = label; lbl.style.color = val ? 'var(--text)' : 'var(--text2)'; } }
   },
   notif: {
     title: 'Notification',
     options: [{val:'none', label:'Aucune'},{val:'15', label:'15 minutes avant'},{val:'30', label:'30 minutes avant'},{val:'60', label:'1 heure avant'},{val:'1440', label:'1 jour avant'}],
-    onSelect: (val, label) => { document.newTaskNotif = val; const lbl = document.getElementById('ntask-notif-label'); if(lbl) { lbl.textContent = label; lbl.style.color = val === 'none' ? '#8e8e93' : '#1a1a1a'; } }
+    onSelect: (val, label) => { document.newTaskNotif = val; const lbl = document.getElementById('ntask-notif-label'); if(lbl) { lbl.textContent = label; lbl.style.color = val === 'none' ? 'var(--text2)' : 'var(--text)'; } }
   },
   repeat: {
     title: 'Répétition',
     options: [{val:'never', label:'Jamais'},{val:'daily', label:'Tous les jours'},{val:'weekly', label:'Toutes les semaines'},{val:'monthly', label:'Tous les mois'}],
-    onSelect: (val, label) => { document.newTaskRepeat = val; const lbl = document.getElementById('ntask-repeat-label'); if(lbl) { lbl.textContent = label; lbl.style.color = val === 'never' ? '#8e8e93' : '#1a1a1a'; } }
+    onSelect: (val, label) => { document.newTaskRepeat = val; const lbl = document.getElementById('ntask-repeat-label'); if(lbl) { lbl.textContent = label; lbl.style.color = val === 'never' ? 'var(--text2)' : 'var(--text)'; } }
   }
 };
 
@@ -3400,12 +3400,12 @@ function openNewTaskModalOutlook(dateStr, timeStr){
       <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('type')">
           <span style="font-size:16px;color:var(--text);">Type</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#CCFF00;"></span><span id="ntask-type-label" style="font-size:16px;color:var(--text2);">Rappel</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#CCFF00;"></span><span id="ntask-type-label" style="font-size:16px;color:var(--text2);">Rappel</span><span style="color:var(--text3);font-size:18px;">›</span></div>
         </div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('vehicle')">
           <span style="font-size:16px;color:var(--text);">Véhicule</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-vehicle-label" style="font-size:16px;color:var(--text2);">Aucun</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-vehicle-label" style="font-size:16px;color:var(--text2);">Aucun</span><span style="color:var(--text3);font-size:18px;">›</span></div>
         </div>
       </div>
       <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
@@ -3444,13 +3444,13 @@ function openNewTaskModalOutlook(dateStr, timeStr){
       <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('notif')">
           <span style="font-size:16px;color:var(--text);">Notification</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-notif-label" style="font-size:16px;color:var(--text2);">Aucune</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-notif-label" style="font-size:16px;color:var(--text2);">Aucune</span><span style="color:var(--text3);font-size:18px;">›</span></div>
         </div>
       </div>
       <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openBottomSheet('repeat')">
           <span style="font-size:16px;color:var(--text);">Répétition</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-repeat-label" style="font-size:16px;color:var(--text2);">Jamais</span><span style="color:#c7c7cc;font-size:18px;">›</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span id="ntask-repeat-label" style="font-size:16px;color:var(--text2);">Jamais</span><span style="color:var(--text3);font-size:18px;">›</span></div>
         </div>
       </div>
     </div>
@@ -3502,7 +3502,7 @@ function renderCalNew(target){
   for(let d = 1; d <= lastDay.getDate(); d++){
     const ds = Utils.dateToStr(new Date(year, month, d));
     const isSel = ds === selectedDate, isToday = ds === todayStr;
-    html += `<div onclick="selectDateNew('${ds}','${target}')" style="padding:7px 2px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:${isSel||isToday?'700':'400'};background:${isSel?'#1a1a1a':'transparent'};color:${isSel?'white':isToday?'#007AFF':'#1a1a1a'};">${d}</div>`;
+    html += `<div onclick="selectDateNew('${ds}','${target}')" style="padding:7px 2px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:${isSel||isToday?'700':'400'};background:${isSel?'var(--accent)':'transparent'};color:${isSel?'var(--accent-contrast)':isToday?'var(--accent)':'var(--text)'};">${d}</div>`;
   }
   grid.innerHTML = html;
 }
@@ -3664,10 +3664,10 @@ function showLoginScreen(){
 let authMode = 'login';
 function authTab(m){
   authMode = m;
-  document.getElementById('tab-login').style.background = m==='login'?'white':'transparent';
-  document.getElementById('tab-login').style.color = m==='login'?'#1a1a1a':'#8e8e93';
-  document.getElementById('tab-register').style.background = m==='register'?'white':'transparent';
-  document.getElementById('tab-register').style.color = m==='register'?'#1a1a1a':'#8e8e93';
+  document.getElementById('tab-login').style.background = m==='login'?'var(--surface)':'transparent';
+  document.getElementById('tab-login').style.color = m==='login'?'var(--text)':'var(--text2)';
+  document.getElementById('tab-register').style.background = m==='register'?'var(--surface)':'transparent';
+  document.getElementById('tab-register').style.color = m==='register'?'var(--text)':'var(--text2)';
   document.getElementById('field-name').style.display = m==='register'?'block':'none';
   document.getElementById('auth-btn').textContent = m==='login'?'Se connecter':'Créer mon compte';
   const fl = document.getElementById('forgot-pwd-link');
@@ -3850,8 +3850,8 @@ sb.auth.getSession().then(({data:{session}}) => {
   </button>
 </nav>
 
-<button id="fab-parc" onclick="openAddModal()" style="position:fixed;bottom:130px;right:20px;width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid rgba(255,255,255,0.6);display:none;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);cursor:pointer;z-index:999;transition:transform 0.2s ease;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"><line x1="9" y1="2" x2="9" y2="16"/><line x1="2" y1="9" x2="16" y2="9"/></svg>
+<button id="fab-parc" onclick="openAddModal()" style="position:fixed;bottom:130px;right:20px;width:62px;height:62px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:none;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.14);cursor:pointer;z-index:999;transition:transform 0.2s ease;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--text)" stroke-width="1.6" stroke-linecap="round"><line x1="9" y1="2" x2="9" y2="16"/><line x1="2" y1="9" x2="16" y2="9"/></svg>
 </button>
 
 </body>
