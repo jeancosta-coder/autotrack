@@ -520,8 +520,15 @@
     .filter-btn:hover { background-color: #E5E7EB; }
     .filter-btn:active { transform: scale(0.95); background-color: #D1D5DB; }
     .filter-btn.active { background-color: var(--navy); color: white; border-color: var(--navy); }
-    .parc-filter, .task-filter-btn, .detail-tab { padding: 7px 14px; font-size: 13px; font-weight: 500; border-radius: 20px; border: none; background: transparent; color:var(--text2); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
-    .parc-filter.active, .task-filter-btn.active, .detail-tab.detail-tab-active { background:var(--navy); color: white; font-weight: 600; }
+    .task-filter-btn, .detail-tab { padding: 7px 14px; font-size: 13px; font-weight: 500; border-radius: 20px; border: none; background:var(--surface-2); color:var(--text2); cursor: pointer; transition: background 0.15s ease, color 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1); white-space: nowrap; }
+    .task-filter-btn.active, .detail-tab.detail-tab-active { background:var(--navy); color: white; font-weight: 600; }
+    .task-filter-btn:active, .detail-tab:active { transform: scale(0.95); }
+    /* Segmented control (jour/3j/semaine/mois, statuts Parc, filtres chart) */
+    .seg-control { display: inline-flex; background:var(--surface-2); border-radius: 10px; padding: 3px; gap: 2px; }
+    .seg-btn { border: none; background: transparent; color:var(--text2); font-size: 13px; font-weight: 500; padding: 7px 14px; border-radius: 8px; cursor: pointer; white-space: nowrap; transition: background 0.15s ease, color 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1); }
+    .seg-btn:hover { color:var(--text); }
+    .seg-btn.active { background:var(--surface); color:var(--accent); font-weight: 600; box-shadow: var(--shadow-sm); }
+    .seg-btn:active { transform: scale(0.95); }
     .tab { transition: all 0.2s ease; }
     .tab:hover { color: var(--navy); }
     .modal { animation: fadeIn 0.2s ease; }
@@ -978,9 +985,9 @@
         border-radius: 20px !important;
         border: none !important;
         border-bottom: none !important;
-        color: #6e6e73 !important;
-        background: transparent !important;
-        transition: all 0.18s !important;
+        color:var(--text2) !important;
+        background:var(--surface-2) !important;
+        transition: background 0.15s ease, color 0.15s ease !important;
         cursor: pointer !important;
       }
       #details > div:nth-child(2) .detail-tab.detail-tab-active {
@@ -990,7 +997,7 @@
         box-shadow: none !important;
       }
       #details > div:nth-child(2) .detail-tab:not(.detail-tab-active):hover {
-        background: rgba(0,0,0,0.06) !important;
+        background: var(--surface-3) !important;
         color:var(--text) !important;
       }
       /* Onglets contenu : col 2, row 2 */
@@ -1209,33 +1216,25 @@
         margin-right: 8px;
       }
       .detail-tab,
-      .task-filter-btn,
-      .chart-filter,
-      .filter-btn,
-      .parc-filter {
+      .task-filter-btn {
         border-radius: 20px !important;
         border: none !important;
-        background: transparent !important;
+        background:var(--surface-2) !important;
         color:var(--text2) !important;
         font-weight: 500 !important;
         font-size: 13px !important;
-        transition: all 0.15s !important;
+        transition: background 0.15s ease, color 0.15s ease !important;
         cursor: pointer !important;
       }
       .task-filter-btn.active,
-      .filter-btn.active,
-      .chart-filter.active,
-      .parc-filter.active {
+      .detail-tab.detail-tab-active {
         background:var(--navy) !important;
         color: white !important;
         font-weight: 600 !important;
       }
       .task-filter-btn:not(.active):hover,
-      .filter-btn:not(.active):hover,
-      .chart-filter:not(.active):hover,
-      .parc-filter:not(.active):hover,
       .detail-tab:not(.detail-tab-active):hover {
-        background: rgba(0,0,0,0.06) !important;
+        background: var(--surface-3) !important;
         color:var(--text) !important;
       }
       .btn-outline {
@@ -1568,11 +1567,11 @@
     </div>
 
     <!-- FILTRES -->
-    <div style="display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
-      <button class="parc-filter active" onclick="filterParc('all',this)">Tous</button>
-      <button class="parc-filter" onclick="filterParc('En cours',this)">En cours</button>
-      <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)">Prêt</button>
-      <button class="parc-filter" onclick="filterParc('Vendu',this)">Vendu</button>
+    <div class="seg-control" style="margin-bottom:20px;overflow-x:auto;">
+      <button class="seg-btn parc-filter active" onclick="filterParc('all',this)">Tous</button>
+      <button class="seg-btn parc-filter" onclick="filterParc('En cours',this)">En cours</button>
+      <button class="seg-btn parc-filter" onclick="filterParc('Prêt à vendre',this)">Prêt</button>
+      <button class="seg-btn parc-filter" onclick="filterParc('Vendu',this)">Vendu</button>
     </div>
 
     <div id="parc-grid" style="padding-bottom:160px;"></div>
@@ -1667,10 +1666,10 @@
       </div>
     </div>
     <div style="margin-bottom:20px;">
-      <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
-        <button class="chart-filter active" onclick="switchChart('ca',this)" style="padding:6px 14px;border:none;border-radius:20px;background:var(--navy);color:white;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">CA</button>
-        <button class="chart-filter" onclick="switchChart('prep-profit',this)" style="padding:6px 14px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Prep vs Profit</button>
-        <button class="chart-filter" onclick="switchChart('temps-vente',this)" style="padding:6px 14px;border:none;border-radius:20px;background:rgba(0,0,0,0.06);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;">Temps de vente</button>
+      <div class="seg-control" style="margin-bottom:14px;overflow-x:auto;">
+        <button class="seg-btn chart-filter active" onclick="switchChart('ca',this)">CA</button>
+        <button class="seg-btn chart-filter" onclick="switchChart('prep-profit',this)">Prep vs Profit</button>
+        <button class="seg-btn chart-filter" onclick="switchChart('temps-vente',this)">Temps de vente</button>
       </div>
       <div style="background:var(--surface);border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
         <canvas id="chart-canvas" style="max-height:220px;"></canvas>
