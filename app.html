@@ -554,8 +554,9 @@
       .filter-btn { padding: 10px 12px; gap: 6px; }
       input, textarea, select { font-size: 16px; }
       div[style*="grid-template-columns:1fr 1fr"] { display: grid !important; grid-template-columns: 1fr !important; gap: 16px !important; margin-bottom: 20px !important; }
-      .details-segment-wrap { display: flex; gap: 0; margin: 18px 12px 10px; overflow-x: auto; scrollbar-width: none; }
-      .details-segment-wrap .detail-tab { flex: 1; text-align: center; }
+      .details-segment-wrap { display: flex; gap: 2px; margin: 14px 12px 10px; padding: 3px; background:var(--surface-2); border-radius: 10px; overflow-x: auto; scrollbar-width: none; }
+      .details-segment-wrap .detail-tab { flex: 1; text-align: center; background: transparent !important; }
+      .details-segment-wrap .detail-tab.detail-tab-active { background:var(--surface) !important; color:var(--accent) !important; box-shadow: var(--shadow-sm); }
       #details > div:nth-child(2) { border-bottom: none !important; background:var(--surface); }
       #detail-tab-infos { background:var(--surface-2) !important; }
       .progress-container { margin-bottom: 0.5rem; }
@@ -969,35 +970,34 @@
         border-bottom: 1px solid rgba(0,0,0,0.06) !important;
         gap: 4px !important;
       }
-      /* Segmented pills */
+      /* Segmented control */
       .details-segment-wrap {
         display: flex !important;
-        background: transparent !important;
-        border-radius: 0 !important;
-        padding: 0 !important;
-        gap: 4px !important;
+        background:var(--surface-2) !important;
+        border-radius: 10px !important;
+        padding: 3px !important;
+        gap: 2px !important;
       }
       #details > div:nth-child(2) .detail-tab {
         flex: none !important;
         padding: 7px 18px !important;
         font-size: 13px !important;
         font-weight: 500 !important;
-        border-radius: 20px !important;
+        border-radius: 8px !important;
         border: none !important;
         border-bottom: none !important;
         color:var(--text2) !important;
-        background:var(--surface-2) !important;
+        background: transparent !important;
         transition: background 0.15s ease, color 0.15s ease !important;
         cursor: pointer !important;
       }
       #details > div:nth-child(2) .detail-tab.detail-tab-active {
-        background:var(--navy) !important;
-        color: white !important;
+        background:var(--surface) !important;
+        color:var(--accent) !important;
         font-weight: 600 !important;
-        box-shadow: none !important;
+        box-shadow: var(--shadow-sm) !important;
       }
       #details > div:nth-child(2) .detail-tab:not(.detail-tab-active):hover {
-        background: var(--surface-3) !important;
         color:var(--text) !important;
       }
       /* Onglets contenu : col 2, row 2 */
