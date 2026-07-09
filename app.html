@@ -3669,9 +3669,12 @@ function ntaskModalBody(startDate, endDate, startTime, endTime){
       <div class="ntask-card" style="padding:0 16px;">
         <input type="text" id="ntask-title" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
       </div>
-      <div style="margin:0 2px 8px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;">Type</div>
-      <div id="ntask-type-pills" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;scrollbar-width:none;">${ntaskTypePills(document.newTaskType)}</div>
       <div class="ntask-card">
+        <div class="ntask-row" style="cursor:default;">
+          <span class="ntask-row-label">Type</span>
+          <select id="ntask-type" class="ntask-native" onchange="document.newTaskType=this.value">${ntaskOptionsHTML(NTASK_TYPES, document.newTaskType)}</select>
+        </div>
+        <div class="ntask-sep"></div>
         <div class="ntask-row" style="cursor:default;">
           <span class="ntask-row-label">Véhicule</span>
           <select id="ntask-vehicle" class="ntask-native" onchange="document.newTaskVehicleId=this.value">${ntaskOptionsHTML(ntaskVehicleOpts(), vId)}</select>
