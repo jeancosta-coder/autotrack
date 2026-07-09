@@ -521,7 +521,7 @@
     .filter-btn:active { transform: scale(0.95); background-color: #D1D5DB; }
     .filter-btn.active { background-color: var(--navy); color: white; border-color: var(--navy); }
     .task-filter-btn, .detail-tab { padding: 7px 14px; font-size: 13px; font-weight: 500; border-radius: 20px; border: none; background:var(--surface-2); color:var(--text2); cursor: pointer; transition: background 0.15s ease, color 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1); white-space: nowrap; }
-    .task-filter-btn.active, .detail-tab.detail-tab-active { background:var(--navy); color: white; font-weight: 600; }
+    .task-filter-btn.active, .detail-tab.detail-tab-active { background:var(--surface); color:var(--accent); font-weight: 600; box-shadow: var(--shadow-sm); }
     .task-filter-btn:active, .detail-tab:active { transform: scale(0.95); }
     /* Segmented control (jour/3j/semaine/mois, statuts Parc, filtres chart) */
     .seg-control { display: inline-flex; background:var(--surface-2); border-radius: 10px; padding: 3px; gap: 2px; }
@@ -1098,20 +1098,21 @@
         font-size: 13px !important;
         border-radius: 20px !important;
         border: none !important;
-        background: transparent !important;
+        background:var(--surface-2) !important;
         color:var(--text2) !important;
         font-weight: 500 !important;
-        transition: all 0.2s !important;
+        transition: background 0.15s ease, color 0.15s ease !important;
       }
       #detail-tab-taches .task-filter-btn.active,
       #detail-tab-taches #filter-all-tasks[style*="1a1a1a"] {
-        background:var(--navy) !important;
-        color: white !important;
+        background:var(--surface) !important;
+        color:var(--accent) !important;
         border: none !important;
         font-weight: 600 !important;
+        box-shadow: var(--shadow-sm) !important;
       }
       #detail-tab-taches .task-filter-btn:not(.active):hover {
-        background: rgba(0,0,0,0.06) !important;
+        background:var(--surface-3) !important;
         color:var(--text) !important;
       }
       /* Items de tâches : plus d'espace */
@@ -1228,9 +1229,10 @@
       }
       .task-filter-btn.active,
       .detail-tab.detail-tab-active {
-        background:var(--navy) !important;
-        color: white !important;
+        background:var(--surface) !important;
+        color:var(--accent) !important;
         font-weight: 600 !important;
+        box-shadow: var(--shadow-sm) !important;
       }
       .task-filter-btn:not(.active):hover,
       .detail-tab:not(.detail-tab-active):hover {
