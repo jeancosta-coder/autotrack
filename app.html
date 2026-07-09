@@ -154,6 +154,9 @@
     .ntask-row-val { display: flex; align-items: center; gap: 8px; font-size: 16px; color: var(--text2); }
     .ntask-row-val .chev { color: var(--text3); font-size: 18px; transition: transform 0.2s ease; }
     .ntask-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 13px; font-weight: 500; border-radius: 20px; cursor: pointer; white-space: nowrap; transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease; }
+    .ntask-native { border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 15px; padding: 7px 10px; border-radius: 8px; outline: none; font-family: inherit; cursor: pointer; max-width: 62%; }
+    .ntask-native:focus { border-color: var(--accent); }
+    select.ntask-native { -webkit-appearance: none; appearance: none; padding-right: 26px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23888' stroke-width='1.6'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; }
     .ntask-field { position: relative; }
     /* Panneaux = menus déroulants flottants (mobile + desktop) */
     .ntask-card { overflow: visible; }
@@ -3653,7 +3656,54 @@ if(!window._ntaskOutsideBound){
 }
 function ntaskVehicleOpts(){ const o = [{v:'',l:'Aucun'}]; vehicles.forEach(v => o.push({v:String(v.id), l:(v.marque + ' ' + v.modele).trim() || 'Véhicule'})); return o; }
 /* Corps partagé des modales tâche (ajout + modification) — lit document.newTask* */
+function ntaskOptionsHTML(opts, cur){ return opts.map(o => `<option value="${o.v}"${o.v === cur ? ' selected' : ''}>${o.l}</option>`).join(''); }
 function ntaskModalBody(startDate, endDate, startTime, endTime){
+  const vId = document.newTaskVehicleId || '';
+  const nCur = document.newTaskNotif || 'none';
+  const rCur = document.newTaskRepeat || 'never';
+  return `<div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:20px 16px 24px 16px;">
+      <div class="ntask-card" style="padding:0 16px;">
+        <input type="text" id="ntask-title" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
+      </div>
+      <div style="margin:0 2px 8px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;">Type</div>
+      <div id="ntask-type-pills" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;scrollbar-width:none;">${ntaskTypePills(document.newTaskType)}</div>
+      <div class="ntask-card">
+        <div class="ntask-row" style="cursor:default;">
+          <span class="ntask-row-label">Véhicule</span>
+          <select id="ntask-vehicle" class="ntask-native" onchange="document.newTaskVehicleId=this.value">${ntaskOptionsHTML(ntaskVehicleOpts(), vId)}</select>
+        </div>
+      </div>
+      <div class="ntask-card">
+        <div class="ntask-row" style="cursor:default;">
+          <span class="ntask-row-label">Début</span>
+          <span style="display:flex;gap:8px;align-items:center;">
+            <input type="date" id="ntask-start-date" class="ntask-native" value="${startDate}" onchange="document.newTaskDate=this.value">
+            <input type="time" id="ntask-start-time" class="ntask-native" value="${startTime}" onchange="document.newTaskTime=this.value">
+          </span>
+        </div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;">
+          <span class="ntask-row-label">Fin</span>
+          <span style="display:flex;gap:8px;align-items:center;">
+            <input type="date" id="ntask-end-date" class="ntask-native" value="${endDate}" onchange="document.newTaskDateEnd=this.value">
+            <input type="time" id="ntask-end-time" class="ntask-native" value="${endTime}" onchange="document.newTaskTimeEnd=this.value">
+          </span>
+        </div>
+      </div>
+      <div class="ntask-card">
+        <div class="ntask-row" style="cursor:default;">
+          <span class="ntask-row-label">Notification</span>
+          <select id="ntask-notif" class="ntask-native" onchange="document.newTaskNotif=this.value">${ntaskOptionsHTML(NTASK_NOTIF_OPTS, nCur)}</select>
+        </div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;">
+          <span class="ntask-row-label">Répétition</span>
+          <select id="ntask-repeat" class="ntask-native" onchange="document.newTaskRepeat=this.value">${ntaskOptionsHTML(NTASK_REPEAT_OPTS, rCur)}</select>
+        </div>
+      </div>
+    </div>`;
+}
+function _ntaskModalBodyOLD(startDate, endDate, startTime, endTime){
   const dfmt = (d) => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
   const vId = document.newTaskVehicleId || '';
   const vSel = ntaskVehicleOpts().find(x => x.v === vId);
@@ -3751,7 +3801,7 @@ function ntaskSelectVehicle(id){
 }
 function openNewTaskModalOutlookForVehicle(dateStr, timeStr, vehicleId){
   openNewTaskModalOutlook(dateStr, timeStr);
-  setTimeout(() => { if(vehicleId) { document.newTaskVehicleId = String(vehicleId); const lbl = document.getElementById('ntask-vehicle-label'); const v = vehicles.find(x => x.id == vehicleId); if(lbl && v) { lbl.textContent = v.marque + ' ' + v.modele; lbl.style.color = 'var(--text)'; } } }, 10);
+  setTimeout(() => { if(vehicleId) { document.newTaskVehicleId = String(vehicleId); const sel = document.getElementById('ntask-vehicle'); if(sel) sel.value = String(vehicleId); } }, 10);
 }
 
 function openNewTaskModalOutlook(dateStr, timeStr){
