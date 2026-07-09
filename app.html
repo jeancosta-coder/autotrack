@@ -159,8 +159,10 @@
     .ntask-card { overflow: visible; }
     .ntask-inline-panel {
       display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 60;
-      margin-top: 4px; border: 1px solid var(--border); border-radius: var(--r-md);
-      background: var(--surface); box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+      margin-top: 4px; border: 1px solid var(--border); border-radius: 16px;
+      background: var(--nav-glass);
+      backdrop-filter: saturate(180%) blur(22px); -webkit-backdrop-filter: saturate(180%) blur(22px);
+      box-shadow: 0 12px 34px rgba(0,0,0,0.28);
       max-height: 280px; overflow-y: auto;
     }
     .ntask-opt { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; cursor: pointer; }
@@ -3174,82 +3176,67 @@ function renderWeekView(date){
 function openEditPlanningTaskModal(taskId){
   const task = planning.find(t => t.id === taskId);
   if(!task) return;
-  const taskType = task.type || 'rappel';
-  const taskDate = task.date || Utils.today();
   const taskTimeStart = task.timeStart || task.time || '09:00';
   const taskTimeEnd = task.timeEnd || (() => { const [h,m] = taskTimeStart.split(':'); return String((parseInt(h)+1)%24).padStart(2,'0')+':'+m; })();
-  const TYPE_COLORS = EVENT_COLORS;
-  const TYPE_LABELS = {rappel:'Rappel', preparation:'Préparation', sav:'SAV', rdv:'RDV', appel:'Appel'};
-  const dotColor = TYPE_COLORS[taskType] || EVENT_COLORS.rappel;
-  const typeLabel = TYPE_LABELS[taskType] || 'Rappel';
-  const vehicleLabel = task.vehicleId ? ((vehicles.find(v => v.id == task.vehicleId)?.marque + ' ' + vehicles.find(v => v.id == task.vehicleId)?.modele) || 'Aucun') : 'Aucun';
-  const dateFormatted = (d) => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
-  document.editTaskId = taskId;
-  document.editTaskType = taskType;
-  document.editTaskVehicleId = task.vehicleId || '';
-  document.editTaskDate = taskDate;
-  document.editTaskDateEnd = task.dateEnd || taskDate;
-  document.editTaskAllDay = task.allDay || false;
-
-  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
+  const taskDate = task.date || Utils.today();
+  const taskDateEnd = task.dateEnd || taskDate;
+  // Pré-remplir l'état partagé (mêmes variables que la modale d'ajout)
+  document.newTaskType = task.type || 'rappel';
+  document.newTaskVehicleId = task.vehicleId ? String(task.vehicleId) : '';
+  document.newTaskDate = taskDate;
+  document.newTaskDateEnd = taskDateEnd;
+  document.newTaskTime = taskTimeStart;
+  document.newTaskTimeEnd = taskTimeEnd;
+  document.newTaskNotif = task.notification || 'none';
+  document.newTaskRepeat = task.repeat || 'never';
+  _ntaskCalDate = new Date(taskDate + 'T00:00:00');
+  if(!document.getElementById('modal-anim-style')){
+    const style = document.createElement('style');
+    style.id = 'modal-anim-style';
+    style.textContent = '@keyframes slideUpFull{from{transform:translateY(100%);opacity:0;}to{transform:translateY(0);opacity:1;}}@keyframes slideDownFull{from{transform:translateY(0);opacity:1;}to{transform:translateY(100%);opacity:0;}}';
+    document.head.appendChild(style);
+  }
+  const trash = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
+  const html = `<div id="edit-task-modal-planning" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface-2);z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
       <button onclick="closeEditPlanningModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
-      <span style="font-size:17px;font-weight:600;color:var(--text);">Modifier la tâche</span>
-      <button onclick="saveEditPlanningTask(${taskId})" style="background:none;border:none;cursor:pointer;padding:4px;">
-        <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div>
-      </button>
+      <span style="font-size:17px;font-weight:600;color:var(--text);">Modifier l'événement</span>
+      <button onclick="confirmDeleteEditTask(${taskId})" title="Supprimer" style="background:none;border:none;cursor:pointer;color:var(--danger);padding:4px;display:flex;">${trash}</button>
     </div>
-    <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
-      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px;padding:0 16px;">
-        <input type="text" id="edit-task-title" value="${task.description || ''}" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
-      </div>
-      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openEditBottomSheet('type')">
-          <span style="font-size:16px;color:var(--text);">Type</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="edit-type-dot" style="width:10px;height:10px;border-radius:50%;background:${dotColor};"></span><span id="edit-type-label" style="font-size:16px;color:var(--text);">${typeLabel}</span><span style="color:var(--text3);font-size:18px;">›</span></div>
-        </div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openEditBottomSheet('vehicle')">
-          <span style="font-size:16px;color:var(--text);">Véhicule</span>
-          <div style="display:flex;align-items:center;gap:8px;"><span id="edit-vehicle-label" style="font-size:16px;color:${task.vehicleId ? 'var(--text)' : 'var(--text2)'};">${vehicleLabel}</span><span style="color:var(--text3);font-size:18px;">›</span></div>
-        </div>
-      </div>
-      <div style="background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:var(--text);">Début</span>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:16px;color:var(--text);">${dateFormatted(taskDate)}</span>
-            <input type="time" id="edit-start-time" value="${taskTimeStart}" style="border:none;outline:none;font-size:16px;color:var(--text2);background:transparent;"/>
-          </div>
-        </div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-          <span style="font-size:16px;color:var(--text);">Fin</span>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:16px;color:var(--text);">${dateFormatted(task.dateEnd || taskDate)}</span>
-            <input type="time" id="edit-end-time" value="${taskTimeEnd}" style="border:none;outline:none;font-size:16px;color:var(--text2);background:transparent;"/>
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:center;margin-top:8px;">
-        <button onclick="confirmDeleteEditTask(${taskId})" style="background:none;border:none;cursor:pointer;padding:12px;display:flex;align-items:center;justify-content:center;border-radius:50%;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF1744" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-        </button>
-      </div>
-    </div>`;
-
-  if (window.innerWidth >= 900) {
-    let innerHtmlDesktop = innerHtml.replace(/<button [^>]*onclick="saveEditPlanningTask\([\s\S]*?<\/button>/, `<button onclick="saveEditPlanningTask(${taskId})" style="background:none;border:none;cursor:pointer;padding:4px;"><div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div></button>`);
-    innerHtmlDesktop = innerHtmlDesktop.replace(/<div style="display:flex;justify-content:center;margin-top:8px;">[\s\S]*?<\/div>/, '<div style="display:none;"></div>');
-    innerHtmlDesktop += `<div style="padding:16px 20px;border-top:1px solid var(--border);flex-shrink:0;display:flex;justify-content:center;"><button onclick="confirmDeleteEditTask(${taskId})" style="background:none;border:none;cursor:pointer;font-size:15px;font-weight:500;color:#FF3B30;padding:10px 16px;">Supprimer</button></div>`;
+    ${ntaskModalBody(taskDate, taskDateEnd, taskTimeStart, taskTimeEnd)}
+    <div class="ntask-save-bar"><button class="ntask-save-btn" onclick="saveTaskEdit(${taskId})">Enregistrer</button></div>
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+  const titleEl = document.getElementById('ntask-title'); if(titleEl) titleEl.value = task.description || '';
+  if(window.innerWidth >= 900){
     const bd = document.createElement('div');
     bd.id = 'edit-planning-backdrop';
     bd.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9997;';
     bd.addEventListener('click', closeEditPlanningModal);
-    document.body.appendChild(bd);
-    document.body.insertAdjacentHTML('beforeend', `<div id="edit-task-modal-planning" style="background:var(--surface);z-index:9999;display:flex;flex-direction:column;">${innerHtmlDesktop}</div>`);
-  } else {
-    document.body.insertAdjacentHTML('beforeend', `<div id="edit-task-modal-planning" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:flex;flex-direction:column;">${innerHtml}</div>`);
+    const modal = document.getElementById('edit-task-modal-planning');
+    if(modal) document.body.insertBefore(bd, modal);
   }
+}
+function saveTaskEdit(taskId){
+  const task = planning.find(t => t.id === taskId);
+  if(!task) return;
+  const titleEl = document.getElementById('ntask-title');
+  const desc = titleEl ? titleEl.value.trim() : '';
+  if(!desc){ showToast('⚠️ Titre requis'); return; }
+  task.description = desc;
+  task.type = document.newTaskType || task.type;
+  task.vehicleId = document.newTaskVehicleId || null;
+  task.date = document.newTaskDate || task.date;
+  task.dateEnd = document.newTaskDateEnd || task.date;
+  task.timeStart = document.newTaskTime || task.timeStart;
+  task.timeEnd = document.newTaskTimeEnd || task.timeEnd;
+  task.notification = document.newTaskNotif || 'none';
+  task.repeat = document.newTaskRepeat || 'never';
+  save();
+  closeEditPlanningModal();
+  renderPlanning();
+  if(currentDetailVehicleId) renderDetailTasks(currentDetailVehicleId, currentDetailTaskFilter);
+  showToast('✓ Événement modifié');
 }
 
 function closeEditPlanningModal(){ const m = document.getElementById('edit-task-modal-planning'); if(m) m.remove(); const bd = document.getElementById('edit-planning-backdrop'); if(bd) bd.remove(); }
@@ -3612,7 +3599,16 @@ function ntaskSetType(v){
 }
 function ntaskToggle(id){
   document.querySelectorAll('.ntask-inline-panel').forEach(p => { if(p.id !== id) p.style.display = 'none'; });
-  const p = document.getElementById(id); if(p) p.style.display = (p.style.display === 'block') ? 'none' : 'block';
+  const p = document.getElementById(id); if(!p) return;
+  const open = p.style.display !== 'block';
+  p.style.display = open ? 'block' : 'none';
+  if(open){
+    const field = p.closest('.ntask-field');
+    const anchor = field ? (field.querySelector('.ntask-row') || field) : p;
+    const spaceBelow = window.innerHeight - anchor.getBoundingClientRect().bottom;
+    if(spaceBelow < 280){ p.style.top = 'auto'; p.style.bottom = '100%'; p.style.marginTop = '0'; p.style.marginBottom = '6px'; }
+    else { p.style.top = '100%'; p.style.bottom = 'auto'; p.style.marginTop = '4px'; p.style.marginBottom = '0'; }
+  }
 }
 function ntaskToggleTime(target){ ntaskToggle('ntask-' + target + '-time-panel'); }
 function ntaskTimeSlots(target){
@@ -3650,12 +3646,103 @@ function ntaskSelectRepeat(v){
 if(!window._ntaskOutsideBound){
   window._ntaskOutsideBound = true;
   document.addEventListener('click', function(e){
-    if(!document.getElementById('new-task-modal')) return;
+    if(!document.getElementById('new-task-modal') && !document.getElementById('edit-task-modal-planning')) return;
     if(e.target.closest && e.target.closest('.ntask-field')) return;
     document.querySelectorAll('.ntask-inline-panel').forEach(p => { p.style.display = 'none'; });
   });
 }
 function ntaskVehicleOpts(){ const o = [{v:'',l:'Aucun'}]; vehicles.forEach(v => o.push({v:String(v.id), l:(v.marque + ' ' + v.modele).trim() || 'Véhicule'})); return o; }
+/* Corps partagé des modales tâche (ajout + modification) — lit document.newTask* */
+function ntaskModalBody(startDate, endDate, startTime, endTime){
+  const dfmt = (d) => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
+  const vId = document.newTaskVehicleId || '';
+  const vSel = ntaskVehicleOpts().find(x => x.v === vId);
+  const vLabel = vSel ? vSel.l : 'Aucun';
+  const nCur = document.newTaskNotif || 'none';
+  const rCur = document.newTaskRepeat || 'never';
+  const nLabel = (NTASK_NOTIF_OPTS.find(x => x.v === nCur) || {l:'Aucune'}).l;
+  const rLabel = (NTASK_REPEAT_OPTS.find(x => x.v === rCur) || {l:'Jamais'}).l;
+  const chev = (h) => `<svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="${h}"/></svg>`;
+  return `<div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:20px 16px 24px 16px;">
+      <div class="ntask-card" style="padding:0 16px;">
+        <input type="text" id="ntask-title" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
+      </div>
+      <div style="margin:0 2px 8px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;">Type</div>
+      <div id="ntask-type-pills" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;scrollbar-width:none;">${ntaskTypePills(document.newTaskType)}</div>
+      <div class="ntask-card">
+        <div class="ntask-field">
+          <div class="ntask-row" onclick="ntaskToggle('ntask-vehicle-panel')">
+            <span class="ntask-row-label">Véhicule</span>
+            <span class="ntask-row-val"><span id="ntask-vehicle-label" style="color:${vId ? 'var(--text)' : 'var(--text2)'};">${vLabel}</span><span class="chev">›</span></span>
+          </div>
+          <div id="ntask-vehicle-panel" class="ntask-inline-panel">${ntaskOptList(ntaskVehicleOpts(), vId, 'ntaskSelectVehicle')}</div>
+        </div>
+      </div>
+      <div class="ntask-card">
+        <div class="ntask-field">
+        <div class="ntask-row" style="cursor:default;">
+          <span class="ntask-row-label">Début</span>
+          <span class="ntask-row-val">
+            <span id="ntask-start-date-label" onclick="toggleDatePickerNew('start')" style="cursor:pointer;">${dfmt(startDate)}</span>
+            <span id="ntask-start-time-label" onclick="ntaskToggleTime('start')" style="cursor:pointer;color:var(--text);font-weight:500;background:var(--surface-2);padding:4px 10px;border-radius:8px;">${startTime}</span>
+          </span>
+        </div>
+        <div id="ntask-date-picker-start" class="ntask-inline-panel" style="padding:0 16px 16px 16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
+            <button onclick="shiftMonthNew(-1,'start')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;">${chev('6,1 1,6 6,11')}</button>
+            <span id="ntask-cal-month-start" style="font-weight:600;font-size:15px;color:var(--text);"></span>
+            <button onclick="shiftMonthNew(1,'start')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;">${chev('1,1 6,6 1,11')}</button>
+          </div>
+          <div id="ntask-cal-grid-start" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+        </div>
+        <div id="ntask-start-time-panel" class="ntask-inline-panel"><div class="ntask-slots">${ntaskTimeSlots('start')}</div></div>
+        </div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-field">
+        <div class="ntask-row" style="cursor:default;">
+          <span class="ntask-row-label">Fin</span>
+          <span class="ntask-row-val">
+            <span id="ntask-end-date-label" onclick="toggleDatePickerNew('end')" style="cursor:pointer;">${dfmt(endDate)}</span>
+            <span id="ntask-end-time-label" onclick="ntaskToggleTime('end')" style="cursor:pointer;color:var(--text);font-weight:500;background:var(--surface-2);padding:4px 10px;border-radius:8px;">${endTime}</span>
+          </span>
+        </div>
+        <div id="ntask-date-picker-end" class="ntask-inline-panel" style="padding:0 16px 16px 16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
+            <button onclick="shiftMonthNew(-1,'end')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;">${chev('6,1 1,6 6,11')}</button>
+            <span id="ntask-cal-month-end" style="font-weight:600;font-size:15px;color:var(--text);"></span>
+            <button onclick="shiftMonthNew(1,'end')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;">${chev('1,1 6,6 1,11')}</button>
+          </div>
+          <div id="ntask-cal-grid-end" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+        </div>
+        <div id="ntask-end-time-panel" class="ntask-inline-panel"><div class="ntask-slots">${ntaskTimeSlots('end')}</div></div>
+        </div>
+        <div class="ntask-sep"></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:12px 16px;">
+          <span style="font-size:13px;color:var(--text2);margin-right:2px;">Durée</span>
+          <button type="button" class="ntask-dur" onclick="ntaskSetDuration(30)">30 min</button>
+          <button type="button" class="ntask-dur" onclick="ntaskSetDuration(60)">1 h</button>
+          <button type="button" class="ntask-dur" onclick="ntaskSetDuration(120)">2 h</button>
+        </div>
+      </div>
+      <div class="ntask-card">
+        <div class="ntask-field">
+          <div class="ntask-row" onclick="ntaskToggle('ntask-notif-panel')">
+            <span class="ntask-row-label">Notification</span>
+            <span class="ntask-row-val"><span id="ntask-notif-label" style="color:${nCur !== 'none' ? 'var(--text)' : 'var(--text2)'};">${nLabel}</span><span class="chev">›</span></span>
+          </div>
+          <div id="ntask-notif-panel" class="ntask-inline-panel">${ntaskOptList(NTASK_NOTIF_OPTS, nCur, 'ntaskSelectNotif')}</div>
+        </div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-field">
+          <div class="ntask-row" onclick="ntaskToggle('ntask-repeat-panel')">
+            <span class="ntask-row-label">Répétition</span>
+            <span class="ntask-row-val"><span id="ntask-repeat-label" style="color:${rCur !== 'never' ? 'var(--text)' : 'var(--text2)'};">${rLabel}</span><span class="chev">›</span></span>
+          </div>
+          <div id="ntask-repeat-panel" class="ntask-inline-panel">${ntaskOptList(NTASK_REPEAT_OPTS, rCur, 'ntaskSelectRepeat')}</div>
+        </div>
+      </div>
+    </div>`;
+}
 function ntaskSelectVehicle(id){
   document.newTaskVehicleId = id; const o = ntaskVehicleOpts().find(x => x.v === id);
   const lbl = document.getElementById('ntask-vehicle-label'); if(lbl){ lbl.textContent = o ? o.l : 'Aucun'; lbl.style.color = id ? 'var(--text)' : 'var(--text2)'; }
@@ -3692,85 +3779,7 @@ function openNewTaskModalOutlook(dateStr, timeStr){
       <span style="font-size:17px;font-weight:600;color:var(--text);">Nouvel événement</span>
       <span style="width:22px;"></span>
     </div>
-    <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:20px 16px 24px 16px;">
-      <div class="ntask-card" style="padding:0 16px;">
-        <input type="text" id="ntask-title" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
-      </div>
-      <div style="margin:0 2px 8px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;">Type</div>
-      <div id="ntask-type-pills" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;scrollbar-width:none;">${ntaskTypePills(document.newTaskType)}</div>
-      <div class="ntask-card">
-        <div class="ntask-field">
-          <div class="ntask-row" onclick="ntaskToggle('ntask-vehicle-panel')">
-            <span class="ntask-row-label">Véhicule</span>
-            <span class="ntask-row-val"><span id="ntask-vehicle-label" style="color:var(--text2);">Aucun</span><span class="chev">›</span></span>
-          </div>
-          <div id="ntask-vehicle-panel" class="ntask-inline-panel">${ntaskOptList(ntaskVehicleOpts(), '', 'ntaskSelectVehicle')}</div>
-        </div>
-      </div>
-      <div class="ntask-card">
-        <div class="ntask-field">
-        <div class="ntask-row" style="cursor:default;">
-          <span class="ntask-row-label">Début</span>
-          <span class="ntask-row-val">
-            <span id="ntask-start-date-label" onclick="toggleDatePickerNew('start')" style="cursor:pointer;">${dfmt(dateStr)}</span>
-            <span id="ntask-start-time-label" onclick="ntaskToggleTime('start')" style="cursor:pointer;color:var(--text);font-weight:500;background:var(--surface-2);padding:4px 10px;border-radius:8px;">${timeStr}</span>
-          </span>
-        </div>
-        <div id="ntask-date-picker-start" class="ntask-inline-panel" style="padding:0 16px 16px 16px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
-            <button onclick="shiftMonthNew(-1,'start')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,1 1,6 6,11"/></svg></button>
-            <span id="ntask-cal-month-start" style="font-weight:600;font-size:15px;color:var(--text);"></span>
-            <button onclick="shiftMonthNew(1,'start')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 6,6 1,11"/></svg></button>
-          </div>
-          <div id="ntask-cal-grid-start" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
-        </div>
-        <div id="ntask-start-time-panel" class="ntask-inline-panel"><div class="ntask-slots">${ntaskTimeSlots('start')}</div></div>
-        </div>
-        <div class="ntask-sep"></div>
-        <div class="ntask-field">
-        <div class="ntask-row" style="cursor:default;">
-          <span class="ntask-row-label">Fin</span>
-          <span class="ntask-row-val">
-            <span id="ntask-end-date-label" onclick="toggleDatePickerNew('end')" style="cursor:pointer;">${dfmt(dateStr)}</span>
-            <span id="ntask-end-time-label" onclick="ntaskToggleTime('end')" style="cursor:pointer;color:var(--text);font-weight:500;background:var(--surface-2);padding:4px 10px;border-radius:8px;">${endDefault}</span>
-          </span>
-        </div>
-        <div id="ntask-date-picker-end" class="ntask-inline-panel" style="padding:0 16px 16px 16px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
-            <button onclick="shiftMonthNew(-1,'end')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,1 1,6 6,11"/></svg></button>
-            <span id="ntask-cal-month-end" style="font-weight:600;font-size:15px;color:var(--text);"></span>
-            <button onclick="shiftMonthNew(1,'end')" style="background:none;border:none;cursor:pointer;color:var(--text);padding:4px 10px;"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 6,6 1,11"/></svg></button>
-          </div>
-          <div id="ntask-cal-grid-end" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
-        </div>
-        <div id="ntask-end-time-panel" class="ntask-inline-panel"><div class="ntask-slots">${ntaskTimeSlots('end')}</div></div>
-        </div>
-        <div class="ntask-sep"></div>
-        <div style="display:flex;align-items:center;gap:8px;padding:12px 16px;">
-          <span style="font-size:13px;color:var(--text2);margin-right:2px;">Durée</span>
-          <button type="button" class="ntask-dur" onclick="ntaskSetDuration(30)">30 min</button>
-          <button type="button" class="ntask-dur" onclick="ntaskSetDuration(60)">1 h</button>
-          <button type="button" class="ntask-dur" onclick="ntaskSetDuration(120)">2 h</button>
-        </div>
-      </div>
-      <div class="ntask-card">
-        <div class="ntask-field">
-          <div class="ntask-row" onclick="ntaskToggle('ntask-notif-panel')">
-            <span class="ntask-row-label">Notification</span>
-            <span class="ntask-row-val"><span id="ntask-notif-label" style="color:var(--text2);">Aucune</span><span class="chev">›</span></span>
-          </div>
-          <div id="ntask-notif-panel" class="ntask-inline-panel">${ntaskOptList(NTASK_NOTIF_OPTS, document.newTaskNotif, 'ntaskSelectNotif')}</div>
-        </div>
-        <div class="ntask-sep"></div>
-        <div class="ntask-field">
-          <div class="ntask-row" onclick="ntaskToggle('ntask-repeat-panel')">
-            <span class="ntask-row-label">Répétition</span>
-            <span class="ntask-row-val"><span id="ntask-repeat-label" style="color:var(--text2);">Jamais</span><span class="chev">›</span></span>
-          </div>
-          <div id="ntask-repeat-panel" class="ntask-inline-panel">${ntaskOptList(NTASK_REPEAT_OPTS, document.newTaskRepeat, 'ntaskSelectRepeat')}</div>
-        </div>
-      </div>
-    </div>
+    ${ntaskModalBody(dateStr, dateStr, timeStr, endDefault)}
     <div class="ntask-save-bar"><button class="ntask-save-btn" onclick="saveNewTask()">Enregistrer</button></div>
   </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
