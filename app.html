@@ -1344,8 +1344,6 @@
       #statut-popover button[data-statut="Vendu"]:hover { background: var(--success-soft) !important; color: var(--success) !important; }
       /* ── Desktop: add vehicle modal z-index ── */
       #modal-add-vehicle { z-index: 9998 !important; }
-      #add-vehicle-check-btn { visibility: hidden !important; }
-      #add-vehicle-desktop-footer { display: flex !important; justify-content: center !important; }
       /* ── Desktop: planning header bar ── */
       #planning-header-bar {
         height: 56px !important;
@@ -1389,33 +1387,7 @@
       /* Statut: badge+popover aussi sur mobile */
       #statut-mobile-badges { display: none !important; }
       .check svg, .check-sm svg, .statut-btn svg, .statut-btn svg polyline {
-        stroke: #1e3fae !important;
-      }
-      /* Masquer le check gris en haut à droite sur mobile */
-      #add-vehicle-check-btn { visibility: hidden !important; }
-      /* Afficher la barre de validation en bas sur mobile, sans fond ni bordure */
-      #add-vehicle-desktop-footer {
-        display: flex !important;
-        justify-content: center !important;
-        padding: 28px 20px !important;
-        border-top: none !important;
-        background:var(--surface-2) !important;
-      }
-      #add-vehicle-desktop-footer button {
-        padding: 14px 28px 14px 20px !important;
-        border-radius: 50px !important;
-        gap: 12px !important;
-      }
-      #add-vehicle-desktop-footer button div {
-        width: 40px !important;
-        height: 40px !important;
-      }
-      #add-vehicle-desktop-footer button div svg {
-        width: 17px !important;
-        height: 17px !important;
-      }
-      #add-vehicle-desktop-footer button span {
-        font-size: 17px !important;
+        stroke:var(--accent) !important;
       }
     }
   </style>
@@ -1779,6 +1751,11 @@
             <div class="vsg-cell"><div class="vsg-label">Génération</div><div class="vsg-value" id="detail-gen"></div></div>
             <div class="vsg-cell"><div class="vsg-label">Kilométrage</div><div class="vsg-value" id="detail-km"></div></div>
             <div class="vsg-cell"><div class="vsg-label">Prix d'achat</div><div class="vsg-value" id="detail-achat-display"></div></div>
+            <div class="vsg-cell"><div class="vsg-label">Carburant</div><div class="vsg-value" id="detail-carburant"></div></div>
+            <div class="vsg-cell"><div class="vsg-label">Transmission</div><div class="vsg-value" id="detail-transmission"></div></div>
+            <div class="vsg-cell"><div class="vsg-label">Couleur</div><div class="vsg-value" id="detail-couleur"></div></div>
+            <div class="vsg-cell"><div class="vsg-label">Immatriculation</div><div class="vsg-value" id="detail-immat"></div></div>
+            <div class="vsg-cell"><div class="vsg-label">Puissance</div><div class="vsg-value" id="detail-puissance"></div></div>
           </div>
         </div>
 
@@ -2011,9 +1988,7 @@
   <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
     <button onclick="closeAddModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>
     <span style="font-size:17px;font-weight:600;color:var(--text);flex:1;text-align:center;">Nouveau véhicule</span>
-    <button id="add-vehicle-check-btn" onclick="addVehicle()" style="background:none;border:none;cursor:pointer;padding:4px;">
-      <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div>
-    </button>
+    <span style="width:36px;"></span>
   </div>
   <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px 24px 16px;">
     <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
@@ -2031,15 +2006,27 @@
     <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix achat</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-achat" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
     </div>
-  </div>
-  <div id="add-vehicle-desktop-footer" style="display:none;padding:16px 20px;border-top:1px solid var(--border);flex-shrink:0;display:flex;justify-content:center;">
-    <button onclick="addVehicle()" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 14px 6px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(30,64,175,0.07)'" onmouseout="this.style.background='none'">
-      <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;">
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg>
+    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Carburant</span>
+        <select id="f-carburant" class="ntask-native" style="border:none;background:transparent;text-align:right;padding:15px 0;height:auto;">
+          <option value="">—</option><option value="Essence">Essence</option><option value="Diesel">Diesel</option><option value="Hybride">Hybride</option><option value="Électrique">Électrique</option><option value="GPL">GPL</option>
+        </select>
       </div>
-      <span style="font-size:14px;font-weight:600;color:#1e3fae;">Valider</span>
-    </button>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Transmission</span>
+        <select id="f-transmission" class="ntask-native" style="border:none;background:transparent;text-align:right;padding:15px 0;height:auto;">
+          <option value="">—</option><option value="Manuelle">Manuelle</option><option value="Automatique">Automatique</option>
+        </select>
+      </div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Couleur</span><input type="text" id="f-couleur" placeholder="Noir" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Immatriculation</span><input type="text" id="f-immat" placeholder="AA-123-AA" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Puissance</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-puissance" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:80px;"/><span style="font-size:16px;color:var(--text2);">ch</span></div></div>
+    </div>
   </div>
+  <div class="ntask-save-bar"><button class="ntask-save-btn" onclick="addVehicle()">Enregistrer</button></div>
 </div>
 
 <div id="modal-edit-task" class="modal">
@@ -2312,7 +2299,7 @@ async function confirmLogout(){
 }
 
 function openAddModal(){
-  ['f-marque','f-modele','f-year','f-gen','f-km','f-achat'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  ['f-marque','f-modele','f-year','f-gen','f-km','f-achat','f-carburant','f-transmission','f-couleur','f-immat','f-puissance'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
   if(window.innerWidth >= 900 && !document.getElementById('add-vehicle-backdrop')){
     const bd = document.createElement('div');
     bd.id = 'add-vehicle-backdrop';
@@ -2339,9 +2326,15 @@ function addVehicle(){
   const gen = document.getElementById('f-gen').value.trim() || '?';
   const km = document.getElementById('f-km').value || '0';
   const achat = Number(document.getElementById('f-achat').value) || 0;
+  const carburant = document.getElementById('f-carburant').value || '';
+  const transmission = document.getElementById('f-transmission').value || '';
+  const couleur = document.getElementById('f-couleur').value.trim() || '';
+  const immatriculation = document.getElementById('f-immat').value.trim() || '';
+  const puissance = document.getElementById('f-puissance').value || '';
   const today = Utils.today();
   const newVehicle = {
     id: Date.now(), marque, modele, year, gen, km, achat, vente: 0, prepCost: 0,
+    carburant, transmission, couleur, immatriculation, puissance,
     statut:'En cours', statusHistory: [{statut: 'En cours', date: today}],
     tasks: [{id: Date.now() + 1, type: 'sav', cat: 'Contrôle technique', desc: 'CT à planifier', cost: 0, completed: false, date: null}],
     notes: ''
@@ -2548,6 +2541,11 @@ function openVehicleDetails(id){
   const achatDisplay = document.getElementById('detail-achat-display');
   if(achatDisplay) achatDisplay.textContent = v.achat ? Number(v.achat).toLocaleString('fr-FR') + ' €' : '—';
   document.getElementById('detail-achat-input').value = v.achat || '';
+  const _dc = document.getElementById('detail-carburant'); if(_dc) _dc.textContent = v.carburant || '—';
+  const _dtr = document.getElementById('detail-transmission'); if(_dtr) _dtr.textContent = v.transmission || '—';
+  const _dcl = document.getElementById('detail-couleur'); if(_dcl) _dcl.textContent = v.couleur || '—';
+  const _dim = document.getElementById('detail-immat'); if(_dim) _dim.textContent = v.immatriculation || '—';
+  const _dp = document.getElementById('detail-puissance'); if(_dp) _dp.textContent = v.puissance ? v.puissance + ' ch' : '—';
   document.getElementById('detail-vente-input').value = v.vente || '';
   document.getElementById('detail-sans-tva-input').value = v.sansTva || '';
   document.getElementById('detail-avec-tva-input').value = v.avecTva || '';
