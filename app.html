@@ -165,16 +165,21 @@
     /* Panneaux = menus déroulants flottants (mobile + desktop) */
     .ntask-card { overflow: visible; }
     .ntask-inline-panel {
-      display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 60;
-      margin-top: 4px; border: 1px solid var(--border); border-radius: 16px;
+      display: none; position: absolute; top: 100%; right: 16px; left: auto; z-index: 60;
+      margin-top: 6px; min-width: 200px; max-width: calc(100% - 32px);
+      border: 0.5px solid var(--border); border-radius: 13px;
       background: var(--nav-glass);
-      backdrop-filter: saturate(180%) blur(22px); -webkit-backdrop-filter: saturate(180%) blur(22px);
-      box-shadow: 0 12px 34px rgba(0,0,0,0.28);
-      max-height: 280px; overflow-y: auto;
+      backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.24);
+      max-height: 280px; overflow-y: auto; padding: 4px;
     }
-    .ntask-opt { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; cursor: pointer; }
-    .ntask-opt:hover { background: var(--surface-3); }
-    .ntask-opt span { font-size: 14px; color: var(--text); }
+    .ntask-opt { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 9px; cursor: pointer; }
+    .ntask-opt:hover { background: rgba(128,128,128,0.14); }
+    .ntask-opt span { font-size: 14.5px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .ntask-opt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .ntask-inline-panel + .ntask-inline-panel,
+    .ntask-inline-panel { border-bottom: none; }
+    .ntask-opt + .ntask-opt { border-top: 0.5px solid var(--border); }
     .ntask-slots { max-height: 240px; overflow-y: auto; }
     .ntask-slot { padding: 10px 16px; cursor: pointer; font-size: 14px; color: var(--text); }
     .ntask-slot:hover { background: var(--surface-3); }
@@ -3636,7 +3641,15 @@ function ntaskSetDuration(mins){
   document.newTaskTimeEnd = v; const lbl = document.getElementById('ntask-end-time-label'); if(lbl) lbl.textContent = v;
 }
 function ntaskOptList(opts, current, fn){
-  return opts.map(o => `<div class="ntask-opt" onclick="${fn}('${o.v}')"><span>${o.l}</span>${o.v === current ? '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}</div>`).join('');
+  return opts.map(o => `<div class="ntask-opt" onclick="${fn}('${o.v}')"><span>${o.dot ? `<span class="ntask-opt-dot" style="background:${o.dot};"></span>` : ''}${o.l}</span>${o.v === current ? '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}</div>`).join('');
+}
+function ntaskTypeOpts(){ return NTASK_TYPES.map(t => ({v: t.v, l: t.l, dot: eventColor(t.v)})); }
+function ntaskSelectType(v){
+  document.newTaskType = v; const o = NTASK_TYPES.find(x => x.v === v);
+  const dot = document.getElementById('ntask-type-dot'); if(dot) dot.style.background = eventColor(v);
+  const lbl = document.getElementById('ntask-type-label'); if(lbl) lbl.textContent = o ? o.l : 'Rappel';
+  const panel = document.getElementById('ntask-type-panel'); if(panel) panel.innerHTML = ntaskOptList(ntaskTypeOpts(), v, 'ntaskSelectType');
+  ntaskToggle('ntask-type-panel');
 }
 function ntaskSelectNotif(v){
   document.newTaskNotif = v; const o = NTASK_NOTIF_OPTS.find(x => x.v === v);
@@ -3670,14 +3683,20 @@ function ntaskModalBody(startDate, endDate, startTime, endTime){
         <input type="text" id="ntask-title" placeholder="Titre" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
       </div>
       <div class="ntask-card">
-        <div class="ntask-row" style="cursor:default;">
-          <span class="ntask-row-label">Type</span>
-          <select id="ntask-type" class="ntask-native" onchange="document.newTaskType=this.value">${ntaskOptionsHTML(NTASK_TYPES, document.newTaskType)}</select>
+        <div class="ntask-field">
+          <div class="ntask-row" onclick="ntaskToggle('ntask-type-panel')">
+            <span class="ntask-row-label">Type</span>
+            <span class="ntask-row-val"><span id="ntask-type-dot" style="width:9px;height:9px;border-radius:50%;background:${eventColor(document.newTaskType)};flex-shrink:0;"></span><span id="ntask-type-label">${(NTASK_TYPES.find(t=>t.v===document.newTaskType)||{l:'Rappel'}).l}</span><span class="chev">›</span></span>
+          </div>
+          <div id="ntask-type-panel" class="ntask-inline-panel">${ntaskOptList(ntaskTypeOpts(), document.newTaskType, 'ntaskSelectType')}</div>
         </div>
         <div class="ntask-sep"></div>
-        <div class="ntask-row" style="cursor:default;">
-          <span class="ntask-row-label">Véhicule</span>
-          <select id="ntask-vehicle" class="ntask-native" onchange="document.newTaskVehicleId=this.value">${ntaskOptionsHTML(ntaskVehicleOpts(), vId)}</select>
+        <div class="ntask-field">
+          <div class="ntask-row" onclick="ntaskToggle('ntask-vehicle-panel')">
+            <span class="ntask-row-label">Véhicule</span>
+            <span class="ntask-row-val"><span id="ntask-vehicle-label">${(ntaskVehicleOpts().find(v=>v.v===vId)||{l:'Aucun'}).l}</span><span class="chev">›</span></span>
+          </div>
+          <div id="ntask-vehicle-panel" class="ntask-inline-panel">${ntaskOptList(ntaskVehicleOpts(), vId, 'ntaskSelectVehicle')}</div>
         </div>
       </div>
       <div class="ntask-card">
@@ -3698,14 +3717,20 @@ function ntaskModalBody(startDate, endDate, startTime, endTime){
         </div>
       </div>
       <div class="ntask-card">
-        <div class="ntask-row" style="cursor:default;">
-          <span class="ntask-row-label">Notification</span>
-          <select id="ntask-notif" class="ntask-native" onchange="document.newTaskNotif=this.value">${ntaskOptionsHTML(NTASK_NOTIF_OPTS, nCur)}</select>
+        <div class="ntask-field">
+          <div class="ntask-row" onclick="ntaskToggle('ntask-notif-panel')">
+            <span class="ntask-row-label">Notification</span>
+            <span class="ntask-row-val"><span id="ntask-notif-label">${(NTASK_NOTIF_OPTS.find(x=>x.v===nCur)||{l:'Aucune'}).l}</span><span class="chev">›</span></span>
+          </div>
+          <div id="ntask-notif-panel" class="ntask-inline-panel">${ntaskOptList(NTASK_NOTIF_OPTS, nCur, 'ntaskSelectNotif')}</div>
         </div>
         <div class="ntask-sep"></div>
-        <div class="ntask-row" style="cursor:default;">
-          <span class="ntask-row-label">Répétition</span>
-          <select id="ntask-repeat" class="ntask-native" onchange="document.newTaskRepeat=this.value">${ntaskOptionsHTML(NTASK_REPEAT_OPTS, rCur)}</select>
+        <div class="ntask-field">
+          <div class="ntask-row" onclick="ntaskToggle('ntask-repeat-panel')">
+            <span class="ntask-row-label">Répétition</span>
+            <span class="ntask-row-val"><span id="ntask-repeat-label">${(NTASK_REPEAT_OPTS.find(x=>x.v===rCur)||{l:'Jamais'}).l}</span><span class="chev">›</span></span>
+          </div>
+          <div id="ntask-repeat-panel" class="ntask-inline-panel">${ntaskOptList(NTASK_REPEAT_OPTS, rCur, 'ntaskSelectRepeat')}</div>
         </div>
       </div>
     </div>`;
