@@ -520,9 +520,10 @@
     .filter-btn:hover { background-color: #E5E7EB; }
     .filter-btn:active { transform: scale(0.95); background-color: #D1D5DB; }
     .filter-btn.active { background-color: var(--navy); color: white; border-color: var(--navy); }
-    .task-filter-btn, .detail-tab { padding: 7px 14px; font-size: 13px; font-weight: 500; border-radius: 20px; border: none; background:var(--surface-2); color:var(--text2); cursor: pointer; transition: background 0.15s ease, color 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1); white-space: nowrap; }
-    .task-filter-btn.active, .detail-tab.detail-tab-active { background:var(--surface); color:var(--accent); font-weight: 600; box-shadow: var(--shadow-sm); }
-    .task-filter-btn:active, .detail-tab:active { transform: scale(0.95); }
+    .task-filter-btn, .detail-tab, .parc-filter { padding: 7px 14px; font-size: 13px; font-weight: 500; border-radius: 20px; border: none; background:var(--surface-2); color:var(--text2); cursor: pointer; transition: background 0.15s ease, color 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1); white-space: nowrap; }
+    .task-filter-btn.active, .detail-tab.detail-tab-active, .parc-filter.active { background:var(--surface); color:var(--accent); font-weight: 600; box-shadow: var(--shadow-sm); }
+    .task-filter-btn:active, .detail-tab:active, .parc-filter:active { transform: scale(0.95); }
+    .parc-filter:not(.active):hover { background:var(--surface-3); color:var(--text); }
     /* Segmented control (jour/3j/semaine/mois, statuts Parc, filtres chart) */
     .seg-control { display: inline-flex; background:var(--surface-2); border-radius: 10px; padding: 3px; gap: 2px; }
     .seg-btn { border: none; background: transparent; color:var(--text2); font-size: 13px; font-weight: 500; padding: 7px 14px; border-radius: 8px; cursor: pointer; white-space: nowrap; transition: background 0.15s ease, color 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1); }
@@ -1569,11 +1570,11 @@
     </div>
 
     <!-- FILTRES -->
-    <div class="seg-control" style="margin-bottom:20px;overflow-x:auto;">
-      <button class="seg-btn parc-filter active" onclick="filterParc('all',this)">Tous</button>
-      <button class="seg-btn parc-filter" onclick="filterParc('En cours',this)">En cours</button>
-      <button class="seg-btn parc-filter" onclick="filterParc('Prêt à vendre',this)">Prêt</button>
-      <button class="seg-btn parc-filter" onclick="filterParc('Vendu',this)">Vendu</button>
+    <div style="display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+      <button class="parc-filter active" onclick="filterParc('all',this)">Tous</button>
+      <button class="parc-filter" onclick="filterParc('En cours',this)">En cours</button>
+      <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)">Prêt</button>
+      <button class="parc-filter" onclick="filterParc('Vendu',this)">Vendu</button>
     </div>
 
     <div id="parc-grid" style="padding-bottom:160px;"></div>
