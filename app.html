@@ -3682,7 +3682,7 @@ function ntaskGetScrollParent(el){
   let node = el.parentElement;
   while(node && node !== document.body){
     const style = getComputedStyle(node);
-    if((style.overflowY === 'auto' || style.overflowY === 'scroll') && node.scrollHeight > node.clientHeight) return node;
+    if(style.overflowY === 'auto' || style.overflowY === 'scroll' || style.overflowY === 'hidden') return node;
     node = node.parentElement;
   }
   return null;
@@ -3700,10 +3700,12 @@ function ntaskToggle(id){
     const scrollParent = ntaskGetScrollParent(p);
     const limitBottom = scrollParent ? Math.min(window.innerHeight, scrollParent.getBoundingClientRect().bottom) : window.innerHeight;
     const limitTop = scrollParent ? Math.max(0, scrollParent.getBoundingClientRect().top) : 0;
-    const spaceBelow = limitBottom - anchorRect.bottom;
-    const spaceAbove = anchorRect.top - limitTop;
+    const spaceBelow = limitBottom - anchorRect.bottom - 10;
+    const spaceAbove = anchorRect.top - limitTop - 10;
     if(spaceBelow < panelHeight && spaceAbove > spaceBelow){ p.style.top = 'auto'; p.style.bottom = '100%'; p.style.marginTop = '0'; p.style.marginBottom = '6px'; }
     else { p.style.top = '100%'; p.style.bottom = 'auto'; p.style.marginTop = '4px'; p.style.marginBottom = '0'; }
+    const availableSpace = Math.max(spaceAbove, spaceBelow);
+    p.style.maxHeight = (availableSpace < panelHeight ? Math.max(120, availableSpace) : 280) + 'px';
     setTimeout(() => { p.scrollIntoView({block: 'nearest', behavior: 'smooth'}); }, 20);
   }
 }
