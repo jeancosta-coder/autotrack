@@ -2680,7 +2680,6 @@ function renderDetailTasks(id, filter){
   if(filtered.length === 0){ document.getElementById('detail-tasks').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text2);font-size:15px;">Aucune tâche</div>'; return; }
   const grouped = {};
   filtered.forEach(t => { const key = t.date || 'Sans date'; if(!grouped[key]) grouped[key] = []; grouped[key].push(t); });
-  const typeColors = EVENT_COLORS;
   let html = '';
   Object.keys(grouped).sort().forEach(date => {
     const dateObj = new Date(date + 'T00:00:00');
@@ -2688,15 +2687,14 @@ function renderDetailTasks(id, filter){
     html += `<div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:capitalize;">${dayName}</span></div>`;
     html += `<div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">`;
     grouped[date].forEach((t, idx) => {
-      const color = typeColors[t.type] || '#8e8e93';
       const isLast = idx === grouped[date].length - 1;
       const title = t.cat || t.desc || '';
       html += `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;${isLast ? '' : 'border-bottom:1px solid var(--border);'}opacity:${t.completed ? '0.45' : '1'};" onclick="openEditTaskModal(${id}, ${t.id})">`;
-      html += `<div onclick="event.stopPropagation();const v=vehicles.find(x=>x.id===${id});const t=v.tasks.find(s=>s.id===${t.id});t.completed=!t.completed;save();renderDetailTasks(${id},'${filter}');" style="width:24px;height:24px;border-radius:50%;flex-shrink:0;cursor:pointer;border:2px solid ${t.completed ? color : '#d1d1d6'};background:${t.completed ? color : 'transparent'};display:flex;align-items:center;justify-content:center;transition:all 0.2s;">${t.completed ? `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><polyline points="1,6 4,9 11,3"/></svg>` : ''}</div>`;
+      html += `<div onclick="event.stopPropagation();const v=vehicles.find(x=>x.id===${id});const t=v.tasks.find(s=>s.id===${t.id});t.completed=!t.completed;save();renderDetailTasks(${id},'${filter}');" style="width:24px;height:24px;border-radius:50%;flex-shrink:0;cursor:pointer;border:2px solid ${t.completed ? 'var(--text)' : 'var(--border-strong)'};background:${t.completed ? 'var(--text)' : 'transparent'};display:flex;align-items:center;justify-content:center;transition:all 0.2s;">${t.completed ? `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"><polyline points="1,6 4,9 11,3"/></svg>` : ''}</div>`;
       html += `<div style="flex:1;min-width:0;"><div style="font-size:15px;color:var(--text);text-decoration:${t.completed ? 'line-through' : 'none'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${title}</div>`;
       if(t.cost) html += `<div style="font-size:12px;color:var(--text2);margin-top:2px;">${Number(t.cost).toLocaleString('fr-FR')}€</div>`;
       html += `</div>`;
-      html += `<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></span><svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round"><polyline points="1,1 7,7 1,13"/></svg></div>`;
+      html += `<svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round" style="flex-shrink:0;"><polyline points="1,1 7,7 1,13"/></svg>`;
       html += `</div>`;
     });
     html += `</div>`;
