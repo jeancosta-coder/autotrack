@@ -180,6 +180,16 @@
     .ntask-opt:hover { background: rgba(128,128,128,0.14); }
     .ntask-opt span { font-size: 14.5px; color: var(--text); display: flex; align-items: center; gap: 8px; }
     .ntask-opt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    /* Menu deroulant ancre (calendrier, menu contextuel carte...) — meme style translucide */
+    .anchored-menu {
+      position: fixed; z-index: 10050; min-width: 190px; max-width: calc(100vw - 24px);
+      padding: 4px; border: 0.5px solid var(--border); border-radius: 13px;
+      background: var(--menu-glass);
+      backdrop-filter: saturate(190%) blur(26px); -webkit-backdrop-filter: saturate(190%) blur(26px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.24);
+      max-height: 320px; overflow-y: auto;
+    }
+    .anchored-menu-overlay { position: fixed; inset: 0; z-index: 10049; background: transparent; }
     @media (max-width: 480px) {
       .ntask-inline-panel { min-width: 240px; max-width: calc(100% - 24px); right: 8px; border-radius: 16px; }
       .ntask-opt { padding: 13px 14px; }
@@ -777,7 +787,7 @@
       .sidebar-profile-sub { font-size: 11px; color: var(--text2); white-space: nowrap; }
       .desktop-only { display: block !important; }
       .desktop-card-actions { display: none !important; }
-      .card-menu-btn { display: none !important; }
+      .card-menu-btn { display: flex !important; }
       .desktop-parc-toolbar { display: flex !important; }
       .desktop-view-header { display: block !important; }
       .desktop-view-header .desktop-header-actions { justify-content: flex-end; }
@@ -1151,16 +1161,6 @@
       #edit-task-modal-planning > * {
         max-height: calc(100vh - 160px);
         overflow: auto;
-      }
-      #view-modal {
-        align-items: center !important;
-        justify-content: center !important;
-        background: rgba(0,0,0,0.35) !important;
-      }
-      #view-modal > div {
-        width: min(420px, calc(100vw - 320px));
-        border-radius: 24px;
-        overflow: hidden;
       }
       #edit-bottom-sheet,
       #simple-type-sheet,
@@ -2440,7 +2440,7 @@ const RenderHelpers = {
             <div style="font-size:16px;font-weight:700;color:var(--text);">${v.pinned ? '<span style="font-size:11px;color:var(--accent);font-weight:600;background:var(--accent-soft);padding:2px 6px;border-radius:6px;margin-right:6px;">épinglé</span>' : ''}${v.marque} ${v.modele}</div>
             <div style="font-size:13px;color:var(--text2);margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen}</div>
           </div>
-          <button class="card-menu-btn" onclick="event.stopPropagation();showVehicleContextMenu(${v.id})" style="background:var(--surface-2);border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;">···</button>
+          <button class="card-menu-btn" onclick="event.stopPropagation();showVehicleContextMenu(${v.id}, this)" style="background:var(--surface-2);border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;">···</button>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
           <div style="display:inline-flex;align-items:center;gap:5px;background:${color}18;padding:3px 8px;border-radius:20px;">
@@ -2493,31 +2493,18 @@ function renderParc(){
 
 function initLongPressCards(){}
 
-function showVehicleContextMenu(vehicleId){
-  const existing = document.getElementById('vehicle-context-sheet');
-  if(existing) existing.remove();
+function showVehicleContextMenu(vehicleId, btn){
   const v = vehicles.find(x => x.id === vehicleId);
   if(!v) return;
   const isPinned = v.pinned || false;
-  document.body.insertAdjacentHTML('beforeend', `
-    <div id="vehicle-context-sheet" style="position:fixed;inset:0;z-index:10000;">
-      <div style="position:absolute;inset:0;background:rgba(0,0,0,0.4);" onclick="closeVehicleContextSheet()"></div>
-      <div style="position:absolute;bottom:0;left:0;right:0;background:var(--surface);border-radius:20px 20px 0 0;padding:8px 0 calc(16px + env(safe-area-inset-bottom));">
-        <div style="width:36px;height:4px;background:#d1d1d6;border-radius:2px;margin:8px auto 16px;"></div>
-        <button onclick="pinVehicle(${vehicleId})" style="width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;color:var(--text);">${isPinned ? 'Désépingler' : 'Épingler'}</button>
-        <div style="height:1px;background:var(--surface-2);margin:0 20px;"></div>
-        <button onclick="duplicateVehicle(${vehicleId})" style="width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;color:var(--text);">Dupliquer</button>
-        <div style="height:1px;background:var(--surface-2);margin:0 20px;"></div>
-        <button onclick="closeVehicleContextSheet();deleteVehicle(${vehicleId})" style="width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;color:#FF3B30;">Supprimer</button>
-      </div>
-    </div>
-  `);
+  const itemsHtml = `
+    <div class="ntask-opt" onclick="closeAnchoredMenu();pinVehicle(${vehicleId})"><span>${isPinned ? 'Désépingler' : 'Épingler'}</span></div>
+    <div class="ntask-opt" onclick="closeAnchoredMenu();duplicateVehicle(${vehicleId})"><span>Dupliquer</span></div>
+    <div class="ntask-opt" onclick="closeAnchoredMenu();deleteVehicle(${vehicleId})"><span style="color:var(--danger);">Supprimer</span></div>
+  `;
+  openAnchoredMenu(btn || event.currentTarget, itemsHtml);
 }
-
-function closeVehicleContextSheet(){
-  const s = document.getElementById('vehicle-context-sheet');
-  if(s) s.remove();
-}
+function closeVehicleContextSheet(){ closeAnchoredMenu(); }
 
 function pinVehicle(vehicleId){
   const v = vehicles.find(x => x.id === vehicleId);
@@ -3021,26 +3008,13 @@ function openViewModal(){
   const options = [
     {val:'1', label:'Jour'}, {val:'3', label:'3 Jours'}, {val:'7', label:'Semaine'}, {val:'month', label:'Mois'}
   ];
-  const optionsHtml = options.map(opt => {
+  const itemsHtml = options.map(opt => {
     const isActive = viewMode === opt.val;
-    return `<div onclick="setViewMode('${opt.val}'); closeViewModal();" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--border);min-height:52px;background:var(--surface);" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='var(--surface)'">
-      <span style="font-size:16px;font-weight:${isActive ? '600' : '400'};color:var(--text);">${opt.label}</span>
-      ${isActive ? '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}
-    </div>`;
+    return `<div class="ntask-opt" onclick="setViewMode('${opt.val}');closeAnchoredMenu();"><span>${opt.label}</span>${isActive ? '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}</div>`;
   }).join('');
-  const sheet = document.createElement('div');
-  sheet.id = 'view-modal';
-  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9999;display:flex;align-items:flex-end;';
-  sheet.innerHTML = `<div style="background:var(--surface);width:100%;border-radius:16px 16px 0 0;padding-bottom:32px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
-      <span style="font-size:17px;font-weight:600;color:var(--text);">Vue</span>
-      <button onclick="closeViewModal()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button>
-    </div>${optionsHtml}</div>`;
-  sheet.addEventListener('click', (e) => { if(e.target === sheet) closeViewModal(); });
-  document.body.appendChild(sheet);
+  openAnchoredMenu(document.getElementById('planning-grid-icon-btn'), itemsHtml);
 }
-
-function closeViewModal(){ const modal = document.getElementById('view-modal'); if(modal) modal.remove(); }
+function closeViewModal(){ closeAnchoredMenu(); }
 
 function handleSwipeStart(e){ window.swipeStartX = e.touches[0].clientX; window.swipeStartY = e.touches[0].clientY; window.swipeStartTime = Date.now(); }
 function handleSwipeEnd(e){
@@ -3708,6 +3682,35 @@ function ntaskSetType(v){
     if(b.dataset.type === v){ b.style.background = c + '1F'; b.style.color = c; b.style.borderColor = c; }
     else { b.style.background = 'transparent'; b.style.color = 'var(--text2)'; b.style.borderColor = 'var(--border)'; }
   });
+}
+/* Menu deroulant ancre generique (translucide, style Apple) */
+function closeAnchoredMenu(){
+  document.getElementById('anchored-menu')?.remove();
+  document.getElementById('anchored-menu-overlay')?.remove();
+}
+function openAnchoredMenu(anchorEl, itemsHtml){
+  closeAnchoredMenu();
+  const overlay = document.createElement('div');
+  overlay.id = 'anchored-menu-overlay';
+  overlay.className = 'anchored-menu-overlay';
+  overlay.onclick = closeAnchoredMenu;
+  document.body.appendChild(overlay);
+  const menu = document.createElement('div');
+  menu.id = 'anchored-menu';
+  menu.className = 'anchored-menu';
+  menu.innerHTML = itemsHtml;
+  document.body.appendChild(menu);
+  const rect = anchorEl.getBoundingClientRect();
+  const menuRect = menu.getBoundingClientRect();
+  let left = rect.right - menuRect.width;
+  if(left < 8) left = Math.max(8, rect.left);
+  if(left + menuRect.width > window.innerWidth - 8) left = window.innerWidth - 8 - menuRect.width;
+  const spaceBelow = window.innerHeight - rect.bottom;
+  let top;
+  if(spaceBelow < menuRect.height + 12 && rect.top > menuRect.height){ top = rect.top - menuRect.height - 6; }
+  else { top = rect.bottom + 6; }
+  menu.style.left = left + 'px';
+  menu.style.top = top + 'px';
 }
 function ntaskGetScrollParent(el){
   let node = el.parentElement;
