@@ -2007,18 +2007,22 @@
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix achat</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-achat" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
     </div>
     <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Carburant</span>
-        <select id="f-carburant" class="ntask-native" style="border:none;background:transparent;text-align:right;padding:15px 0;height:auto;">
-          <option value="">—</option><option value="Essence">Essence</option><option value="Diesel">Diesel</option><option value="Hybride">Hybride</option><option value="Électrique">Électrique</option><option value="GPL">GPL</option>
-        </select>
+      <div class="ntask-field">
+        <div class="ntask-row" onclick="vehToggleDropdown('carburant')">
+          <span class="ntask-row-label">Carburant</span>
+          <span class="ntask-row-val"><span id="veh-carburant-label">—</span><span class="chev">›</span></span>
+        </div>
+        <div id="veh-carburant-panel" class="ntask-inline-panel"></div>
       </div>
-      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Transmission</span>
-        <select id="f-transmission" class="ntask-native" style="border:none;background:transparent;text-align:right;padding:15px 0;height:auto;">
-          <option value="">—</option><option value="Manuelle">Manuelle</option><option value="Automatique">Automatique</option>
-        </select>
+      <div class="ntask-sep"></div>
+      <div class="ntask-field">
+        <div class="ntask-row" onclick="vehToggleDropdown('transmission')">
+          <span class="ntask-row-label">Transmission</span>
+          <span class="ntask-row-val"><span id="veh-transmission-label">—</span><span class="chev">›</span></span>
+        </div>
+        <div id="veh-transmission-panel" class="ntask-inline-panel"></div>
       </div>
-      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div class="ntask-sep"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Couleur</span><input type="text" id="f-couleur" placeholder="Noir" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
       <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Immatriculation</span><input type="text" id="f-immat" placeholder="AA-123-AA" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
@@ -2298,8 +2302,28 @@ async function confirmLogout(){
   window.location.replace('/');
 }
 
+const FUEL_OPTS = [{v:'',l:'—'},{v:'Essence',l:'Essence'},{v:'Diesel',l:'Diesel'},{v:'Hybride',l:'Hybride'},{v:'Électrique',l:'Électrique'},{v:'GPL',l:'GPL'}];
+const TRANS_OPTS = [{v:'',l:'—'},{v:'Manuelle',l:'Manuelle'},{v:'Automatique',l:'Automatique'}];
+function vehToggleDropdown(which){ ntaskToggle('veh-' + which + '-panel'); }
+function vehSelectCarburant(v){
+  document.newVehicleCarburant = v; const o = FUEL_OPTS.find(x => x.v === v);
+  const lbl = document.getElementById('veh-carburant-label'); if(lbl){ lbl.textContent = o ? o.l : '—'; lbl.style.color = v ? 'var(--text)' : 'var(--text2)'; }
+  const panel = document.getElementById('veh-carburant-panel'); if(panel) panel.innerHTML = ntaskOptList(FUEL_OPTS, v, 'vehSelectCarburant');
+  ntaskToggle('veh-carburant-panel');
+}
+function vehSelectTransmission(v){
+  document.newVehicleTransmission = v; const o = TRANS_OPTS.find(x => x.v === v);
+  const lbl = document.getElementById('veh-transmission-label'); if(lbl){ lbl.textContent = o ? o.l : '—'; lbl.style.color = v ? 'var(--text)' : 'var(--text2)'; }
+  const panel = document.getElementById('veh-transmission-panel'); if(panel) panel.innerHTML = ntaskOptList(TRANS_OPTS, v, 'vehSelectTransmission');
+  ntaskToggle('veh-transmission-panel');
+}
 function openAddModal(){
-  ['f-marque','f-modele','f-year','f-gen','f-km','f-achat','f-carburant','f-transmission','f-couleur','f-immat','f-puissance'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  ['f-marque','f-modele','f-year','f-gen','f-km','f-achat','f-couleur','f-immat','f-puissance'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  document.newVehicleCarburant = ''; document.newVehicleTransmission = '';
+  const _cl = document.getElementById('veh-carburant-label'); if(_cl){ _cl.textContent = '—'; _cl.style.color = 'var(--text2)'; }
+  const _tl = document.getElementById('veh-transmission-label'); if(_tl){ _tl.textContent = '—'; _tl.style.color = 'var(--text2)'; }
+  const _cp = document.getElementById('veh-carburant-panel'); if(_cp) _cp.innerHTML = ntaskOptList(FUEL_OPTS, '', 'vehSelectCarburant');
+  const _tp = document.getElementById('veh-transmission-panel'); if(_tp) _tp.innerHTML = ntaskOptList(TRANS_OPTS, '', 'vehSelectTransmission');
   if(window.innerWidth >= 900 && !document.getElementById('add-vehicle-backdrop')){
     const bd = document.createElement('div');
     bd.id = 'add-vehicle-backdrop';
@@ -2326,8 +2350,8 @@ function addVehicle(){
   const gen = document.getElementById('f-gen').value.trim() || '?';
   const km = document.getElementById('f-km').value || '0';
   const achat = Number(document.getElementById('f-achat').value) || 0;
-  const carburant = document.getElementById('f-carburant').value || '';
-  const transmission = document.getElementById('f-transmission').value || '';
+  const carburant = document.newVehicleCarburant || '';
+  const transmission = document.newVehicleTransmission || '';
   const couleur = document.getElementById('f-couleur').value.trim() || '';
   const immatriculation = document.getElementById('f-immat').value.trim() || '';
   const puissance = document.getElementById('f-puissance').value || '';
@@ -3686,7 +3710,9 @@ function ntaskSelectRepeat(v){
 if(!window._ntaskOutsideBound){
   window._ntaskOutsideBound = true;
   document.addEventListener('click', function(e){
-    if(!document.getElementById('new-task-modal') && !document.getElementById('edit-task-modal-planning')) return;
+    const _addVehModal = document.getElementById('modal-add-vehicle');
+    const _addVehOpen = _addVehModal && _addVehModal.style.display === 'flex';
+    if(!document.getElementById('new-task-modal') && !document.getElementById('edit-task-modal-planning') && !_addVehOpen) return;
     if(e.target.closest && e.target.closest('.ntask-field')) return;
     document.querySelectorAll('.ntask-inline-panel').forEach(p => { p.style.display = 'none'; });
   });
