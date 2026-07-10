@@ -2675,8 +2675,10 @@ function confirmDeleteCurrentVehicle(){
   const innerHtml = `<div style="background:var(--surface);border-radius:24px;padding:24px;max-width:460px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.14);">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Supprimer ce véhicule ?</div>
     <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Toutes les tâches associées seront supprimées.</div>
-    <button onclick="DataLayer.deleteVehicle(${currentDetailVehicleId});showToast('✓ Véhicule supprimé');closeVehicleDetails();renderParc();this.closest('[style*=fixed]').remove();" style="width:100%;padding:14px;background:var(--surface-2);color:var(--danger);border:none;border-radius:14px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-sm);letter-spacing:-0.2px;margin-bottom:10px;">Supprimer</button>
-    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--text);border:none;border-radius:14px;font-size:15px;font-weight:500;cursor:pointer;letter-spacing:-0.2px;">Annuler</button>
+    <div style="display:flex;gap:8px;">
+      <button onclick="this.closest('[style*=fixed]').remove()" style="flex:1;padding:11px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:-0.2px;">Annuler</button>
+      <button onclick="DataLayer.deleteVehicle(${currentDetailVehicleId});showToast('✓ Véhicule supprimé');closeVehicleDetails();renderParc();this.closest('[style*=fixed]').remove();" style="flex:1;padding:11px;background:var(--danger);color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.2px;">Supprimer</button>
+    </div>
   </div>`;
   createDialogOrSheet('confirm-delete-current-vehicle-sheet', innerHtml, {desktopWidth:'480px'});
 }
@@ -3331,8 +3333,10 @@ function confirmDeleteEditTask(taskId){
   const innerHtml = `<div style="padding:24px 20px 32px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Supprimer cette tâche ?</div>
     <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Cette action ne peut pas être annulée.</div>
-    <button onclick="DataLayer.deletePlanningTask(${taskId});vehicles.forEach(v=>{const i=v.tasks.findIndex(t=>t.id===${taskId});if(i!==-1)v.tasks.splice(i,1);});save();showToast('✓ Tâche supprimée');closeEditPlanningModal();renderPlanning();if(currentDetailVehicleId)renderDetailTasks(currentDetailVehicleId,currentDetailTaskFilter);this.closest('[style*=fixed]').remove();" style="width:100%;padding:14px;background:var(--surface-2);color:var(--danger);border:none;border-radius:14px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-sm);letter-spacing:-0.2px;margin-bottom:10px;">Supprimer</button>
-    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--text);border:none;border-radius:14px;font-size:15px;font-weight:500;cursor:pointer;letter-spacing:-0.2px;">Annuler</button>
+    <div style="display:flex;gap:8px;">
+      <button onclick="this.closest('[style*=fixed]').remove()" style="flex:1;padding:11px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:-0.2px;">Annuler</button>
+      <button onclick="DataLayer.deletePlanningTask(${taskId});vehicles.forEach(v=>{const i=v.tasks.findIndex(t=>t.id===${taskId});if(i!==-1)v.tasks.splice(i,1);});save();showToast('✓ Tâche supprimée');closeEditPlanningModal();renderPlanning();if(currentDetailVehicleId)renderDetailTasks(currentDetailVehicleId,currentDetailTaskFilter);this.closest('[style*=fixed]').remove();" style="flex:1;padding:11px;background:var(--danger);color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.2px;">Supprimer</button>
+    </div>
   </div>`;
   createDialogOrSheet('confirm-delete-edit-task', innerHtml, {desktopWidth:'420px'});
 }
@@ -3516,8 +3520,10 @@ function deleteSimpleTask(vehicleId, taskId){
   const html = `<div style="background:var(--surface);width:100%;border-radius:16px 16px 0 0;padding:24px 20px 40px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Supprimer cette tâche ?</div>
     <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Cette action ne peut pas être annulée.</div>
-    <button onclick="DataLayer.deleteTask(${vehicleId},${taskId});save();document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal')?.remove();renderDetailTasks(${vehicleId},'all');showToast('✓ Tâche supprimée');document.getElementById('delete-simple-task-sheet')?.remove();" style="width:100%;padding:14px;background:var(--surface-2);color:var(--danger);border:none;border-radius:14px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-sm);letter-spacing:-0.2px;margin-bottom:10px;">Supprimer</button>
-    <button onclick="document.getElementById('delete-simple-task-sheet')?.remove()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--text);border:none;border-radius:14px;font-size:15px;font-weight:500;cursor:pointer;letter-spacing:-0.2px;">Annuler</button>
+    <div style="display:flex;gap:8px;">
+      <button onclick="document.getElementById('delete-simple-task-sheet')?.remove()" style="flex:1;padding:11px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:-0.2px;">Annuler</button>
+      <button onclick="DataLayer.deleteTask(${vehicleId},${taskId});save();document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal')?.remove();renderDetailTasks(${vehicleId},'all');showToast('✓ Tâche supprimée');document.getElementById('delete-simple-task-sheet')?.remove();" style="flex:1;padding:11px;background:var(--danger);color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.2px;">Supprimer</button>
+    </div>
   </div>`;
   createDialogOrSheet('delete-simple-task-sheet', html, {desktopWidth:'420px'});
 }
@@ -3556,8 +3562,10 @@ function deleteVehicle(vehicleId){
   const innerHtml = `<div style="background:var(--surface);border-radius:24px;padding:24px;max-width:460px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.14);">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Supprimer ce véhicule ?</div>
     <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Toutes les tâches associées seront supprimées.</div>
-    <button onclick="DataLayer.deleteVehicle(${vehicleId});showToast('✓ Véhicule supprimé');if(currentDetailVehicleId===${vehicleId})switchView('parc');renderParc();this.closest('[style*=fixed]').remove();" style="width:100%;padding:14px;background:var(--surface-2);color:var(--danger);border:none;border-radius:14px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-sm);letter-spacing:-0.2px;margin-bottom:10px;">Supprimer</button>
-    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--text);border:none;border-radius:14px;font-size:15px;font-weight:500;cursor:pointer;letter-spacing:-0.2px;">Annuler</button>
+    <div style="display:flex;gap:8px;">
+      <button onclick="this.closest('[style*=fixed]').remove()" style="flex:1;padding:11px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:-0.2px;">Annuler</button>
+      <button onclick="DataLayer.deleteVehicle(${vehicleId});showToast('✓ Véhicule supprimé');if(currentDetailVehicleId===${vehicleId})switchView('parc');renderParc();this.closest('[style*=fixed]').remove();" style="flex:1;padding:11px;background:var(--danger);color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.2px;">Supprimer</button>
+    </div>
   </div>`;
   createDialogOrSheet('confirm-delete-vehicle-sheet', innerHtml, {desktopWidth:'480px'});
 }
