@@ -3689,6 +3689,7 @@ function ntaskToggle(id){
     const spaceBelow = window.innerHeight - anchor.getBoundingClientRect().bottom;
     if(spaceBelow < 280){ p.style.top = 'auto'; p.style.bottom = '100%'; p.style.marginTop = '0'; p.style.marginBottom = '6px'; }
     else { p.style.top = '100%'; p.style.bottom = 'auto'; p.style.marginTop = '4px'; p.style.marginBottom = '0'; }
+    setTimeout(() => { p.scrollIntoView({block: 'nearest', behavior: 'smooth'}); }, 20);
   }
 }
 function ntaskToggleTime(target){ ntaskToggle('ntask-' + target + '-time-panel'); }
