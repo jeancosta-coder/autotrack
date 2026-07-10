@@ -1127,7 +1127,8 @@
         cursor: pointer !important;
       }
       #modal-add-vehicle,
-      #simple-task-modal {
+      #simple-task-modal,
+      #edit-simple-task-modal {
         position: fixed !important;
         top: 50% !important;
         left: 50% !important;
@@ -3359,27 +3360,35 @@ function openEditTaskModal(vehicleId, taskId){
     const existing = document.getElementById('edit-simple-task-modal');
     if(existing) existing.remove();
     const currentType = task.type || 'preparation';
-    const TASK_TYPE_MAP = {preparation:{label:'Préparation',dot:EVENT_COLORS.preparation}, sav:{label:'SAV',dot:EVENT_COLORS.sav}, rappel:{label:'Rappel',dot:EVENT_COLORS.rappel}, rdv:{label:'RDV',dot:EVENT_COLORS.rdv}, appel:{label:'Appel',dot:EVENT_COLORS.appel}};
+    const _etypeOpts = [
+      {v:'preparation', l:'Préparation', dot:'#06B6D4'},
+      {v:'sav', l:'SAV', dot:'#F43F5E'},
+      {v:'rappel', l:'Rappel', dot:'#F59E0B'},
+      {v:'rdv', l:'RDV', dot:'#6366F1'},
+      {v:'appel', l:'Appel', dot:'#10B981'}
+    ];
     document.editSimpleTaskType = currentType;
+    const _etypeCur = _etypeOpts.find(t => t.v === currentType) || _etypeOpts[0];
     const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;min-height:56px;">
       <button onclick="document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
       <span style="font-size:17px;font-weight:600;color:var(--text);">Modifier la tâche</span>
-      <button onclick="updateSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;padding:4px;">
-        <div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div>
-      </button>
+      <button onclick="deleteSimpleTask(${vehicleId}, ${taskId})" title="Supprimer" style="background:none;border:none;cursor:pointer;color:var(--danger);padding:4px;display:flex;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
     </div>
     <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px;">
       <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
         <input type="text" id="etask-title" value="${task.cat || task.desc || ''}" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
       </div>
-      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;cursor:pointer;" onclick="openSimpleTaskTypeSheet('edit')">
-          <span style="font-size:16px;color:var(--text);">Type</span>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span id="etask-type-dot" style="width:10px;height:10px;border-radius:50%;background:${TASK_TYPE_MAP[currentType]?.dot||'#06B6D4'};flex-shrink:0;"></span>
-            <span id="etask-type-label" style="font-size:16px;color:var(--text);">${TASK_TYPE_MAP[currentType]?.label||'Préparation'}</span>
-            <span style="color:var(--text3);font-size:18px;line-height:1;">›</span>
+      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:visible;margin-bottom:16px;">
+        <div class="ntask-field">
+          <div class="ntask-row" onclick="ntaskToggle('etask-type-panel')">
+            <span class="ntask-row-label">Type</span>
+            <span class="ntask-row-val">
+              <span id="etask-type-dot" style="width:10px;height:10px;border-radius:50%;background:${_etypeCur.dot};flex-shrink:0;"></span>
+              <span id="etask-type-label">${_etypeCur.l}</span>
+              <span class="chev">›</span>
+            </span>
           </div>
+          <div id="etask-type-panel" class="ntask-inline-panel">${ntaskOptList(_etypeOpts, currentType, 'etaskSelectType')}</div>
         </div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
@@ -3390,19 +3399,13 @@ function openEditTaskModal(vehicleId, taskId){
           </div>
         </div>
       </div>
-      <div style="padding:20px 16px 4px;text-align:center;">
-        <button onclick="deleteSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;padding:8px;border-radius:8px;transition:opacity 0.15s;color:#FF3B30;" onmouseover="this.style.opacity='0.6'" onmouseout="this.style.opacity='1'"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
-      </div>
-    </div>`;
+    </div>
+    <div class="ntask-save-bar"><button class="ntask-save-btn" onclick="updateSimpleTask(${vehicleId}, ${taskId})">Enregistrer</button></div>`;
     if (window.innerWidth >= 900) {
-      let innerHtmlDesktop = innerHtml.replace('background:var(--surface-2)', 'background:var(--surface)');
-      innerHtmlDesktop = innerHtmlDesktop.replace(/<button [^>]*onclick="updateSimpleTask\([\s\S]*?<\/button>/, `<button onclick="updateSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;padding:4px;"><div style="width:28px;height:28px;border-radius:50%;background:#1e3fae;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-size:0;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polyline points="1,7 5,11 12,2"/></svg></div></button>`);
-      innerHtmlDesktop = innerHtmlDesktop.replace(/<div style="padding:20px 16px 4px;text-align:center;">[\s\S]*?<\/div>/, '<div style="display:none;"></div>');
-      innerHtmlDesktop += `<div style="padding:16px 20px;border-top:1px solid var(--border);flex-shrink:0;display:flex;justify-content:center;"><button onclick="deleteSimpleTask(${vehicleId}, ${taskId})" style="background:none;border:none;cursor:pointer;font-size:15px;font-weight:500;color:#FF3B30;padding:10px 16px;">Supprimer</button></div>`;
       document.getElementById('edit-simple-task-modal-overlay')?.remove();
       document.body.insertAdjacentHTML('beforeend',
-        `<div id="edit-simple-task-modal-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.18);z-index:10009;" onclick="document.getElementById('edit-simple-task-modal')?.remove();this.remove()"></div>` +
-        `<div id="edit-simple-task-modal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,calc(100vw - 320px));max-height:calc(100vh - 80px);border-radius:20px;background:var(--surface);box-shadow:0 24px 80px rgba(0,0,0,0.18);z-index:10010;display:flex;flex-direction:column;overflow:hidden;">${innerHtmlDesktop}</div>`
+        `<div id="edit-simple-task-modal-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10009;" onclick="document.getElementById('edit-simple-task-modal')?.remove();this.remove()"></div>` +
+        `<div id="edit-simple-task-modal" style="z-index:10010;display:flex;flex-direction:column;">${innerHtml}</div>`
       );
     } else {
       document.body.insertAdjacentHTML('beforeend', `<div id="edit-simple-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">${innerHtml}</div>`);
@@ -3450,6 +3453,21 @@ function staskSelectType(v){
   const lbl = document.getElementById('stask-type-label'); if(lbl && o) lbl.textContent = o.l;
   const panel = document.getElementById('stask-type-panel'); if(panel) panel.innerHTML = ntaskOptList(opts, v, 'staskSelectType');
   ntaskToggle('stask-type-panel');
+}
+function etaskSelectType(v){
+  const opts = [
+    {v:'preparation', l:'Préparation', dot:'#06B6D4'},
+    {v:'sav', l:'SAV', dot:'#F43F5E'},
+    {v:'rappel', l:'Rappel', dot:'#F59E0B'},
+    {v:'rdv', l:'RDV', dot:'#6366F1'},
+    {v:'appel', l:'Appel', dot:'#10B981'}
+  ];
+  const o = opts.find(x => x.v === v);
+  document.editSimpleTaskType = v;
+  const dotEl = document.getElementById('etask-type-dot'); if(dotEl && o) dotEl.style.background = o.dot;
+  const lbl = document.getElementById('etask-type-label'); if(lbl && o) lbl.textContent = o.l;
+  const panel = document.getElementById('etask-type-panel'); if(panel) panel.innerHTML = ntaskOptList(opts, v, 'etaskSelectType');
+  ntaskToggle('etask-type-panel');
 }
 function selectSimpleTaskType(mode, val, label, dot){
   if(mode === 'new'){
@@ -3755,7 +3773,7 @@ if(!window._ntaskOutsideBound){
   document.addEventListener('click', function(e){
     const _addVehModal = document.getElementById('modal-add-vehicle');
     const _addVehOpen = _addVehModal && _addVehModal.style.display === 'flex';
-    if(!document.getElementById('new-task-modal') && !document.getElementById('edit-task-modal-planning') && !_addVehOpen && !document.getElementById('simple-task-modal')) return;
+    if(!document.getElementById('new-task-modal') && !document.getElementById('edit-task-modal-planning') && !_addVehOpen && !document.getElementById('simple-task-modal') && !document.getElementById('edit-simple-task-modal')) return;
     if(e.target.closest && e.target.closest('.ntask-field')) return;
     document.querySelectorAll('.ntask-inline-panel').forEach(p => { p.style.display = 'none'; });
   });
