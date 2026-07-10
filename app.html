@@ -3263,15 +3263,17 @@ function openEditPlanningTaskModal(taskId){
     style.textContent = '@keyframes slideUpFull{from{transform:translateY(100%);opacity:0;}to{transform:translateY(0);opacity:1;}}@keyframes slideDownFull{from{transform:translateY(0);opacity:1;}to{transform:translateY(100%);opacity:0;}}';
     document.head.appendChild(style);
   }
-  const trash = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
   const html = `<div id="edit-task-modal-planning" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface-2);z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
       <button onclick="closeEditPlanningModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
       <span style="font-size:17px;font-weight:600;color:var(--text);">Modifier l'événement</span>
-      <button onclick="confirmDeleteEditTask(${taskId})" title="Supprimer" style="background:none;border:none;cursor:pointer;color:var(--danger);padding:4px;display:flex;">${trash}</button>
+      <span style="width:22px;"></span>
     </div>
     ${ntaskModalBody(taskDate, taskDateEnd, taskTimeStart, taskTimeEnd)}
-    <div class="ntask-save-bar"><button class="ntask-save-btn" onclick="saveTaskEdit(${taskId})">Enregistrer</button></div>
+    <div class="ntask-save-bar">
+      <button class="ntask-save-btn" onclick="saveTaskEdit(${taskId})">Enregistrer</button>
+      <button onclick="confirmDeleteEditTask(${taskId})" style="width:100%;background:none;border:none;cursor:pointer;padding:10px 0 0;font-size:14px;font-weight:500;color:var(--danger);">Supprimer l'événement</button>
+    </div>
   </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
   const titleEl = document.getElementById('ntask-title'); if(titleEl) titleEl.value = task.description || '';
@@ -3372,7 +3374,7 @@ function openEditTaskModal(vehicleId, taskId){
     const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;min-height:56px;">
       <button onclick="document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
       <span style="font-size:17px;font-weight:600;color:var(--text);">Modifier la tâche</span>
-      <button onclick="deleteSimpleTask(${vehicleId}, ${taskId})" title="Supprimer" style="background:none;border:none;cursor:pointer;color:var(--danger);padding:4px;display:flex;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      <span style="width:22px;"></span>
     </div>
     <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px;">
       <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
@@ -3400,7 +3402,10 @@ function openEditTaskModal(vehicleId, taskId){
         </div>
       </div>
     </div>
-    <div class="ntask-save-bar"><button class="ntask-save-btn" onclick="updateSimpleTask(${vehicleId}, ${taskId})">Enregistrer</button></div>`;
+    <div class="ntask-save-bar">
+      <button class="ntask-save-btn" onclick="updateSimpleTask(${vehicleId}, ${taskId})">Enregistrer</button>
+      <button onclick="deleteSimpleTask(${vehicleId}, ${taskId})" style="width:100%;background:none;border:none;cursor:pointer;padding:10px 0 0;font-size:14px;font-weight:500;color:var(--danger);">Supprimer la tâche</button>
+    </div>`;
     if (window.innerWidth >= 900) {
       document.getElementById('edit-simple-task-modal-overlay')?.remove();
       document.body.insertAdjacentHTML('beforeend',
