@@ -2720,15 +2720,7 @@ function openDetailTaskModal(){
   if (existing) existing.remove();
 
   document.newSimpleTaskType = 'preparation';
-  document.newSimpleTaskTypeLabel = 'Préparation';
-  document.newSimpleTaskTypeDot = '#06B6D4';
-  const _stypeOpts = [
-    {v:'preparation', l:'Préparation', dot:'#06B6D4'},
-    {v:'sav', l:'SAV', dot:'#F43F5E'},
-    {v:'rappel', l:'Rappel', dot:'#F59E0B'},
-    {v:'rdv', l:'RDV', dot:'#6366F1'},
-    {v:'appel', l:'Appel', dot:'#10B981'}
-  ];
+  document.newSimpleTaskPriority = 'normal';
 
   const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;min-height:56px;">
       <button onclick="document.getElementById('simple-task-modal-overlay')?.remove();document.getElementById('simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
@@ -2741,15 +2733,20 @@ function openDetailTaskModal(){
       </div>
       <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:visible;margin-bottom:16px;">
         <div class="ntask-field">
-          <div class="ntask-row" onclick="ntaskToggle('stask-type-panel')">
-            <span class="ntask-row-label">Type</span>
+          <div class="ntask-row" onclick="ntaskToggle('stask-priority-panel')">
+            <span class="ntask-row-label">Priorité</span>
             <span class="ntask-row-val">
-              <span id="stask-type-dot" style="width:10px;height:10px;border-radius:50%;background:#06B6D4;flex-shrink:0;"></span>
-              <span id="stask-type-label">Préparation</span>
+              <span id="stask-priority-icon" style="display:inline-flex;color:${priorityColor('normal')};">${PRIORITY_FLAG}</span>
+              <span id="stask-priority-label">${priorityLabel('normal')}</span>
               <span class="chev">›</span>
             </span>
           </div>
-          <div id="stask-type-panel" class="ntask-inline-panel">${ntaskOptList(_stypeOpts, 'preparation', 'staskSelectType')}</div>
+          <div id="stask-priority-panel" class="ntask-inline-panel">${ntaskOptList(PRIORITY_OPTS, 'normal', 'staskSelectPriority')}</div>
+        </div>
+        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:var(--text);">Échéance</span>
+          <input type="date" id="stask-date" class="ntask-native" style="background:transparent;">
         </div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
@@ -2759,6 +2756,10 @@ function openDetailTaskModal(){
             <span style="font-size:16px;color:var(--text2);">€</span>
           </div>
         </div>
+      </div>
+      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;padding:12px 16px;">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">Notes</div>
+        <textarea id="stask-notes" placeholder="Détails, remarques..." style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:80px;resize:none;color:var(--text);background:transparent;padding:0;"></textarea>
       </div>
     </div>
     <div class="ntask-save-bar"><button class="ntask-save-btn" onclick="saveSimpleTask()">Enregistrer</button></div>`;
@@ -2779,12 +2780,14 @@ function saveSimpleTask(){
   const title = document.getElementById('stask-title')?.value.trim();
   if(!title){ showToast('⚠️ Titre requis'); return; }
   const type = document.newSimpleTaskType || 'preparation';
+  const priority = document.newSimpleTaskPriority || 'normal';
   const cost = Number(document.getElementById('stask-cost')?.value) || 0;
   const date = document.getElementById('stask-date')?.value || null;
+  const notes = document.getElementById('stask-notes')?.value.trim() || '';
   const v = vehicles.find(x => x.id === currentDetailVehicleId);
   if(!v) return;
   if(!v.tasks) v.tasks = [];
-  v.tasks.push({ id: Date.now(), type, cat: title, desc: '', cost, completed: false, date });
+  v.tasks.push({ id: Date.now(), type, priority, cat: title, desc: '', cost, completed: false, date, notes });
   save();
   document.getElementById('simple-task-modal-overlay')?.remove();
   document.getElementById('simple-task-modal').remove();
@@ -3339,15 +3342,9 @@ function openEditTaskModal(vehicleId, taskId){
     const existing = document.getElementById('edit-simple-task-modal');
     if(existing) existing.remove();
     const currentType = task.type || 'preparation';
-    const _etypeOpts = [
-      {v:'preparation', l:'Préparation', dot:'#06B6D4'},
-      {v:'sav', l:'SAV', dot:'#F43F5E'},
-      {v:'rappel', l:'Rappel', dot:'#F59E0B'},
-      {v:'rdv', l:'RDV', dot:'#6366F1'},
-      {v:'appel', l:'Appel', dot:'#10B981'}
-    ];
+    const currentPriority = task.priority || 'normal';
     document.editSimpleTaskType = currentType;
-    const _etypeCur = _etypeOpts.find(t => t.v === currentType) || _etypeOpts[0];
+    document.editSimpleTaskPriority = currentPriority;
     const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;min-height:56px;">
       <button onclick="document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
       <span style="font-size:17px;font-weight:600;color:var(--text);">Modifier la tâche</span>
@@ -3359,15 +3356,20 @@ function openEditTaskModal(vehicleId, taskId){
       </div>
       <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:visible;margin-bottom:16px;">
         <div class="ntask-field">
-          <div class="ntask-row" onclick="ntaskToggle('etask-type-panel')">
-            <span class="ntask-row-label">Type</span>
+          <div class="ntask-row" onclick="ntaskToggle('etask-priority-panel')">
+            <span class="ntask-row-label">Priorité</span>
             <span class="ntask-row-val">
-              <span id="etask-type-dot" style="width:10px;height:10px;border-radius:50%;background:${_etypeCur.dot};flex-shrink:0;"></span>
-              <span id="etask-type-label">${_etypeCur.l}</span>
+              <span id="etask-priority-icon" style="display:inline-flex;color:${priorityColor(currentPriority)};">${PRIORITY_FLAG}</span>
+              <span id="etask-priority-label">${priorityLabel(currentPriority)}</span>
               <span class="chev">›</span>
             </span>
           </div>
-          <div id="etask-type-panel" class="ntask-inline-panel">${ntaskOptList(_etypeOpts, currentType, 'etaskSelectType')}</div>
+          <div id="etask-priority-panel" class="ntask-inline-panel">${ntaskOptList(PRIORITY_OPTS, currentPriority, 'etaskSelectPriority')}</div>
+        </div>
+        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:16px;color:var(--text);">Échéance</span>
+          <input type="date" id="etask-date" class="ntask-native" value="${task.date || ''}" style="background:transparent;">
         </div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
@@ -3377,6 +3379,10 @@ function openEditTaskModal(vehicleId, taskId){
             <span style="font-size:16px;color:var(--text2);">€</span>
           </div>
         </div>
+      </div>
+      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;padding:12px 16px;">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">Notes</div>
+        <textarea id="etask-notes" placeholder="Détails, remarques..." style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:80px;resize:none;color:var(--text);background:transparent;padding:0;">${task.notes || ''}</textarea>
       </div>
     </div>
     <div class="ntask-save-bar">
@@ -3421,6 +3427,20 @@ function openSimpleTaskTypeSheet(mode){
   createDialogOrSheet('simple-type-sheet', innerHtml, {desktopWidth:'420px'});
 }
 
+function staskSelectPriority(v){
+  document.newSimpleTaskPriority = v;
+  const iconEl = document.getElementById('stask-priority-icon'); if(iconEl) iconEl.style.color = priorityColor(v);
+  const lbl = document.getElementById('stask-priority-label'); if(lbl) lbl.textContent = priorityLabel(v);
+  const panel = document.getElementById('stask-priority-panel'); if(panel) panel.innerHTML = ntaskOptList(PRIORITY_OPTS, v, 'staskSelectPriority');
+  ntaskToggle('stask-priority-panel');
+}
+function etaskSelectPriority(v){
+  document.editSimpleTaskPriority = v;
+  const iconEl = document.getElementById('etask-priority-icon'); if(iconEl) iconEl.style.color = priorityColor(v);
+  const lbl = document.getElementById('etask-priority-label'); if(lbl) lbl.textContent = priorityLabel(v);
+  const panel = document.getElementById('etask-priority-panel'); if(panel) panel.innerHTML = ntaskOptList(PRIORITY_OPTS, v, 'etaskSelectPriority');
+  ntaskToggle('etask-priority-panel');
+}
 function staskSelectType(v){
   const opts = [
     {v:'preparation', l:'Préparation', dot:'#06B6D4'},
@@ -3480,8 +3500,11 @@ function updateSimpleTask(vehicleId, taskId){
   if(!title){ showToast('⚠️ Titre requis'); return; }
   task.cat = title;
   task.type = document.editSimpleTaskType || task.type;
+  task.priority = document.editSimpleTaskPriority || task.priority || 'normal';
   task.desc = '';
   task.cost = Number(document.getElementById('etask-cost')?.value) || 0;
+  task.date = document.getElementById('etask-date')?.value || null;
+  task.notes = document.getElementById('etask-notes')?.value.trim() || '';
   save();
   document.getElementById('edit-simple-task-modal-overlay')?.remove();
   document.getElementById('edit-simple-task-modal').remove();
@@ -3761,8 +3784,20 @@ function ntaskSetDuration(mins){
   document.newTaskTimeEnd = v; const lbl = document.getElementById('ntask-end-time-label'); if(lbl) lbl.textContent = v;
 }
 function ntaskOptList(opts, current, fn){
-  return opts.map(o => `<div class="ntask-opt" onclick="${fn}('${o.v}')"><span>${o.dot ? `<span class="ntask-opt-dot" style="background:${o.dot};"></span>` : ''}${o.l}</span>${o.v === current ? '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}</div>`).join('');
+  return opts.map(o => {
+    const marker = o.icon ? `<span style="display:inline-flex;color:${o.color||'currentColor'};flex-shrink:0;">${o.icon}</span>` : (o.dot ? `<span class="ntask-opt-dot" style="background:${o.dot};"></span>` : '');
+    return `<div class="ntask-opt" onclick="${fn}('${o.v}')"><span>${marker}${o.l}</span>${o.v === current ? '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg>' : ''}</div>`;
+  }).join('');
 }
+const PRIORITY_FLAG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4"/><path d="M4 4h13l-3 4 3 4H4"/></svg>';
+const PRIORITY_OPTS = [
+  {v:'low', l:'Faible', icon:PRIORITY_FLAG, color:'var(--neutral)'},
+  {v:'normal', l:'Normale', icon:PRIORITY_FLAG, color:'var(--info)'},
+  {v:'high', l:'Haute', icon:PRIORITY_FLAG, color:'var(--warning)'},
+  {v:'urgent', l:'Urgente', icon:PRIORITY_FLAG, color:'var(--danger)'}
+];
+function priorityLabel(v){ return (PRIORITY_OPTS.find(p => p.v === v) || PRIORITY_OPTS[1]).l; }
+function priorityColor(v){ return (PRIORITY_OPTS.find(p => p.v === v) || PRIORITY_OPTS[1]).color; }
 function ntaskTypeOpts(){ return NTASK_TYPES.map(t => ({v: t.v, l: t.l, dot: eventColor(t.v)})); }
 function ntaskSelectType(v){
   document.newTaskType = v; const o = NTASK_TYPES.find(x => x.v === v);
