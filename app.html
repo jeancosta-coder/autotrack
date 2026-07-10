@@ -3678,6 +3678,15 @@ function ntaskSetType(v){
     else { b.style.background = 'transparent'; b.style.color = 'var(--text2)'; b.style.borderColor = 'var(--border)'; }
   });
 }
+function ntaskGetScrollParent(el){
+  let node = el.parentElement;
+  while(node && node !== document.body){
+    const style = getComputedStyle(node);
+    if((style.overflowY === 'auto' || style.overflowY === 'scroll') && node.scrollHeight > node.clientHeight) return node;
+    node = node.parentElement;
+  }
+  return null;
+}
 function ntaskToggle(id){
   document.querySelectorAll('.ntask-inline-panel').forEach(p => { if(p.id !== id) p.style.display = 'none'; });
   const p = document.getElementById(id); if(!p) return;
@@ -3686,8 +3695,14 @@ function ntaskToggle(id){
   if(open){
     const field = p.closest('.ntask-field');
     const anchor = field ? (field.querySelector('.ntask-row') || field) : p;
-    const spaceBelow = window.innerHeight - anchor.getBoundingClientRect().bottom;
-    if(spaceBelow < 280){ p.style.top = 'auto'; p.style.bottom = '100%'; p.style.marginTop = '0'; p.style.marginBottom = '6px'; }
+    const anchorRect = anchor.getBoundingClientRect();
+    const panelHeight = Math.min(p.scrollHeight, 280);
+    const scrollParent = ntaskGetScrollParent(p);
+    const limitBottom = scrollParent ? Math.min(window.innerHeight, scrollParent.getBoundingClientRect().bottom) : window.innerHeight;
+    const limitTop = scrollParent ? Math.max(0, scrollParent.getBoundingClientRect().top) : 0;
+    const spaceBelow = limitBottom - anchorRect.bottom;
+    const spaceAbove = anchorRect.top - limitTop;
+    if(spaceBelow < panelHeight && spaceAbove > spaceBelow){ p.style.top = 'auto'; p.style.bottom = '100%'; p.style.marginTop = '0'; p.style.marginBottom = '6px'; }
     else { p.style.top = '100%'; p.style.bottom = 'auto'; p.style.marginTop = '4px'; p.style.marginBottom = '0'; }
     setTimeout(() => { p.scrollIntoView({block: 'nearest', behavior: 'smooth'}); }, 20);
   }
