@@ -1533,16 +1533,9 @@
         </div>
       </div>
 
-      <div class="seg-control" style="margin-bottom:14px;display:flex;">
-        <button class="seg-btn pvsel active" data-pv="vehicles" onclick="switchParcView('vehicles')" style="flex:1;">Véhicules</button>
-        <button class="seg-btn pvsel" data-pv="tasks" onclick="switchParcView('tasks')" style="flex:1;">Tâches</button>
-      </div>
-
-      <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;">
-        <button type="button" onclick="openAddModal()" style="display:flex;align-items:center;gap:8px;background:var(--accent);border:none;cursor:pointer;padding:10px 18px;border-radius:14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
-          <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Nouveau véhicule</span>
-        </button>
+      <div class="seg-control" style="margin-bottom:14px;">
+        <button class="seg-btn pvsel active" data-pv="vehicles" onclick="switchParcView('vehicles')">Véhicules</button>
+        <button class="seg-btn pvsel" data-pv="tasks" onclick="switchParcView('tasks')">Tâches</button>
       </div>
 
       <!-- RECHERCHE iOS -->
@@ -1552,11 +1545,18 @@
       </div>
 
       <!-- FILTRES -->
-      <div style="display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+      <div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
         <button class="parc-filter active" onclick="filterParc('all',this)">Tous</button>
         <button class="parc-filter" onclick="filterParc('En cours',this)">En cours</button>
         <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)">Prêt</button>
         <button class="parc-filter" onclick="filterParc('Vendu',this)">Vendu</button>
+      </div>
+
+      <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:16px;">
+        <button type="button" onclick="openAddModal()" style="display:flex;align-items:center;gap:8px;background:var(--accent);border:none;cursor:pointer;padding:10px 18px;border-radius:14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
+          <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Nouveau véhicule</span>
+        </button>
       </div>
 
       <div id="parc-grid" style="padding-bottom:160px;"></div>
@@ -1588,16 +1588,9 @@
         </div>
       </div>
 
-      <div class="seg-control" style="margin-bottom:14px;display:flex;">
-        <button class="seg-btn pvsel" data-pv="vehicles" onclick="switchParcView('vehicles')" style="flex:1;">Véhicules</button>
-        <button class="seg-btn pvsel active" data-pv="tasks" onclick="switchParcView('tasks')" style="flex:1;">Tâches</button>
-      </div>
-
-      <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;">
-        <button type="button" onclick="openGlobalAddTaskModal()" style="display:flex;align-items:center;gap:8px;background:var(--accent);border:none;cursor:pointer;padding:10px 18px;border-radius:14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
-          <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Ajouter une tâche</span>
-        </button>
+      <div class="seg-control" style="margin-bottom:14px;">
+        <button class="seg-btn pvsel" data-pv="vehicles" onclick="switchParcView('vehicles')">Véhicules</button>
+        <button class="seg-btn pvsel active" data-pv="tasks" onclick="switchParcView('tasks')">Tâches</button>
       </div>
 
       <!-- RECHERCHE taches -->
@@ -1607,7 +1600,7 @@
       </div>
 
       <!-- FILTRES taches -->
-      <div style="display:flex;gap:8px;margin-bottom:8px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+      <div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
         <button class="parc-filter active" data-tf="all" onclick="setTasksFilter('all')">Tous</button>
         <button class="parc-filter" data-tf="today" onclick="setTasksFilter('today')">Aujourd'hui</button>
         <button class="parc-filter" data-tf="late" onclick="setTasksFilter('late')">En retard</button>
@@ -1615,6 +1608,13 @@
         <button class="parc-filter" data-tf="custom" id="tf-custom-btn" onclick="setTasksFilter('custom')">Personnalisé</button>
       </div>
       <input type="date" id="tasks-custom-date-input" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;" onchange="onTasksCustomDateChange(this.value)">
+
+      <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:16px;">
+        <button type="button" onclick="openGlobalAddTaskModal()" style="display:flex;align-items:center;gap:8px;background:var(--accent);border:none;cursor:pointer;padding:10px 18px;border-radius:14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
+          <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Ajouter une tâche</span>
+        </button>
+      </div>
       <div id="tasks-count-label" style="display:none;font-size:13px;color:var(--text2);margin-bottom:12px;padding:0 2px;"></div>
 
       <div id="tasks-list" style="padding-bottom:160px;"></div>
