@@ -2074,6 +2074,8 @@
     </div>
     <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix achat</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-achat" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix de vente cible</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-vente" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
     </div>
     <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:visible;margin-bottom:24px;">
       <div class="ntask-field">
@@ -2419,6 +2421,7 @@ function addVehicle(){
   const gen = document.getElementById('f-gen').value.trim() || '?';
   const km = document.getElementById('f-km').value || '0';
   const achat = Number(document.getElementById('f-achat').value) || 0;
+  const vente = Number(document.getElementById('f-vente').value) || 0;
   const carburant = document.newVehicleCarburant || '';
   const transmission = document.newVehicleTransmission || '';
   const couleur = document.getElementById('f-couleur').value.trim() || '';
@@ -2426,7 +2429,7 @@ function addVehicle(){
   const puissance = document.getElementById('f-puissance').value || '';
   const today = Utils.today();
   const newVehicle = {
-    id: Date.now(), marque, modele, year, gen, km, achat, vente: 0, prepCost: 0,
+    id: Date.now(), marque, modele, year, gen, km, achat, vente, prepCost: 0,
     carburant, transmission, couleur, immatriculation, puissance,
     statut:'En cours', statusHistory: [{statut: 'En cours', date: today}],
     tasks: [{id: Date.now() + 1, type: 'sav', cat: 'Contrôle technique', desc: 'CT à planifier', cost: 0, completed: false, date: null}],
