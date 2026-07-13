@@ -2104,6 +2104,8 @@
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Kilométrage</span><input type="number" id="f-km" placeholder="45 000" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
     </div>
     <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Date d'achat</span><input type="date" id="f-achat-date" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;"/></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix achat</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-achat" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
       <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix de vente cible</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-vente" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
@@ -2423,7 +2425,7 @@ function vehSelectTransmission(v){
 function openAddModal(){
   document.editingVehicleId = null;
   const _t = document.getElementById('add-vehicle-title'); if(_t) _t.textContent = 'Nouveau véhicule';
-  ['f-marque','f-modele','f-year','f-gen','f-km','f-achat','f-vente','f-couleur','f-immat','f-puissance'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  ['f-marque','f-modele','f-year','f-gen','f-km','f-achat-date','f-achat','f-vente','f-couleur','f-immat','f-puissance'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
   document.newVehicleCarburant = ''; document.newVehicleTransmission = '';
   const _cl = document.getElementById('veh-carburant-label'); if(_cl){ _cl.textContent = '—'; _cl.style.color = 'var(--text2)'; }
   const _tl = document.getElementById('veh-transmission-label'); if(_tl){ _tl.textContent = '—'; _tl.style.color = 'var(--text2)'; }
@@ -2454,6 +2456,7 @@ function addVehicle(){
   const year = document.getElementById('f-year').value || '?';
   const gen = document.getElementById('f-gen').value.trim() || '?';
   const km = document.getElementById('f-km').value || '0';
+  const achatDate = document.getElementById('f-achat-date').value || '';
   const achat = Number(document.getElementById('f-achat').value) || 0;
   const vente = Number(document.getElementById('f-vente').value) || 0;
   const carburant = document.newVehicleCarburant || '';
@@ -2463,7 +2466,7 @@ function addVehicle(){
   const puissance = document.getElementById('f-puissance').value || '';
   const editId = document.editingVehicleId;
   if(editId){
-    DataLayer.updateVehicle(editId, { marque, modele, year, gen, km, achat, vente, carburant, transmission, couleur, immatriculation, puissance });
+    DataLayer.updateVehicle(editId, { marque, modele, year, gen, km, achatDate, achat, vente, carburant, transmission, couleur, immatriculation, puissance });
     document.editingVehicleId = null;
     showToast('✓ Fiche modifiée');
     closeAddModal();
@@ -2473,7 +2476,7 @@ function addVehicle(){
   }
   const today = Utils.today();
   const newVehicle = {
-    id: Date.now(), marque, modele, year, gen, km, achat, vente, prepCost: 0,
+    id: Date.now(), marque, modele, year, gen, km, achatDate, achat, vente, prepCost: 0,
     carburant, transmission, couleur, immatriculation, puissance,
     statut:'En cours', statusHistory: [{statut: 'En cours', date: today}],
     tasks: [{id: Date.now() + 1, type: 'sav', cat: 'Contrôle technique', desc: 'CT à planifier', cost: 0, completed: false, date: null}],
@@ -2493,7 +2496,7 @@ function openEditVehicleModal(id, focusId){
   const t = document.getElementById('add-vehicle-title'); if(t) t.textContent = 'Modifier le véhicule';
   const set = (fid, val) => { const el = document.getElementById(fid); if(el) el.value = (val === undefined || val === null || val === '?') ? '' : val; };
   set('f-marque', v.marque); set('f-modele', v.modele); set('f-year', v.year); set('f-gen', v.gen);
-  set('f-km', v.km); set('f-achat', v.achat || ''); set('f-vente', v.vente || '');
+  set('f-km', v.km); set('f-achat-date', v.achatDate || ''); set('f-achat', v.achat || ''); set('f-vente', v.vente || '');
   set('f-couleur', v.couleur); set('f-immat', v.immatriculation); set('f-puissance', v.puissance);
   document.newVehicleCarburant = v.carburant || '';
   document.newVehicleTransmission = v.transmission || '';
