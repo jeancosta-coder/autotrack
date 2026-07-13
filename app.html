@@ -1505,55 +1505,113 @@
 <div class="app-container">
   <div id="parc" class="view active">
 
-    <!-- KPI CARDS enrichies -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
-      <div class="kpi-card">
-        <div class="kpi-head">
-          <span class="kpi-icon" style="background:var(--warning-soft);color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+    <!-- Segmented Véhicules / Tâches -->
+    <div class="seg-control" style="margin-bottom:16px;">
+      <button class="seg-btn active" id="pvsel-vehicles" onclick="switchParcView('vehicles')">Véhicules</button>
+      <button class="seg-btn" id="pvsel-tasks" onclick="switchParcView('tasks')">Tâches</button>
+    </div>
+
+    <div id="parc-view-vehicles">
+      <!-- KPI CARDS enrichies -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span class="kpi-icon" style="background:var(--warning-soft);color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          </div>
+          <div class="kpi-val" id="kpi-enc">0</div>
+          <div class="kpi-label">En cours</div>
         </div>
-        <div class="kpi-val" id="kpi-enc">0</div>
-        <div class="kpi-label">En cours</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-head">
-          <span class="kpi-icon" style="background:var(--info-soft);color:var(--info);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span class="kpi-icon" style="background:var(--info-soft);color:var(--info);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+          </div>
+          <div class="kpi-val" id="kpi-prt">0</div>
+          <div class="kpi-label">Prêt à vendre</div>
         </div>
-        <div class="kpi-val" id="kpi-prt">0</div>
-        <div class="kpi-label">Prêt à vendre</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-head">
-          <span class="kpi-icon" style="background:var(--success-soft);color:var(--success);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><path d="M5 13l3-5h8l3 5"/></svg></span>
-          <span id="kpi-vnd-delta"></span>
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span class="kpi-icon" style="background:var(--success-soft);color:var(--success);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><path d="M5 13l3-5h8l3 5"/></svg></span>
+            <span id="kpi-vnd-delta"></span>
+          </div>
+          <div class="kpi-val" id="kpi-vnd">0</div>
+          <div class="kpi-label">Vendus</div>
+          <div id="kpi-vnd-spark"></div>
         </div>
-        <div class="kpi-val" id="kpi-vnd">0</div>
-        <div class="kpi-label">Vendus</div>
-        <div id="kpi-vnd-spark"></div>
       </div>
+
+      <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;">
+        <button type="button" onclick="openAddModal()" style="display:flex;align-items:center;gap:8px;background:var(--accent);border:none;cursor:pointer;padding:10px 18px;border-radius:14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
+          <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Nouveau véhicule</span>
+        </button>
+      </div>
+
+      <!-- RECHERCHE iOS -->
+      <div style="position:relative;margin-bottom:14px;">
+        <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text2);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Rechercher..." style="width:100%;padding:10px 12px 10px 36px;background:var(--surface-2);border:none;border-radius:10px;font-size:15px;color:var(--text);outline:none;box-sizing:border-box;" onkeyup="filterParc('search')"/>
+      </div>
+
+      <!-- FILTRES -->
+      <div style="display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+        <button class="parc-filter active" onclick="filterParc('all',this)">Tous</button>
+        <button class="parc-filter" onclick="filterParc('En cours',this)">En cours</button>
+        <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)">Prêt</button>
+        <button class="parc-filter" onclick="filterParc('Vendu',this)">Vendu</button>
+      </div>
+
+      <div id="parc-grid" style="padding-bottom:160px;"></div>
     </div>
 
-    <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;">
-      <button type="button" onclick="openAddModal()" style="display:flex;align-items:center;gap:8px;background:var(--accent);border:none;cursor:pointer;padding:10px 18px;border-radius:14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
-        <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Nouveau véhicule</span>
-      </button>
-    </div>
+    <div id="parc-view-tasks" style="display:none;">
+      <!-- Barre de progression globale -->
+      <div class="progress-container" style="margin-bottom:16px;"><div class="progress-bar" id="tasks-progress-bar" style="width:0%;"></div></div>
 
-    <!-- RECHERCHE iOS -->
-    <div style="position:relative;margin-bottom:14px;">
-      <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text2);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="search-input" placeholder="Rechercher..." style="width:100%;padding:10px 12px 10px 36px;background:var(--surface-2);border:none;border-radius:10px;font-size:15px;color:var(--text);outline:none;box-sizing:border-box;" onkeyup="filterParc('search')"/>
-    </div>
+      <!-- KPI CARDS taches -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span class="kpi-icon" style="background:var(--danger-soft);color:var(--danger);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+          </div>
+          <div class="kpi-val" id="kpi-tasks-late">0</div>
+          <div class="kpi-label">En retard</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span class="kpi-icon" style="background:var(--warning-soft);color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          </div>
+          <div class="kpi-val" id="kpi-tasks-today">0</div>
+          <div class="kpi-label">Aujourd'hui</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span class="kpi-icon" style="background:var(--info-soft);color:var(--info);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="4" x2="9" y2="9"/><line x1="15" y1="4" x2="15" y2="9"/></svg></span>
+          </div>
+          <div class="kpi-val" id="kpi-tasks-upcoming">0</div>
+          <div class="kpi-label">À venir</div>
+        </div>
+      </div>
 
-    <!-- FILTRES -->
-    <div style="display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
-      <button class="parc-filter active" onclick="filterParc('all',this)">Tous</button>
-      <button class="parc-filter" onclick="filterParc('En cours',this)">En cours</button>
-      <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)">Prêt</button>
-      <button class="parc-filter" onclick="filterParc('Vendu',this)">Vendu</button>
-    </div>
+      <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;">
+        <button type="button" onclick="openGlobalAddTaskModal()" style="display:flex;align-items:center;gap:8px;background:var(--accent);border:none;cursor:pointer;padding:10px 18px;border-radius:14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
+          <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Ajouter une tâche</span>
+        </button>
+      </div>
 
-    <div id="parc-grid" style="padding-bottom:160px;"></div>
+      <!-- FILTRES taches -->
+      <div style="display:flex;gap:8px;margin-bottom:8px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+        <button class="parc-filter active" data-tf="all" onclick="setTasksFilter('all')">Tous</button>
+        <button class="parc-filter" data-tf="today" onclick="setTasksFilter('today')">Aujourd'hui</button>
+        <button class="parc-filter" data-tf="late" onclick="setTasksFilter('late')">En retard</button>
+        <button class="parc-filter" data-tf="tomorrow" onclick="setTasksFilter('tomorrow')">Demain</button>
+        <button class="parc-filter" data-tf="custom" id="tf-custom-btn" onclick="setTasksFilter('custom')">Personnalisé</button>
+      </div>
+      <input type="date" id="tasks-custom-date-input" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;" onchange="onTasksCustomDateChange(this.value)">
+      <div id="tasks-count-label" style="display:none;font-size:13px;color:var(--text2);margin-bottom:12px;padding:0 2px;"></div>
+
+      <div id="tasks-list" style="padding-bottom:160px;"></div>
+    </div>
   </div>
 
   <div id="planning" class="view" style="position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;background:var(--surface-2);z-index:1;">
@@ -2493,6 +2551,140 @@ function renderParc(){
 
 function initLongPressCards(){}
 
+let currentParcView = 'vehicles';
+let currentTasksFilter = 'all';
+let tasksCustomDate = null;
+
+function switchParcView(view){
+  currentParcView = view;
+  document.getElementById('pvsel-vehicles').classList.toggle('active', view === 'vehicles');
+  document.getElementById('pvsel-tasks').classList.toggle('active', view === 'tasks');
+  document.getElementById('parc-view-vehicles').style.display = view === 'vehicles' ? 'block' : 'none';
+  document.getElementById('parc-view-tasks').style.display = view === 'tasks' ? 'block' : 'none';
+  const fab = document.getElementById('fab-parc');
+  if(fab) fab.setAttribute('onclick', view === 'tasks' ? 'openGlobalAddTaskModal()' : 'openAddModal()');
+  if(view === 'tasks') renderTasksView();
+}
+
+function getAllTasks(){
+  const out = [];
+  vehicles.forEach(v => {
+    (v.tasks || []).forEach(t => { out.push({...t, vehicleId: v.id, vehicleName: (v.marque + ' ' + v.modele).trim()}); });
+  });
+  return out;
+}
+
+function setTasksFilter(f){
+  if(f === 'custom'){
+    const inp = document.getElementById('tasks-custom-date-input');
+    if(inp){ inp.value = tasksCustomDate || Utils.today(); (inp.showPicker ? inp.showPicker() : inp.click()); }
+    return;
+  }
+  currentTasksFilter = f;
+  document.querySelectorAll('#parc-view-tasks .parc-filter').forEach(b => b.classList.toggle('active', b.dataset.tf === f));
+  renderTasksView();
+}
+function onTasksCustomDateChange(val){
+  if(!val) return;
+  tasksCustomDate = val;
+  currentTasksFilter = 'custom';
+  document.querySelectorAll('#parc-view-tasks .parc-filter').forEach(b => b.classList.toggle('active', b.dataset.tf === 'custom'));
+  renderTasksView();
+}
+
+function renderTasksView(){
+  const today = Utils.today();
+  const all = getAllTasks();
+  const active = all.filter(t => !t.completed);
+  const late = active.filter(t => t.date && t.date < today).length;
+  const todayCount = active.filter(t => t.date === today).length;
+  const upcoming = active.filter(t => t.date && t.date > today).length;
+  document.getElementById('kpi-tasks-late').textContent = late;
+  document.getElementById('kpi-tasks-today').textContent = todayCount;
+  document.getElementById('kpi-tasks-upcoming').textContent = upcoming;
+  const done = all.filter(t => t.completed).length;
+  const pct = all.length > 0 ? Math.round((done / all.length) * 100) : 0;
+  document.getElementById('tasks-progress-bar').style.width = pct + '%';
+
+  const tomorrow = RenderHelpers.getNextDay(1);
+  let list = all.slice();
+  const f = currentTasksFilter;
+  const label = document.getElementById('tasks-count-label');
+  if(f === 'today'){ list = list.filter(t => t.date === today); }
+  else if(f === 'late'){ list = list.filter(t => t.date && t.date < today && !t.completed); }
+  else if(f === 'tomorrow'){ list = list.filter(t => t.date === tomorrow); }
+  else if(f === 'custom'){ list = list.filter(t => t.date === tasksCustomDate); }
+  if(f !== 'all' && label){
+    label.style.display = 'block';
+    const dLabel = f === 'custom' && tasksCustomDate ? new Date(tasksCustomDate + 'T00:00:00').toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'}) : '';
+    label.textContent = list.length + ' tâche' + (list.length > 1 ? 's' : '') + (dLabel ? ' · ' + dLabel : '');
+  } else if(label){ label.style.display = 'none'; }
+
+  // tri : échéance croissante (sans date en dernier), non terminées avant terminées
+  list.sort((a, b) => {
+    if(a.completed !== b.completed) return a.completed ? 1 : -1;
+    const da = a.date || '9999-99-99', db = b.date || '9999-99-99';
+    return da.localeCompare(db);
+  });
+
+  const container = document.getElementById('tasks-list');
+  if(list.length === 0){ container.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:var(--text2);font-size:15px;">Aucune tâche</div>'; return; }
+
+  // groupes par échéance
+  const groups = {};
+  list.forEach(t => {
+    let key;
+    if(!t.date) key = 'Sans échéance';
+    else if(t.date < today) key = 'En retard';
+    else if(t.date === today) key = "Aujourd'hui";
+    else if(t.date === tomorrow) key = 'Demain';
+    else key = new Date(t.date + 'T00:00:00').toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+    (groups[key] = groups[key] || []).push(t);
+  });
+  const order = ['En retard', "Aujourd'hui", 'Demain'];
+  const keys = Object.keys(groups).sort((a, b) => {
+    const ia = order.indexOf(a), ib = order.indexOf(b);
+    if(a === 'Sans échéance') return 1; if(b === 'Sans échéance') return -1;
+    if(ia !== -1 || ib !== -1){ return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib); }
+    const da = groups[a][0].date || '', db = groups[b][0].date || '';
+    return da.localeCompare(db);
+  });
+
+  let html = '';
+  keys.forEach(k => {
+    const isLate = k === 'En retard';
+    html += `<div style="margin:4px 4px 6px;"><span style="font-size:12px;font-weight:600;color:${isLate ? 'var(--danger)' : 'var(--text2)'};text-transform:capitalize;">${k}</span></div>`;
+    html += `<div style="background:var(--surface);border-radius:14px;box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;margin-bottom:14px;">`;
+    groups[k].forEach((t, idx) => {
+      const isLastItem = idx === groups[k].length - 1;
+      const title = t.cat || t.desc || '(sans titre)';
+      const prio = t.priority || 'normal';
+      const dateStr = t.date ? new Date(t.date + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) : '';
+      html += `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;${isLastItem ? '' : 'border-bottom:1px solid var(--border);'}opacity:${t.completed ? '0.45' : '1'};cursor:pointer;" onclick="openEditTaskModal(${t.vehicleId}, ${t.id})">`;
+      html += `<div onclick="event.stopPropagation();toggleGlobalTask(${t.vehicleId},${t.id})" style="width:24px;height:24px;border-radius:50%;flex-shrink:0;cursor:pointer;border:2px solid ${t.completed ? 'var(--text)' : 'var(--border-strong)'};background:${t.completed ? 'var(--text)' : 'transparent'};display:flex;align-items:center;justify-content:center;">${t.completed ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"><polyline points="1,6 4,9 11,3"/></svg>' : ''}</div>`;
+      html += `<div style="flex:1;min-width:0;"><div style="font-size:15px;color:var(--text);text-decoration:${t.completed ? 'line-through' : 'none'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${title}</div><div style="font-size:12px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${t.vehicleName}</div></div>`;
+      html += `<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><span style="display:inline-flex;color:${priorityColor(prio)};">${PRIORITY_FLAG}</span>${dateStr ? `<span style="font-size:12px;color:var(--text2);">${dateStr}</span>` : ''}</div>`;
+      html += `</div>`;
+    });
+    html += `</div>`;
+  });
+  container.innerHTML = html;
+}
+
+function toggleGlobalTask(vehicleId, taskId){
+  const v = vehicles.find(x => x.id === vehicleId);
+  const t = v && v.tasks ? v.tasks.find(s => s.id === taskId) : null;
+  if(!t) return;
+  t.completed = !t.completed;
+  save();
+  renderTasksView();
+}
+
+function openGlobalAddTaskModal(){
+  currentDetailVehicleId = null;
+  openDetailTaskModal(true);
+}
+
 function showVehicleContextMenu(vehicleId, btn){
   const v = vehicles.find(x => x.id === vehicleId);
   if(!v) return;
@@ -2714,12 +2906,30 @@ function changeStatut(newStatut){
   }
 }
 
-function openDetailTaskModal(){
+function staskVehicleOpts(){ return vehicles.map(v => ({v:String(v.id), l:(v.marque + ' ' + v.modele).trim() || 'Véhicule'})); }
+function staskSelectVehicle(id){
+  document.newSimpleTaskVehicleId = id; const o = staskVehicleOpts().find(x => x.v === id);
+  const lbl = document.getElementById('stask-vehicle-label'); if(lbl){ lbl.textContent = o ? o.l : 'Choisir'; lbl.style.color = id ? 'var(--text)' : 'var(--text2)'; }
+  const panel = document.getElementById('stask-vehicle-panel'); if(panel) panel.innerHTML = ntaskOptList(staskVehicleOpts(), id, 'staskSelectVehicle');
+  ntaskToggle('stask-vehicle-panel');
+}
+function openDetailTaskModal(global){
   const existing = document.getElementById('simple-task-modal');
   if (existing) existing.remove();
 
   document.newSimpleTaskType = 'preparation';
   document.newSimpleTaskPriority = 'normal';
+  document.newSimpleTaskVehicleId = '';
+  const vehicleFieldHtml = global ? `
+      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:visible;margin-bottom:16px;">
+        <div class="ntask-field">
+          <div class="ntask-row" onclick="ntaskToggle('stask-vehicle-panel')">
+            <span class="ntask-row-label">Véhicule</span>
+            <span class="ntask-row-val"><span id="stask-vehicle-label" style="color:var(--text2);">Choisir</span><span class="chev">›</span></span>
+          </div>
+          <div id="stask-vehicle-panel" class="ntask-inline-panel">${ntaskOptList(staskVehicleOpts(), '', 'staskSelectVehicle')}</div>
+        </div>
+      </div>` : '';
 
   const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;min-height:56px;">
       <button onclick="document.getElementById('simple-task-modal-overlay')?.remove();document.getElementById('simple-task-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
@@ -2730,6 +2940,7 @@ function openDetailTaskModal(){
       <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
         <input type="text" id="stask-title" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
       </div>
+      ${vehicleFieldHtml}
       <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:visible;margin-bottom:16px;">
         <div class="ntask-field">
           <div class="ntask-row" onclick="ntaskToggle('stask-priority-panel')">
@@ -2783,18 +2994,24 @@ function saveSimpleTask(){
   const cost = Number(document.getElementById('stask-cost')?.value) || 0;
   const date = document.getElementById('stask-date')?.value || null;
   const notes = document.getElementById('stask-notes')?.value.trim() || '';
-  const v = vehicles.find(x => x.id === currentDetailVehicleId);
+  const isGlobal = !!document.getElementById('stask-vehicle-panel');
+  const targetId = isGlobal ? Number(document.newSimpleTaskVehicleId) : currentDetailVehicleId;
+  if(isGlobal && !document.newSimpleTaskVehicleId){ showToast('⚠️ Choisissez un véhicule'); return; }
+  const v = vehicles.find(x => x.id === targetId);
   if(!v) return;
   if(!v.tasks) v.tasks = [];
   v.tasks.push({ id: Date.now(), type, priority, cat: title, desc: '', cost, completed: false, date, notes });
   save();
   document.getElementById('simple-task-modal-overlay')?.remove();
   document.getElementById('simple-task-modal').remove();
-  renderDetailTasks(currentDetailVehicleId, 'all');
-  document.querySelectorAll('.task-filter-btn').forEach(b => b.classList.remove('active'));
-  const allBtn = document.getElementById('filter-all-tasks');
-  if(allBtn) allBtn.classList.add('active');
-  currentDetailTaskFilter = 'all';
+  if(isGlobal){ renderTasksView(); }
+  else {
+    renderDetailTasks(currentDetailVehicleId, 'all');
+    document.querySelectorAll('.task-filter-btn').forEach(b => b.classList.remove('active'));
+    const allBtn = document.getElementById('filter-all-tasks');
+    if(allBtn) allBtn.classList.add('active');
+    currentDetailTaskFilter = 'all';
+  }
   showToast('✓ Tâche ajoutée');
 }
 
@@ -3507,7 +3724,8 @@ function updateSimpleTask(vehicleId, taskId){
   save();
   document.getElementById('edit-simple-task-modal-overlay')?.remove();
   document.getElementById('edit-simple-task-modal').remove();
-  renderDetailTasks(vehicleId, 'all');
+  if(currentDetailVehicleId) renderDetailTasks(vehicleId, 'all');
+  if(currentParcView === 'tasks') renderTasksView();
   showToast('✓ Tâche modifiée');
 }
 
@@ -3517,7 +3735,7 @@ function deleteSimpleTask(vehicleId, taskId){
     <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Cette action ne peut pas être annulée.</div>
     <div style="display:flex;gap:8px;">
       <button onclick="document.getElementById('delete-simple-task-sheet')?.remove()" style="flex:1;padding:11px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:-0.2px;">Annuler</button>
-      <button onclick="DataLayer.deleteTask(${vehicleId},${taskId});save();document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal')?.remove();renderDetailTasks(${vehicleId},'all');showToast('✓ Tâche supprimée');document.getElementById('delete-simple-task-sheet')?.remove();" style="flex:1;padding:11px;background:var(--danger);color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.2px;">Supprimer</button>
+      <button onclick="DataLayer.deleteTask(${vehicleId},${taskId});save();document.getElementById('edit-simple-task-modal-overlay')?.remove();document.getElementById('edit-simple-task-modal')?.remove();if(currentDetailVehicleId)renderDetailTasks(${vehicleId},'all');if(currentParcView==='tasks')renderTasksView();showToast('✓ Tâche supprimée');document.getElementById('delete-simple-task-sheet')?.remove();" style="flex:1;padding:11px;background:var(--danger);color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.2px;">Supprimer</button>
     </div>
   </div>`;
   createDialogOrSheet('delete-simple-task-sheet', html, {desktopWidth:'420px'});
