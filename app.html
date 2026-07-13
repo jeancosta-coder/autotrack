@@ -3226,15 +3226,10 @@ function updateViewSelectorUI(mode){
 
 function planningSettingsItemsHtml(){
   const vm = localStorage.getItem('at_planning_viewmode') || (window.innerWidth >= 900 ? '7' : '1');
-  const dur = localStorage.getItem('at_planning_duration') || '60';
   const views = [['1','Jour'],['3','3 jours'],['5','Semaine de travail'],['7','Semaine'],['month','Mois']];
-  const durs = [['15','15 min'],['30','30 min'],['60','1 h'],['120','2 h']];
   const chk = '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg>';
-  const sec = (t) => `<div style="padding:10px 14px 4px;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">${t}</div>`;
-  let h = sec('Vue par défaut');
+  let h = `<div style="padding:10px 14px 4px;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Vue par défaut</div>`;
   h += views.map(([v,l]) => `<div class="ntask-opt" onclick="setPlanningView('${v}')"><span>${l}</span>${vm===v?chk:''}</div>`).join('');
-  h += '<div class="ntask-sep"></div>' + sec('Durée par défaut');
-  h += durs.map(([v,l]) => `<div class="ntask-opt" onclick="setPlanningDuration('${v}')"><span>${l}</span>${dur===v?chk:''}</div>`).join('');
   return h;
 }
 function refreshPlanningSettings(){
@@ -3244,7 +3239,6 @@ function refreshPlanningSettings(){
   if(menu) menu.innerHTML = planningSettingsItemsHtml();
 }
 function setPlanningView(v){ setViewMode(v); refreshPlanningSettings(); }
-function setPlanningDuration(v){ localStorage.setItem('at_planning_duration', v); refreshPlanningSettings(); }
 function openPlanningSettings(anchorEl){
   if(window.innerWidth >= 900){ openAnchoredMenu(anchorEl, planningSettingsItemsHtml()); return; }
   const html = `<div id="planning-settings-page" style="position:fixed;inset:0;background:var(--surface-2);z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
