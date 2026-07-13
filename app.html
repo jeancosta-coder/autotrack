@@ -1509,7 +1509,7 @@
 
     <div id="parc-view-vehicles">
       <!-- KPI CARDS enrichies -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;">
         <div class="kpi-card">
           <div class="kpi-head">
             <span class="kpi-icon" style="background:var(--warning-soft);color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
@@ -1523,6 +1523,13 @@
           </div>
           <div class="kpi-val" id="kpi-prt">0</div>
           <div class="kpi-label">Prêt à vendre</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span class="kpi-icon" style="background:rgba(168,85,247,0.12);color:#A855F7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></span>
+          </div>
+          <div class="kpi-val" id="kpi-rsv">0</div>
+          <div class="kpi-label">Réservé</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-head">
@@ -2556,6 +2563,7 @@ function renderParc(){
   const counts = DataLayer.getVehicleCountsByStatus();
   if(Utils.el('kpi-enc')) Utils.el('kpi-enc').textContent = counts['En cours'];
   if(Utils.el('kpi-prt')) Utils.el('kpi-prt').textContent = counts['Prêt à vendre'];
+  if(Utils.el('kpi-rsv')) Utils.el('kpi-rsv').textContent = counts['Réservé'];
   if(Utils.el('kpi-vnd')) Utils.el('kpi-vnd').textContent = counts['Livré'];
   const _ss = monthlySoldSeries(6);
   const _vd = document.getElementById('kpi-vnd-delta');
