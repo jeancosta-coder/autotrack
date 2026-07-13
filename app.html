@@ -1755,7 +1755,9 @@
           <div id="detail-title" style="font-size:17px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 50px;"></div>
           <div id="detail-subtitle" style="font-size:12px;color:var(--text2);margin-top:1px;"></div>
         </div>
-        <div style="width:30px;flex-shrink:0;margin-left:auto;"></div>
+        <button onclick="openEditVehicleModal(currentDetailVehicleId)" title="Modifier la fiche" style="width:30px;flex-shrink:0;margin-left:auto;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);padding:4px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+        </button>
       </div>
     </div>
     <div style="background:var(--surface);flex-shrink:0;">
@@ -1771,10 +1773,14 @@
 
         <!-- Nav desktop uniquement : caché sur mobile -->
         <div id="details-desktop-nav" style="display:none;">
-          <div style="padding:14px 16px 8px;">
+          <div style="padding:14px 16px 8px;display:flex;align-items:center;justify-content:space-between;">
             <button onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:500;color:var(--text2);padding:0;display:flex;align-items:center;gap:4px;letter-spacing:0.1px;">
               <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="5,1 1,5 5,9"/></svg>
               Parc
+            </button>
+            <button onclick="openEditVehicleModal(currentDetailVehicleId)" title="Modifier la fiche" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;color:var(--text2);font-size:12px;font-weight:500;padding:4px 8px;border-radius:8px;transition:background 0.15s;" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='none'">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+              Modifier
             </button>
           </div>
           <div style="padding:6px 16px 20px;">
@@ -2071,7 +2077,7 @@
 <div id="modal-add-vehicle" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:none;flex-direction:column;animation:slideUpFull 0.3s ease;">
   <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
     <button onclick="closeAddModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>
-    <span style="font-size:17px;font-weight:600;color:var(--text);flex:1;text-align:center;">Nouveau véhicule</span>
+    <span id="add-vehicle-title" style="font-size:17px;font-weight:600;color:var(--text);flex:1;text-align:center;">Nouveau véhicule</span>
     <span style="width:36px;"></span>
   </div>
   <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px 24px 16px;">
@@ -2405,7 +2411,9 @@ function vehSelectTransmission(v){
   ntaskToggle('veh-transmission-panel');
 }
 function openAddModal(){
-  ['f-marque','f-modele','f-year','f-gen','f-km','f-achat','f-couleur','f-immat','f-puissance'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  document.editingVehicleId = null;
+  const _t = document.getElementById('add-vehicle-title'); if(_t) _t.textContent = 'Nouveau véhicule';
+  ['f-marque','f-modele','f-year','f-gen','f-km','f-achat','f-vente','f-couleur','f-immat','f-puissance'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
   document.newVehicleCarburant = ''; document.newVehicleTransmission = '';
   const _cl = document.getElementById('veh-carburant-label'); if(_cl){ _cl.textContent = '—'; _cl.style.color = 'var(--text2)'; }
   const _tl = document.getElementById('veh-transmission-label'); if(_tl){ _tl.textContent = '—'; _tl.style.color = 'var(--text2)'; }
@@ -2443,6 +2451,16 @@ function addVehicle(){
   const couleur = document.getElementById('f-couleur').value.trim() || '';
   const immatriculation = document.getElementById('f-immat').value.trim() || '';
   const puissance = document.getElementById('f-puissance').value || '';
+  const editId = document.editingVehicleId;
+  if(editId){
+    DataLayer.updateVehicle(editId, { marque, modele, year, gen, km, achat, vente, carburant, transmission, couleur, immatriculation, puissance });
+    document.editingVehicleId = null;
+    showToast('✓ Fiche modifiée');
+    closeAddModal();
+    renderParc();
+    if(currentDetailVehicleId === editId) openVehicleDetails(editId);
+    return;
+  }
   const today = Utils.today();
   const newVehicle = {
     id: Date.now(), marque, modele, year, gen, km, achat, vente, prepCost: 0,
@@ -2455,6 +2473,25 @@ function addVehicle(){
   showToast('✓ Véhicule créé');
   closeAddModal();
   renderParc();
+}
+function openEditVehicleModal(id){
+  const v = vehicles.find(x => x.id === id);
+  if(!v) return;
+  openAddModal();
+  document.editingVehicleId = id;
+  const t = document.getElementById('add-vehicle-title'); if(t) t.textContent = 'Modifier le véhicule';
+  const set = (fid, val) => { const el = document.getElementById(fid); if(el) el.value = (val === undefined || val === null || val === '?') ? '' : val; };
+  set('f-marque', v.marque); set('f-modele', v.modele); set('f-year', v.year); set('f-gen', v.gen);
+  set('f-km', v.km); set('f-achat', v.achat || ''); set('f-vente', v.vente || '');
+  set('f-couleur', v.couleur); set('f-immat', v.immatriculation); set('f-puissance', v.puissance);
+  document.newVehicleCarburant = v.carburant || '';
+  document.newVehicleTransmission = v.transmission || '';
+  const cl = document.getElementById('veh-carburant-label'); const co = FUEL_OPTS.find(x => x.v === v.carburant);
+  if(cl){ cl.textContent = co ? co.l : (v.carburant || '—'); cl.style.color = v.carburant ? 'var(--text)' : 'var(--text2)'; }
+  const cp = document.getElementById('veh-carburant-panel'); if(cp) cp.innerHTML = ntaskOptList(FUEL_OPTS, v.carburant || '', 'vehSelectCarburant');
+  const tl = document.getElementById('veh-transmission-label'); const to = TRANS_OPTS.find(x => x.v === v.transmission);
+  if(tl){ tl.textContent = to ? to.l : (v.transmission || '—'); tl.style.color = v.transmission ? 'var(--text)' : 'var(--text2)'; }
+  const tp = document.getElementById('veh-transmission-panel'); if(tp) tp.innerHTML = ntaskOptList(TRANS_OPTS, v.transmission || '', 'vehSelectTransmission');
 }
 
 
