@@ -4013,6 +4013,15 @@ function ntaskSelectTime(target, v){
   const lbl = document.getElementById('ntask-' + target + '-time-label'); if(lbl) lbl.textContent = v;
   ntaskToggle('ntask-' + target + '-time-panel');
 }
+function ntaskStartTimeChanged(v){
+  document.newTaskTime = v;
+  const [h, m] = v.split(':').map(Number);
+  let tot = (h * 60 + m + 60) % 1440;
+  const endV = String(Math.floor(tot / 60)).padStart(2,'0') + ':' + String(tot % 60).padStart(2,'0');
+  document.newTaskTimeEnd = endV;
+  const endInput = document.getElementById('ntask-end-time');
+  if(endInput) endInput.value = endV;
+}
 function ntaskSetDuration(mins){
   const start = document.newTaskTime || '09:00'; const [h, m] = start.split(':').map(Number);
   let tot = (h * 60 + m + mins) % (24 * 60); if(tot < 0) tot += 24 * 60;
@@ -4097,7 +4106,7 @@ function ntaskModalBody(startDate, endDate, startTime, endTime){
           <span class="ntask-row-label">Début</span>
           <span class="ntask-datetime-pair">
             <input type="date" id="ntask-start-date" class="ntask-native" value="${startDate}" onchange="document.newTaskDate=this.value">
-            <input type="time" id="ntask-start-time" class="ntask-native" value="${startTime}" onchange="document.newTaskTime=this.value">
+            <input type="time" id="ntask-start-time" class="ntask-native" value="${startTime}" onchange="ntaskStartTimeChanged(this.value)">
           </span>
         </div>
         <div class="ntask-sep"></div>
