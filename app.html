@@ -2473,6 +2473,7 @@ function addVehicle(){
   showToast('✓ Véhicule créé');
   closeAddModal();
   renderParc();
+  openVehicleDetails(newVehicle.id);
 }
 function openEditVehicleModal(id, focusId){
   const v = vehicles.find(x => x.id === id);
