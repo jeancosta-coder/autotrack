@@ -1834,17 +1834,17 @@
         <!-- Infos véhicule -->
         <div class="dt-infos-wrap">
           <div class="detail-vehicle-specs vehicle-specs-grid">
-            <div class="vsg-cell"><div class="vsg-label">Marque</div><div class="vsg-value" id="detail-marque"></div></div>
-            <div class="vsg-cell"><div class="vsg-label">Modèle</div><div class="vsg-value" id="detail-modele"></div></div>
-            <div class="vsg-cell"><div class="vsg-label">Année</div><div class="vsg-value" id="detail-year"></div></div>
-            <div class="vsg-cell"><div class="vsg-label">Génération</div><div class="vsg-value" id="detail-gen"></div></div>
-            <div class="vsg-cell"><div class="vsg-label">Kilométrage</div><div class="vsg-value" id="detail-km"></div></div>
-            <div class="vsg-cell"><div class="vsg-label">Prix d'achat</div><div class="vsg-value" id="detail-achat-display"></div></div>
-            <div class="vsg-cell"><div class="vsg-label">Carburant</div><div class="vsg-value" id="detail-carburant"></div></div>
-            <div class="vsg-cell"><div class="vsg-label">Transmission</div><div class="vsg-value" id="detail-transmission"></div></div>
-            <div class="vsg-cell"><div class="vsg-label">Couleur</div><div class="vsg-value" id="detail-couleur"></div></div>
-            <div class="vsg-cell"><div class="vsg-label">Immatriculation</div><div class="vsg-value" id="detail-immat"></div></div>
-            <div class="vsg-cell"><div class="vsg-label">Puissance</div><div class="vsg-value" id="detail-puissance"></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-marque')"><div class="vsg-label">Marque</div><div class="vsg-value" id="detail-marque"></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-modele')"><div class="vsg-label">Modèle</div><div class="vsg-value" id="detail-modele"></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-year')"><div class="vsg-label">Année</div><div class="vsg-value" id="detail-year"></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-gen')"><div class="vsg-label">Génération</div><div class="vsg-value" id="detail-gen"></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-km')"><div class="vsg-label">Kilométrage</div><div class="vsg-value" id="detail-km"></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-achat')"><div class="vsg-label">Prix d'achat</div><div class="vsg-value" id="detail-achat-display"></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'veh-carburant')"><div class="vsg-label">Carburant</div><div class="vsg-value" id="detail-carburant"></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'veh-transmission')"><div class="vsg-label">Transmission</div><div class="vsg-value" id="detail-transmission"></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-couleur')"><div class="vsg-label">Couleur</div><div class="vsg-value" id="detail-couleur"></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-immat')"><div class="vsg-label">Immatriculation</div><div class="vsg-value" id="detail-immat"></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-puissance')"><div class="vsg-label">Puissance</div><div class="vsg-value" id="detail-puissance"></div></div>
           </div>
         </div>
 
@@ -2474,7 +2474,7 @@ function addVehicle(){
   closeAddModal();
   renderParc();
 }
-function openEditVehicleModal(id){
+function openEditVehicleModal(id, focusId){
   const v = vehicles.find(x => x.id === id);
   if(!v) return;
   openAddModal();
@@ -2492,6 +2492,17 @@ function openEditVehicleModal(id){
   const tl = document.getElementById('veh-transmission-label'); const to = TRANS_OPTS.find(x => x.v === v.transmission);
   if(tl){ tl.textContent = to ? to.l : (v.transmission || '—'); tl.style.color = v.transmission ? 'var(--text)' : 'var(--text2)'; }
   const tp = document.getElementById('veh-transmission-panel'); if(tp) tp.innerHTML = ntaskOptList(TRANS_OPTS, v.transmission || '', 'vehSelectTransmission');
+  if(focusId){
+    setTimeout(() => {
+      if(focusId === 'veh-carburant' || focusId === 'veh-transmission'){
+        (document.getElementById(focusId + '-label') || document.getElementById(focusId + '-panel'))?.scrollIntoView({block:'center'});
+        ntaskToggle(focusId + '-panel');
+      } else {
+        const el = document.getElementById(focusId);
+        if(el){ el.scrollIntoView({block:'center'}); el.focus(); if(el.select) el.select(); }
+      }
+    }, 360);
+  }
 }
 
 
