@@ -2137,7 +2137,7 @@ function statusIconSVG(statut, stroke){
 }
 const STATUS_COLORS = new Proxy({}, { get: (_, k) => statusColor(k) });
 /* Palette unique des types d'événements/tâches (B · vif moderne) */
-const EVENT_COLORS = {rappel:'#F59E0B', preparation:'#06B6D4', prep:'#06B6D4', sav:'#F43F5E', rdv:'#6366F1', appel:'#10B981', livraison:'#A855F7', autre:'#94A3B8'};
+const EVENT_COLORS = {visite:'#6366F1', livraison:'#A855F7', tache:'#10B981', rappel:'#F59E0B', preparation:'#06B6D4', prep:'#06B6D4', sav:'#F43F5E', rdv:'#6366F1', appel:'#10B981', autre:'#94A3B8'};
 function eventColor(type){ return EVENT_COLORS[type] || '#94A3B8'; }
 const EVENT_LABELS = {rdv:'RDV', appel:'Appel', rappel:'Rappel', livraison:'Livraison', autre:'Autre'};
 const TASK_COLORS = {mecanique:'#FF9500', carrosserie:'#007AFF', administratif:'#AF52DE', preparation:'#34C759', sav:'#FF3B30'};
@@ -3461,7 +3461,7 @@ function openEditPlanningTaskModal(taskId){
   const taskDate = task.date || Utils.today();
   const taskDateEnd = task.dateEnd || taskDate;
   // Pré-remplir l'état partagé (mêmes variables que la modale d'ajout)
-  document.newTaskType = task.type || 'rappel';
+  document.newTaskType = task.type || 'visite';
   document.newTaskVehicleId = task.vehicleId ? String(task.vehicleId) : '';
   document.newTaskDate = taskDate;
   document.newTaskDateEnd = taskDateEnd;
@@ -3926,7 +3926,13 @@ let _ntaskCalDate = new Date();
 /* ── Helpers modale tâche (pills, panneaux inline, créneaux, durée) ── */
 const NTASK_NOTIF_OPTS = [{v:'none',l:'Aucune'},{v:'15',l:'15 minutes avant'},{v:'30',l:'30 minutes avant'},{v:'60',l:'1 heure avant'},{v:'1440',l:'1 jour avant'}];
 const NTASK_REPEAT_OPTS = [{v:'never',l:'Jamais'},{v:'daily',l:'Tous les jours'},{v:'weekly',l:'Toutes les semaines'},{v:'monthly',l:'Tous les mois'}];
-const NTASK_TYPES = [{v:'rappel',l:'Rappel'},{v:'preparation',l:'Préparation'},{v:'sav',l:'SAV'},{v:'rdv',l:'RDV'},{v:'appel',l:'Appel'}];
+const TYPE_ICONS = {
+  visite: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.686-6-10a6 6 0 0 1 12 0c0 4.314-6 10-6 10z"/><circle cx="12" cy="11" r="2.5"/></svg>',
+  livraison: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="13" height="10" rx="1"/><path d="M14 9h4l3 3v4h-7z"/><circle cx="6" cy="18.5" r="1.6"/><circle cx="17" cy="18.5" r="1.6"/></svg>',
+  tache: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h10"/><path d="M10 12h10"/><path d="M10 18h10"/><path d="M3.5 6l1.2 1.2L7 5"/><path d="M3.5 12l1.2 1.2L7 11"/><path d="M3.5 18l1.2 1.2L7 17"/></svg>'
+};
+function typeIcon(v){ return TYPE_ICONS[v] || TYPE_ICONS.tache; }
+const NTASK_TYPES = [{v:'visite',l:'Visite'},{v:'livraison',l:'Livraison'},{v:'tache',l:'Tâches'}];
 function ntaskTypePills(current){
   return NTASK_TYPES.map(t => {
     const c = eventColor(t.v); const active = t.v === current ? `background:${c}1F;color:${c};border-color:${c};` : '';
@@ -4043,11 +4049,11 @@ const PRIORITY_OPTS = [
 ];
 function priorityLabel(v){ return (PRIORITY_OPTS.find(p => p.v === v) || PRIORITY_OPTS[1]).l; }
 function priorityColor(v){ return (PRIORITY_OPTS.find(p => p.v === v) || PRIORITY_OPTS[1]).color; }
-function ntaskTypeOpts(){ return NTASK_TYPES.map(t => ({v: t.v, l: t.l, dot: eventColor(t.v)})); }
+function ntaskTypeOpts(){ return NTASK_TYPES.map(t => ({v: t.v, l: t.l, icon: typeIcon(t.v), color: eventColor(t.v)})); }
 function ntaskSelectType(v){
   document.newTaskType = v; const o = NTASK_TYPES.find(x => x.v === v);
-  const dot = document.getElementById('ntask-type-dot'); if(dot) dot.style.background = eventColor(v);
-  const lbl = document.getElementById('ntask-type-label'); if(lbl) lbl.textContent = o ? o.l : 'Rappel';
+  const dot = document.getElementById('ntask-type-dot'); if(dot){ dot.style.color = eventColor(v); dot.innerHTML = typeIcon(v); }
+  const lbl = document.getElementById('ntask-type-label'); if(lbl) lbl.textContent = o ? o.l : 'Visite';
   const panel = document.getElementById('ntask-type-panel'); if(panel) panel.innerHTML = ntaskOptList(ntaskTypeOpts(), v, 'ntaskSelectType');
   ntaskToggle('ntask-type-panel');
 }
@@ -4088,7 +4094,7 @@ function ntaskModalBody(startDate, endDate, startTime, endTime){
         <div class="ntask-field">
           <div class="ntask-row" onclick="ntaskToggle('ntask-type-panel')">
             <span class="ntask-row-label">Type</span>
-            <span class="ntask-row-val"><span id="ntask-type-dot" style="width:9px;height:9px;border-radius:50%;background:${eventColor(document.newTaskType)};flex-shrink:0;"></span><span id="ntask-type-label">${(NTASK_TYPES.find(t=>t.v===document.newTaskType)||{l:'Rappel'}).l}</span><span class="chev">›</span></span>
+            <span class="ntask-row-val"><span id="ntask-type-dot" style="display:inline-flex;align-items:center;color:${eventColor(document.newTaskType)};flex-shrink:0;">${typeIcon(document.newTaskType)}</span><span id="ntask-type-label">${(NTASK_TYPES.find(t=>t.v===document.newTaskType)||{l:'Visite'}).l}</span><span class="chev">›</span></span>
           </div>
           <div id="ntask-type-panel" class="ntask-inline-panel">${ntaskOptList(ntaskTypeOpts(), document.newTaskType, 'ntaskSelectType')}</div>
         </div>
@@ -4239,7 +4245,7 @@ function openNewTaskModalOutlookForVehicle(dateStr, timeStr, vehicleId){
 }
 
 function openNewTaskModalOutlook(dateStr, timeStr){
-  document.newTaskType = 'rappel';
+  document.newTaskType = 'visite';
   document.newTaskVehicleId = '';
   document.newTaskDate = dateStr;
   document.newTaskDateEnd = dateStr;
@@ -4353,7 +4359,7 @@ function openBottomSheet(key){
 function closeBottomSheet(){ const sheet = document.getElementById('ntask-bottom-sheet'); if(sheet) sheet.remove(); }
 
 function saveNewTask(){
-  const type = document.newTaskType || 'rappel';
+  const type = document.newTaskType || 'visite';
   const titleEl = document.getElementById('ntask-title');
   const title = titleEl ? titleEl.value.trim() : '';
   const date = document.newTaskDate || null;
