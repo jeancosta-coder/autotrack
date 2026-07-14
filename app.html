@@ -3283,14 +3283,15 @@ function renderSaleCycle(v){
   const pct = Math.round((done.length / SALE_CYCLE_STEPS.length) * 100);
   const bar = document.getElementById('detail-cycle-bar'); if(bar) bar.style.width = pct + '%';
   const pctLbl = document.getElementById('detail-cycle-pct'); if(pctLbl) pctLbl.textContent = pct + '%';
+  el.style.cssText = 'display:flex;overflow-x:auto;padding:4px 2px 6px;scrollbar-width:none;';
   el.innerHTML = SALE_CYCLE_STEPS.map((s, i) => {
     const checked = done.includes(s.k);
     const isLast = i === SALE_CYCLE_STEPS.length - 1;
-    const line = isLast ? '' : `<div style="position:absolute;left:13px;top:28px;bottom:-14px;width:2px;background:${checked ? 'var(--accent)' : 'var(--border)'};transition:background 0.2s;"></div>`;
+    const line = isLast ? '' : `<div style="position:absolute;left:50%;right:-50%;top:13px;height:2px;background:${checked ? 'var(--accent)' : 'var(--border)'};transition:background 0.2s;z-index:0;"></div>`;
     const circle = checked
-      ? `<div style="width:26px;height:26px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;box-shadow:0 2px 6px rgba(0,0,0,0.12);"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg></div>`
-      : `<div style="width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--surface);flex-shrink:0;position:relative;z-index:1;box-sizing:border-box;"></div>`;
-    return `<div onclick="toggleSaleCycleStep('${s.k}')" style="position:relative;display:flex;align-items:center;gap:14px;padding:7px 6px;border-radius:10px;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'">${line}${circle}<span style="font-size:14px;font-weight:${checked ? '600' : '400'};color:${checked ? 'var(--text)' : 'var(--text2)'};">${s.l}</span></div>`;
+      ? `<div style="width:26px;height:26px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;box-shadow:0 2px 6px rgba(0,0,0,0.12);margin:0 auto;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg></div>`
+      : `<div style="width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--surface);flex-shrink:0;position:relative;z-index:1;box-sizing:border-box;margin:0 auto;"></div>`;
+    return `<div onclick="toggleSaleCycleStep('${s.k}')" style="position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 14px;cursor:pointer;flex-shrink:0;width:92px;">${line}${circle}<span style="font-size:11px;font-weight:${checked ? '600' : '400'};color:${checked ? 'var(--text)' : 'var(--text2)'};text-align:center;line-height:1.25;">${s.l}</span></div>`;
   }).join('');
 }
 function toggleSaleCycleStep(k){
