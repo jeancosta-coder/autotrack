@@ -1860,7 +1860,10 @@
         <!-- Cycle de vente -->
         <div class="dt-cycle-wrap" style="margin-bottom:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 4px;">
-            <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Cycle de vente</span>
+            <div onclick="openSaleCycleMenu(this)" style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Cycle de vente</span>
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;"><polyline points="2,3 5,7 8,3"/></svg>
+            </div>
             <span id="detail-cycle-pct" style="font-size:12px;font-weight:700;color:var(--accent);"></span>
           </div>
           <div style="background:var(--surface);border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:18px 16px;">
@@ -3295,12 +3298,9 @@ function renderSaleCycle(v){
   const pctLbl = document.getElementById('detail-cycle-pct'); if(pctLbl) pctLbl.textContent = pct + '%';
   const lastDoneIdx = [...SALE_CYCLE_STEPS].reverse().findIndex(s => done.includes(s.k));
   const currentLabel = lastDoneIdx === -1 ? 'Aucune étape' : SALE_CYCLE_STEPS[SALE_CYCLE_STEPS.length - 1 - lastDoneIdx].l;
-  el.innerHTML = `<div onclick="openSaleCycleMenu(this)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:4px 2px;">
-    <div style="display:flex;align-items:center;gap:8px;">
-      <span style="font-size:14px;font-weight:600;color:var(--text);">${currentLabel}</span>
-      <span style="font-size:12px;color:var(--text2);">${done.length}/${SALE_CYCLE_STEPS.length}</span>
-    </div>
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;"><polyline points="2,3 5,7 8,3"/></svg>
+  el.innerHTML = `<div style="display:flex;align-items:center;gap:8px;padding:4px 2px;">
+    <span style="font-size:14px;font-weight:600;color:var(--text);">${currentLabel}</span>
+    <span style="font-size:12px;color:var(--text2);">${done.length}/${SALE_CYCLE_STEPS.length}</span>
   </div>`;
 }
 function openSaleCycleMenu(anchorEl){
