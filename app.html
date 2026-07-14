@@ -1943,7 +1943,6 @@
         <div class="fin-section-label">Acquisition</div>
         <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Prix d'achat</span><div class="fin-input-wrap"><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
-          <div class="fin-row fin-sep fin-total-row"><span class="fin-label-text fin-bold">Prix de revient</span><span id="detail-cout-revient" class="fin-bold">—</span></div>
         </div>
 
         <!-- FRAIS SANS TVA -->
@@ -1958,6 +1957,11 @@
         <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Frais soumis à la TVA</span><div style="display:flex;align-items:center;gap:10px;"><span id="fin-total-avecTva" class="fin-label-text" style="color:var(--text2);">0 €</span><button onclick="addCostItemForm('avecTva')" style="width:24px;height:24px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div></div>
           <div id="fin-list-avecTva"></div>
+        </div>
+
+        <!-- PRIX DE REVIENT -->
+        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <div class="fin-row fin-total-row"><span class="fin-label-text fin-bold">Prix de revient</span><span id="detail-cout-revient" class="fin-bold">—</span></div>
         </div>
 
         <!-- FRAIS DIVERS -->
