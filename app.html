@@ -3277,22 +3277,35 @@ const SALE_CYCLE_STEPS = [
   {k:'livre', l:'Livré'}
 ];
 const SALE_CYCLE_DEFAULT = ['achete'];
+function saleCycleMenuItemsHtml(v){
+  const done = Array.isArray(v.saleCycle) ? v.saleCycle : SALE_CYCLE_DEFAULT;
+  return SALE_CYCLE_STEPS.map(s => {
+    const checked = done.includes(s.k);
+    const box = checked
+      ? `<div style="width:18px;height:18px;border-radius:5px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg></div>`
+      : `<div style="width:18px;height:18px;border-radius:5px;border:2px solid var(--border);flex-shrink:0;box-sizing:border-box;"></div>`;
+    return `<div onclick="event.stopPropagation();toggleSaleCycleStep('${s.k}')" style="display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;font-size:14px;font-weight:${checked ? '600' : '400'};color:${checked ? 'var(--text)' : 'var(--text2)'};white-space:nowrap;">${box}<span>${s.l}</span></div>`;
+  }).join('');
+}
 function renderSaleCycle(v){
   const el = document.getElementById('detail-cycle'); if(!el) return;
   const done = Array.isArray(v.saleCycle) ? v.saleCycle : SALE_CYCLE_DEFAULT;
   const pct = Math.round((done.length / SALE_CYCLE_STEPS.length) * 100);
   const bar = document.getElementById('detail-cycle-bar'); if(bar) bar.style.width = pct + '%';
   const pctLbl = document.getElementById('detail-cycle-pct'); if(pctLbl) pctLbl.textContent = pct + '%';
-  el.style.cssText = 'display:flex;overflow-x:auto;padding:4px 2px 6px;scrollbar-width:none;';
-  el.innerHTML = SALE_CYCLE_STEPS.map((s, i) => {
-    const checked = done.includes(s.k);
-    const isLast = i === SALE_CYCLE_STEPS.length - 1;
-    const line = isLast ? '' : `<div style="position:absolute;left:50%;right:-50%;top:13px;height:2px;background:${checked ? 'var(--accent)' : 'var(--border)'};transition:background 0.2s;z-index:0;"></div>`;
-    const circle = checked
-      ? `<div style="width:26px;height:26px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;box-shadow:0 2px 6px rgba(0,0,0,0.12);margin:0 auto;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg></div>`
-      : `<div style="width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--surface);flex-shrink:0;position:relative;z-index:1;box-sizing:border-box;margin:0 auto;"></div>`;
-    return `<div onclick="toggleSaleCycleStep('${s.k}')" style="position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 14px;cursor:pointer;flex-shrink:0;width:92px;">${line}${circle}<span style="font-size:11px;font-weight:${checked ? '600' : '400'};color:${checked ? 'var(--text)' : 'var(--text2)'};text-align:center;line-height:1.25;">${s.l}</span></div>`;
-  }).join('');
+  const lastDoneIdx = [...SALE_CYCLE_STEPS].reverse().findIndex(s => done.includes(s.k));
+  const currentLabel = lastDoneIdx === -1 ? 'Aucune étape' : SALE_CYCLE_STEPS[SALE_CYCLE_STEPS.length - 1 - lastDoneIdx].l;
+  el.innerHTML = `<div onclick="openSaleCycleMenu(this)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:4px 2px;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:14px;font-weight:600;color:var(--text);">${currentLabel}</span>
+      <span style="font-size:12px;color:var(--text2);">${done.length}/${SALE_CYCLE_STEPS.length}</span>
+    </div>
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;"><polyline points="2,3 5,7 8,3"/></svg>
+  </div>`;
+}
+function openSaleCycleMenu(anchorEl){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  openAnchoredMenu(anchorEl, saleCycleMenuItemsHtml(v));
 }
 function toggleSaleCycleStep(k){
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
@@ -3300,7 +3313,10 @@ function toggleSaleCycleStep(k){
   const idx = done.indexOf(k);
   if(idx === -1) done.push(k); else done.splice(idx, 1);
   DataLayer.updateVehicle(currentDetailVehicleId, {saleCycle: done});
-  renderSaleCycle(DataLayer.getVehicleById(currentDetailVehicleId));
+  const nv = DataLayer.getVehicleById(currentDetailVehicleId);
+  renderSaleCycle(nv);
+  const menu = document.getElementById('anchored-menu');
+  if(menu) menu.innerHTML = saleCycleMenuItemsHtml(nv);
 }
 function openInlineDatePicker(kind){
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
