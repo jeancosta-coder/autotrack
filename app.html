@@ -1943,12 +1943,34 @@
         <div class="fin-section-label">Acquisition</div>
         <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Prix d'achat</span><div class="fin-input-wrap"><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
-          <div class="fin-row fin-sep"><span class="fin-label-text">Coût sans TVA</span><div class="fin-input-wrap"><input type="number" id="detail-sans-tva-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
-          <div class="fin-row fin-sep"><span class="fin-label-text">Coût soumis à la TVA</span><div class="fin-input-wrap"><input type="number" id="detail-avec-tva-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
           <div class="fin-row fin-sep fin-total-row"><span class="fin-label-text fin-bold">Prix de revient</span><span id="detail-cout-revient" class="fin-bold">—</span></div>
         </div>
 
-        <!-- FRAIS -->
+        <!-- FRAIS SANS TVA -->
+        <div class="fin-section-label" style="display:flex;justify-content:space-between;align-items:center;padding-right:16px;"><span>Frais sans TVA</span><span id="fin-total-sansTva" style="color:var(--text2);font-weight:600;text-transform:none;letter-spacing:0;"></span></div>
+        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <div id="fin-list-sansTva"></div>
+          <div class="fin-row fin-sep" onclick="addCostItemForm('sansTva')" style="cursor:pointer;">
+            <span style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--accent);">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+              Ajouter un coût
+            </span>
+          </div>
+        </div>
+
+        <!-- FRAIS SOUMIS À LA TVA -->
+        <div class="fin-section-label" style="display:flex;justify-content:space-between;align-items:center;padding-right:16px;"><span>Frais soumis à la TVA</span><span id="fin-total-avecTva" style="color:var(--text2);font-weight:600;text-transform:none;letter-spacing:0;"></span></div>
+        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <div id="fin-list-avecTva"></div>
+          <div class="fin-row fin-sep" onclick="addCostItemForm('avecTva')" style="cursor:pointer;">
+            <span style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--accent);">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+              Ajouter un coût
+            </span>
+          </div>
+        </div>
+
+        <!-- FRAIS DIVERS -->
         <div class="fin-section-label">Frais</div>
         <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Carte grise</span><div class="fin-input-wrap"><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
@@ -2262,7 +2284,9 @@ const DataLayer = {
   updateVehicle: (id, updates) => {
     const v = vehicles.find(v => v.id === id);
     if(v) {
-      const allowed = ['statut', 'achat', 'vente', 'prepCost', 'notes', 'statusHistory', 'carteGrise', 'transport', 'commission', 'margeCible', 'sansTva', 'avecTva'];
+      const allowed = ['statut', 'achat', 'vente', 'prepCost', 'notes', 'statusHistory', 'carteGrise', 'transport', 'commission', 'margeCible', 'sansTva', 'avecTva',
+        'marque', 'modele', 'year', 'gen', 'km', 'achatDate', 'saleDate', 'carburant', 'transmission', 'couleur', 'immatriculation', 'puissance', 'saleCycle',
+        'costsSansTva', 'costsAvecTva'];
       Object.keys(updates).forEach(key => { if(allowed.includes(key)) v[key] = updates[key]; });
       save();
     }
@@ -2892,9 +2916,9 @@ function openVehicleDetails(id){
   const _dim = document.getElementById('detail-immat'); if(_dim) _dim.textContent = v.immatriculation || '—';
   const _dp = document.getElementById('detail-puissance'); if(_dp) _dp.textContent = v.puissance ? v.puissance + ' ch' : '—';
   document.getElementById('detail-vente-input').value = v.vente || '';
-  document.getElementById('detail-sans-tva-input').value = v.sansTva || '';
-  document.getElementById('detail-avec-tva-input').value = v.avecTva || '';
   document.getElementById('detail-cg-input').value = v.carteGrise || '';
+  renderCostList('sansTva');
+  renderCostList('avecTva');
   document.getElementById('detail-marge-cible-input').value = v.margeCible || 15;
   const _sd = document.getElementById('detail-sale-date'); if(_sd) _sd.value = v.saleDate || '';
   const _fmtD = (d) => d ? new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '—';
@@ -2927,10 +2951,73 @@ if(window.innerWidth >= 900) {
   }
   setTimeout(() => initDetailSwipe(), 100);
 }
+function costItemsOf(v, kind){
+  const arrKey = kind === 'sansTva' ? 'costsSansTva' : 'costsAvecTva';
+  if(Array.isArray(v[arrKey])) return v[arrKey];
+  const legacy = kind === 'sansTva' ? v.sansTva : v.avecTva;
+  return legacy ? [{id:'legacy', label:'Autres frais', amount: legacy}] : [];
+}
+function costTotal(items){ return items.reduce((s, i) => s + (Number(i.amount) || 0), 0); }
+function renderCostList(kind){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  const items = costItemsOf(v, kind);
+  const listEl = document.getElementById('fin-list-' + kind);
+  if(listEl){
+    listEl.innerHTML = items.map(it => `<div class="fin-row fin-sep" style="padding-right:8px;">
+      <span class="fin-label-text" style="font-size:14px;">${it.label}</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="fin-label-text" style="font-size:14px;">${Number(it.amount).toLocaleString('fr-FR')} €</span>
+        <button onclick="removeCostItem('${kind}','${it.id}')" style="background:none;border:none;cursor:pointer;color:var(--text2);padding:2px;display:flex;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+      </div>
+    </div>`).join('');
+  }
+  const totalEl = document.getElementById('fin-total-' + kind);
+  const total = costTotal(items);
+  if(totalEl) totalEl.textContent = total ? total.toLocaleString('fr-FR') + ' €' : '';
+}
+function addCostItemForm(kind){
+  const listEl = document.getElementById('fin-list-' + kind);
+  if(!listEl || document.getElementById('cost-form-' + kind)) return;
+  const formHtml = `<div id="cost-form-${kind}" class="fin-row fin-sep" style="flex-direction:column;align-items:stretch;gap:8px;padding:12px 16px;">
+    <input type="text" id="cost-form-label-${kind}" placeholder="Libellé (ex: Plaquettes de frein)" style="border:none;outline:none;background:var(--surface-2);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);">
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input type="number" id="cost-form-amount-${kind}" placeholder="Montant" style="flex:1;min-width:0;border:none;outline:none;background:var(--surface-2);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);">
+      <span style="font-size:14px;color:var(--text2);">€</span>
+      <button onclick="saveCostItemForm('${kind}')" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Ajouter</button>
+      <button onclick="cancelCostItemForm('${kind}')" style="background:none;border:none;color:var(--text2);cursor:pointer;padding:8px;font-size:16px;">✕</button>
+    </div>
+  </div>`;
+  listEl.insertAdjacentHTML('beforeend', formHtml);
+  setTimeout(() => document.getElementById('cost-form-label-' + kind)?.focus(), 50);
+}
+function cancelCostItemForm(kind){ document.getElementById('cost-form-' + kind)?.remove(); }
+function saveCostItemForm(kind){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  const label = document.getElementById('cost-form-label-' + kind)?.value.trim();
+  const amount = Number(document.getElementById('cost-form-amount-' + kind)?.value) || 0;
+  if(!label || !amount){ showToast('⚠️ Libellé et montant requis'); return; }
+  const items = [...costItemsOf(v, kind), {id: String(Date.now()), label, amount}];
+  const arrKey = kind === 'sansTva' ? 'costsSansTva' : 'costsAvecTva';
+  DataLayer.updateVehicle(currentDetailVehicleId, {[arrKey]: items});
+  renderCostList(kind);
+  updateMargePreview();
+  showToast('✓ Coût ajouté');
+}
+function removeCostItem(kind, id){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  const items = costItemsOf(v, kind).filter(i => String(i.id) !== String(id));
+  const arrKey = kind === 'sansTva' ? 'costsSansTva' : 'costsAvecTva';
+  DataLayer.updateVehicle(currentDetailVehicleId, {[arrKey]: items});
+  renderCostList(kind);
+  updateMargePreview();
+}
 function updateMargePreview(){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId);
   const achat = parseFloat(document.getElementById('detail-achat-input')?.value) || 0;
-  const sansTva = parseFloat(document.getElementById('detail-sans-tva-input')?.value) || 0;
-  const avecTva = parseFloat(document.getElementById('detail-avec-tva-input')?.value) || 0;
+  const sansTva = v ? costTotal(costItemsOf(v, 'sansTva')) : 0;
+  const avecTva = v ? costTotal(costItemsOf(v, 'avecTva')) : 0;
   const vente = parseFloat(document.getElementById('detail-vente-input')?.value) || 0;
   const cible = parseFloat(document.getElementById('detail-marge-cible-input')?.value) || 15;
   const revient = achat + sansTva + avecTva;
@@ -3265,8 +3352,6 @@ function savePrices(){
   DataLayer.updateVehicle(currentDetailVehicleId, {
     achat: Utils.toNumber(Utils.el('detail-achat-input').value),
     vente: Utils.toNumber(Utils.el('detail-vente-input').value),
-    sansTva: Utils.toNumber(Utils.el('detail-sans-tva-input').value),
-    avecTva: Utils.toNumber(Utils.el('detail-avec-tva-input').value),
     carteGrise: Utils.toNumber(Utils.el('detail-cg-input').value),
     margeCible: Utils.toNumber(Utils.el('detail-marge-cible-input').value)
   });
@@ -3344,8 +3429,6 @@ function finalizeSale(){
   DataLayer.updateVehicle(currentDetailVehicleId, {
     achat: Utils.toNumber(Utils.el('detail-achat-input').value),
     vente: Utils.toNumber(Utils.el('detail-vente-input').value),
-    sansTva: Utils.toNumber(Utils.el('detail-sans-tva-input').value),
-    avecTva: Utils.toNumber(Utils.el('detail-avec-tva-input').value),
     carteGrise: Utils.toNumber(Utils.el('detail-cg-input').value),
     margeCible: Utils.toNumber(Utils.el('detail-marge-cible-input').value),
     saleDate: saleDate,
