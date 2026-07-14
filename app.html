@@ -1028,6 +1028,9 @@
       #tab-inforight { display: inline-flex !important; }
       /* Dates dans la colonne gauche (desktop) */
       .dt-dates-wrap { display: block !important; flex-shrink: 0 !important; padding: 12px 20px 0 !important; }
+      /* Cycle de vente dans la colonne gauche (desktop) */
+      .dt-cycle-wrap { flex-shrink: 0 !important; padding: 12px 20px 0 !important; margin-bottom: 0 !important; }
+      .dt-cycle-wrap > div:first-child { padding: 0 !important; }
       /* Contenu Infos déplacé à droite : rétablir l'aspect carte normal */
       #detail-tab-inforight .dt-notes-wrap,
       #detail-tab-inforight .dt-infos-wrap { padding: 0 !important; margin-bottom: 16px !important; }
@@ -1842,6 +1845,12 @@
               </button>
             </div>
           </div>
+        </div>
+
+        <!-- Cycle de vente -->
+        <div class="dt-cycle-wrap" style="margin-bottom:12px;">
+          <div style="margin-bottom:8px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Cycle de vente</span></div>
+          <div id="detail-cycle" style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:14px 16px;"></div>
         </div>
 
         <!-- Dates (desktop — colonne gauche) -->
@@ -2878,6 +2887,7 @@ function openVehicleDetails(id){
   const _ad = document.getElementById('detail-achat-date-disp'); if(_ad) _ad.textContent = _fmtD(v.achatDate);
   const _svd = document.getElementById('detail-sale-date-disp'); if(_svd) _svd.textContent = _fmtD(v.saleDate);
   document.getElementById('detail-notes').value = v.notes || '';
+  renderSaleCycle(v);
   relayoutDetailInfos();
   updateMargePreview();
   updateStatutUI(v.statut);
@@ -3248,6 +3258,37 @@ function savePrices(){
   updateMargePreview();
 }
 
+const SALE_CYCLE_STEPS = [
+  {k:'stock', l:'En stock'},
+  {k:'prep', l:'En préparation'},
+  {k:'visite', l:'Visite planifiée'},
+  {k:'offre', l:'Offre faite'},
+  {k:'acompte', l:'Acompte versé'},
+  {k:'dossier', l:'Dossier en cours'},
+  {k:'livraison', l:'Livraison planifiée'},
+  {k:'livre', l:'Livré'}
+];
+function renderSaleCycle(v){
+  const el = document.getElementById('detail-cycle'); if(!el) return;
+  const done = Array.isArray(v.saleCycle) ? v.saleCycle : [];
+  el.innerHTML = SALE_CYCLE_STEPS.map((s, i) => {
+    const checked = done.includes(s.k);
+    const isLast = i === SALE_CYCLE_STEPS.length - 1;
+    const line = isLast ? '' : `<div style="position:absolute;left:11px;top:20px;bottom:-16px;width:2px;background:${checked ? 'var(--accent)' : 'var(--border)'};"></div>`;
+    const circle = checked
+      ? `<div style="width:24px;height:24px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg></div>`
+      : `<div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:var(--surface);flex-shrink:0;position:relative;z-index:1;box-sizing:border-box;"></div>`;
+    return `<div onclick="toggleSaleCycleStep('${s.k}')" style="position:relative;display:flex;align-items:center;gap:12px;padding:5px 0;cursor:pointer;">${line}${circle}<span style="font-size:14px;font-weight:${checked ? '600' : '400'};color:${checked ? 'var(--accent)' : 'var(--text2)'};">${s.l}</span></div>`;
+  }).join('');
+}
+function toggleSaleCycleStep(k){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  const done = Array.isArray(v.saleCycle) ? [...v.saleCycle] : [];
+  const idx = done.indexOf(k);
+  if(idx === -1) done.push(k); else done.splice(idx, 1);
+  DataLayer.updateVehicle(currentDetailVehicleId, {saleCycle: done});
+  renderSaleCycle(DataLayer.getVehicleById(currentDetailVehicleId));
+}
 function openInlineDatePicker(kind){
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
   const inp = document.getElementById(kind === 'achat' ? 'detail-achat-date-edit' : 'detail-sale-date-edit');
