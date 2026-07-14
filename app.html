@@ -949,6 +949,9 @@
         padding: 12px 20px 0 !important;
       }
       .dt-statut-wrap > div:first-child { padding: 0 !important; margin-bottom: 8px !important; }
+      /* Dates : colonne gauche desktop */
+      .dt-dates-wrap { flex-shrink: 0 !important; padding: 12px 20px 0 !important; }
+      .dt-dates-wrap > div:first-child { padding: 0 !important; }
       /* Notes */
       .dt-notes-wrap {
         flex-shrink: 0 !important;
@@ -1029,7 +1032,6 @@
       /* Contenu Infos déplacé à droite : rétablir l'aspect carte normal */
       #detail-tab-inforight .dt-notes-wrap,
       #detail-tab-inforight .dt-cycle-wrap,
-      #detail-tab-inforight .dt-dates-wrap,
       #detail-tab-inforight .dt-infos-wrap { padding: 0 !important; margin-bottom: 16px !important; }
       #detail-tab-inforight .detail-vehicle-specs { background: var(--surface) !important; border-radius: 14px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important; overflow: hidden !important; }
       #detail-tab-inforight .vsg-cell { padding: 10px 14px !important; }
@@ -1844,6 +1846,16 @@
           </div>
         </div>
 
+        <!-- Dates (colonne gauche sur desktop, visible aussi sur mobile) -->
+        <div class="dt-dates-wrap">
+          <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Dates</span></div>
+          <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+            <div style="position:relative;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;" onclick="openInlineDatePicker('achat')"><span style="font-size:13px;color:var(--text2);">Date d'achat</span><span id="detail-achat-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span><input type="date" id="detail-achat-date-edit" onchange="saveVehicleDateInline('achat',this.value)" style="position:absolute;left:16px;bottom:6px;width:1px;height:1px;opacity:0;pointer-events:none;"></div>
+            <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+            <div style="position:relative;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;" onclick="openInlineDatePicker('vente')"><span style="font-size:13px;color:var(--text2);">Date de vente</span><span id="detail-sale-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span><input type="date" id="detail-sale-date-edit" onchange="saveVehicleDateInline('vente',this.value)" style="position:absolute;left:16px;bottom:6px;width:1px;height:1px;opacity:0;pointer-events:none;"></div>
+          </div>
+        </div>
+
         <!-- Contenu déplacé vers l'onglet Infos sur desktop (via JS) -->
         <div id="infos-movable">
 
@@ -1858,16 +1870,6 @@
               <div id="detail-cycle-bar" style="height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width 0.3s ease;"></div>
             </div>
             <div id="detail-cycle"></div>
-          </div>
-        </div>
-
-        <!-- Dates -->
-        <div class="dt-dates-wrap">
-          <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Dates</span></div>
-          <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-            <div style="position:relative;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;" onclick="openInlineDatePicker('achat')"><span style="font-size:13px;color:var(--text2);">Date d'achat</span><span id="detail-achat-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span><input type="date" id="detail-achat-date-edit" onchange="saveVehicleDateInline('achat',this.value)" style="position:absolute;left:16px;bottom:6px;width:1px;height:1px;opacity:0;pointer-events:none;"></div>
-            <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-            <div style="position:relative;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;" onclick="openInlineDatePicker('vente')"><span style="font-size:13px;color:var(--text2);">Date de vente</span><span id="detail-sale-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span><input type="date" id="detail-sale-date-edit" onchange="saveVehicleDateInline('vente',this.value)" style="position:absolute;left:16px;bottom:6px;width:1px;height:1px;opacity:0;pointer-events:none;"></div>
           </div>
         </div>
 
