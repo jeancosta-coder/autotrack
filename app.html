@@ -1013,6 +1013,7 @@
         color:var(--text) !important;
       }
       /* Onglets contenu : col 2, row 2 */
+      #detail-tab-inforight,
       #detail-tab-taches,
       #detail-tab-finances,
       #detail-tab-historique {
@@ -1022,7 +1023,18 @@
         min-height: 0 !important;
         overflow-y: auto !important;
       }
+      #detail-tab-inforight { padding: 24px 28px 32px !important; }
       #tab-infos { display: none !important; }
+      #tab-inforight { display: inline-flex !important; }
+      /* Dates dans la colonne gauche (desktop) */
+      .dt-dates-wrap { display: block !important; flex-shrink: 0 !important; padding: 12px 20px 0 !important; }
+      /* Contenu Infos déplacé à droite : rétablir l'aspect carte normal */
+      #detail-tab-inforight .dt-notes-wrap,
+      #detail-tab-inforight .dt-infos-wrap { padding: 0 !important; margin-bottom: 16px !important; }
+      #detail-tab-inforight .detail-vehicle-specs { background: var(--surface) !important; border-radius: 14px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important; overflow: hidden !important; }
+      #detail-tab-inforight .vsg-cell { padding: 10px 14px !important; }
+      #detail-tab-inforight .vsg-label { font-size: 11px !important; }
+      #detail-tab-inforight .vsg-value { font-size: 14px !important; }
       /* Bouton ajout tâche desktop — même design que sidebar CTA */
       .add-task-desktop-btn { display: inline-flex !important; -webkit-appearance: none !important; appearance: none !important; margin-top: 8px !important; margin-bottom: 16px !important; border: none !important; box-shadow: none !important; }
       /* Bouton ajout tâche mobile inline : masqué sur desktop */
@@ -1762,6 +1774,7 @@
     </div>
     <div style="background:var(--surface);flex-shrink:0;">
       <div class="details-segment-wrap">
+        <button id="tab-inforight" class="detail-tab" onclick="switchDetailTab('inforight')" style="display:none;">Infos</button>
         <button id="tab-infos" class="detail-tab detail-tab-active" onclick="switchDetailTab('infos')">Infos</button>
         <button id="tab-taches" class="detail-tab" onclick="switchDetailTab('taches')">Tâches</button>
         <button id="tab-finances" class="detail-tab" onclick="switchDetailTab('finances')">Finances</button>
@@ -1831,6 +1844,18 @@
           </div>
         </div>
 
+        <!-- Dates (desktop — colonne gauche) -->
+        <div class="dt-dates-wrap" style="display:none;">
+          <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-achat-date')"><span style="font-size:13px;color:var(--text2);">Date d'achat</span><span id="detail-achat-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span></div>
+            <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;" onclick="switchDetailTab('finances')"><span style="font-size:13px;color:var(--text2);">Date de vente</span><span id="detail-sale-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span></div>
+          </div>
+        </div>
+
+        <!-- Contenu déplacé vers l'onglet Infos sur desktop (via JS) -->
+        <div id="infos-movable">
+
         <!-- Notes -->
         <div class="dt-notes-wrap">
           <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
@@ -1869,6 +1894,7 @@
           </div>
           <span style="font-size:11px;font-weight:600;color:white;background:var(--neutral);padding:3px 8px;border-radius:20px;">Bientôt</span>
         </button>
+        </div><!-- /infos-movable -->
 
         <!-- Bouton supprimer mobile -->
         <div class="dt-delete-mobile-wrap" style="margin-top:auto;padding:16px 0 32px;">
@@ -1885,6 +1911,8 @@
         </div>
 
     </div>
+
+      <div id="detail-tab-inforight" class="detail-tab-content" style="display:none;flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;"></div>
 
       <div id="detail-tab-finances" class="detail-tab-content" style="display:none;flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
 
@@ -2846,7 +2874,11 @@ function openVehicleDetails(id){
   document.getElementById('detail-cg-input').value = v.carteGrise || '';
   document.getElementById('detail-marge-cible-input').value = v.margeCible || 15;
   const _sd = document.getElementById('detail-sale-date'); if(_sd) _sd.value = v.saleDate || '';
+  const _fmtD = (d) => d ? new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '—';
+  const _ad = document.getElementById('detail-achat-date-disp'); if(_ad) _ad.textContent = _fmtD(v.achatDate);
+  const _svd = document.getElementById('detail-sale-date-disp'); if(_svd) _svd.textContent = _fmtD(v.saleDate);
   document.getElementById('detail-notes').value = v.notes || '';
+  relayoutDetailInfos();
   updateMargePreview();
   updateStatutUI(v.statut);
   const totalTasks = v.tasks ? v.tasks.length : 0;
@@ -2856,7 +2888,7 @@ function openVehicleDetails(id){
   document.getElementById('detail-progress-text').textContent = progressPercent + '%';
   currentDetailTaskFilter = 'all';
   renderDetailTasks(id, 'all');
-  switchDetailTab(window.innerWidth >= 900 ? 'taches' : 'infos');
+  switchDetailTab(window.innerWidth >= 900 ? 'inforight' : 'infos');
 if(window.innerWidth >= 900) {
     document.getElementById('parc').style.display = 'none';
     const modal = document.getElementById('details');
@@ -3109,6 +3141,22 @@ let planningIndex = {};
 
 const DETAIL_TABS = ['infos', 'taches', 'finances', 'historique'];
 
+function relayoutDetailInfos(){
+  const mov = document.getElementById('infos-movable');
+  if(!mov) return;
+  const rightSlot = document.getElementById('detail-tab-inforight');
+  const leftHost = document.getElementById('detail-tab-infos');
+  const deleteMobile = leftHost ? leftHost.querySelector('.dt-delete-mobile-wrap') : null;
+  if(window.innerWidth >= 900){
+    if(rightSlot && mov.parentElement !== rightSlot) rightSlot.appendChild(mov);
+  } else {
+    if(leftHost && mov.parentElement !== leftHost) leftHost.insertBefore(mov, deleteMobile);
+  }
+}
+if(!window._detailRelayoutBound){
+  window._detailRelayoutBound = true;
+  window.addEventListener('resize', () => { if(currentDetailVehicleId) relayoutDetailInfos(); });
+}
 function switchDetailTab(tab){
   const isDesktop = window.innerWidth >= 900;
   if(isDesktop && tab === 'infos') tab = 'taches';
