@@ -3498,12 +3498,19 @@ function renderSaleCycle(v){
   const el = document.getElementById('detail-cycle'); if(!el) return;
   const done = Array.isArray(v.saleCycle) ? v.saleCycle : SALE_CYCLE_DEFAULT;
   const pct = Math.round((done.length / SALE_CYCLE_STEPS.length) * 100);
-  const bar = document.getElementById('detail-cycle-bar'); if(bar) bar.style.width = pct + '%';
-  const pctLbl = document.getElementById('detail-cycle-pct'); if(pctLbl) pctLbl.textContent = pct + '%';
+  const complete = done.length === SALE_CYCLE_STEPS.length;
+  const bar = document.getElementById('detail-cycle-bar');
+  if(bar){ bar.style.width = pct + '%'; bar.style.background = complete ? 'var(--success)' : 'var(--accent)'; }
+  const pctLbl = document.getElementById('detail-cycle-pct');
+  if(pctLbl){
+    pctLbl.innerHTML = complete
+      ? `<span style="display:inline-flex;align-items:center;gap:4px;color:var(--success);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Terminé</span>`
+      : pct + '%';
+  }
   const lastDoneIdx = [...SALE_CYCLE_STEPS].reverse().findIndex(s => done.includes(s.k));
   const currentLabel = lastDoneIdx === -1 ? 'Aucune étape' : SALE_CYCLE_STEPS[SALE_CYCLE_STEPS.length - 1 - lastDoneIdx].l;
   el.innerHTML = `<div onclick="openSaleCycleMenu(this)" style="display:flex;align-items:center;gap:8px;padding:4px 2px;cursor:pointer;width:fit-content;">
-    <span style="font-size:14px;font-weight:600;color:var(--text);">${currentLabel}</span>
+    <span style="font-size:14px;font-weight:600;color:${complete ? 'var(--success)' : 'var(--text)'};">${currentLabel}</span>
     <span style="font-size:12px;color:var(--text2);">${done.length}/${SALE_CYCLE_STEPS.length}</span>
     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;"><polyline points="2,3 5,7 8,3"/></svg>
   </div>`;
