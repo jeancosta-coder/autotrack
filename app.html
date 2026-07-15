@@ -2047,14 +2047,25 @@
         </div>
 
         <!-- FINALISER LA VENTE -->
-        <div class="fin-section-label">Finaliser la vente</div>
-        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-          <div class="fin-row"><span class="fin-label-text">Date de vente</span><input type="date" id="detail-sale-date" class="fin-input" style="width:150px;"></div>
+        <div id="finalize-sale-pending">
+          <div class="fin-section-label">Finaliser la vente</div>
+          <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+            <div class="fin-row"><span class="fin-label-text">Date de vente</span><input type="date" id="detail-sale-date" class="fin-input" style="width:150px;"></div>
+          </div>
+          <button onclick="finalizeSale()" style="width:100%;padding:14px;background:var(--success);color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            Valider la vente
+          </button>
         </div>
-        <button onclick="finalizeSale()" style="width:100%;padding:14px;background:var(--success);color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-          Valider la vente
-        </button>
+        <div id="finalize-sale-done" style="display:none;background:color-mix(in srgb, var(--success) 12%, var(--surface));border-radius:14px;padding:14px 16px;margin-bottom:12px;align-items:center;gap:10px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--success);">Vente finalisée</div>
+            <div id="finalize-sale-done-date" style="font-size:12px;color:var(--text2);margin-top:1px;"></div>
+          </div>
+        </div>
 
       </div>
 
@@ -3031,6 +3042,7 @@ function openVehicleDetails(id){
   document.getElementById('detail-notes').value = v.notes || '';
   renderSaleCycle(v);
   renderEventsWidget(v.id);
+  renderFinanceValidationState(v);
   relayoutDetailInfos();
   updateMargePreview();
   updateStatutUI(v.statut);
@@ -3494,6 +3506,18 @@ function saleCycleMenuItemsHtml(v){
     return `<div onclick="event.stopPropagation();toggleSaleCycleStep('${s.k}')" style="display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;font-size:14px;font-weight:${checked ? '600' : '400'};color:${checked ? 'var(--text)' : 'var(--text2)'};white-space:nowrap;">${box}<span>${s.l}</span></div>`;
   }).join('');
 }
+function renderFinanceValidationState(v){
+  const pending = document.getElementById('finalize-sale-pending');
+  const done = document.getElementById('finalize-sale-done');
+  if(!pending || !done) return;
+  const isValidated = !!v.venteValidee;
+  pending.style.display = isValidated ? 'none' : 'block';
+  done.style.display = isValidated ? 'flex' : 'none';
+  if(isValidated){
+    const dateLbl = document.getElementById('finalize-sale-done-date');
+    if(dateLbl) dateLbl.textContent = v.saleDate ? 'le ' + new Date(v.saleDate + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '';
+  }
+}
 function renderSaleCycle(v){
   const el = document.getElementById('detail-cycle'); if(!el) return;
   const done = Array.isArray(v.saleCycle) ? v.saleCycle : SALE_CYCLE_DEFAULT;
@@ -3552,7 +3576,8 @@ function finalizeSale(){
     margeCible: Utils.toNumber(Utils.el('detail-marge-cible-input').value),
     saleDate: saleDate,
     statut: 'Livré',
-    statusHistory: [...(v.statusHistory || []), {statut: 'Livré', date: saleDate}]
+    statusHistory: [...(v.statusHistory || []), {statut: 'Livré', date: saleDate}],
+    venteValidee: true
   });
   showToast('✓ Vente finalisée');
   updateStatutUI('Livré');
