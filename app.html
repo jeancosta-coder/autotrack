@@ -1784,7 +1784,7 @@
         <button id="tab-inforight" class="detail-tab" onclick="switchDetailTab('inforight')" style="display:none;">Infos</button>
         <button id="tab-infos" class="detail-tab detail-tab-active" onclick="switchDetailTab('infos')">Infos</button>
         <button id="tab-taches" class="detail-tab" onclick="switchDetailTab('taches')">Tâches</button>
-        <button id="tab-finances" class="detail-tab" onclick="switchDetailTab('finances')">Finances</button>
+        <button id="tab-finances" class="detail-tab" onclick="switchDetailTab('finances')">Finances<span id="tab-finances-check" style="display:none;margin-left:5px;color:var(--success);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></button>
       </div>
     </div>
     <div id="detail-tab-infos" class="detail-tab-content" style="display:flex;flex-direction:column;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
@@ -3513,6 +3513,8 @@ function renderFinanceValidationState(v){
   const isValidated = !!v.venteValidee;
   pending.style.display = isValidated ? 'none' : 'block';
   done.style.display = isValidated ? 'flex' : 'none';
+  const tabCheck = document.getElementById('tab-finances-check');
+  if(tabCheck) tabCheck.style.display = isValidated ? 'inline-flex' : 'none';
   if(isValidated){
     const dateLbl = document.getElementById('finalize-sale-done-date');
     if(dateLbl) dateLbl.textContent = v.saleDate ? 'le ' + new Date(v.saleDate + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '';
