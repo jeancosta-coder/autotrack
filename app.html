@@ -2009,7 +2009,7 @@
         <div class="fin-section-label">Acquisition</div>
         <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Prix d'achat</span><div class="fin-input-wrap"><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
-          <div class="fin-row fin-sep"><span class="fin-label-text">Prix de vente</span><div class="fin-input-wrap"><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
+          <div class="fin-row fin-sep"><span class="fin-label-text">Prix de vente cible</span><div class="fin-input-wrap"><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
         </div>
 
         <!-- FRAIS SANS TVA -->
@@ -2055,7 +2055,8 @@
         <div id="finalize-sale-pending">
           <div class="fin-section-label">Finaliser la vente</div>
           <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
-            <div class="fin-row"><span class="fin-label-text">Date de vente</span><input type="date" id="detail-sale-date" class="fin-input" style="width:150px;"></div>
+            <div class="fin-row"><span class="fin-label-text">Prix de vente</span><div class="fin-input-wrap"><input type="number" id="detail-vente-finale-input" placeholder="0" class="fin-input"><span class="fin-unit">€</span></div></div>
+            <div class="fin-row fin-sep"><span class="fin-label-text">Date de vente</span><input type="date" id="detail-sale-date" class="fin-input" style="width:150px;"></div>
           </div>
           <button onclick="finalizeSale()" style="width:100%;padding:14px;background:var(--success);color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
@@ -3034,6 +3035,7 @@ function openVehicleDetails(id){
   if(!v) return;
   refreshDetailHeaderAndSpecs(v);
   document.getElementById('detail-vente-input').value = v.vente || '';
+  const venteFinaleInput = document.getElementById('detail-vente-finale-input'); if(venteFinaleInput) venteFinaleInput.value = v.venteFinale || '';
   document.getElementById('detail-cg-input').value = v.carteGrise || '';
   renderCostList('sansTva');
   renderCostList('avecTva');
@@ -3575,10 +3577,12 @@ function finalizeSale(){
   const v = DataLayer.getVehicleById(currentDetailVehicleId);
   if(!v) return;
   const saleDate = Utils.el('detail-sale-date').value || Utils.today();
+  const venteFinale = Utils.toNumber(Utils.el('detail-vente-finale-input').value);
   // enregistre les chiffres saisis
   DataLayer.updateVehicle(currentDetailVehicleId, {
     achat: Utils.toNumber(Utils.el('detail-achat-input').value),
-    vente: Utils.toNumber(Utils.el('detail-vente-input').value),
+    vente: venteFinale || Utils.toNumber(Utils.el('detail-vente-input').value),
+    venteFinale: venteFinale,
     carteGrise: Utils.toNumber(Utils.el('detail-cg-input').value),
     margeCible: Utils.toNumber(Utils.el('detail-marge-cible-input').value),
     saleDate: saleDate,
