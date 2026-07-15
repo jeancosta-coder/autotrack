@@ -652,6 +652,7 @@
     .vsg-text { min-width:0; }
     .vsg-label { font-size: 10.5px; color:var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px; }
     .vsg-value { font-size: 13.5px; font-weight: 700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .vsg-input { font-size: 13.5px; font-weight: 700; color:var(--text); font-family:inherit; border:none; border-bottom:1.5px solid var(--accent); outline:none; background:transparent; width:100%; padding:0 0 1px; }
     @media (min-width: 480px) { .vehicle-specs-grid { grid-template-columns: repeat(3, 1fr); } }
     #detail-header-trash { visibility: hidden; pointer-events: none; }
     .fin-green { color:#34c759; }
@@ -1931,17 +1932,17 @@
             </span>
           </div>
           <div class="detail-vehicle-specs vehicle-specs-grid">
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-marque')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><circle cx="7" cy="16" r="1"/><circle cx="17" cy="16" r="1"/></svg></div><div class="vsg-text"><div class="vsg-label">Marque</div><div class="vsg-value" id="detail-marque"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-modele')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg></div><div class="vsg-text"><div class="vsg-label">Modèle</div><div class="vsg-value" id="detail-modele"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-year')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><div class="vsg-text"><div class="vsg-label">Année</div><div class="vsg-value" id="detail-year"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-gen')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg></div><div class="vsg-text"><div class="vsg-label">Génération</div><div class="vsg-value" id="detail-gen"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-km')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="vsg-text"><div class="vsg-label">Kilométrage</div><div class="vsg-value" id="detail-km"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-achat')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5a2.5 2.5 0 0 1 2.5-1.5h.5a2 2 0 0 1 0 4h-1a2 2 0 0 0 0 4h.5a2.5 2.5 0 0 0 2.5-1.5"/></svg></div><div class="vsg-text"><div class="vsg-label">Prix d'achat</div><div class="vsg-value" id="detail-achat-display"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'veh-carburant')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"/><path d="M3 22h10"/><path d="M13 10h2l3 3v5a1 1 0 0 1-1 1h-1"/><circle cx="7" cy="6" r="0" /><path d="M7 3v3"/></svg></div><div class="vsg-text"><div class="vsg-label">Carburant</div><div class="vsg-value" id="detail-carburant"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'veh-transmission')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M9 18h4a4 4 0 0 0 4-4V9"/></svg></div><div class="vsg-text"><div class="vsg-label">Transmission</div><div class="vsg-value" id="detail-transmission"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-couleur')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="10" cy="19" r="2.5"/></svg></div><div class="vsg-text"><div class="vsg-label">Couleur</div><div class="vsg-value" id="detail-couleur"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-immat')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M7 11h.01M7 13h.01M12 11h4M12 13h4"/></svg></div><div class="vsg-text"><div class="vsg-label">Immatriculation</div><div class="vsg-value" id="detail-immat"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openEditVehicleModal(currentDetailVehicleId,'f-puissance')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg></div><div class="vsg-text"><div class="vsg-label">Puissance</div><div class="vsg-value" id="detail-puissance"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'marque')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><circle cx="7" cy="16" r="1"/><circle cx="17" cy="16" r="1"/></svg></div><div class="vsg-text"><div class="vsg-label">Marque</div><div class="vsg-value" id="detail-marque"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'modele')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg></div><div class="vsg-text"><div class="vsg-label">Modèle</div><div class="vsg-value" id="detail-modele"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'year')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><div class="vsg-text"><div class="vsg-label">Année</div><div class="vsg-value" id="detail-year"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'gen')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg></div><div class="vsg-text"><div class="vsg-label">Génération</div><div class="vsg-value" id="detail-gen"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'km')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="vsg-text"><div class="vsg-label">Kilométrage</div><div class="vsg-value" id="detail-km"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'achat')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5a2.5 2.5 0 0 1 2.5-1.5h.5a2 2 0 0 1 0 4h-1a2 2 0 0 0 0 4h.5a2.5 2.5 0 0 0 2.5-1.5"/></svg></div><div class="vsg-text"><div class="vsg-label">Prix d'achat</div><div class="vsg-value" id="detail-achat-display"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openVsgCarburantMenu(this)"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"/><path d="M3 22h10"/><path d="M13 10h2l3 3v5a1 1 0 0 1-1 1h-1"/><circle cx="7" cy="6" r="0" /><path d="M7 3v3"/></svg></div><div class="vsg-text"><div class="vsg-label">Carburant</div><div class="vsg-value" id="detail-carburant"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openVsgTransmissionMenu(this)"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M9 18h4a4 4 0 0 0 4-4V9"/></svg></div><div class="vsg-text"><div class="vsg-label">Transmission</div><div class="vsg-value" id="detail-transmission"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'couleur')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="10" cy="19" r="2.5"/></svg></div><div class="vsg-text"><div class="vsg-label">Couleur</div><div class="vsg-value" id="detail-couleur"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'immatriculation')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M7 11h.01M7 13h.01M12 11h4M12 13h4"/></svg></div><div class="vsg-text"><div class="vsg-label">Immatriculation</div><div class="vsg-value" id="detail-immat"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'puissance')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg></div><div class="vsg-text"><div class="vsg-label">Puissance</div><div class="vsg-value" id="detail-puissance"></div></div></div>
           </div>
         </div>
 
@@ -2929,10 +2930,7 @@ function filterParc(status, btn){
   renderParc();
 }
 
-function openVehicleDetails(id){
-  currentDetailVehicleId = id;
-  const v = vehicles.find(x => x.id === id);
-  if(!v) return;
+function refreshDetailHeaderAndSpecs(v){
   document.getElementById('detail-title').textContent = v.marque + ' ' + v.modele;
   document.getElementById('detail-subtitle').textContent = v.year + (v.gen ? ' · ' + v.gen : '') + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
   const dtD = document.getElementById('detail-title-desktop'); if(dtD) dtD.textContent = v.marque + ' ' + v.modele;
@@ -2944,12 +2942,70 @@ function openVehicleDetails(id){
   document.getElementById('detail-km').textContent = Number(v.km).toLocaleString('fr-FR') + ' km';
   const achatDisplay = document.getElementById('detail-achat-display');
   if(achatDisplay) achatDisplay.textContent = v.achat ? Number(v.achat).toLocaleString('fr-FR') + ' €' : '—';
-  document.getElementById('detail-achat-input').value = v.achat || '';
+  const achatInput = document.getElementById('detail-achat-input'); if(achatInput) achatInput.value = v.achat || '';
   const _dc = document.getElementById('detail-carburant'); if(_dc) _dc.textContent = v.carburant || '—';
   const _dtr = document.getElementById('detail-transmission'); if(_dtr) _dtr.textContent = v.transmission || '—';
   const _dcl = document.getElementById('detail-couleur'); if(_dcl) _dcl.textContent = v.couleur || '—';
   const _dim = document.getElementById('detail-immat'); if(_dim) _dim.textContent = v.immatriculation || '—';
   const _dp = document.getElementById('detail-puissance'); if(_dp) _dp.textContent = v.puissance ? v.puissance + ' ch' : '—';
+}
+const VSG_FIELD_TYPES = { year:'number', km:'number', achat:'number', puissance:'number' };
+function editVsgField(cell, field){
+  if(cell.dataset.editing) return;
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  cell.dataset.editing = '1';
+  const type = VSG_FIELD_TYPES[field] || 'text';
+  const valueEl = cell.querySelector('.vsg-value');
+  const id = valueEl.id;
+  const raw = v[field];
+  const input = document.createElement('input');
+  input.type = type;
+  input.id = id;
+  input.className = 'vsg-input';
+  input.value = (raw === undefined || raw === null || raw === '?') ? '' : raw;
+  input.onclick = (e) => e.stopPropagation();
+  input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); };
+  input.onblur = () => {
+    const val = type === 'number' ? Utils.toNumber(input.value) : input.value.trim();
+    DataLayer.updateVehicle(currentDetailVehicleId, {[field]: val});
+    const nv = DataLayer.getVehicleById(currentDetailVehicleId);
+    const newDiv = document.createElement('div'); newDiv.className = 'vsg-value'; newDiv.id = id;
+    input.replaceWith(newDiv);
+    delete cell.dataset.editing;
+    refreshDetailHeaderAndSpecs(nv);
+    renderParc();
+    showToast('✓ Enregistré');
+  };
+  valueEl.replaceWith(input);
+  input.focus(); input.select();
+}
+function openVsgCarburantMenu(cell){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  openAnchoredMenu(cell, ntaskOptList(FUEL_OPTS, v.carburant || '', 'saveVsgCarburant'));
+}
+function saveVsgCarburant(val){
+  DataLayer.updateVehicle(currentDetailVehicleId, {carburant: val});
+  refreshDetailHeaderAndSpecs(DataLayer.getVehicleById(currentDetailVehicleId));
+  renderParc();
+  closeAnchoredMenu();
+  showToast('✓ Enregistré');
+}
+function openVsgTransmissionMenu(cell){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  openAnchoredMenu(cell, ntaskOptList(TRANS_OPTS, v.transmission || '', 'saveVsgTransmission'));
+}
+function saveVsgTransmission(val){
+  DataLayer.updateVehicle(currentDetailVehicleId, {transmission: val});
+  refreshDetailHeaderAndSpecs(DataLayer.getVehicleById(currentDetailVehicleId));
+  renderParc();
+  closeAnchoredMenu();
+  showToast('✓ Enregistré');
+}
+function openVehicleDetails(id){
+  currentDetailVehicleId = id;
+  const v = vehicles.find(x => x.id === id);
+  if(!v) return;
+  refreshDetailHeaderAndSpecs(v);
   document.getElementById('detail-vente-input').value = v.vente || '';
   document.getElementById('detail-cg-input').value = v.carteGrise || '';
   renderCostList('sansTva');
