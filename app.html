@@ -2048,19 +2048,9 @@
             <div class="fin-row fin-sep"><span class="fin-label-text">Date de vente</span><input type="date" id="detail-sale-date" class="fin-input" style="width:150px;"></div>
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;">
-            <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:10px 8px;text-align:center;">
-              <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Marge réelle</div>
-              <div id="fin-widget-marge" style="font-size:14px;font-weight:700;color:var(--text);">—</div>
-            </div>
-            <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:10px 8px;text-align:center;">
-              <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Coûts totaux</div>
-              <div id="fin-widget-couts" style="font-size:14px;font-weight:700;color:var(--text);">—</div>
-            </div>
-            <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:10px 8px;text-align:center;">
-              <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Écart vs cible</div>
-              <div id="fin-widget-ecart" style="font-size:14px;font-weight:700;color:var(--text);">—</div>
-            </div>
+          <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:14px 16px;margin-bottom:12px;text-align:center;">
+            <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Marge réelle</div>
+            <div id="fin-widget-marge" style="font-size:20px;font-weight:700;color:var(--text);">—</div>
           </div>
 
           <button onclick="finalizeSale()" style="width:100%;padding:14px;background:var(--success);color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
@@ -3164,13 +3154,6 @@ function updateMargePreview(){
   if(margeWidget){
     if(!vente && !revient){ margeWidget.textContent = '—'; margeWidget.style.color = 'var(--text)'; }
     else { margeWidget.textContent = fmt(marge); margeWidget.style.color = marge >= 0 ? 'var(--success)' : 'var(--danger)'; }
-  }
-  const coutsWidget = document.getElementById('fin-widget-couts');
-  if(coutsWidget){ const totalCosts = sansTva + avecTva + cg; coutsWidget.textContent = totalCosts ? fmt(totalCosts) : '—'; }
-  const ecartWidget = document.getElementById('fin-widget-ecart');
-  if(ecartWidget){
-    if(!venteFinale || !venteCible){ ecartWidget.textContent = '—'; ecartWidget.style.color = 'var(--text)'; }
-    else { const ecart = venteFinale - venteCible; ecartWidget.textContent = (ecart >= 0 ? '+' : '') + fmt(ecart); ecartWidget.style.color = ecart >= 0 ? 'var(--success)' : 'var(--danger)'; }
   }
 }
 
