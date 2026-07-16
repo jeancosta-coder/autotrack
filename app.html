@@ -367,6 +367,17 @@
     .kpi-hero .kpi-val { font-size: 34px; }
     .kpi-hero .kpi-spark { height: 34px; }
     @media (min-width: 900px) { .kpi-hero .kpi-val { font-size: 40px; } }
+    @media (max-width: 480px) {
+      .kpi-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 6px !important; }
+      .kpi-grid .kpi-card { padding: 8px 6px 7px; min-height: 74px; border-radius: 12px; }
+      .kpi-grid .kpi-head { margin-bottom: 6px; min-height: 22px; }
+      .kpi-grid .kpi-icon { width: 22px; height: 22px; border-radius: 6px; }
+      .kpi-grid .kpi-icon svg { width: 12px; height: 12px; }
+      .kpi-grid .kpi-val { font-size: 16px; letter-spacing: -0.3px; }
+      .kpi-grid .kpi-label { font-size: 9.5px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .kpi-grid .kpi-delta { display: none; }
+      .kpi-grid .kpi-spark { display: none; }
+    }
     #details {
       position: fixed;
       top: 0;
@@ -1528,7 +1539,7 @@
 
     <div id="parc-view-vehicles">
       <!-- KPI CARDS enrichies -->
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;">
+      <div class="kpi-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;">
         <div class="kpi-card">
           <div class="kpi-head">
             <span class="kpi-icon" style="background:var(--warning-soft);color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
@@ -1593,7 +1604,7 @@
 
     <div id="parc-view-tasks" style="display:none;">
       <!-- KPI CARDS taches -->
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;">
+      <div class="kpi-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;">
         <div class="kpi-card">
           <div class="kpi-head">
             <span class="kpi-icon" style="background:var(--danger-soft);color:var(--danger);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
