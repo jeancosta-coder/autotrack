@@ -1593,7 +1593,7 @@
 
     <div id="parc-view-tasks" style="display:none;">
       <!-- KPI CARDS taches -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;">
         <div class="kpi-card">
           <div class="kpi-head">
             <span class="kpi-icon" style="background:var(--danger-soft);color:var(--danger);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
@@ -1614,6 +1614,13 @@
           </div>
           <div class="kpi-val" id="kpi-tasks-upcoming">0</div>
           <div class="kpi-label">À venir</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span class="kpi-icon" style="background:rgba(168,85,247,0.12);color:#A855F7;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+          </div>
+          <div class="kpi-val" id="kpi-tasks-total">0</div>
+          <div class="kpi-label">Total</div>
         </div>
       </div>
 
@@ -2833,6 +2840,7 @@ function renderTasksView(){
   document.getElementById('kpi-tasks-late').textContent = late;
   document.getElementById('kpi-tasks-today').textContent = todayCount;
   document.getElementById('kpi-tasks-upcoming').textContent = upcoming;
+  document.getElementById('kpi-tasks-total').textContent = active.length;
 
   const tomorrow = RenderHelpers.getNextDay(1);
   let list = all.slice();
