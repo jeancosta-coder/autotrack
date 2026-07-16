@@ -1553,6 +1553,10 @@
   }
   #splash-gauge-needle { animation: splash-needle-sweep 1.1s cubic-bezier(0.3,0.6,0.3,1) forwards; }
   #splash-gauge-arc { animation: splash-arc-fill 1.1s ease-out forwards; }
+  @keyframes sold-car-drive {
+    0% { left: -20%; }
+    100% { left: 120%; }
+  }
 </style>
 <script>window.__authLoaderStart = Date.now();</script>
 <aside id="desktop-sidebar" class="desktop-sidebar" style="display:none;">
@@ -3649,6 +3653,27 @@ function saveVehicleDateInline(kind, val){
   renderParc();
   showToast('✓ Date enregistrée');
 }
+function playSoldCarAnimation(){
+  if(document.getElementById('sold-car-overlay')) return;
+  const div = document.createElement('div');
+  div.id = 'sold-car-overlay';
+  div.style.cssText = 'position:fixed;top:38%;left:0;width:100%;height:0;pointer-events:none;z-index:9999;overflow:visible;';
+  div.innerHTML = `<svg id="sold-car-svg" width="90" height="50" viewBox="0 0 120 60" style="position:absolute;left:-20%;transform:translateY(-50%);animation:sold-car-drive 1.3s cubic-bezier(0.45,0,0.55,1) forwards;">
+    <g stroke="var(--text3)" stroke-width="3" stroke-linecap="round" opacity="0.5">
+      <line x1="0" y1="20" x2="18" y2="20"/>
+      <line x1="0" y1="32" x2="14" y2="32"/>
+      <line x1="0" y1="44" x2="20" y2="44"/>
+    </g>
+    <g transform="translate(30,10)">
+      <path d="M0,30h60v13a3 3 0 0 1-3 3h-3a3 3 0 0 1-3-3v-3H9v3a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3z" fill="var(--text)"/>
+      <path d="M6,30l8-15h26l8,15z" fill="var(--text)"/>
+      <circle cx="12" cy="46" r="5" fill="var(--bg)" stroke="var(--text)" stroke-width="2.5"/>
+      <circle cx="48" cy="46" r="5" fill="var(--bg)" stroke="var(--text)" stroke-width="2.5"/>
+    </g>
+  </svg>`;
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 1400);
+}
 function finalizeSale(){
   const v = DataLayer.getVehicleById(currentDetailVehicleId);
   if(!v) return;
@@ -3667,6 +3692,7 @@ function finalizeSale(){
     venteValidee: true
   });
   showToast('✓ Vente finalisée');
+  playSoldCarAnimation();
   updateStatutUI('Livré');
   renderParc();
   openVehicleDetails(currentDetailVehicleId);
