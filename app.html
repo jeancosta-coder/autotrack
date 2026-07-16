@@ -361,7 +361,7 @@
     .kpi-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; min-height: 30px; }
     .kpi-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .kpi-icon svg { width: 16px; height: 16px; }
-    .kpi-delta { font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
+    .kpi-delta { font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; padding: 3px 7px; border-radius: 20px; }
     .kpi-val { font-size: 24px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; color: var(--text); }
     .kpi-label { font-size: 12px; color: var(--text2); margin-top: 5px; }
     .kpi-spark { width: 100%; height: 22px; margin-top: 10px; display: block; }
@@ -4410,8 +4410,9 @@ function deltaBadgeHTML(cur, prev){
   const up = cur >= prev;
   const txt = prev === 0 ? 'nouveau' : ((cur-prev)/Math.abs(prev)*100 >= 0 ? '+' : '') + Math.round((cur-prev)/Math.abs(prev)*100) + '%';
   const col = up ? 'var(--success)' : 'var(--danger)';
-  const arrow = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="' + (up ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6') + '"/></svg>';
-  return '<span class="kpi-delta" style="color:' + col + ';">' + arrow + txt + '</span>';
+  const bg = up ? 'var(--success-soft)' : 'var(--danger-soft)';
+  const arrow = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="' + (up ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6') + '"/></svg>';
+  return '<span class="kpi-delta" style="color:' + col + ';background:' + bg + ';">' + arrow + txt + '</span>';
 }
 function renderDashboard(){
   const hist = loadHistorique();
