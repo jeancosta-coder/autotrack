@@ -51,8 +51,8 @@
       --orange: var(--warning);
       --blue: var(--accent);
       /* Ombres (désactivées en dark, remplacées par bordures) */
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-      --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 6px 16px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.04), 0 16px 40px rgba(0,0,0,0.08);
       /* Barre nav flottante translucide */
       --nav-glass: rgba(255,255,255,0.72);
       --menu-glass: rgba(255,255,255,0.42);
@@ -355,7 +355,8 @@
       gap: 20px;
     }
     /* KPI cards enrichies (Phase 3) */
-    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px 14px 12px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; min-height: 108px; }
+    .kpi-card { background: var(--surface); border: 1px solid transparent; border-radius: 18px; padding: 14px 14px 12px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; min-height: 108px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+    [data-theme="dark"] .kpi-card { border-color: var(--border); }
     .kpi-card .kpi-spark { margin-top: auto; }
     .kpi-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; min-height: 30px; }
     .kpi-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -494,14 +495,14 @@
     .modal-actions button { flex: 1; }
     .task-group {
       background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
-      border: 1px solid var(--border);
-      border-radius: 14px;
+      border: 1px solid transparent;
+      border-radius: 17px;
       padding: 18px 20px;
       margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(26, 26, 26, 0.06);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 6px 16px rgba(0,0,0,0.05);
       transition: all 0.3s ease;
     }
-    .task-group:hover { box-shadow: 0 6px 16px rgba(26, 26, 26, 0.1); }
+    .task-group:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.04), 0 12px 28px rgba(0,0,0,0.08); }
     .task-item { display: flex; gap: 14px; padding: 4px 0; align-items: center; }
     .task-item input[type="checkbox"] {
       appearance: none;
@@ -621,7 +622,7 @@
 
     /* ── Finances ── */
     .fin-section-label { font-size:13px; color:var(--text2); margin:20px 0 6px 20px; }
-    .fin-card { background:var(--surface); border-radius:12px; overflow:hidden; margin:0 16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+    .fin-card { background:var(--surface); border-radius:12px; overflow:hidden; margin:0 16px; box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05); }
     .fin-row { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:0.5px solid var(--border); min-height:50px; }
     .fin-row:last-child { border-bottom:none; }
     .fin-row-left { font-size:17px; color:var(--text); }
@@ -634,7 +635,7 @@
     .fin-row-right input::placeholder { color:var(--text3); }
     .fin-unit { font-size:17px; color:var(--text2); }
     .fin-val { font-size:17px; font-weight:500; color:var(--text); }
-    .fin-marge-card { background:var(--surface); border-radius:12px; padding:28px 16px; text-align:center; margin:0 16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+    .fin-marge-card { background:var(--surface); border-radius:12px; padding:28px 16px; text-align:center; margin:0 16px; box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05); }
     .fin-marge-label { font-size:12px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
     .fin-marge-val { font-size:42px; font-weight:700; letter-spacing:-1.5px; line-height:1; }
     .fin-marge-pct { font-size:16px; color:var(--text2); margin-top:6px; }
@@ -1769,19 +1770,19 @@
         <button class="seg-btn chart-filter" onclick="switchChart('prep-profit',this)">Prep vs Profit</button>
         <button class="seg-btn chart-filter" onclick="switchChart('temps-vente',this)">Temps de vente</button>
       </div>
-      <div style="background:var(--surface);border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+      <div style="background:var(--surface);border-radius:14px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);">
         <canvas id="chart-canvas" style="max-height:220px;"></canvas>
       </div>
     </div>
     <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Finances</span></div>
-    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;">
+    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Profit moyen / véhicule</span><span id="dash-avg-profit" style="font-size:15px;font-weight:600;color:var(--success);"></span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Marge moyenne</span><span id="dash-avg-margin" style="font-size:15px;font-weight:600;color:var(--success);"></span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Trésorerie bloquée</span><span id="dash-cash-blocked" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:var(--text2);">Chiffre d'affaires</span><span id="dash-revenue" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
     </div>
     <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Opérations</span></div>
-    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Rotation</span><span id="dash-rotation" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Temps moyen de vente</span><span id="dash-avg-time" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Coût moyen préparation</span><span id="dash-avg-prep" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
@@ -1884,7 +1885,7 @@
               Dates
             </span>
           </div>
-          <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
             <div style="position:relative;padding:12px 16px;cursor:pointer;">
               <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;pointer-events:none;">
                 <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);">
@@ -1925,7 +1926,7 @@
             </span>
             <span id="detail-cycle-pct" style="font-size:12px;font-weight:700;color:var(--accent);"></span>
           </div>
-          <div style="background:var(--surface);border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:18px 16px;">
+          <div style="background:var(--surface);border-radius:18px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:18px 16px;">
             <div style="height:4px;border-radius:2px;background:var(--surface-3);margin-bottom:18px;overflow:hidden;">
               <div id="detail-cycle-bar" style="height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width 0.3s ease;"></div>
             </div>
@@ -1941,7 +1942,7 @@
               Évènements
             </span>
           </div>
-          <div onclick="toggleEventsPopover(event)" style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:flex-start;">
+          <div onclick="toggleEventsPopover(event)" style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:flex-start;">
             <span id="detail-events-summary" style="font-size:14px;font-weight:600;color:var(--text);">Aucun événement</span>
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;margin-left:6px;"><polyline points="2,3 5,7 8,3"/></svg>
           </div>
@@ -1958,7 +1959,7 @@
               Notes
             </span>
           </div>
-          <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
             <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:14px 16px;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
           </div>
         </div>
@@ -1987,7 +1988,7 @@
         </div>
 
         <!-- Préconisations constructeur IA -->
-        <button disabled style="width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:none;border-radius:14px;padding:14px 16px;margin-bottom:12px;cursor:not-allowed;box-shadow:0 1px 3px rgba(0,0,0,0.06);opacity:0.6;">
+        <button disabled style="width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:none;border-radius:14px;padding:14px 16px;margin-bottom:12px;cursor:not-allowed;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);opacity:0.6;">
           <div style="display:flex;align-items:center;gap:10px;">
             <div style="width:32px;height:32px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="18" cy="6" r="3" fill="var(--text2)" stroke="none"/></svg>
@@ -2033,33 +2034,33 @@
 
         <!-- ACQUISITION -->
         <div class="fin-section-label">Acquisition</div>
-        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Prix d'achat</span><div class="fin-input-wrap"><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
           <div class="fin-row fin-sep"><span class="fin-label-text">Prix de vente cible</span><div class="fin-input-wrap"><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
         </div>
 
         <!-- FRAIS SANS TVA -->
         <div class="fin-section-label">Frais sans TVA</div>
-        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Frais sans TVA</span><div style="display:flex;align-items:center;gap:10px;"><span id="fin-total-sansTva" class="fin-label-text" style="color:var(--text2);">0 €</span><button onclick="addCostItemForm('sansTva')" style="width:24px;height:24px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div></div>
           <div id="fin-list-sansTva"></div>
         </div>
 
         <!-- FRAIS SOUMIS À LA TVA -->
         <div class="fin-section-label">Frais soumis à la TVA</div>
-        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Frais soumis à la TVA</span><div style="display:flex;align-items:center;gap:10px;"><span id="fin-total-avecTva" class="fin-label-text" style="color:var(--text2);">0 €</span><button onclick="addCostItemForm('avecTva')" style="width:24px;height:24px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div></div>
           <div id="fin-list-avecTva"></div>
         </div>
 
         <!-- PRIX DE REVIENT -->
-        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row fin-total-row"><span class="fin-label-text fin-bold">Prix de revient</span><span id="detail-cout-revient" class="fin-bold">—</span></div>
         </div>
 
         <!-- FRAIS DIVERS -->
         <div class="fin-section-label">Frais</div>
-        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Carte grise</span><div class="fin-input-wrap"><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
         </div>
 
@@ -2069,12 +2070,12 @@
         <!-- FINALISER LA VENTE -->
         <div id="finalize-sale-pending">
           <div class="fin-section-label">Finaliser la vente</div>
-          <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">
+          <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
             <div class="fin-row"><span class="fin-label-text">Prix de vente</span><div class="fin-input-wrap"><input type="number" id="detail-vente-finale-input" placeholder="0" oninput="updateMargePreview()" class="fin-input"><span class="fin-unit">€</span></div></div>
             <div class="fin-row fin-sep"><span class="fin-label-text">Date de vente</span><input type="date" id="detail-sale-date" class="fin-input" style="width:150px;"></div>
           </div>
 
-          <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:14px 16px;margin-bottom:12px;text-align:center;">
+          <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:14px 16px;margin-bottom:12px;text-align:center;">
             <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Marge réelle</div>
             <div id="fin-widget-marge" style="font-size:20px;font-weight:700;color:var(--text);">—</div>
           </div>
@@ -2097,7 +2098,7 @@
       </div>
 
       <div id="detail-tab-taches" class="detail-tab-content" style="display:none;flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
-        <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:14px 16px;margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:14px 16px;margin-bottom:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:13px;color:var(--text2);font-weight:600;">Progression</span><span id="detail-progress-text" style="font-size:13px;font-weight:700;color:var(--text);">0%</span></div>
           <div class="progress-container" style="margin-bottom:0;"><div class="progress-bar" id="detail-progress-bar" style="width:0%;"></div></div>
         </div>
@@ -2149,7 +2150,7 @@
 
     <!-- Profil -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Profil</span></div>
-    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 24px 16px;">
+    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin:0 16px 24px 16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid var(--border);">
         <span style="font-size:15px;color:var(--text);">Nom</span>
         <span id="compte-nom" style="font-size:15px;color:var(--text2);">—</span>
@@ -2179,7 +2180,7 @@
 
     <!-- Abonnement -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Abonnement</span></div>
-    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 24px 16px;">
+    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin:0 16px 24px 16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
         <span style="font-size:15px;color:var(--text);">Plan actuel</span>
         <span style="font-size:12px;font-weight:600;color:#34C759;background:rgba(52,199,89,0.12);padding:4px 10px;border-radius:20px;letter-spacing:0.2px;">GRATUIT</span>
@@ -2188,7 +2189,7 @@
 
     <!-- Historique -->
     <div id="section-historique" style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Données avant Trakoto</span></div>
-    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 8px 16px;">
+    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin:0 16px 8px 16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
         <span style="font-size:15px;color:var(--text);">Véhicules vendus</span>
         <input type="number" id="hist-nb-ventes" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:80px;background:transparent;"/>
@@ -2221,7 +2222,7 @@
 
     <!-- App -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
-    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin:0 16px 32px 16px;">
+    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin:0 16px 32px 16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
         <span style="font-size:15px;color:var(--text);">Version</span>
         <span style="font-size:15px;color:var(--text2);">1.0.0</span>
@@ -2249,26 +2250,26 @@
     <span style="width:36px;"></span>
   </div>
   <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px 24px 16px;">
-    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
       <div style="padding:0 16px;"><input type="text" id="f-marque" placeholder="Marque" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;box-sizing:border-box;"/></div>
       <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
       <div style="padding:0 16px;"><input type="text" id="f-modele" placeholder="Modèle" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;box-sizing:border-box;"/></div>
     </div>
-    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Année</span><input type="number" id="f-year" placeholder="2022" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
       <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Génération</span><input type="text" id="f-gen" placeholder="W206" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
       <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Kilométrage</span><input type="number" id="f-km" placeholder="45 000" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
     </div>
-    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:24px;">
+    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Date d'achat</span><input type="date" id="f-achat-date" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;"/></div>
       <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix achat</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-achat" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
       <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix de vente cible</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-vente" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
     </div>
-    <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:visible;margin-bottom:24px;">
+    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:visible;margin-bottom:24px;">
       <div class="ntask-field">
         <div class="ntask-row" onclick="vehToggleDropdown('carburant')">
           <span class="ntask-row-label">Carburant</span>
@@ -2732,7 +2733,7 @@ const RenderHelpers = {
       <!-- Carte -->
       <div class="vehicle-card-swipeable" id="card-${v.id}" onclick="handleCardTap(event, ${v.id})" style="
         position:relative;z-index:1;
-        background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px;
+        background:var(--surface);border-radius:18px;padding:14px;
         box-shadow:var(--shadow-sm);
         cursor:pointer;display:flex;flex-direction:column;gap:10px;
         transform:translateX(0);transition:transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
@@ -3257,7 +3258,7 @@ function renderDetailTasks(id, filter){
     const dateObj = new Date(date + 'T00:00:00');
     const dayName = date === 'Sans date' ? 'Sans date' : dateObj.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
     html += `<div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:capitalize;">${dayName}</span></div>`;
-    html += `<div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px;">`;
+    html += `<div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">`;
     grouped[date].forEach((t, idx) => {
       const isLast = idx === grouped[date].length - 1;
       const title = t.cat || t.desc || '';
@@ -3302,7 +3303,7 @@ function openDetailTaskModal(global){
   document.newSimpleTaskPriority = 'normal';
   document.newSimpleTaskVehicleId = '';
   const vehicleFieldHtml = global ? `
-      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:visible;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:visible;margin-bottom:16px;">
         <div class="ntask-field">
           <div class="ntask-row" onclick="ntaskToggle('stask-vehicle-panel')">
             <span class="ntask-row-label">Véhicule</span>
@@ -3318,11 +3319,11 @@ function openDetailTaskModal(global){
       <span style="width:22px;"></span>
     </div>
     <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px;">
-      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
+      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:16px;padding:0 16px;">
         <input type="text" id="stask-title" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
       </div>
       ${vehicleFieldHtml}
-      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:visible;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:visible;margin-bottom:16px;">
         <div class="ntask-field">
           <div class="ntask-row" onclick="ntaskToggle('stask-priority-panel')">
             <span class="ntask-row-label">Priorité</span>
@@ -3348,7 +3349,7 @@ function openDetailTaskModal(global){
           </div>
         </div>
       </div>
-      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;padding:12px 16px;">
+      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:16px;padding:12px 16px;">
         <div style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">Notes</div>
         <textarea id="stask-notes" placeholder="Détails, remarques..." style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:80px;resize:none;color:var(--text);background:transparent;padding:0;"></textarea>
       </div>
@@ -4139,10 +4140,10 @@ function openEditTaskModal(vehicleId, taskId){
       <span style="width:22px;"></span>
     </div>
     <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px;">
-      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:16px;padding:0 16px;">
+      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:16px;padding:0 16px;">
         <input type="text" id="etask-title" value="${task.cat || task.desc || ''}" placeholder="Titre de la tâche" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;"/>
       </div>
-      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:visible;margin-bottom:16px;">
+      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:visible;margin-bottom:16px;">
         <div class="ntask-field">
           <div class="ntask-row" onclick="ntaskToggle('etask-priority-panel')">
             <span class="ntask-row-label">Priorité</span>
@@ -4168,7 +4169,7 @@ function openEditTaskModal(vehicleId, taskId){
           </div>
         </div>
       </div>
-      <div style="background:var(--surface);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:16px;padding:12px 16px;">
+      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:16px;padding:12px 16px;">
         <div style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">Notes</div>
         <textarea id="etask-notes" placeholder="Détails, remarques..." style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:80px;resize:none;color:var(--text);background:transparent;padding:0;">${task.notes || ''}</textarea>
       </div>
@@ -4976,7 +4977,7 @@ function showLoginScreen(){
       </div>
 
       <!-- Champs -->
-      <div style="background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:12px;">
+      <div style="background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:12px;">
         
         <div id="field-name" style="display:none;">
           <div style="padding:0 16px;">
@@ -5113,7 +5114,7 @@ function showResetPasswordScreen(){
         <div style="font-size:15px;color:var(--text2);margin-top:6px;">Nouveau mot de passe</div>
       </div>
       <div style="width:100%;max-width:360px;">
-        <div style="background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:12px;">
           <div style="padding:0 16px;">
             <input id="inp-newpwd" type="password" placeholder="Nouveau mot de passe" style="width:100%;border:none;outline:none;font-size:16px;color:var(--text);padding:16px 0;background:transparent;"/>
           </div>
