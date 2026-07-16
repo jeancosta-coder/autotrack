@@ -621,7 +621,8 @@
     .app-container { padding-bottom: 160px; }
 
     /* ── Finances ── */
-    .fin-section-label { font-size:13px; color:var(--text2); margin:20px 0 6px 20px; }
+    .fin-section-label { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin:20px 0 6px 20px; }
+    .fin-section-label svg { flex-shrink:0; opacity:0.85; }
     .fin-card { background:var(--surface); border-radius:12px; overflow:hidden; margin:0 16px; box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05); }
     .fin-row { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:0.5px solid var(--border); min-height:50px; }
     .fin-row:last-child { border-bottom:none; }
@@ -641,7 +642,6 @@
     .fin-marge-pct { font-size:16px; color:var(--text2); margin-top:6px; }
     .fin-dark { color:var(--text); }
     /* Finances classes - base mobile */
-    .fin-section-label { display:none; }
     .fin-row { display:flex; justify-content:space-between; align-items:center; padding:13px 16px; min-height:50px; }
     .fin-sep { border-top:0.5px solid var(--border); }
     .fin-label-text { font-size:17px; color:var(--text); }
@@ -1064,7 +1064,9 @@
       }
       /* ── Finances desktop ── */
       .fin-section-label {
-        display: block !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
         font-size: 11px !important;
         font-weight: 600 !important;
         color:var(--text2) !important;
@@ -2033,21 +2035,21 @@
         </div>
 
         <!-- ACQUISITION -->
-        <div class="fin-section-label">Acquisition</div>
+        <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5a2.5 2.5 0 0 1 2.5-1.5h.5a2 2 0 0 1 0 4h-1a2 2 0 0 0 0 4h.5a2.5 2.5 0 0 0 2.5-1.5"/></svg><span>Acquisition</span></div>
         <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Prix d'achat</span><div class="fin-input-wrap"><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
           <div class="fin-row fin-sep"><span class="fin-label-text">Prix de vente cible</span><div class="fin-input-wrap"><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
         </div>
 
         <!-- FRAIS SANS TVA -->
-        <div class="fin-section-label">Frais sans TVA</div>
+        <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v17l-2.5-1.8-2 1.8-2-1.8-2 1.8-2-1.8-2 1.8z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/></svg><span>Frais sans TVA</span></div>
         <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Frais sans TVA</span><div style="display:flex;align-items:center;gap:10px;"><span id="fin-total-sansTva" class="fin-label-text" style="color:var(--text2);">0 €</span><button onclick="addCostItemForm('sansTva')" style="width:24px;height:24px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div></div>
           <div id="fin-list-sansTva"></div>
         </div>
 
         <!-- FRAIS SOUMIS À LA TVA -->
-        <div class="fin-section-label">Frais soumis à la TVA</div>
+        <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v17l-2.5-1.8-2 1.8-2-1.8-2 1.8-2-1.8-2 1.8z"/><line x1="9" y1="15" x2="15" y2="9"/><circle cx="9.5" cy="9.5" r="0.75" fill="currentColor" stroke="none"/><circle cx="14.5" cy="14.5" r="0.75" fill="currentColor" stroke="none"/></svg><span>Frais soumis à la TVA</span></div>
         <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Frais soumis à la TVA</span><div style="display:flex;align-items:center;gap:10px;"><span id="fin-total-avecTva" class="fin-label-text" style="color:var(--text2);">0 €</span><button onclick="addCostItemForm('avecTva')" style="width:24px;height:24px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div></div>
           <div id="fin-list-avecTva"></div>
@@ -2059,7 +2061,7 @@
         </div>
 
         <!-- FRAIS DIVERS -->
-        <div class="fin-section-label">Frais</div>
+        <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="18" y2="10"/><line x1="14" y1="14" x2="18" y2="14"/></svg><span>Frais</span></div>
         <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
           <div class="fin-row"><span class="fin-label-text">Carte grise</span><div class="fin-input-wrap"><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
         </div>
@@ -2069,7 +2071,7 @@
 
         <!-- FINALISER LA VENTE -->
         <div id="finalize-sale-pending">
-          <div class="fin-section-label">Finaliser la vente</div>
+          <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Finaliser la vente</span></div>
           <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
             <div class="fin-row"><span class="fin-label-text">Prix de vente</span><div class="fin-input-wrap"><input type="number" id="detail-vente-finale-input" placeholder="0" oninput="updateMargePreview()" class="fin-input"><span class="fin-unit">€</span></div></div>
             <div class="fin-row fin-sep"><span class="fin-label-text">Date de vente</span><input type="date" id="detail-sale-date" class="fin-input" style="width:150px;"></div>
