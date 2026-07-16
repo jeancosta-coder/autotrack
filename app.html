@@ -577,8 +577,8 @@
       input, textarea, select { font-size: 16px; }
       div[style*="grid-template-columns:1fr 1fr"] { display: grid !important; grid-template-columns: 1fr !important; gap: 16px !important; margin-bottom: 20px !important; }
       .details-segment-wrap { display: flex; gap: 2px; margin: 14px 12px 10px; padding: 3px; background:var(--surface-2); border-radius: 10px; overflow-x: auto; scrollbar-width: none; }
-      .details-segment-wrap .detail-tab { flex: 1; text-align: center; background: transparent !important; }
-      .details-segment-wrap .detail-tab.detail-tab-active { background:var(--surface) !important; color:var(--accent) !important; box-shadow: var(--shadow-sm); }
+      .details-segment-wrap .detail-tab { flex: 1; text-align: center; padding: 7px 14px; font-size: 13px; font-weight: 500; border-radius: 8px; border: none; color:var(--text2); background: transparent !important; transition: background 0.15s ease, color 0.15s ease; }
+      .details-segment-wrap .detail-tab.detail-tab-active { background:var(--surface) !important; color:var(--accent) !important; font-weight: 600; box-shadow: var(--shadow-sm); }
       #details > div:nth-child(2) { border-bottom: none !important; background:var(--surface); }
       #detail-tab-infos { background:var(--surface-2) !important; }
       .progress-container { margin-bottom: 0.5rem; }
