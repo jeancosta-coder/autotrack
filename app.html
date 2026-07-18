@@ -2124,8 +2124,8 @@
         <!-- KPI : visibles uniquement une fois la vente validée -->
         <div id="fin-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
           <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
-          <div class="bft-stat accent"><div class="bft-stat-lbl">Marge réelle</div><div id="stat-marge" class="bft-stat-val">—</div></div>
-          <div class="bft-stat pos"><div class="bft-stat-lbl">Marge</div><div id="stat-marge-pct" class="bft-stat-val">—</div></div>
+          <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
+          <div class="bft-stat pos"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
         </div>
 
         <!-- GRAND TABLEAU FINANCES -->
@@ -3271,10 +3271,10 @@ function updateMargePreview(){
   if(statsRow) statsRow.style.display = (v && v.venteValidee) ? 'grid' : 'none';
   const statRevient = document.getElementById('stat-revient');
   if(statRevient) statRevient.textContent = revient ? fmt(revient) : '—';
+  const statVente = document.getElementById('stat-vente');
+  if(statVente) statVente.textContent = vente ? fmt(vente) : '—';
   const statMarge = document.getElementById('stat-marge');
   if(statMarge) statMarge.textContent = (!vente && !revient) ? '—' : fmt(marge);
-  const statMargePct = document.getElementById('stat-marge-pct');
-  if(statMargePct) statMargePct.textContent = (!vente && !revient) ? '—' : pct.toFixed(1) + ' %';
 }
 
 function updateStatutUI(statut){
