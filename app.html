@@ -668,6 +668,27 @@
     #detail-header-trash { visibility: hidden; pointer-events: none; }
     .fin-green { color:#34c759; }
     .fin-red { color:#ff3b30; }
+    /* Grand tableau Finances */
+    .bft-stat { background:var(--surface); border-radius:14px; box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05); padding:14px 16px; }
+    .bft-stat-lbl { font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px; }
+    .bft-stat-val { font-size:19px; font-weight:700; letter-spacing:-0.4px; font-variant-numeric:tabular-nums; color:var(--text); }
+    .bft-stat.accent .bft-stat-val { color:var(--accent); }
+    .bft-stat.pos .bft-stat-val { color:var(--success); }
+    .bft-card { background:var(--surface); border-radius:17px; box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05); overflow:hidden; margin-bottom:12px; }
+    .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 16px; background:var(--surface-2); font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; }
+    .bft-plus { width:22px; height:22px; border-radius:50%; background:var(--accent); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .bft-plus svg { width:11px; height:11px; }
+    .bft-row { display:grid; grid-template-columns:1fr 100px 92px 26px; align-items:center; gap:8px; padding:12px 16px; border-top:1px solid var(--border); font-size:14px; }
+    .bft-name { color:var(--text); }
+    .bft-amt { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); }
+    .bft-inp { grid-column:2; width:100%; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); border:none; outline:none; background:transparent; font-size:14px; font-family:inherit; }
+    .bft-badge { justify-self:end; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+    .bft-badge.on { background:color-mix(in srgb, var(--accent) 14%, var(--surface)); color:var(--accent); }
+    .bft-badge.off { background:var(--surface-2); color:var(--text2); }
+    .bft-del { color:var(--text2); opacity:0.55; justify-self:end; cursor:pointer; background:none; border:none; display:flex; padding:2px; }
+    .bft-del svg { width:15px; height:15px; }
+    .bft-total { background:color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+    .bft-total .bft-name, .bft-total .bft-amt { font-weight:700; color:var(--accent); }
     .desktop-sidebar { display:none; }
     @media (min-width: 900px) {
       body { background-color: var(--bg); }
@@ -2100,36 +2121,29 @@
           </div>
         </div>
 
-        <!-- ACQUISITION -->
-        <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5a2.5 2.5 0 0 1 2.5-1.5h.5a2 2 0 0 1 0 4h-1a2 2 0 0 0 0 4h.5a2.5 2.5 0 0 0 2.5-1.5"/></svg><span>Acquisition</span></div>
-        <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
-          <div class="fin-row"><span class="fin-label-text">Prix d'achat</span><div class="fin-input-wrap"><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
-          <div class="fin-row fin-sep"><span class="fin-label-text">Prix de vente cible</span><div class="fin-input-wrap"><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
+        <!-- KPI : visibles uniquement une fois la vente validée -->
+        <div id="fin-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+          <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
+          <div class="bft-stat accent"><div class="bft-stat-lbl">Marge réelle</div><div id="stat-marge" class="bft-stat-val">—</div></div>
+          <div class="bft-stat pos"><div class="bft-stat-lbl">Marge</div><div id="stat-marge-pct" class="bft-stat-val">—</div></div>
         </div>
 
-        <!-- FRAIS SANS TVA -->
-        <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v17l-2.5-1.8-2 1.8-2-1.8-2 1.8-2-1.8-2 1.8z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/></svg><span>Frais sans TVA</span></div>
-        <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
-          <div class="fin-row"><span class="fin-label-text">Frais sans TVA</span><div style="display:flex;align-items:center;gap:10px;"><span id="fin-total-sansTva" class="fin-label-text" style="color:var(--text2);">0 €</span><button onclick="addCostItemForm('sansTva')" style="width:24px;height:24px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div></div>
+        <!-- GRAND TABLEAU FINANCES -->
+        <div class="bft-card">
+          <div class="bft-group"><span>Acquisition</span></div>
+          <div class="bft-row"><span class="bft-name">Prix d'achat</span><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp"><span></span><span></span></div>
+          <div class="bft-row"><span class="bft-name">Prix de vente cible</span><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp"><span></span><span></span></div>
+
+          <div class="bft-group"><span>Frais sans TVA · <span id="fin-total-sansTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('sansTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
           <div id="fin-list-sansTva"></div>
-        </div>
 
-        <!-- FRAIS SOUMIS À LA TVA -->
-        <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v17l-2.5-1.8-2 1.8-2-1.8-2 1.8-2-1.8-2 1.8z"/><line x1="9" y1="15" x2="15" y2="9"/><circle cx="9.5" cy="9.5" r="0.75" fill="currentColor" stroke="none"/><circle cx="14.5" cy="14.5" r="0.75" fill="currentColor" stroke="none"/></svg><span>Frais soumis à la TVA</span></div>
-        <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
-          <div class="fin-row"><span class="fin-label-text">Frais soumis à la TVA</span><div style="display:flex;align-items:center;gap:10px;"><span id="fin-total-avecTva" class="fin-label-text" style="color:var(--text2);">0 €</span><button onclick="addCostItemForm('avecTva')" style="width:24px;height:24px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div></div>
+          <div class="bft-group"><span>Frais soumis à la TVA · <span id="fin-total-avecTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('avecTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
           <div id="fin-list-avecTva"></div>
-        </div>
 
-        <!-- PRIX DE REVIENT -->
-        <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
-          <div class="fin-row fin-total-row"><span class="fin-label-text fin-bold">Prix de revient</span><span id="detail-cout-revient" class="fin-bold">—</span></div>
-        </div>
+          <div class="bft-group"><span>Frais divers</span></div>
+          <div class="bft-row"><span class="bft-name">Carte grise</span><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp"><span></span><span></span></div>
 
-        <!-- FRAIS DIVERS -->
-        <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="18" y2="10"/><line x1="14" y1="14" x2="18" y2="14"/></svg><span>Frais</span></div>
-        <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
-          <div class="fin-row"><span class="fin-label-text">Carte grise</span><div class="fin-input-wrap"><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="fin-input"><span class="fin-unit">€</span></div></div>
+          <div class="bft-row bft-total"><span class="bft-name">Prix de revient</span><span id="detail-cout-revient" class="bft-amt">—</span><span></span><span></span></div>
         </div>
 
         <input type="hidden" id="detail-marge-cible-input" value="15">
@@ -2157,10 +2171,11 @@
           <div style="width:30px;height:30px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <div>
+          <div style="flex:1;min-width:0;">
             <div style="font-size:14px;font-weight:600;color:var(--success);">Vente finalisée</div>
             <div id="finalize-sale-done-date" style="font-size:12px;color:var(--text2);margin-top:1px;"></div>
           </div>
+          <button onclick="reopenFinalizeSale()" style="background:none;border:1px solid var(--success);color:var(--success);border-radius:10px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;">Modifier</button>
         </div>
 
       </div>
@@ -3174,16 +3189,17 @@ function costTotal(items){ return items.reduce((s, i) => s + (Number(i.amount) |
 function renderCostList(kind){
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
   const items = costItemsOf(v, kind);
+  const badgeLabel = kind === 'sansTva' ? 'Non soumis' : 'Soumis';
+  const badgeCls = kind === 'sansTva' ? 'off' : 'on';
   const listEl = document.getElementById('fin-list-' + kind);
   if(listEl){
-    listEl.innerHTML = items.map(it => `<div class="fin-row fin-sep" style="padding-right:8px;">
-      <span class="fin-label-text" style="font-size:14px;">${it.label}</span>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span class="fin-label-text" style="font-size:14px;">${Number(it.amount).toLocaleString('fr-FR')} €</span>
-        <button onclick="removeCostItem('${kind}','${it.id}')" style="background:none;border:none;cursor:pointer;color:var(--text2);padding:2px;display:flex;">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        </button>
-      </div>
+    listEl.innerHTML = items.map(it => `<div class="bft-row">
+      <span class="bft-name">${it.label}</span>
+      <span class="bft-amt">${Number(it.amount).toLocaleString('fr-FR')} €</span>
+      <span class="bft-badge ${badgeCls}">${badgeLabel}</span>
+      <button class="bft-del" onclick="removeCostItem('${kind}','${it.id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </button>
     </div>`).join('');
   }
   const totalEl = document.getElementById('fin-total-' + kind);
@@ -3193,10 +3209,10 @@ function renderCostList(kind){
 function addCostItemForm(kind){
   const listEl = document.getElementById('fin-list-' + kind);
   if(!listEl || document.getElementById('cost-row-new-' + kind)) return;
-  const rowHtml = `<div id="cost-row-new-${kind}" class="fin-row fin-sep" style="gap:8px;padding-right:8px;">
-    <input type="text" id="cost-row-label-${kind}" placeholder="Titre" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:14px;color:var(--text);">
-    <input type="number" id="cost-row-amount-${kind}" placeholder="Montant" style="width:80px;border:none;outline:none;background:transparent;font-size:14px;color:var(--text);text-align:right;" onkeydown="if(event.key==='Enter')this.blur()" onblur="commitCostItemRow('${kind}')">
-    <span style="font-size:14px;color:var(--text2);">€</span>
+  const rowHtml = `<div id="cost-row-new-${kind}" class="bft-row">
+    <input type="text" id="cost-row-label-${kind}" placeholder="Titre" style="border:none;outline:none;background:transparent;font-size:14px;color:var(--text);font-family:inherit;">
+    <input type="number" id="cost-row-amount-${kind}" placeholder="Montant" class="bft-inp" style="grid-column:auto;" onkeydown="if(event.key==='Enter')this.blur()" onblur="commitCostItemRow('${kind}')">
+    <span></span><span></span>
   </div>`;
   listEl.insertAdjacentHTML('beforeend', rowHtml);
   setTimeout(() => document.getElementById('cost-row-label-' + kind)?.focus(), 50);
@@ -3232,7 +3248,7 @@ function updateMargePreview(){
   const vente = venteFinale || venteCible;
   const cg = parseFloat(document.getElementById('detail-cg-input')?.value) || 0;
   const cible = parseFloat(document.getElementById('detail-marge-cible-input')?.value) || 15;
-  const revient = achat + sansTva + avecTva;
+  const revient = achat + sansTva + avecTva + cg;
   const marge = vente - revient;
   const pct = revient ? (marge / revient * 100) : 0;
   const fmt = v => Math.round(v).toLocaleString('fr-FR') + ' €';
@@ -3251,6 +3267,14 @@ function updateMargePreview(){
     if(!vente && !revient){ margeWidget.textContent = '—'; margeWidget.style.color = 'var(--text)'; }
     else { margeWidget.textContent = fmt(marge); margeWidget.style.color = marge >= 0 ? 'var(--success)' : 'var(--danger)'; }
   }
+  const statsRow = document.getElementById('fin-stats-row');
+  if(statsRow) statsRow.style.display = (v && v.venteValidee) ? 'grid' : 'none';
+  const statRevient = document.getElementById('stat-revient');
+  if(statRevient) statRevient.textContent = revient ? fmt(revient) : '—';
+  const statMarge = document.getElementById('stat-marge');
+  if(statMarge) statMarge.textContent = (!vente && !revient) ? '—' : fmt(marge);
+  const statMargePct = document.getElementById('stat-marge-pct');
+  if(statMargePct) statMargePct.textContent = (!vente && !revient) ? '—' : pct.toFixed(1) + ' %';
 }
 
 function updateStatutUI(statut){
@@ -3713,8 +3737,15 @@ function playSoldCarAnimation(){
 function finalizeSale(){
   const v = DataLayer.getVehicleById(currentDetailVehicleId);
   if(!v) return;
+  const wasValidated = !!v.venteValidee;
   const saleDate = Utils.el('detail-sale-date').value || Utils.today();
   const venteFinale = Utils.toNumber(Utils.el('detail-vente-finale-input').value);
+  const history = [...(v.statusHistory || [])];
+  if(wasValidated && history.length && history[history.length - 1].statut === 'Livré'){
+    history[history.length - 1] = {statut: 'Livré', date: saleDate};
+  } else {
+    history.push({statut: 'Livré', date: saleDate});
+  }
   // enregistre les chiffres saisis
   DataLayer.updateVehicle(currentDetailVehicleId, {
     achat: Utils.toNumber(Utils.el('detail-achat-input').value),
@@ -3724,17 +3755,23 @@ function finalizeSale(){
     margeCible: Utils.toNumber(Utils.el('detail-marge-cible-input').value),
     saleDate: saleDate,
     statut: 'Livré',
-    statusHistory: [...(v.statusHistory || []), {statut: 'Livré', date: saleDate}],
+    statusHistory: history,
     venteValidee: true
   });
-  showToast('✓ Vente finalisée');
-  playSoldCarAnimation();
+  showToast(wasValidated ? '✓ Vente mise à jour' : '✓ Vente finalisée');
+  if(!wasValidated) playSoldCarAnimation();
   updateStatutUI('Livré');
   renderParc();
   const nv = DataLayer.getVehicleById(currentDetailVehicleId);
   refreshDetailHeaderAndSpecs(nv);
   renderFinanceValidationState(nv);
   updateMargePreview();
+}
+function reopenFinalizeSale(){
+  const pending = document.getElementById('finalize-sale-pending');
+  const done = document.getElementById('finalize-sale-done');
+  if(pending) pending.style.display = 'block';
+  if(done) done.style.display = 'none';
 }
 
 function renderPlanning(){
