@@ -692,6 +692,7 @@
     .desktop-sidebar { display:none; }
     @media (min-width: 900px) {
       body { background-color: var(--bg); }
+      #dash-mobile-databtn { display: none !important; }
       .desktop-sidebar {
         display: flex !important;
         position: fixed;
@@ -1826,7 +1827,14 @@
       <div class="desktop-header-actions">
         <button class="desktop-card-btn" type="button" onclick="switchView('parc')">Parc</button>
         <button class="desktop-card-btn" type="button" onclick="drawChart()">Actualiser</button>
+        <button class="desktop-card-btn" type="button" onclick="openFinanceDataModal()">Gérer les données</button>
       </div>
+    </div>
+    <div id="dash-mobile-databtn" style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+      <button onclick="openFinanceDataModal()" style="display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        Gérer les données
+      </button>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
       <div class="kpi-card kpi-hero">
@@ -1878,6 +1886,70 @@
       <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:var(--text2);">Tâches urgentes</span><span id="dash-urgent-tasks" style="font-size:15px;font-weight:600;color:var(--danger);"></span></div>
     </div>
     <div style="height:160px;flex-shrink:0;"></div>
+  </div>
+
+  <!-- MODAL Dashboard : Gérer les données (Données avant Trakoto + Suivi financier) -->
+  <div id="modal-finance-data" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:none;flex-direction:column;animation:slideUpFull 0.3s ease;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
+      <button onclick="closeFinanceDataModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>
+      <span style="font-size:17px;font-weight:600;color:var(--text);flex:1;text-align:center;">Gérer les données</span>
+      <span style="width:36px;"></span>
+    </div>
+    <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px 40px 16px;">
+
+      <!-- Données avant Trakoto -->
+      <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Données avant Trakoto</span></div>
+      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
+          <span style="font-size:15px;color:var(--text);">Véhicules vendus</span>
+          <input type="number" id="hist-nb-ventes" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:80px;background:transparent;"/>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
+          <span style="font-size:15px;color:var(--text);">CA total</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" id="hist-ca" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
+            <span style="font-size:15px;color:var(--text2);">€</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
+          <span style="font-size:15px;color:var(--text);">Marge totale</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" id="hist-marge" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
+            <span style="font-size:15px;color:var(--text2);">€</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:15px;color:var(--text);">Coût moyen prépa</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" id="hist-prep" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
+            <span style="font-size:15px;color:var(--text2);">€</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-bottom:24px;">
+        <button onclick="saveHistorique()" style="width:100%;padding:14px;background:var(--surface);color:var(--text);border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;">Enregistrer</button>
+      </div>
+
+      <!-- Suivi financier -->
+      <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Suivi financier</span></div>
+      <div class="bft-card">
+        <div class="bft-group"><span>Charges fixes · <span id="flog-latest-charges">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('charges')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+        <div id="flog-list-charges"></div>
+      </div>
+      <div class="bft-card">
+        <div class="bft-group"><span>Trésorerie · <span id="flog-latest-tresorerie">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('tresorerie')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+        <div id="flog-list-tresorerie"></div>
+      </div>
+      <div class="bft-card">
+        <div class="bft-group"><span>Total du stock · <span id="flog-latest-stock">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('stock')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+        <div id="flog-list-stock"></div>
+      </div>
+      <div class="bft-card">
+        <div class="bft-group"><span>Total des ventes · <span id="flog-latest-ventes">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('ventes')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+        <div id="flog-list-ventes"></div>
+      </div>
+
+    </div>
   </div>
 
   <div id="details" style="background:var(--surface-2);display:none;flex-direction:column;">
@@ -2270,59 +2342,6 @@
       </div>
     </div>
 
-    <!-- Historique -->
-    <div id="section-historique" style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Données avant Trakoto</span></div>
-    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin:0 16px 8px 16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
-        <span style="font-size:15px;color:var(--text);">Véhicules vendus</span>
-        <input type="number" id="hist-nb-ventes" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:80px;background:transparent;"/>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
-        <span style="font-size:15px;color:var(--text);">CA total</span>
-        <div style="display:flex;align-items:center;gap:4px;">
-          <input type="number" id="hist-ca" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
-          <span style="font-size:15px;color:var(--text2);">€</span>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
-        <span style="font-size:15px;color:var(--text);">Marge totale</span>
-        <div style="display:flex;align-items:center;gap:4px;">
-          <input type="number" id="hist-marge" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
-          <span style="font-size:15px;color:var(--text2);">€</span>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
-        <span style="font-size:15px;color:var(--text);">Coût moyen prépa</span>
-        <div style="display:flex;align-items:center;gap:4px;">
-          <input type="number" id="hist-prep" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
-          <span style="font-size:15px;color:var(--text2);">€</span>
-        </div>
-      </div>
-    </div>
-    <div style="margin:0 16px 24px 16px;">
-      <button onclick="saveHistorique()" style="width:100%;padding:14px;background:var(--surface);color:var(--text);border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;">Enregistrer</button>
-    </div>
-
-    <!-- Suivi financier -->
-    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Suivi financier</span></div>
-    <div style="margin:0 16px 24px 16px;">
-      <div class="bft-card">
-        <div class="bft-group"><span>Charges fixes · <span id="flog-latest-charges">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('charges')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
-        <div id="flog-list-charges"></div>
-      </div>
-      <div class="bft-card">
-        <div class="bft-group"><span>Trésorerie · <span id="flog-latest-tresorerie">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('tresorerie')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
-        <div id="flog-list-tresorerie"></div>
-      </div>
-      <div class="bft-card">
-        <div class="bft-group"><span>Total du stock · <span id="flog-latest-stock">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('stock')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
-        <div id="flog-list-stock"></div>
-      </div>
-      <div class="bft-card">
-        <div class="bft-group"><span>Total des ventes · <span id="flog-latest-ventes">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('ventes')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
-        <div id="flog-list-ventes"></div>
-      </div>
-    </div>
 
     <!-- App -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
@@ -2674,6 +2693,24 @@ function removeFinanceLogItem(type, id){
 function renderFinanceLogAll(){
   Object.keys(FIN_LOG_LABELS).forEach(renderFinanceLogList);
 }
+function openFinanceDataModal(){
+  if(!document.getElementById('modal-anim-style')){
+    const style = document.createElement('style');
+    style.id = 'modal-anim-style';
+    style.textContent = '@keyframes slideUpFull{from{transform:translateY(100%);opacity:0;}to{transform:translateY(0);opacity:1;}}@keyframes slideDownFull{from{transform:translateY(0);opacity:1;}to{transform:translateY(100%);opacity:0;}}';
+    document.head.appendChild(style);
+  }
+  const hist = loadHistorique();
+  const _hnv = document.getElementById('hist-nb-ventes'); if(_hnv) _hnv.value = hist.nbVentes || '';
+  const _hca = document.getElementById('hist-ca'); if(_hca) _hca.value = hist.ca || '';
+  const _hm = document.getElementById('hist-marge'); if(_hm) _hm.value = hist.marge || '';
+  const _hp = document.getElementById('hist-prep'); if(_hp) _hp.value = hist.prep || '';
+  renderFinanceLogAll();
+  document.getElementById('modal-finance-data').style.display = 'flex';
+}
+function closeFinanceDataModal(){
+  document.getElementById('modal-finance-data').style.display = 'none';
+}
 
 function renderCompte(){
   const user = sbUser;
@@ -2692,13 +2729,6 @@ function renderCompte(){
   const _sav = document.getElementById('sidebar-avatar');
   if(_sav){ const src = nom !== '—' ? nom : (email !== '—' ? email : '?'); const parts = src.trim().split(/\s+/); _sav.textContent = (parts.length > 1 ? parts[0][0] + parts[1][0] : src.substring(0,2)); }
 
-  // Pré-remplir historique
-  const hist = loadHistorique();
-  if(document.getElementById('hist-nb-ventes')) document.getElementById('hist-nb-ventes').value = hist.nbVentes || '';
-  if(document.getElementById('hist-ca')) document.getElementById('hist-ca').value = hist.ca || '';
-  if(document.getElementById('hist-marge')) document.getElementById('hist-marge').value = hist.marge || '';
-  if(document.getElementById('hist-prep')) document.getElementById('hist-prep').value = hist.prep || '';
-  renderFinanceLogAll();
 }
 
 async function doLogout(){
