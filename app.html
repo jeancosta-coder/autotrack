@@ -1926,21 +1926,38 @@
 
       <!-- Suivi financier -->
       <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Suivi financier</span></div>
-      <div class="bft-card">
-        <div class="bft-group"><span>Charges fixes · <span id="flog-latest-charges">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('charges')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
-        <div id="flog-list-charges"></div>
+      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
+          <span style="font-size:15px;color:var(--text);">Charges fixes</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" id="fsnap-charges" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
+            <span style="font-size:15px;color:var(--text2);">€</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
+          <span style="font-size:15px;color:var(--text);">Trésorerie</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" id="fsnap-tresorerie" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
+            <span style="font-size:15px;color:var(--text2);">€</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
+          <span style="font-size:15px;color:var(--text);">Total du stock</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" id="fsnap-stock" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
+            <span style="font-size:15px;color:var(--text2);">€</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
+          <span style="font-size:15px;color:var(--text);">Total des ventes</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" id="fsnap-ventes" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
+            <span style="font-size:15px;color:var(--text2);">€</span>
+          </div>
+        </div>
       </div>
-      <div class="bft-card">
-        <div class="bft-group"><span>Trésorerie · <span id="flog-latest-tresorerie">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('tresorerie')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
-        <div id="flog-list-tresorerie"></div>
-      </div>
-      <div class="bft-card">
-        <div class="bft-group"><span>Total du stock · <span id="flog-latest-stock">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('stock')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
-        <div id="flog-list-stock"></div>
-      </div>
-      <div class="bft-card">
-        <div class="bft-group"><span>Total des ventes · <span id="flog-latest-ventes">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('ventes')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
-        <div id="flog-list-ventes"></div>
+      <div>
+        <button onclick="saveFinanceSnapshot()" style="width:100%;padding:14px;background:var(--surface);color:var(--text);border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;">Enregistrer</button>
       </div>
 
     </div>
@@ -2639,53 +2656,18 @@ function loadHistorique(){
   return JSON.parse(localStorage.getItem('at_historique') || '{"nbVentes":0,"ca":0,"marge":0,"prep":0}');
 }
 
-const FIN_LOG_LABELS = {charges:'Charges fixes', tresorerie:'Trésorerie', stock:'Total du stock', ventes:'Total des ventes'};
-function loadFinanceLog(){ return JSON.parse(localStorage.getItem('at_finance_log') || '[]'); }
-function saveFinanceLog(items){ localStorage.setItem('at_finance_log', JSON.stringify(items)); }
-function financeLogItemsOf(type){ return loadFinanceLog().filter(i => i.type === type).sort((a, b) => (b.date || '').localeCompare(a.date || '')); }
-function renderFinanceLogList(type){
-  const items = financeLogItemsOf(type);
-  const listEl = document.getElementById('flog-list-' + type);
-  if(listEl){
-    listEl.innerHTML = items.length ? items.map(it => `<div class="bft-row">
-      <span class="bft-name">${it.date ? new Date(it.date + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '—'}</span>
-      <span class="bft-amt">${Number(it.montant).toLocaleString('fr-FR')} €</span>
-      <span></span>
-      <button class="bft-del" onclick="removeFinanceLogItem('${type}','${it.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
-    </div>`).join('') : `<div class="bft-row"><span class="bft-name" style="color:var(--text2);">Aucune donnée</span><span></span><span></span><span></span></div>`;
-  }
-  const latestEl = document.getElementById('flog-latest-' + type);
-  if(latestEl) latestEl.textContent = items.length ? Number(items[0].montant).toLocaleString('fr-FR') + ' €' : '—';
+function loadFinanceSnapshot(){
+  return JSON.parse(localStorage.getItem('at_finance_snapshot') || '{"charges":0,"tresorerie":0,"stock":0,"ventes":0}');
 }
-function addFinanceLogForm(type){
-  const listEl = document.getElementById('flog-list-' + type);
-  if(!listEl || document.getElementById('flog-row-new-' + type)) return;
-  const today = Utils.today();
-  const rowHtml = `<div id="flog-row-new-${type}" class="bft-row" style="grid-template-columns:120px 1fr 26px;">
-    <input type="date" id="flog-date-${type}" value="${today}" style="border:none;outline:none;background:transparent;font-size:14px;color:var(--text);">
-    <input type="number" id="flog-amount-${type}" placeholder="Montant €" style="border:none;outline:none;background:transparent;font-size:14px;color:var(--text);text-align:right;" onkeydown="if(event.key==='Enter')this.blur()" onblur="commitFinanceLogRow('${type}')">
-    <span></span>
-  </div>`;
-  listEl.insertAdjacentHTML('afterbegin', rowHtml);
-  setTimeout(() => document.getElementById('flog-amount-' + type)?.focus(), 50);
-}
-function commitFinanceLogRow(type){
-  const dateEl = document.getElementById('flog-date-' + type);
-  const amountEl = document.getElementById('flog-amount-' + type);
-  const date = dateEl?.value || Utils.today();
-  const montant = Number(amountEl?.value) || 0;
-  if(!montant){ document.getElementById('flog-row-new-' + type)?.remove(); return; }
-  const items = [...loadFinanceLog(), {id: String(Date.now()), type, date, montant}];
-  saveFinanceLog(items);
-  renderFinanceLogList(type);
-  showToast('✓ Donnée ajoutée');
-}
-function removeFinanceLogItem(type, id){
-  saveFinanceLog(loadFinanceLog().filter(i => String(i.id) !== String(id)));
-  renderFinanceLogList(type);
-}
-function renderFinanceLogAll(){
-  Object.keys(FIN_LOG_LABELS).forEach(renderFinanceLogList);
+function saveFinanceSnapshot(){
+  const snap = {
+    charges:    Number(document.getElementById('fsnap-charges')?.value)    || 0,
+    tresorerie: Number(document.getElementById('fsnap-tresorerie')?.value) || 0,
+    stock:      Number(document.getElementById('fsnap-stock')?.value)      || 0,
+    ventes:     Number(document.getElementById('fsnap-ventes')?.value)     || 0
+  };
+  localStorage.setItem('at_finance_snapshot', JSON.stringify(snap));
+  showToast('✓ Données enregistrées');
 }
 function openFinanceDataModal(){
   if(!document.getElementById('modal-anim-style')){
@@ -2699,7 +2681,11 @@ function openFinanceDataModal(){
   const _hca = document.getElementById('hist-ca'); if(_hca) _hca.value = hist.ca || '';
   const _hm = document.getElementById('hist-marge'); if(_hm) _hm.value = hist.marge || '';
   const _hp = document.getElementById('hist-prep'); if(_hp) _hp.value = hist.prep || '';
-  renderFinanceLogAll();
+  const snap = loadFinanceSnapshot();
+  const _fc = document.getElementById('fsnap-charges'); if(_fc) _fc.value = snap.charges || '';
+  const _ft = document.getElementById('fsnap-tresorerie'); if(_ft) _ft.value = snap.tresorerie || '';
+  const _fs = document.getElementById('fsnap-stock'); if(_fs) _fs.value = snap.stock || '';
+  const _fv = document.getElementById('fsnap-ventes'); if(_fv) _fv.value = snap.ventes || '';
   document.getElementById('modal-finance-data').style.display = 'flex';
 }
 function closeFinanceDataModal(){
