@@ -1943,19 +1943,14 @@
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
           <span style="font-size:15px;color:var(--text);">Total du stock</span>
-          <div style="display:flex;align-items:center;gap:4px;">
-            <input type="number" id="fsnap-stock" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
-            <span style="font-size:15px;color:var(--text2);">€</span>
-          </div>
+          <span id="fsnap-stock-disp" style="font-size:15px;font-weight:600;color:var(--text);">—</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;">
           <span style="font-size:15px;color:var(--text);">Total des ventes</span>
-          <div style="display:flex;align-items:center;gap:4px;">
-            <input type="number" id="fsnap-ventes" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:100px;background:transparent;"/>
-            <span style="font-size:15px;color:var(--text2);">€</span>
-          </div>
+          <span id="fsnap-ventes-disp" style="font-size:15px;font-weight:600;color:var(--text);">—</span>
         </div>
       </div>
+      <div style="margin:0 0 24px 4px;"><span style="font-size:12px;color:var(--text2);">Total du stock et Total des ventes sont calculés automatiquement à partir du Parc et des données avant Trakoto.</span></div>
       <div>
         <button onclick="saveFinanceSnapshot()" style="width:100%;padding:14px;background:var(--surface);color:var(--text);border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;">Enregistrer</button>
       </div>
@@ -2662,9 +2657,7 @@ function loadFinanceSnapshot(){
 function saveFinanceSnapshot(){
   const snap = {
     charges:    Number(document.getElementById('fsnap-charges')?.value)    || 0,
-    tresorerie: Number(document.getElementById('fsnap-tresorerie')?.value) || 0,
-    stock:      Number(document.getElementById('fsnap-stock')?.value)      || 0,
-    ventes:     Number(document.getElementById('fsnap-ventes')?.value)     || 0
+    tresorerie: Number(document.getElementById('fsnap-tresorerie')?.value) || 0
   };
   localStorage.setItem('at_finance_snapshot', JSON.stringify(snap));
   showToast('✓ Données enregistrées');
@@ -2684,8 +2677,9 @@ function openFinanceDataModal(){
   const snap = loadFinanceSnapshot();
   const _fc = document.getElementById('fsnap-charges'); if(_fc) _fc.value = snap.charges || '';
   const _ft = document.getElementById('fsnap-tresorerie'); if(_ft) _ft.value = snap.tresorerie || '';
-  const _fs = document.getElementById('fsnap-stock'); if(_fs) _fs.value = snap.stock || '';
-  const _fv = document.getElementById('fsnap-ventes'); if(_fv) _fv.value = snap.ventes || '';
+  const totals = computeParcTotals();
+  const _fsd = document.getElementById('fsnap-stock-disp'); if(_fsd) _fsd.textContent = totals.totalStock.toLocaleString('fr-FR') + ' €';
+  const _fvd = document.getElementById('fsnap-ventes-disp'); if(_fvd) _fvd.textContent = totals.totalVentes.toLocaleString('fr-FR') + ' €';
   document.getElementById('modal-finance-data').style.display = 'flex';
 }
 function closeFinanceDataModal(){
@@ -4640,15 +4634,23 @@ function deltaBadgeHTML(cur, prev){
   const arrow = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="' + (up ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6') + '"/></svg>';
   return '<span class="kpi-delta" style="color:' + col + ';background:' + bg + ';">' + arrow + txt + '</span>';
 }
+function computeParcTotals(){
+  const hist = loadHistorique();
+  const sold = vehicles.filter(v => (v.statut === 'Livré' || v.statut === 'Vendu'));
+  const stock = vehicles.filter(v => (v.statut !== 'Livré' && v.statut !== 'Vendu'));
+  return {
+    totalStock: stock.reduce((s, v) => s + (v.achat || 0), 0),
+    totalVentes: sold.reduce((s, v) => s + (v.vente || 0), 0) + hist.ca
+  };
+}
 function renderDashboard(){
   const hist = loadHistorique();
   const sold = vehicles.filter(v => (v.statut === 'Livré' || v.statut === 'Vendu'));
   const stock = vehicles.filter(v => (v.statut !== 'Livré' && v.statut !== 'Vendu'));
   const totalProfit = vehicles.reduce((s, v) => s + ((v.vente || 0) - (v.achat || 0) - (v.prepCost || 0)), 0) + hist.marge;
   const avgProfit = (sold.length + hist.nbVentes) > 0 ? Math.round(totalProfit / (sold.length + hist.nbVentes)) : 0;
-  const revenue = sold.reduce((s, v) => s + (v.vente || 0), 0) + hist.ca;
+  const { totalStock: cashBlocked, totalVentes: revenue } = computeParcTotals();
   const avgMargin = revenue > 0 ? Math.round((totalProfit / revenue) * 100) : 0;
-  const cashBlocked = stock.reduce((s, v) => s + (v.achat || 0), 0);
   const rotation = stock.length > 0 ? ((sold.length + hist.nbVentes) / stock.length).toFixed(2) : 0;
   let avgTime = '—';
   if(sold.length > 0){
