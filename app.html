@@ -2303,6 +2303,27 @@
       <button onclick="saveHistorique()" style="width:100%;padding:14px;background:var(--surface);color:var(--text);border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;">Enregistrer</button>
     </div>
 
+    <!-- Suivi financier -->
+    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Suivi financier</span></div>
+    <div style="margin:0 16px 24px 16px;">
+      <div class="bft-card">
+        <div class="bft-group"><span>Charges fixes · <span id="flog-latest-charges">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('charges')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+        <div id="flog-list-charges"></div>
+      </div>
+      <div class="bft-card">
+        <div class="bft-group"><span>Trésorerie · <span id="flog-latest-tresorerie">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('tresorerie')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+        <div id="flog-list-tresorerie"></div>
+      </div>
+      <div class="bft-card">
+        <div class="bft-group"><span>Total du stock · <span id="flog-latest-stock">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('stock')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+        <div id="flog-list-stock"></div>
+      </div>
+      <div class="bft-card">
+        <div class="bft-group"><span>Total des ventes · <span id="flog-latest-ventes">—</span></span><button class="bft-plus" onclick="addFinanceLogForm('ventes')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+        <div id="flog-list-ventes"></div>
+      </div>
+    </div>
+
     <!-- App -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
     <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin:0 16px 32px 16px;">
@@ -2605,6 +2626,55 @@ function loadHistorique(){
   return JSON.parse(localStorage.getItem('at_historique') || '{"nbVentes":0,"ca":0,"marge":0,"prep":0}');
 }
 
+const FIN_LOG_LABELS = {charges:'Charges fixes', tresorerie:'Trésorerie', stock:'Total du stock', ventes:'Total des ventes'};
+function loadFinanceLog(){ return JSON.parse(localStorage.getItem('at_finance_log') || '[]'); }
+function saveFinanceLog(items){ localStorage.setItem('at_finance_log', JSON.stringify(items)); }
+function financeLogItemsOf(type){ return loadFinanceLog().filter(i => i.type === type).sort((a, b) => (b.date || '').localeCompare(a.date || '')); }
+function renderFinanceLogList(type){
+  const items = financeLogItemsOf(type);
+  const listEl = document.getElementById('flog-list-' + type);
+  if(listEl){
+    listEl.innerHTML = items.length ? items.map(it => `<div class="bft-row">
+      <span class="bft-name">${it.date ? new Date(it.date + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '—'}</span>
+      <span class="bft-amt">${Number(it.montant).toLocaleString('fr-FR')} €</span>
+      <span></span>
+      <button class="bft-del" onclick="removeFinanceLogItem('${type}','${it.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+    </div>`).join('') : `<div class="bft-row"><span class="bft-name" style="color:var(--text2);">Aucune donnée</span><span></span><span></span><span></span></div>`;
+  }
+  const latestEl = document.getElementById('flog-latest-' + type);
+  if(latestEl) latestEl.textContent = items.length ? Number(items[0].montant).toLocaleString('fr-FR') + ' €' : '—';
+}
+function addFinanceLogForm(type){
+  const listEl = document.getElementById('flog-list-' + type);
+  if(!listEl || document.getElementById('flog-row-new-' + type)) return;
+  const today = Utils.today();
+  const rowHtml = `<div id="flog-row-new-${type}" class="bft-row" style="grid-template-columns:120px 1fr 26px;">
+    <input type="date" id="flog-date-${type}" value="${today}" style="border:none;outline:none;background:transparent;font-size:14px;color:var(--text);">
+    <input type="number" id="flog-amount-${type}" placeholder="Montant €" style="border:none;outline:none;background:transparent;font-size:14px;color:var(--text);text-align:right;" onkeydown="if(event.key==='Enter')this.blur()" onblur="commitFinanceLogRow('${type}')">
+    <span></span>
+  </div>`;
+  listEl.insertAdjacentHTML('afterbegin', rowHtml);
+  setTimeout(() => document.getElementById('flog-amount-' + type)?.focus(), 50);
+}
+function commitFinanceLogRow(type){
+  const dateEl = document.getElementById('flog-date-' + type);
+  const amountEl = document.getElementById('flog-amount-' + type);
+  const date = dateEl?.value || Utils.today();
+  const montant = Number(amountEl?.value) || 0;
+  if(!montant){ document.getElementById('flog-row-new-' + type)?.remove(); return; }
+  const items = [...loadFinanceLog(), {id: String(Date.now()), type, date, montant}];
+  saveFinanceLog(items);
+  renderFinanceLogList(type);
+  showToast('✓ Donnée ajoutée');
+}
+function removeFinanceLogItem(type, id){
+  saveFinanceLog(loadFinanceLog().filter(i => String(i.id) !== String(id)));
+  renderFinanceLogList(type);
+}
+function renderFinanceLogAll(){
+  Object.keys(FIN_LOG_LABELS).forEach(renderFinanceLogList);
+}
+
 function renderCompte(){
   const user = sbUser;
   const meta = user?.user_metadata || {};
@@ -2628,6 +2698,7 @@ function renderCompte(){
   if(document.getElementById('hist-ca')) document.getElementById('hist-ca').value = hist.ca || '';
   if(document.getElementById('hist-marge')) document.getElementById('hist-marge').value = hist.marge || '';
   if(document.getElementById('hist-prep')) document.getElementById('hist-prep').value = hist.prep || '';
+  renderFinanceLogAll();
 }
 
 async function doLogout(){
