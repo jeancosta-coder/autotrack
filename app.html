@@ -2455,7 +2455,7 @@ const DataLayer = {
     if(v) {
       const allowed = ['statut', 'achat', 'vente', 'prepCost', 'notes', 'statusHistory', 'carteGrise', 'transport', 'commission', 'margeCible', 'sansTva', 'avecTva',
         'marque', 'modele', 'year', 'gen', 'km', 'achatDate', 'saleDate', 'carburant', 'transmission', 'couleur', 'immatriculation', 'puissance', 'saleCycle',
-        'costsSansTva', 'costsAvecTva'];
+        'costsSansTva', 'costsAvecTva', 'venteFinale', 'venteValidee'];
       Object.keys(updates).forEach(key => { if(allowed.includes(key)) v[key] = updates[key]; });
       save();
     }
