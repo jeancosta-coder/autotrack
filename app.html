@@ -236,21 +236,14 @@
     }
     .desktop-card-btn:hover { background:var(--surface-2); }
     .desktop-card-btn.danger { border-color: #ff3b30; color: #ff3b30; }
-    /* Essai : bouton primaire "verre" translucide (pilule) */
-    .btn-glass-test {
-      background: rgba(26,26,26,0.78);
-      backdrop-filter: blur(14px) saturate(160%);
-      -webkit-backdrop-filter: blur(14px) saturate(160%);
-      border: 1px solid rgba(255,255,255,0.14);
+    /* Essai : bouton primaire plein avec leger degrade de profondeur (pilule) */
+    .btn-depth-test {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 80%, white 20%) 0%, var(--accent) 100%);
+      border: none;
       border-radius: 9999px;
       box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.14);
     }
-    .btn-glass-test:hover { background: rgba(0,0,0,0.8); }
-    [data-theme="dark"] .btn-glass-test {
-      background: rgba(255,255,255,0.14);
-      border-color: rgba(255,255,255,0.18);
-    }
-    [data-theme="dark"] .btn-glass-test:hover { background: rgba(255,255,255,0.2); }
+    .btn-depth-test:hover { background: var(--accent-hover); }
     .desktop-view-header { display: none; }
     .desktop-view-header {
       padding: 24px 24px 22px;
@@ -1698,7 +1691,7 @@
       </div>
 
       <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:16px;">
-        <button type="button" class="btn-glass-test" onclick="openAddModal()" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+        <button type="button" class="btn-depth-test" onclick="openAddModal()" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
           <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Nouveau véhicule</span>
         </button>
