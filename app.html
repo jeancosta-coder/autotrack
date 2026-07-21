@@ -2104,7 +2104,12 @@
             <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
             <div style="padding:10px 16px;"><input type="text" id="detail-client-prenom" placeholder="Prénom" onblur="saveClientField('prenom',this.value)" style="width:100%;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;"></div>
             <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-            <div style="padding:10px 16px;"><input type="tel" id="detail-client-tel" placeholder="Téléphone" onblur="saveClientField('tel',this.value)" style="width:100%;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;"></div>
+            <div style="padding:10px 16px;display:flex;align-items:center;gap:8px;">
+              <input type="tel" id="detail-client-tel" placeholder="Téléphone" onblur="saveClientField('tel',this.value)" oninput="updateClientCallBtn()" style="flex:1;min-width:0;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;">
+              <button id="detail-client-call-btn" onclick="callClientPhone()" title="Appeler" style="display:none;width:28px;height:28px;border-radius:50%;background:var(--success-soft);border:none;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </button>
+            </div>
             <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
             <div style="padding:10px 16px;"><input type="email" id="detail-client-email" placeholder="Email" onblur="saveClientField('email',this.value)" style="width:100%;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;"></div>
           </div>
@@ -3191,12 +3196,25 @@ function refreshDetailHeaderAndSpecs(v){
   const _cp = document.getElementById('detail-client-prenom'); if(_cp) _cp.value = v.clientPrenom || '';
   const _ct = document.getElementById('detail-client-tel'); if(_ct) _ct.value = v.clientTel || '';
   const _ce = document.getElementById('detail-client-email'); if(_ce) _ce.value = v.clientEmail || '';
+  updateClientCallBtn();
 }
 const CLIENT_FIELD_MAP = { nom:'clientNom', prenom:'clientPrenom', tel:'clientTel', email:'clientEmail' };
 function saveClientField(field, val){
   if(!DataLayer.getVehicleById(currentDetailVehicleId)) return;
   DataLayer.updateVehicle(currentDetailVehicleId, {[CLIENT_FIELD_MAP[field]]: val.trim()});
   showToast('✓ Client enregistré');
+}
+function updateClientCallBtn(){
+  const input = document.getElementById('detail-client-tel');
+  const btn = document.getElementById('detail-client-call-btn');
+  if(!input || !btn) return;
+  btn.style.display = input.value.trim() ? 'flex' : 'none';
+}
+function callClientPhone(){
+  const input = document.getElementById('detail-client-tel');
+  const val = (input?.value || '').trim();
+  if(!val) return;
+  window.location.href = 'tel:' + val.replace(/[^0-9+]/g, '');
 }
 const VSG_FIELD_TYPES = { year:'number', km:'number', achat:'number', puissance:'number' };
 function editVsgField(cell, field){
