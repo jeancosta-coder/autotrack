@@ -999,6 +999,8 @@
       /* Dates : colonne gauche desktop */
       .dt-dates-wrap { flex-shrink: 0 !important; padding: 12px 20px 0 !important; }
       .dt-dates-wrap > div:first-child { padding: 0 !important; }
+      .dt-client-wrap { flex-shrink: 0 !important; padding: 12px 20px 0 !important; }
+      .dt-client-wrap > div:first-child { padding: 0 !important; }
       .dt-mobile-icon { display: none !important; }
       /* Notes */
       .dt-notes-wrap {
@@ -2089,6 +2091,25 @@
           </div>
         </div>
 
+        <!-- Client -->
+        <div class="dt-client-wrap">
+          <div style="margin-bottom:4px;padding:0 4px;">
+            <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Client
+            </span>
+          </div>
+          <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
+            <div style="padding:10px 16px;"><input type="text" id="detail-client-nom" placeholder="Nom" onblur="saveClientField('nom',this.value)" style="width:100%;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;"></div>
+            <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+            <div style="padding:10px 16px;"><input type="text" id="detail-client-prenom" placeholder="Prénom" onblur="saveClientField('prenom',this.value)" style="width:100%;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;"></div>
+            <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+            <div style="padding:10px 16px;"><input type="tel" id="detail-client-tel" placeholder="Téléphone" onblur="saveClientField('tel',this.value)" style="width:100%;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;"></div>
+            <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+            <div style="padding:10px 16px;"><input type="email" id="detail-client-email" placeholder="Email" onblur="saveClientField('email',this.value)" style="width:100%;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;"></div>
+          </div>
+        </div>
+
         <!-- Contenu déplacé vers l'onglet Infos sur desktop (via JS) -->
         <div id="infos-movable">
 
@@ -2509,7 +2530,8 @@ const DataLayer = {
     if(v) {
       const allowed = ['statut', 'achat', 'vente', 'prepCost', 'notes', 'statusHistory', 'carteGrise', 'transport', 'commission', 'margeCible', 'sansTva', 'avecTva',
         'marque', 'modele', 'year', 'gen', 'km', 'achatDate', 'saleDate', 'carburant', 'transmission', 'couleur', 'immatriculation', 'puissance', 'saleCycle',
-        'costsSansTva', 'costsAvecTva', 'venteFinale', 'venteValidee'];
+        'costsSansTva', 'costsAvecTva', 'venteFinale', 'venteValidee',
+        'clientNom', 'clientPrenom', 'clientTel', 'clientEmail'];
       Object.keys(updates).forEach(key => { if(allowed.includes(key)) v[key] = updates[key]; });
       save();
     }
@@ -3165,6 +3187,16 @@ function refreshDetailHeaderAndSpecs(v){
   const _dcl = document.getElementById('detail-couleur'); if(_dcl) _dcl.textContent = v.couleur || '—';
   const _dim = document.getElementById('detail-immat'); if(_dim) _dim.textContent = v.immatriculation || '—';
   const _dp = document.getElementById('detail-puissance'); if(_dp) _dp.textContent = v.puissance ? v.puissance + ' ch' : '—';
+  const _cn = document.getElementById('detail-client-nom'); if(_cn) _cn.value = v.clientNom || '';
+  const _cp = document.getElementById('detail-client-prenom'); if(_cp) _cp.value = v.clientPrenom || '';
+  const _ct = document.getElementById('detail-client-tel'); if(_ct) _ct.value = v.clientTel || '';
+  const _ce = document.getElementById('detail-client-email'); if(_ce) _ce.value = v.clientEmail || '';
+}
+const CLIENT_FIELD_MAP = { nom:'clientNom', prenom:'clientPrenom', tel:'clientTel', email:'clientEmail' };
+function saveClientField(field, val){
+  if(!DataLayer.getVehicleById(currentDetailVehicleId)) return;
+  DataLayer.updateVehicle(currentDetailVehicleId, {[CLIENT_FIELD_MAP[field]]: val.trim()});
+  showToast('✓ Client enregistré');
 }
 const VSG_FIELD_TYPES = { year:'number', km:'number', achat:'number', puissance:'number' };
 function editVsgField(cell, field){
