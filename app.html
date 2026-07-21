@@ -236,14 +236,14 @@
     }
     .desktop-card-btn:hover { background:var(--surface-2); }
     .desktop-card-btn.danger { border-color: #ff3b30; color: #ff3b30; }
-    /* Essai : bouton primaire plein gris anthracite (pilule) */
-    .btn-depth-test {
-      background: #3A3A3C;
+    /* Bouton d'action primaire : noir plein, pilule complete */
+    .btn-primary-pill {
+      background: var(--accent);
       border: none;
       border-radius: 9999px;
       box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.14);
     }
-    .btn-depth-test:hover { background: #2C2C2E; }
+    .btn-primary-pill:hover { background: var(--accent-hover); }
     .desktop-view-header { display: none; }
     .desktop-view-header {
       padding: 24px 24px 22px;
@@ -1691,7 +1691,7 @@
       </div>
 
       <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:16px;">
-        <button type="button" class="btn-depth-test" onclick="openAddModal()" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+        <button type="button" class="btn-primary-pill" onclick="openAddModal()" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
           <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Nouveau véhicule</span>
         </button>
@@ -1755,7 +1755,7 @@
       <input type="date" id="tasks-custom-date-input" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;" onchange="onTasksCustomDateChange(this.value)">
 
       <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:16px;">
-        <button type="button" onclick="openGlobalAddTaskModal()" style="display:flex;align-items:center;gap:8px;background:var(--accent);border:none;cursor:pointer;padding:10px 18px;border-radius:14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+        <button type="button" class="btn-primary-pill" onclick="openGlobalAddTaskModal()" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
           <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Ajouter une tâche</span>
         </button>
@@ -2272,11 +2272,11 @@
           <div class="progress-container" style="margin-bottom:0;"><div class="progress-bar" id="detail-progress-bar" style="width:0%;"></div></div>
         </div>
         <!-- Bouton ajout desktop : style Nouveau véhicule, au-dessus des filtres -->
-        <button class="add-task-desktop-btn" onclick="openDetailTaskModal()" style="align-items:center;gap:8px;background:var(--accent);border:none;cursor:pointer;padding:10px 18px;border-radius:14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);margin-bottom:20px;" onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+        <button class="add-task-desktop-btn btn-primary-pill" onclick="openDetailTaskModal()" style="align-items:center;gap:8px;cursor:pointer;padding:10px 20px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);margin-bottom:20px;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
           <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Ajouter une tâche</span>
         </button>
-        <button class="add-task-mobile-inline-btn" onclick="openDetailTaskModal()" style="display:flex;align-items:center;gap:8px;background:var(--accent);border:none;cursor:pointer;padding:10px 18px;border-radius:14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);margin-bottom:20px;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+        <button class="add-task-mobile-inline-btn btn-primary-pill" onclick="openDetailTaskModal()" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);margin-bottom:20px;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
           <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Ajouter une tâche</span>
         </button>
