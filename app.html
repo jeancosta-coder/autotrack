@@ -366,6 +366,7 @@
     .kpi-card { background: var(--surface); border: 1px solid transparent; border-radius: 18px; padding: 14px 14px 12px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; min-height: 108px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
     [data-theme="dark"] .kpi-card { border-color: var(--border); }
     .kpi-card .kpi-spark { margin-top: auto; }
+    .dash-square-kpi { aspect-ratio: 1 / 1; min-height: 0; justify-content: center; }
     .dash-sales-table-wrap { display: none; }
     .dash-sales-cards { display: block; }
     #dash-sales-table th, #dash-sales-table td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border); }
@@ -1878,7 +1879,7 @@
 
       <!-- Marge moyenne / Temps moyen de vente -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-        <div class="kpi-card">
+        <div class="kpi-card dash-square-kpi">
           <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
             <span class="kpi-icon" style="background:var(--success-soft);color:var(--success);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
           </div>
@@ -1886,7 +1887,7 @@
           <div class="kpi-label">Marge moyenne</div>
           <div id="dash-avg-margin-spark"></div>
         </div>
-        <div class="kpi-card">
+        <div class="kpi-card dash-square-kpi">
           <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
             <span class="kpi-icon" style="background:var(--info-soft);color:var(--info);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
           </div>
@@ -1898,7 +1899,7 @@
 
       <!-- Total entrées / Total sorties -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
-        <div class="kpi-card">
+        <div class="kpi-card dash-square-kpi">
           <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
             <span class="kpi-icon" style="background:var(--accent-soft);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span>
           </div>
@@ -1907,7 +1908,7 @@
           <div id="dash-entrees-value" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
           <div id="dash-entrees-spark"></div>
         </div>
-        <div class="kpi-card">
+        <div class="kpi-card dash-square-kpi">
           <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
             <span class="kpi-icon" style="background:var(--warning-soft);color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"/><path d="M14 17l5-5-5-5"/><path d="M9 12h12"/></svg></span>
           </div>
