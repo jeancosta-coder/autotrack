@@ -366,6 +366,17 @@
     .kpi-card { background: var(--surface); border: 1px solid transparent; border-radius: 18px; padding: 14px 14px 12px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; min-height: 108px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
     [data-theme="dark"] .kpi-card { border-color: var(--border); }
     .kpi-card .kpi-spark { margin-top: auto; }
+    .dash-sales-table-wrap { display: none; }
+    .dash-sales-cards { display: block; }
+    #dash-sales-table th, #dash-sales-table td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border); }
+    #dash-sales-table th:first-child, #dash-sales-table td:first-child,
+    #dash-sales-table th:nth-child(2), #dash-sales-table td:nth-child(2) { text-align: left; }
+    #dash-sales-table thead th { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.3px; font-weight: 600; background: var(--surface-2); }
+    #dash-sales-table tr.dash-sales-total td { font-weight: 700; color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); border-bottom: none; }
+    .dash-sale-card { background: var(--surface); border-radius: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 6px 16px rgba(0,0,0,0.05); padding: 14px 16px; margin-bottom: 12px; }
+    .dash-sale-card .dsc-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 13px; }
+    .dash-sale-card .dsc-row span:first-child { color: var(--text2); }
+    .dash-sale-card .dsc-row span:last-child { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
     .kpi-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; min-height: 30px; }
     .kpi-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .kpi-icon svg { width: 16px; height: 16px; }
@@ -701,6 +712,8 @@
     @media (min-width: 900px) {
       body { background-color: var(--bg); }
       #dash-mobile-databtn { display: none !important; }
+      .dash-sales-table-wrap { display: block !important; }
+      .dash-sales-cards { display: none !important; }
       .desktop-sidebar {
         display: flex !important;
         position: fixed;
@@ -1840,63 +1853,79 @@
         Gérer les données
       </button>
     </div>
-    <!-- Sélecteur de période -->
-    <div class="seg-control" style="margin-bottom:16px;">
-      <button class="seg-btn dash-period-btn active" data-period="mois" onclick="setDashPeriod('mois')">Mois</button>
-      <button class="seg-btn dash-period-btn" data-period="trimestre" onclick="setDashPeriod('trimestre')">Trimestre</button>
-      <button class="seg-btn dash-period-btn" data-period="semestre" onclick="setDashPeriod('semestre')">Semestre</button>
+    <!-- Onglets Dashboard + sélecteur de période -->
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:16px;">
+      <div class="seg-control" style="overflow-x:auto;">
+        <button class="seg-btn dash-tab-btn active" data-tab="overview" onclick="setDashTab('overview')">Vue d'ensemble</button>
+        <button class="seg-btn dash-tab-btn" data-tab="sales" onclick="setDashTab('sales')">Tableau des ventes</button>
+      </div>
+      <button onclick="openDashPeriodMenu(this)" id="dash-period-icon-btn" title="Période" style="width:36px;height:36px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;color:var(--text);flex-shrink:0;" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='none'">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></svg>
+      </button>
     </div>
 
-    <!-- Seuil de rentabilité -->
-    <div style="margin-bottom:4px;padding:0 4px;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Seuil de rentabilité</span>
-      <span id="dash-breakeven-label" style="font-size:12px;font-weight:700;"></span>
-    </div>
-    <div style="background:var(--surface);border-radius:17px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:20px;">
-      <div id="dash-breakeven-chart"></div>
+    <!-- PANEL : Vue d'ensemble -->
+    <div id="dash-panel-overview">
+      <!-- Seuil de rentabilité -->
+      <div style="margin-bottom:4px;padding:0 4px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Seuil de rentabilité</span>
+        <span id="dash-breakeven-label" style="font-size:12px;font-weight:700;"></span>
+      </div>
+      <div style="background:var(--surface);border-radius:17px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:20px;">
+        <div id="dash-breakeven-chart"></div>
+      </div>
+
+      <!-- Marge moyenne / Temps moyen de vente -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div class="kpi-card">
+          <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
+            <span class="kpi-icon" style="background:var(--success-soft);color:var(--success);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+          </div>
+          <div class="kpi-val" style="font-size:20px;" id="dash-avg-margin">—</div>
+          <div class="kpi-label">Marge moyenne</div>
+          <div id="dash-avg-margin-spark"></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
+            <span class="kpi-icon" style="background:var(--info-soft);color:var(--info);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          </div>
+          <div class="kpi-val" style="font-size:20px;" id="dash-avg-time">—</div>
+          <div class="kpi-label">Temps moyen de vente</div>
+          <div id="dash-avg-time-spark"></div>
+        </div>
+      </div>
+
+      <!-- Total entrées / Total sorties -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+        <div class="kpi-card">
+          <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
+            <span class="kpi-icon" style="background:var(--accent-soft);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span>
+          </div>
+          <div class="kpi-val" style="font-size:20px;" id="dash-entrees-count">0</div>
+          <div class="kpi-label">Total entrées</div>
+          <div id="dash-entrees-value" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
+          <div id="dash-entrees-spark"></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
+            <span class="kpi-icon" style="background:var(--warning-soft);color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"/><path d="M14 17l5-5-5-5"/><path d="M9 12h12"/></svg></span>
+          </div>
+          <div class="kpi-val" style="font-size:20px;" id="dash-sorties-count">0</div>
+          <div class="kpi-label">Total sorties</div>
+          <div id="dash-sorties-value" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
+          <div id="dash-sorties-spark"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- Marge moyenne / Temps moyen de vente -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-      <div class="kpi-card">
-        <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
-          <span class="kpi-icon" style="background:var(--success-soft);color:var(--success);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
-        </div>
-        <div class="kpi-val" style="font-size:20px;" id="dash-avg-margin">—</div>
-        <div class="kpi-label">Marge moyenne</div>
-        <div id="dash-avg-margin-spark"></div>
+    <!-- PANEL : Tableau des ventes -->
+    <div id="dash-panel-sales" style="display:none;">
+      <div class="dash-sales-table-wrap" style="overflow-x:auto;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:16px;">
+        <table id="dash-sales-table" style="width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap;"></table>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
-          <span class="kpi-icon" style="background:var(--info-soft);color:var(--info);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
-        </div>
-        <div class="kpi-val" style="font-size:20px;" id="dash-avg-time">—</div>
-        <div class="kpi-label">Temps moyen de vente</div>
-        <div id="dash-avg-time-spark"></div>
-      </div>
+      <div id="dash-sales-cards" class="dash-sales-cards"></div>
     </div>
 
-    <!-- Total entrées / Total sorties -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
-      <div class="kpi-card">
-        <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
-          <span class="kpi-icon" style="background:var(--accent-soft);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span>
-        </div>
-        <div class="kpi-val" style="font-size:20px;" id="dash-entrees-count">0</div>
-        <div class="kpi-label">Total entrées</div>
-        <div id="dash-entrees-value" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
-        <div id="dash-entrees-spark"></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
-          <span class="kpi-icon" style="background:var(--warning-soft);color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"/><path d="M14 17l5-5-5-5"/><path d="M9 12h12"/></svg></span>
-        </div>
-        <div class="kpi-val" style="font-size:20px;" id="dash-sorties-count">0</div>
-        <div class="kpi-label">Total sorties</div>
-        <div id="dash-sorties-value" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
-        <div id="dash-sorties-spark"></div>
-      </div>
-    </div>
     <div style="height:160px;flex-shrink:0;"></div>
   </div>
 
@@ -4717,10 +4746,29 @@ function computeParcTotals(){
   };
 }
 function getDashPeriod(){ return localStorage.getItem('at_dash_period') || 'mois'; }
+const DASH_PERIOD_LABELS = {mois:'Mois', trimestre:'Trimestre', semestre:'Semestre'};
+function dashPeriodItemsHtml(){
+  const period = getDashPeriod();
+  const chk = '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg>';
+  let h = `<div style="padding:10px 14px 4px;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Période</div>`;
+  h += Object.keys(DASH_PERIOD_LABELS).map(v => `<div class="ntask-opt" onclick="setDashPeriod('${v}')"><span>${DASH_PERIOD_LABELS[v]}</span>${period===v?chk:''}</div>`).join('');
+  return h;
+}
+function openDashPeriodMenu(anchorEl){
+  openAnchoredMenu(anchorEl, dashPeriodItemsHtml());
+}
 function setDashPeriod(period){
   localStorage.setItem('at_dash_period', period);
-  document.querySelectorAll('.dash-period-btn').forEach(b => b.classList.toggle('active', b.dataset.period === period));
+  const menu = document.getElementById('anchored-menu');
+  if(menu) menu.innerHTML = dashPeriodItemsHtml();
   renderDashboard();
+}
+function setDashTab(tab){
+  document.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  const ov = document.getElementById('dash-panel-overview'); if(ov) ov.style.display = tab === 'overview' ? 'block' : 'none';
+  const sa = document.getElementById('dash-panel-sales'); if(sa) sa.style.display = tab === 'sales' ? 'block' : 'none';
+  const periodBtn = document.getElementById('dash-period-icon-btn'); if(periodBtn) periodBtn.style.display = tab === 'overview' ? 'flex' : 'none';
+  if(tab === 'sales') renderSalesTable();
 }
 function _dashBucketMonths(period){ return period === 'trimestre' ? 3 : period === 'semestre' ? 6 : 1; }
 function _dashVehicleMargin(v){ return (v.vente || 0) - (v.achat || 0) - (v.prepCost || 0); }
@@ -4799,7 +4847,6 @@ function renderBreakevenChart(buckets, chargesFixesPerMonth, bucketMonths){
 }
 function renderDashboard(){
   const period = getDashPeriod();
-  document.querySelectorAll('.dash-period-btn').forEach(b => b.classList.toggle('active', b.dataset.period === period));
   const bm = _dashBucketMonths(period);
   const buckets = dashPeriodBuckets(period, 8);
   const currentBucket = buckets[buckets.length - 1];
@@ -4835,6 +4882,97 @@ function renderDashboard(){
   Utils.el('dash-sorties-value').textContent = sortiesValue ? sortiesValue.toLocaleString('fr-FR') + ' € de CA' : '';
   const sortiesSeries = buckets.map(b => b.sold.length);
   const sSpark = document.getElementById('dash-sorties-spark'); if(sSpark) sSpark.innerHTML = sparklineSVG(sortiesSeries, 'var(--warning)');
+}
+
+function computeVehicleSaleIndicators(v){
+  const achat = v.achat || 0;
+  const sansTva = costTotal(costItemsOf(v, 'sansTva'));
+  const avecTva = costTotal(costItemsOf(v, 'avecTva'));
+  const cg = v.carteGrise || 0;
+  const vente = v.venteFinale || v.vente || 0;
+  const revient = achat + sansTva + avecTva + cg;
+  const margeBase = achat + sansTva + cg;
+  const margeTTC = vente - margeBase;
+  const margeHT = margeTTC / 1.2;
+  const tvaSurMarge = margeTTC - margeHT;
+  const pctMarge = vente ? (margeTTC / vente * 100) : 0;
+  const beneficeNetComptable = margeTTC - avecTva;
+  const tresorerie = margeTTC - tvaSurMarge;
+  const pctMargeTresorerie = vente ? (tresorerie / vente * 100) : 0;
+  return { achat, sansTva, avecTva, cg, vente, revient, margeTTC, margeHT, tvaSurMarge, pctMarge, beneficeNetComptable, tresorerie, pctMargeTresorerie };
+}
+
+function renderSalesTable(){
+  const sold = vehicles.filter(v => (v.statut === 'Livré' || v.statut === 'Vendu'))
+    .slice()
+    .sort((a, b) => (b.saleDate || '').localeCompare(a.saleDate || ''));
+  const fmt = n => Math.round(n).toLocaleString('fr-FR') + ' €';
+  const fmtPct = n => n.toFixed(1) + '%';
+  const fmtDate = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) : '—';
+
+  const table = document.getElementById('dash-sales-table');
+  const cards = document.getElementById('dash-sales-cards');
+  if(!table || !cards) return;
+
+  if(sold.length === 0){
+    table.innerHTML = '';
+    cards.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text2);font-size:14px;">Aucune vente enregistrée</div>';
+    return;
+  }
+
+  const cols = [
+    ['N° VO', v => v.numVo || '—'],
+    ['Véhicule', v => v.marque + ' ' + v.modele],
+    ["Date d'achat", v => fmtDate(v.achatDate)],
+    ['Date de vente', v => fmtDate(v.saleDate)],
+    ['Prix de revient', v => fmt(computeVehicleSaleIndicators(v).revient)],
+    ['Prix de vente', v => fmt(computeVehicleSaleIndicators(v).vente)],
+    ['Bénéf. net comptable', v => fmt(computeVehicleSaleIndicators(v).beneficeNetComptable)],
+    ['Trésorerie', v => fmt(computeVehicleSaleIndicators(v).tresorerie)],
+    ['Marge TTC', v => fmt(computeVehicleSaleIndicators(v).margeTTC)],
+    ['Marge HT', v => fmt(computeVehicleSaleIndicators(v).margeHT)],
+    ['TVA sur marge', v => fmt(computeVehicleSaleIndicators(v).tvaSurMarge)],
+    ['% marge', v => fmtPct(computeVehicleSaleIndicators(v).pctMarge)],
+    ['% marge trésorerie', v => fmtPct(computeVehicleSaleIndicators(v).pctMargeTresorerie)]
+  ];
+
+  let thead = '<thead><tr>' + cols.map(c => `<th>${c[0]}</th>`).join('') + '</tr></thead>';
+  let tbody = '<tbody>' + sold.map(v => '<tr>' + cols.map(c => `<td>${c[1](v)}</td>`).join('') + '</tr>').join('');
+
+  const totals = sold.reduce((acc, v) => {
+    const ind = computeVehicleSaleIndicators(v);
+    acc.revient += ind.revient; acc.vente += ind.vente; acc.beneficeNetComptable += ind.beneficeNetComptable;
+    acc.tresorerie += ind.tresorerie; acc.margeTTC += ind.margeTTC; acc.margeHT += ind.margeHT; acc.tvaSurMarge += ind.tvaSurMarge;
+    return acc;
+  }, {revient:0, vente:0, beneficeNetComptable:0, tresorerie:0, margeTTC:0, margeHT:0, tvaSurMarge:0});
+  const pctMargeTotal = totals.vente ? (totals.margeTTC / totals.vente * 100) : 0;
+  const pctMargeTresTotal = totals.vente ? (totals.tresorerie / totals.vente * 100) : 0;
+  tbody += `<tr class="dash-sales-total"><td colspan="4">Total (${sold.length} ventes)</td>
+    <td>${fmt(totals.revient)}</td><td>${fmt(totals.vente)}</td><td>${fmt(totals.beneficeNetComptable)}</td>
+    <td>${fmt(totals.tresorerie)}</td><td>${fmt(totals.margeTTC)}</td><td>${fmt(totals.margeHT)}</td>
+    <td>${fmt(totals.tvaSurMarge)}</td><td>${fmtPct(pctMargeTotal)}</td><td>${fmtPct(pctMargeTresTotal)}</td></tr>`;
+  tbody += '</tbody>';
+  table.innerHTML = thead + tbody;
+
+  cards.innerHTML = sold.map(v => {
+    const ind = computeVehicleSaleIndicators(v);
+    return `<div class="dash-sale-card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+        <span style="font-size:15px;font-weight:700;color:var(--text);">${v.marque} ${v.modele}</span>
+        <span style="font-size:12px;color:var(--text2);">${v.numVo ? 'N°' + v.numVo : ''}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px;">${fmtDate(v.achatDate)} → ${fmtDate(v.saleDate)}</div>
+      <div class="dsc-row"><span>Prix de revient</span><span>${fmt(ind.revient)}</span></div>
+      <div class="dsc-row"><span>Prix de vente</span><span>${fmt(ind.vente)}</span></div>
+      <div class="dsc-row"><span>Bénéf. net comptable</span><span>${fmt(ind.beneficeNetComptable)}</span></div>
+      <div class="dsc-row"><span>Trésorerie</span><span>${fmt(ind.tresorerie)}</span></div>
+      <div class="dsc-row"><span>Marge TTC</span><span>${fmt(ind.margeTTC)}</span></div>
+      <div class="dsc-row"><span>Marge HT</span><span>${fmt(ind.margeHT)}</span></div>
+      <div class="dsc-row"><span>TVA sur marge</span><span>${fmt(ind.tvaSurMarge)}</span></div>
+      <div class="dsc-row"><span>% marge</span><span>${fmtPct(ind.pctMarge)}</span></div>
+      <div class="dsc-row"><span>% marge trésorerie</span><span>${fmtPct(ind.pctMargeTresorerie)}</span></div>
+    </div>`;
+  }).join('');
 }
 
 const BOTTOM_SHEET_DATA = {
