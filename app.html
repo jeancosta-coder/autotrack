@@ -1840,54 +1840,62 @@
         Gérer les données
       </button>
     </div>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
-      <div class="kpi-card kpi-hero">
-        <div class="kpi-head">
-          <span class="kpi-icon" style="background:var(--accent-soft);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
-          <span id="dash-profit-delta"></span>
+    <!-- Sélecteur de période -->
+    <div class="seg-control" style="margin-bottom:16px;">
+      <button class="seg-btn dash-period-btn active" data-period="mois" onclick="setDashPeriod('mois')">Mois</button>
+      <button class="seg-btn dash-period-btn" data-period="trimestre" onclick="setDashPeriod('trimestre')">Trimestre</button>
+      <button class="seg-btn dash-period-btn" data-period="semestre" onclick="setDashPeriod('semestre')">Semestre</button>
+    </div>
+
+    <!-- Seuil de rentabilité -->
+    <div style="margin-bottom:4px;padding:0 4px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Seuil de rentabilité</span>
+      <span id="dash-breakeven-label" style="font-size:12px;font-weight:700;"></span>
+    </div>
+    <div style="background:var(--surface);border-radius:17px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:20px;">
+      <div id="dash-breakeven-chart"></div>
+    </div>
+
+    <!-- Marge moyenne / Temps moyen de vente -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+      <div class="kpi-card">
+        <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
+          <span class="kpi-icon" style="background:var(--success-soft);color:var(--success);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
         </div>
-        <div class="kpi-val" id="dash-profit-real">0€</div>
-        <div class="kpi-label">Profit total réalisé</div>
-        <div id="dash-profit-spark"></div>
+        <div class="kpi-val" style="font-size:20px;" id="dash-avg-margin">—</div>
+        <div class="kpi-label">Marge moyenne</div>
+        <div id="dash-avg-margin-spark"></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div class="kpi-card">
-          <div class="kpi-label" style="margin-top:0;margin-bottom:6px;">Trésorerie</div>
-          <div class="kpi-val" style="font-size:20px;" id="dash-tresorerie">0€</div>
+      <div class="kpi-card">
+        <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
+          <span class="kpi-icon" style="background:var(--info-soft);color:var(--info);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
-            <span class="kpi-label" style="margin-top:0;">CA réalisé</span>
-            <span id="dash-ca-delta"></span>
-          </div>
-          <div class="kpi-val" style="font-size:20px;" id="dash-ca">0€</div>
-          <div id="dash-ca-spark"></div>
-        </div>
+        <div class="kpi-val" style="font-size:20px;" id="dash-avg-time">—</div>
+        <div class="kpi-label">Temps moyen de vente</div>
+        <div id="dash-avg-time-spark"></div>
       </div>
     </div>
-    <div style="margin-bottom:20px;">
-      <div class="seg-control" style="margin-bottom:14px;overflow-x:auto;">
-        <button class="seg-btn chart-filter active" onclick="switchChart('ca',this)">CA</button>
-        <button class="seg-btn chart-filter" onclick="switchChart('prep-profit',this)">Prep vs Profit</button>
-        <button class="seg-btn chart-filter" onclick="switchChart('temps-vente',this)">Temps de vente</button>
+
+    <!-- Total entrées / Total sorties -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+      <div class="kpi-card">
+        <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
+          <span class="kpi-icon" style="background:var(--accent-soft);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span>
+        </div>
+        <div class="kpi-val" style="font-size:20px;" id="dash-entrees-count">0</div>
+        <div class="kpi-label">Total entrées</div>
+        <div id="dash-entrees-value" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
+        <div id="dash-entrees-spark"></div>
       </div>
-      <div style="background:var(--surface);border-radius:14px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);">
-        <canvas id="chart-canvas" style="max-height:220px;"></canvas>
+      <div class="kpi-card">
+        <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
+          <span class="kpi-icon" style="background:var(--warning-soft);color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"/><path d="M14 17l5-5-5-5"/><path d="M9 12h12"/></svg></span>
+        </div>
+        <div class="kpi-val" style="font-size:20px;" id="dash-sorties-count">0</div>
+        <div class="kpi-label">Total sorties</div>
+        <div id="dash-sorties-value" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
+        <div id="dash-sorties-spark"></div>
       </div>
-    </div>
-    <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Finances</span></div>
-    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Profit moyen / véhicule</span><span id="dash-avg-profit" style="font-size:15px;font-weight:600;color:var(--success);"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Marge moyenne</span><span id="dash-avg-margin" style="font-size:15px;font-weight:600;color:var(--success);"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Trésorerie bloquée</span><span id="dash-cash-blocked" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:var(--text2);">Chiffre d'affaires</span><span id="dash-revenue" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
-    </div>
-    <div style="margin-bottom:4px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Opérations</span></div>
-    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Rotation</span><span id="dash-rotation" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Temps moyen de vente</span><span id="dash-avg-time" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);"><span style="font-size:15px;color:var(--text2);">Coût moyen préparation</span><span id="dash-avg-prep" style="font-size:15px;font-weight:600;color:var(--text);"></span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;"><span style="font-size:15px;color:var(--text2);">Tâches urgentes</span><span id="dash-urgent-tasks" style="font-size:15px;font-weight:600;color:var(--danger);"></span></div>
     </div>
     <div style="height:160px;flex-shrink:0;"></div>
   </div>
@@ -2530,8 +2538,6 @@ let currentParcFilter = 'all';
 let currentEditTaskId = null;
 let currentEditVehicleId = null;
 let currentConfirmationVehicleId = null;
-let currentChart = null;
-let currentChartType = 'ca';
 
 const DataLayer = {
   getVehicles: () => vehicles,
@@ -4673,34 +4679,6 @@ function deleteVehicle(vehicleId){
   createDialogOrSheet('confirm-delete-vehicle-sheet', innerHtml, {desktopWidth:'480px'});
 }
 
-function switchChart(type, btn){
-  currentChartType = type;
-  document.querySelectorAll('.chart-filter').forEach(b => { b.style.cssText = ''; b.classList.remove('active'); });
-  if(btn){ btn.classList.add('active'); }
-  drawChart();
-}
-
-function drawChart(){
-  const ctx = document.getElementById('chart-canvas');
-  if(!ctx) return;
-  if(currentChart) currentChart.destroy();
-  if(currentChartType === 'ca'){
-    const soldVehicles = vehicles.filter(v => (v.statut === 'Livré' || v.statut === 'Vendu'));
-    const labels = soldVehicles.map(v => v.marque + ' ' + v.modele);
-    const data = []; let cumul = 0;
-    soldVehicles.forEach(v => { cumul += (v.vente || 0); data.push(cumul); });
-    currentChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'CA Cumulé', data, borderColor: '#0A2E6E', backgroundColor: 'rgba(45,45,45,0.1)', tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } } });
-  } else if(currentChartType === 'prep-profit'){
-    const soldVehicles = vehicles.filter(v => (v.statut === 'Livré' || v.statut === 'Vendu'));
-    currentChart = new Chart(ctx, { type: 'scatter', data: { datasets: [{ label: 'Coût prep vs Profit', data: soldVehicles.map(v => ({x: v.prepCost || 0, y: (v.vente || 0) - (v.achat || 0) - (v.prepCost || 0)})), borderColor: '#27ae60', backgroundColor: 'rgba(39,174,96,0.5)', pointRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false } });
-  } else if(currentChartType === 'temps-vente'){
-    const soldVehicles = vehicles.filter(v => (v.statut === 'Livré' || v.statut === 'Vendu'));
-    const labels = soldVehicles.map(v => v.marque + ' ' + v.modele);
-    const times = soldVehicles.map(v => { const ve = v.statusHistory ? v.statusHistory.find(h => (h.statut === 'Livré' || h.statut === 'Vendu')) : null; return Math.max(0, Math.floor((new Date(ve ? ve.date : '2000-01-01') - new Date(parseInt(v.id))) / 86400000)); });
-    currentChart = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: 'Jours de vente', data: times, backgroundColor: '#EF4444' }] }, options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', scales: { x: { beginAtZero: true } } } });
-  }
-}
-
 /* ── Helpers KPI enrichies (Phase 3) ── */
 function _moKey(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'); }
 function _soldMonth(v){ if(v.saleDate) return v.saleDate.substring(0,7); const h = v.statusHistory ? v.statusHistory.find(x => (x.statut === 'Livré' || x.statut === 'Vendu')) : null; return (h && h.date) ? h.date.substring(0,7) : null; }
@@ -4738,44 +4716,125 @@ function computeParcTotals(){
     totalVentes: sold.reduce((s, v) => s + (v.vente || 0), 0) + hist.ca
   };
 }
-function renderDashboard(){
-  const hist = loadHistorique();
-  const sold = vehicles.filter(v => (v.statut === 'Livré' || v.statut === 'Vendu'));
-  const stock = vehicles.filter(v => (v.statut !== 'Livré' && v.statut !== 'Vendu'));
-  const totalProfit = vehicles.reduce((s, v) => s + ((v.vente || 0) - (v.achat || 0) - (v.prepCost || 0)), 0) + hist.marge;
-  const avgProfit = (sold.length + hist.nbVentes) > 0 ? Math.round(totalProfit / (sold.length + hist.nbVentes)) : 0;
-  const { totalStock: cashBlocked, totalVentes: revenue } = computeParcTotals();
-  const avgMargin = revenue > 0 ? Math.round((totalProfit / revenue) * 100) : 0;
-  const rotation = stock.length > 0 ? ((sold.length + hist.nbVentes) / stock.length).toFixed(2) : 0;
-  let avgTime = '—';
-  if(sold.length > 0){
-    const times = sold.map(v => { const ve = v.statusHistory ? v.statusHistory.find(h => (h.statut === 'Livré' || h.statut === 'Vendu')) : null; return Math.max(0, Math.floor((new Date(ve ? ve.date : '2000-01-01') - new Date(parseInt(v.id))) / 86400000)); }).filter(t => t < 365);
-    if(times.length > 0) avgTime = Math.round(times.reduce((a, b) => a + b, 0) / times.length) + ' jours';
+function getDashPeriod(){ return localStorage.getItem('at_dash_period') || 'mois'; }
+function setDashPeriod(period){
+  localStorage.setItem('at_dash_period', period);
+  document.querySelectorAll('.dash-period-btn').forEach(b => b.classList.toggle('active', b.dataset.period === period));
+  renderDashboard();
+}
+function _dashBucketMonths(period){ return period === 'trimestre' ? 3 : period === 'semestre' ? 6 : 1; }
+function _dashVehicleMargin(v){ return (v.vente || 0) - (v.achat || 0) - (v.prepCost || 0); }
+function _dashSaleDays(v){
+  const ve = v.statusHistory ? v.statusHistory.find(h => (h.statut === 'Livré' || h.statut === 'Vendu')) : null;
+  return Math.max(0, Math.floor((new Date(ve ? ve.date : '2000-01-01') - new Date(parseInt(v.id))) / 86400000));
+}
+function dashPeriodBuckets(period, count){
+  const bm = _dashBucketMonths(period);
+  const now = new Date();
+  const buckets = [];
+  for(let i = count - 1; i >= 0; i--){
+    const start = new Date(now.getFullYear(), now.getMonth() - (i + 1) * bm, 1);
+    const end = new Date(now.getFullYear(), now.getMonth() - i * bm, 1);
+    buckets.push({ start, end, sold: [], entered: [] });
   }
-  const soldPrep = sold.reduce((s, v) => s + (v.prepCost || 0), 0);
-  const totalPrepCount = sold.length + hist.nbVentes;
-  const totalPrepCost = soldPrep + (hist.prep * hist.nbVentes);
-  const avgPrep = totalPrepCount > 0 ? Math.round(totalPrepCost / totalPrepCount) : 0;
-  const today = Utils.today();
-  const urgentTasks = vehicles.reduce((count, v) => count + (v.tasks ? v.tasks.filter(t => t.date <= today && !t.completed).length : 0), 0);
-  Utils.el('dash-tresorerie').textContent = cashBlocked + '€';
-  Utils.el('dash-ca').textContent = revenue + '€';
-  Utils.el('dash-profit-real').textContent = totalProfit + '€';
-  Utils.el('dash-avg-profit').textContent = avgProfit + '€';
-  Utils.el('dash-avg-margin').textContent = avgMargin + '%';
-  Utils.el('dash-cash-blocked').textContent = cashBlocked + '€';
-  Utils.el('dash-revenue').textContent = revenue + '€';
-  Utils.el('dash-rotation').textContent = rotation;
-  Utils.el('dash-avg-time').textContent = avgTime;
-  Utils.el('dash-avg-prep').textContent = avgPrep + '€';
-  Utils.el('dash-urgent-tasks').textContent = urgentTasks;
-  const _series = monthlySoldSeries(6);
-  const _last = _series[_series.length-1], _prev = _series[_series.length-2];
-  const _pd = document.getElementById('dash-profit-delta'); if(_pd) _pd.innerHTML = deltaBadgeHTML(_last.profit, _prev.profit);
-  const _ps = document.getElementById('dash-profit-spark'); if(_ps) _ps.innerHTML = sparklineSVG(_series.map(m => m.profit), 'var(--accent)');
-  const _cd = document.getElementById('dash-ca-delta'); if(_cd) _cd.innerHTML = deltaBadgeHTML(_last.ca, _prev.ca);
-  const _cs = document.getElementById('dash-ca-spark'); if(_cs) _cs.innerHTML = sparklineSVG(_series.map(m => m.ca), 'var(--text2)');
-  setTimeout(() => drawChart(), 100);
+  vehicles.forEach(v => {
+    const h = v.statusHistory ? v.statusHistory.find(x => (x.statut === 'Livré' || x.statut === 'Vendu')) : null;
+    const saleD = v.saleDate ? new Date(v.saleDate + 'T00:00:00') : (h ? new Date(h.date + 'T00:00:00') : null);
+    const buyD = v.achatDate ? new Date(v.achatDate + 'T00:00:00') : new Date(parseInt(v.id));
+    buckets.forEach(b => {
+      if(saleD && saleD >= b.start && saleD < b.end) b.sold.push(v);
+      if(buyD && buyD >= b.start && buyD < b.end) b.entered.push(v);
+    });
+  });
+  return buckets;
+}
+function renderBreakevenChart(buckets, chargesFixesPerMonth, bucketMonths){
+  const w = 100, h = 46;
+  let cumulProfit = 0, cumulCharges = 0;
+  const profitPts = [], chargePts = [];
+  let breakevenX = null;
+  buckets.forEach((b, i) => {
+    cumulProfit += b.sold.reduce((s, v) => s + _dashVehicleMargin(v), 0);
+    cumulCharges += chargesFixesPerMonth * bucketMonths;
+    const x = (i / (buckets.length - 1)) * w;
+    profitPts.push({x, y: cumulProfit});
+    chargePts.push({x, y: cumulCharges});
+    if(breakevenX === null && cumulProfit >= cumulCharges && cumulCharges > 0) breakevenX = x;
+  });
+  const allY = [...profitPts.map(p => p.y), ...chargePts.map(p => p.y), 0];
+  const maxY = Math.max(...allY), minY = Math.min(...allY);
+  const range = (maxY - minY) || 1;
+  const toY = (y) => h - 4 - ((y - minY) / range) * (h - 8);
+  const profitLine = profitPts.map(p => p.x.toFixed(1) + ',' + toY(p.y).toFixed(1)).join(' ');
+  const profitArea = `0,${h} ` + profitLine + ` ${w},${h}`;
+  const chargeLine = chargePts.map(p => p.x.toFixed(1) + ',' + toY(p.y).toFixed(1)).join(' ');
+  const lastProfit = profitPts[profitPts.length - 1];
+  const markerColor = cumulProfit >= cumulCharges ? 'var(--success)' : 'var(--danger)';
+  let breakevenMarker = '';
+  if(breakevenX !== null){
+    const idx = Math.round((breakevenX / w) * (buckets.length - 1));
+    const y = toY(chargePts[idx].y);
+    breakevenMarker = `<circle cx="${breakevenX.toFixed(1)}" cy="${y.toFixed(1)}" r="2.4" fill="var(--success)" stroke="var(--surface)" stroke-width="1"/>`;
+  }
+  const lbl = document.getElementById('dash-breakeven-label');
+  if(lbl){
+    if(breakevenX !== null){ lbl.textContent = 'Atteint'; lbl.style.color = 'var(--success)'; }
+    else { lbl.textContent = 'Pas encore atteint'; lbl.style.color = 'var(--text2)'; }
+  }
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:100%;height:120px;overflow:visible;">
+    <defs><linearGradient id="dashBreakevenFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+    </linearGradient></defs>
+    <polygon points="${profitArea}" fill="url(#dashBreakevenFill)" vector-effect="non-scaling-stroke"/>
+    <polyline points="${chargeLine}" fill="none" stroke="var(--danger)" stroke-width="1.4" stroke-dasharray="3,2" vector-effect="non-scaling-stroke" opacity="0.7"/>
+    <polyline points="${profitLine}" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+    ${breakevenMarker}
+    <circle cx="${lastProfit.x.toFixed(1)}" cy="${toY(lastProfit.y).toFixed(1)}" r="2.2" fill="${markerColor}" stroke="var(--surface)" stroke-width="1"/>
+  </svg>
+  <div style="display:flex;gap:16px;margin-top:8px;">
+    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:2px;background:var(--accent);display:inline-block;border-radius:1px;"></span>Profit cumulé</span>
+    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:2px;background:var(--danger);display:inline-block;border-radius:1px;opacity:0.7;"></span>Charges cumulées</span>
+  </div>`;
+}
+function renderDashboard(){
+  const period = getDashPeriod();
+  document.querySelectorAll('.dash-period-btn').forEach(b => b.classList.toggle('active', b.dataset.period === period));
+  const bm = _dashBucketMonths(period);
+  const buckets = dashPeriodBuckets(period, 8);
+  const currentBucket = buckets[buckets.length - 1];
+
+  // Seuil de rentabilité
+  const snap = loadFinanceSnapshot();
+  const chartEl = document.getElementById('dash-breakeven-chart');
+  if(chartEl) chartEl.innerHTML = renderBreakevenChart(buckets, snap.charges || 0, bm);
+
+  // Marge moyenne (période courante)
+  const margins = currentBucket.sold.map(_dashVehicleMargin);
+  const avgMargin = margins.length ? Math.round(margins.reduce((a, b) => a + b, 0) / margins.length) : null;
+  Utils.el('dash-avg-margin').textContent = avgMargin !== null ? avgMargin.toLocaleString('fr-FR') + ' €' : '—';
+  const marginSeries = buckets.map(b => { const m = b.sold.map(_dashVehicleMargin); return m.length ? m.reduce((a, c) => a + c, 0) / m.length : 0; });
+  const mSpark = document.getElementById('dash-avg-margin-spark'); if(mSpark) mSpark.innerHTML = sparklineSVG(marginSeries, 'var(--success)');
+
+  // Temps moyen de vente (période courante)
+  const times = currentBucket.sold.map(_dashSaleDays).filter(t => t < 365);
+  const avgTime = times.length ? Math.round(times.reduce((a, b) => a + b, 0) / times.length) : null;
+  Utils.el('dash-avg-time').textContent = avgTime !== null ? avgTime + ' j' : '—';
+  const timeSeries = buckets.map(b => { const t = b.sold.map(_dashSaleDays).filter(x => x < 365); return t.length ? t.reduce((a, c) => a + c, 0) / t.length : 0; });
+  const tSpark = document.getElementById('dash-avg-time-spark'); if(tSpark) tSpark.innerHTML = sparklineSVG(timeSeries, 'var(--info)');
+
+  // Total entrées / sorties (période courante)
+  const entreesValue = currentBucket.entered.reduce((s, v) => s + (v.achat || 0), 0);
+  Utils.el('dash-entrees-count').textContent = currentBucket.entered.length;
+  Utils.el('dash-entrees-value').textContent = entreesValue ? entreesValue.toLocaleString('fr-FR') + ' € investis' : '';
+  const entreesSeries = buckets.map(b => b.entered.length);
+  const eSpark = document.getElementById('dash-entrees-spark'); if(eSpark) eSpark.innerHTML = sparklineSVG(entreesSeries, 'var(--accent)');
+
+  const sortiesValue = currentBucket.sold.reduce((s, v) => s + (v.vente || 0), 0);
+  Utils.el('dash-sorties-count').textContent = currentBucket.sold.length;
+  Utils.el('dash-sorties-value').textContent = sortiesValue ? sortiesValue.toLocaleString('fr-FR') + ' € de CA' : '';
+  const sortiesSeries = buckets.map(b => b.sold.length);
+  const sSpark = document.getElementById('dash-sorties-spark'); if(sSpark) sSpark.innerHTML = sparklineSVG(sortiesSeries, 'var(--warning)');
 }
 
 const BOTTOM_SHEET_DATA = {
