@@ -2414,6 +2414,8 @@
   </div>
   <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px 24px 16px;">
     <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
+      <div style="padding:0 16px;"><input type="text" id="f-numvo" placeholder="N° de VO" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;box-sizing:border-box;"/></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
       <div style="padding:0 16px;"><input type="text" id="f-marque" placeholder="Marque" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;box-sizing:border-box;"/></div>
       <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
       <div style="padding:0 16px;"><input type="text" id="f-modele" placeholder="Modèle" style="width:100%;border:none;outline:none;font-size:16px;font-weight:500;color:var(--text);padding:15px 0;background:transparent;box-sizing:border-box;"/></div>
@@ -2536,7 +2538,7 @@ const DataLayer = {
       const allowed = ['statut', 'achat', 'vente', 'prepCost', 'notes', 'statusHistory', 'carteGrise', 'transport', 'commission', 'margeCible', 'sansTva', 'avecTva',
         'marque', 'modele', 'year', 'gen', 'km', 'achatDate', 'saleDate', 'carburant', 'transmission', 'couleur', 'immatriculation', 'puissance', 'saleCycle',
         'costsSansTva', 'costsAvecTva', 'venteFinale', 'venteValidee',
-        'clientNom', 'clientPrenom', 'clientTel', 'clientEmail'];
+        'clientNom', 'clientPrenom', 'clientTel', 'clientEmail', 'numVo'];
       Object.keys(updates).forEach(key => { if(allowed.includes(key)) v[key] = updates[key]; });
       save();
     }
@@ -2779,7 +2781,7 @@ function vehSelectTransmission(v){
 function openAddModal(){
   document.editingVehicleId = null;
   const _t = document.getElementById('add-vehicle-title'); if(_t) _t.textContent = 'Nouveau véhicule';
-  ['f-marque','f-modele','f-year','f-gen','f-km','f-achat-date','f-achat','f-vente','f-couleur','f-immat','f-puissance'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  ['f-numvo','f-marque','f-modele','f-year','f-gen','f-km','f-achat-date','f-achat','f-vente','f-couleur','f-immat','f-puissance'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
   document.newVehicleCarburant = ''; document.newVehicleTransmission = '';
   const _cl = document.getElementById('veh-carburant-label'); if(_cl){ _cl.textContent = '—'; _cl.style.color = 'var(--text2)'; }
   const _tl = document.getElementById('veh-transmission-label'); if(_tl){ _tl.textContent = '—'; _tl.style.color = 'var(--text2)'; }
@@ -2804,6 +2806,7 @@ function closeAddModal(){
 }
 
 function addVehicle(){
+  const numVo = document.getElementById('f-numvo').value.trim();
   const marque = document.getElementById('f-marque').value.trim();
   const modele = document.getElementById('f-modele').value.trim();
   if(!marque || !modele) { showToast('⚠️ Marque et modèle requis'); return; }
@@ -2820,7 +2823,7 @@ function addVehicle(){
   const puissance = document.getElementById('f-puissance').value || '';
   const editId = document.editingVehicleId;
   if(editId){
-    DataLayer.updateVehicle(editId, { marque, modele, year, gen, km, achatDate, achat, vente, carburant, transmission, couleur, immatriculation, puissance });
+    DataLayer.updateVehicle(editId, { numVo, marque, modele, year, gen, km, achatDate, achat, vente, carburant, transmission, couleur, immatriculation, puissance });
     document.editingVehicleId = null;
     showToast('✓ Fiche modifiée');
     closeAddModal();
@@ -2830,7 +2833,7 @@ function addVehicle(){
   }
   const today = Utils.today();
   const newVehicle = {
-    id: Date.now(), marque, modele, year, gen, km, achatDate, achat, vente, prepCost: 0, saleCycle: ['achete'],
+    id: Date.now(), numVo, marque, modele, year, gen, km, achatDate, achat, vente, prepCost: 0, saleCycle: ['achete'],
     carburant, transmission, couleur, immatriculation, puissance,
     statut:'En cours', statusHistory: [{statut: 'En cours', date: today}],
     tasks: [{id: Date.now() + 1, type: 'sav', cat: 'Contrôle technique', desc: 'CT à planifier', cost: 0, completed: false, date: null}],
@@ -2849,7 +2852,7 @@ function openEditVehicleModal(id, focusId){
   document.editingVehicleId = id;
   const t = document.getElementById('add-vehicle-title'); if(t) t.textContent = 'Modifier le véhicule';
   const set = (fid, val) => { const el = document.getElementById(fid); if(el) el.value = (val === undefined || val === null || val === '?') ? '' : val; };
-  set('f-marque', v.marque); set('f-modele', v.modele); set('f-year', v.year); set('f-gen', v.gen);
+  set('f-numvo', v.numVo); set('f-marque', v.marque); set('f-modele', v.modele); set('f-year', v.year); set('f-gen', v.gen);
   set('f-km', v.km); set('f-achat-date', v.achatDate || ''); set('f-achat', v.achat || ''); set('f-vente', v.vente || '');
   set('f-couleur', v.couleur); set('f-immat', v.immatriculation); set('f-puissance', v.puissance);
   document.newVehicleCarburant = v.carburant || '';
