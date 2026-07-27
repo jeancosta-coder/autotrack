@@ -389,49 +389,15 @@
     .kpi-hero .kpi-spark { height: 34px; }
     @media (min-width: 900px) { .kpi-hero .kpi-val { font-size: 40px; } }
     @media (max-width: 480px) {
-      .kpi-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 6px !important; }
-      .kpi-grid .kpi-card { padding: 12px 4px 10px; min-height: 92px; border-radius: 16px; align-items: center; justify-content: center; text-align: center; border: none !important; box-shadow: none !important; }
-      .kpi-grid .kpi-head { margin-bottom: 6px; min-height: 0; justify-content: center; }
-      .kpi-grid .kpi-icon { width: 22px; height: 22px; border-radius: 50%; background: transparent !important; }
-      .kpi-grid .kpi-icon svg { width: 14px; height: 14px; }
-      .kpi-grid .kpi-val { font-size: 17px; letter-spacing: -0.3px; text-align: center; margin-top: 2px; font-weight: 800; }
-      .kpi-grid .kpi-label { font-size: 9.5px; margin-top: 3px; text-align: center; line-height: 1.15; white-space: normal; overflow: visible; text-overflow: clip; font-weight: 600; opacity: 0.75; }
+      .kpi-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; }
+      .kpi-grid .kpi-card { background: var(--surface) !important; padding: 12px 4px 10px; min-height: 90px; border-radius: 16px; align-items: center; justify-content: center; text-align: center; border: 1px solid var(--border) !important; box-shadow: none !important; }
+      .kpi-grid .kpi-head { margin-bottom: 7px; min-height: 0; justify-content: center; }
+      .kpi-grid .kpi-icon { width: 26px; height: 26px; border-radius: 50%; }
+      .kpi-grid .kpi-icon svg { width: 13px; height: 13px; }
+      .kpi-grid .kpi-val { font-size: 17px; letter-spacing: -0.3px; text-align: center; margin-top: 0; font-weight: 700; color: var(--text); }
+      .kpi-grid .kpi-label { font-size: 9.5px; margin-top: 3px; text-align: center; line-height: 1.15; white-space: normal; overflow: visible; text-overflow: clip; font-weight: 500; color: var(--text2); }
       .kpi-grid .kpi-spark { display: none; }
       .kpi-grid .kpi-delta { display: none; }
-
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(1) { background: var(--warning-soft) !important; }
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(1) .kpi-val,
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(1) .kpi-label,
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(1) .kpi-icon { color: var(--warning) !important; }
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(2) { background: var(--info-soft) !important; }
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(2) .kpi-val,
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(2) .kpi-label,
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(2) .kpi-icon { color: var(--info) !important; }
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(3) { background: rgba(168,85,247,0.12) !important; }
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(3) .kpi-val,
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(3) .kpi-label,
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(3) .kpi-icon { color: #A855F7 !important; }
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(4) { background: var(--success-soft) !important; }
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(4) .kpi-val,
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(4) .kpi-label,
-      #parc-view-vehicles .kpi-grid .kpi-card:nth-child(4) .kpi-icon { color: var(--success) !important; }
-
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(1) { background: var(--danger-soft) !important; }
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(1) .kpi-val,
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(1) .kpi-label,
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(1) .kpi-icon { color: var(--danger) !important; }
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(2) { background: var(--warning-soft) !important; }
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(2) .kpi-val,
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(2) .kpi-label,
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(2) .kpi-icon { color: var(--warning) !important; }
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(3) { background: var(--info-soft) !important; }
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(3) .kpi-val,
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(3) .kpi-label,
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(3) .kpi-icon { color: var(--info) !important; }
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(4) { background: rgba(168,85,247,0.12) !important; }
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(4) .kpi-val,
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(4) .kpi-label,
-      #parc-view-tasks .kpi-grid .kpi-card:nth-child(4) .kpi-icon { color: #A855F7 !important; }
     }
     #details {
       position: fixed;
