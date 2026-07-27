@@ -2261,6 +2261,18 @@
         <input type="hidden" id="detail-marge-cible-input" value="15">
         <span id="detail-marge" style="display:none;"></span><span id="detail-marge-pct" style="display:none;"></span>
 
+        <!-- INDICATEURS TVA MARGE -->
+        <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Indicateurs TVA marge</span></div>
+        <div class="bft-card">
+          <div class="bft-row"><span class="bft-name">Marge TTC</span><span id="ind-marge-ttc" class="bft-amt">—</span><span></span><span></span></div>
+          <div class="bft-row"><span class="bft-name">Marge HT</span><span id="ind-marge-ht" class="bft-amt">—</span><span></span><span></span></div>
+          <div class="bft-row"><span class="bft-name">TVA sur marge (20%)</span><span id="ind-tva-marge" class="bft-amt">—</span><span></span><span></span></div>
+          <div class="bft-row"><span class="bft-name">% de la marge</span><span id="ind-pct-marge" class="bft-amt">—</span><span></span><span></span></div>
+          <div class="bft-row"><span class="bft-name">Bénéf. net comptable</span><span id="ind-benef-net" class="bft-amt">—</span><span></span><span></span></div>
+          <div class="bft-row bft-total"><span class="bft-name">Trésorerie</span><span id="ind-tresorerie" class="bft-amt">—</span><span></span><span></span></div>
+          <div class="bft-row"><span class="bft-name">% marge trésorerie</span><span id="ind-pct-tresorerie" class="bft-amt">—</span><span></span><span></span></div>
+        </div>
+
         <!-- FINALISER LA VENTE -->
         <div id="finalize-sale-pending">
           <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Finaliser la vente</span></div>
@@ -3411,6 +3423,25 @@ function updateMargePreview(){
   if(statVente) statVente.textContent = vente ? fmt(vente) : '—';
   const statMarge = document.getElementById('stat-marge');
   if(statMarge) statMarge.textContent = (!vente && !revient) ? '—' : fmt(marge);
+
+  // Indicateurs TVA marge (frais soumis TVA exclus de la base de marge, saisis HT)
+  const margeBase = achat + sansTva + cg;
+  const margeTTC = vente - margeBase;
+  const margeHT = margeTTC / 1.2;
+  const tvaSurMarge = margeTTC - margeHT;
+  const pctMarge = vente ? (margeTTC / vente * 100) : 0;
+  const beneficeNetComptable = margeTTC - avecTva;
+  const tresorerie = margeTTC - tvaSurMarge;
+  const pctMargeTresorerie = vente ? (tresorerie / vente * 100) : 0;
+  const hasData = !!(vente || margeBase);
+  const setInd = (id, val, isPct) => { const el = document.getElementById(id); if(el) el.textContent = hasData ? (isPct ? val.toFixed(1) + '%' : fmt(val)) : '—'; };
+  setInd('ind-marge-ttc', margeTTC);
+  setInd('ind-marge-ht', margeHT);
+  setInd('ind-tva-marge', tvaSurMarge);
+  setInd('ind-pct-marge', pctMarge, true);
+  setInd('ind-benef-net', beneficeNetComptable);
+  setInd('ind-tresorerie', tresorerie);
+  setInd('ind-pct-tresorerie', pctMargeTresorerie, true);
 }
 
 function updateStatutUI(statut){
