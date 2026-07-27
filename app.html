@@ -1921,6 +1921,7 @@
 
     <!-- PANEL : Tableau des ventes -->
     <div id="dash-panel-sales" style="display:none;">
+      <div style="margin-bottom:8px;padding:0 4px;"><span id="dash-sales-period-label" style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;"></span></div>
       <div class="dash-sales-table-wrap" style="overflow-x:auto;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:16px;">
         <table id="dash-sales-table" style="width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap;"></table>
       </div>
@@ -4758,18 +4759,27 @@ function dashPeriodItemsHtml(){
 function openDashPeriodMenu(anchorEl){
   openAnchoredMenu(anchorEl, dashPeriodItemsHtml());
 }
+let currentDashTab = 'overview';
 function setDashPeriod(period){
   localStorage.setItem('at_dash_period', period);
   const menu = document.getElementById('anchored-menu');
   if(menu) menu.innerHTML = dashPeriodItemsHtml();
-  renderDashboard();
+  if(currentDashTab === 'sales') renderSalesTable();
+  else renderDashboard();
 }
 function setDashTab(tab){
+  currentDashTab = tab;
   document.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   const ov = document.getElementById('dash-panel-overview'); if(ov) ov.style.display = tab === 'overview' ? 'block' : 'none';
   const sa = document.getElementById('dash-panel-sales'); if(sa) sa.style.display = tab === 'sales' ? 'block' : 'none';
-  const periodBtn = document.getElementById('dash-period-icon-btn'); if(periodBtn) periodBtn.style.display = tab === 'overview' ? 'flex' : 'none';
   if(tab === 'sales') renderSalesTable();
+}
+function dashPeriodRange(period){
+  const bm = _dashBucketMonths(period);
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth() - bm + 1, 1);
+  const end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  return { start, end };
 }
 function _dashBucketMonths(period){ return period === 'trimestre' ? 3 : period === 'semestre' ? 6 : 1; }
 function _dashVehicleMargin(v){ return (v.vente || 0) - (v.achat || 0) - (v.prepCost || 0); }
@@ -4904,9 +4914,15 @@ function computeVehicleSaleIndicators(v){
 }
 
 function renderSalesTable(){
-  const sold = vehicles.filter(v => (v.statut === 'Livré' || v.statut === 'Vendu'))
-    .slice()
-    .sort((a, b) => (b.saleDate || '').localeCompare(a.saleDate || ''));
+  const period = getDashPeriod();
+  const lbl = document.getElementById('dash-sales-period-label'); if(lbl) lbl.textContent = 'Période : ' + DASH_PERIOD_LABELS[period];
+  const { start, end } = dashPeriodRange(period);
+  const sold = vehicles.filter(v => {
+    if(v.statut !== 'Livré' && v.statut !== 'Vendu') return false;
+    if(!v.saleDate) return false;
+    const d = new Date(v.saleDate + 'T00:00:00');
+    return d >= start && d < end;
+  }).slice().sort((a, b) => (b.saleDate || '').localeCompare(a.saleDate || ''));
   const fmt = n => Math.round(n).toLocaleString('fr-FR') + ' €';
   const fmtPct = n => n.toFixed(1) + '%';
   const fmtDate = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) : '—';
@@ -4917,7 +4933,7 @@ function renderSalesTable(){
 
   if(sold.length === 0){
     table.innerHTML = '';
-    cards.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text2);font-size:14px;">Aucune vente enregistrée</div>';
+    cards.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--text2);font-size:14px;">Aucune vente sur cette période (${DASH_PERIOD_LABELS[period]})</div>`;
     return;
   }
 
