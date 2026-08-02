@@ -382,25 +382,29 @@
     /* Organisation */
     .org-pill { border: none; background: var(--surface-2); color: var(--text2); font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 9999px; cursor: pointer; white-space: nowrap; transition: background 0.15s ease, color 0.15s ease; flex-shrink: 0; }
     .org-pill.active { background: var(--accent); color: #fff; }
-    .org-col { background: var(--surface-2); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; min-height: 200px; }
-    .org-col-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding: 0 2px; }
-    .org-col-title { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.4px; display: flex; align-items: center; gap: 6px; }
-    .org-col-count { font-size: 11px; font-weight: 700; color: var(--text2); background: var(--surface); border-radius: 9999px; padding: 2px 8px; }
-    .org-col-add { background: none; border: none; cursor: pointer; color: var(--accent); display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 50%; }
-    .org-col-body { display: flex; flex-direction: column; gap: 8px; min-height: 60px; flex: 1; transition: background 0.15s ease; border-radius: 12px; }
+    .org-col { background: var(--surface-2); border-radius: 16px; padding: 10px; display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; }
+    .org-col-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; padding: 0 2px; flex-shrink: 0; }
+    .org-col-title { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.3px; display: flex; align-items: center; gap: 5px; }
+    .org-col-count { font-size: 10px; font-weight: 700; color: var(--text2); background: var(--surface); border-radius: 9999px; padding: 2px 7px; }
+    .org-col-add { background: none; border: none; cursor: pointer; color: var(--accent); display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 50%; flex-shrink: 0; }
+    .org-col-body { display: flex; flex-direction: column; gap: 7px; flex: 1; min-height: 0; overflow-y: auto; transition: background 0.15s ease; border-radius: 12px; -webkit-overflow-scrolling: touch; }
     .org-col-body.org-drop-hover { background: var(--accent-soft); outline: 2px dashed var(--accent); outline-offset: -2px; }
-    .org-card { background: var(--surface); border-radius: 12px; padding: 10px 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 9px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
-    .org-card-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .org-card { background: var(--surface); border-radius: 12px; padding: 9px 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 8px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; flex-shrink: 0; }
+    .org-card-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .org-card-text { flex: 1; min-width: 0; }
-    .org-card-name { font-size: 13.5px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .org-card-theme { font-size: 10.5px; font-weight: 600; margin-top: 1px; }
-    .org-card-del { background: none; border: none; color: var(--text2); opacity: 0.5; cursor: pointer; padding: 4px; display: flex; flex-shrink: 0; }
+    .org-card-name { font-size: 12.5px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .org-card-theme { font-size: 10px; font-weight: 600; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .org-card-del { background: none; border: none; color: var(--text2); opacity: 0.5; cursor: pointer; padding: 3px; display: flex; flex-shrink: 0; }
     .org-card-ghost { position: fixed; z-index: 10050; pointer-events: none; box-shadow: 0 12px 32px rgba(0,0,0,0.22); border-radius: 12px; opacity: 0.96; transform: scale(1.04); }
     @keyframes orgHop { 0% { transform: scale(0.9); opacity: 0.6; } 55% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
     .org-card.org-just-dropped { animation: orgHop 0.32s cubic-bezier(0.34,1.56,0.64,1); }
-    @media (max-width: 899px) {
-      #org-board { display: flex !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; padding-bottom: 8px; }
-      .org-col { min-width: 250px !important; flex-shrink: 0 !important; }
+    @media (max-width: 480px) {
+      .org-col { padding: 8px 6px; border-radius: 13px; }
+      .org-col-title { font-size: 9.5px; }
+      .org-card { padding: 8px; gap: 6px; }
+      .org-card-name { font-size: 11.5px; }
+      .org-card-theme { font-size: 9px; }
+      .org-card-del svg { width: 11px; height: 11px; }
     }
     .kpi-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; min-height: 30px; }
     .kpi-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -935,6 +939,19 @@
         flex: 1 !important;
         min-height: 0 !important;
       }
+      #organisation {
+        position: fixed !important;
+        top: 0 !important;
+        left: 64px !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: auto !important;
+        height: auto !important;
+        overflow: hidden;
+        background:var(--surface-2) !important;
+        z-index: 1 !important;
+      }
+      #org-board-wrap { padding: 0 20px 20px !important; }
       #planning-rail {
         display: flex !important;
         flex-direction: column;
@@ -1960,34 +1977,36 @@
   </div>
 
   <!-- VUE ORGANISATION -->
-  <div id="organisation" class="view" style="display:none;">
-    <div class="desktop-only" style="margin-bottom:20px;">
+  <div id="organisation" class="view" style="position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;background:var(--surface-2);z-index:1;">
+    <div class="desktop-only" style="padding:20px 20px 0;flex-shrink:0;">
       <h1 style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.3px;">Organisation</h1>
     </div>
 
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Prestataires</span>
-      <button onclick="openAddPrestataireRow()" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--accent);font-size:13px;font-weight:600;padding:4px 0;">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
-        Ajouter
-      </button>
+    <div style="padding:14px 14px 0;flex-shrink:0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Prestataires</span>
+        <button onclick="openAddPrestataireRow()" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--accent);font-size:13px;font-weight:600;padding:4px 0;">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+          Ajouter
+        </button>
+      </div>
+
+      <div id="org-add-prestataire-row" style="display:none;margin-bottom:10px;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:10px 12px;align-items:center;gap:8px;">
+        <input type="text" id="org-new-prestataire-input" placeholder="Nom du prestataire" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:15px;color:var(--text);" onkeydown="if(event.key==='Enter')commitAddPrestataire()">
+        <button onclick="commitAddPrestataire()" style="background:var(--accent);color:#fff;border:none;border-radius:9999px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Ajouter</button>
+        <button onclick="closeAddPrestataireRow()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px;padding:4px;">✕</button>
+      </div>
+
+      <div id="org-prestataire-pills" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;"></div>
     </div>
 
-    <div id="org-add-prestataire-row" style="display:none;margin-bottom:14px;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:10px 12px;align-items:center;gap:8px;">
-      <input type="text" id="org-new-prestataire-input" placeholder="Nom du prestataire" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:15px;color:var(--text);" onkeydown="if(event.key==='Enter')commitAddPrestataire()">
-      <button onclick="commitAddPrestataire()" style="background:var(--accent);color:#fff;border:none;border-radius:9999px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Ajouter</button>
-      <button onclick="closeAddPrestataireRow()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px;padding:4px;">✕</button>
-    </div>
-
-    <div id="org-prestataire-pills" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:20px;-webkit-overflow-scrolling:touch;scrollbar-width:none;"></div>
-
-    <div id="org-empty-state" style="display:none;text-align:center;padding:60px 20px;color:var(--text2);font-size:14px;">
+    <div id="org-empty-state" style="display:none;flex:1;align-items:center;justify-content:center;text-align:center;padding:40px 20px;color:var(--text2);font-size:14px;">
       Ajoute un prestataire (mécanicien, carrossier…) pour commencer à organiser les véhicules.
     </div>
 
-    <div id="org-board" style="display:none;grid-template-columns:repeat(3,1fr);gap:12px;"></div>
-
-    <div style="height:160px;flex-shrink:0;"></div>
+    <div id="org-board-wrap" style="flex:1;min-height:0;padding:0 14px calc(100px + env(safe-area-inset-bottom));">
+      <div id="org-board" style="display:none;grid-template-columns:repeat(3,1fr);gap:8px;height:100%;"></div>
+    </div>
   </div>
 
   <!-- MODAL Dashboard : Gérer les données (Données avant Trakoto + Suivi financier) -->
@@ -2733,11 +2752,11 @@ function renderOrganisation(){
   const board = document.getElementById('org-board');
   if(!empty || !board) return;
   if(!prestataires.length){
-    empty.style.display = 'block'; board.style.display = 'none';
+    empty.style.display = 'flex'; board.style.display = 'none';
     return;
   }
   empty.style.display = 'none';
-  board.style.display = window.innerWidth >= 900 ? 'grid' : 'flex';
+  board.style.display = 'grid';
   renderOrgBoard();
 }
 
@@ -2969,7 +2988,7 @@ function switchView(view){
   document.querySelectorAll('.view').forEach(v => { v.classList.remove('active'); v.style.display = 'none'; });
   Utils.removeActiveClass('.bottom-nav-item');
   const el = Utils.el(view);
-  if(el) { el.classList.add('active'); el.style.display = view === 'planning' ? 'flex' : 'block'; }
+  if(el) { el.classList.add('active'); el.style.display = (view === 'planning' || view === 'organisation') ? 'flex' : 'block'; }
   ['planning','parc','dashboard','organisation','compte'].forEach(v => {
     const btn = document.getElementById('nav-' + v);
     if(!btn) return;
