@@ -405,8 +405,12 @@
     @keyframes orgHop { 0% { transform: scale(0.9); opacity: 0.6; } 55% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
     .org-card.org-just-dropped { animation: orgHop 0.32s cubic-bezier(0.34,1.56,0.64,1); }
     @media (max-width: 480px) {
-      .org-col { padding: 8px 6px; border-radius: 13px; }
-      .org-col-title { font-size: 15px; }
+      .org-col { padding: 8px 5px; border-radius: 13px; }
+      .org-col-head { gap: 4px; padding: 0 1px 7px; }
+      .org-col-title { font-size: 11px; letter-spacing: 0.1px; gap: 4px; }
+      .org-col-count { font-size: 9px; padding: 1.5px 5.5px; }
+      .org-col-add { width: 20px; height: 20px; }
+      .org-col-add svg { width: 13px; height: 13px; }
       .org-card { padding: 11px 9px; gap: 8px; }
       .org-card-name { font-size: 13px; }
       .org-card-theme { font-size: 10.5px; }
@@ -2809,7 +2813,7 @@ function renderOrgBoard(){
   board.innerHTML = ORG_COLUMNS.map(col => {
     const items = entries.filter(e => e.status === col.k);
     const addBtn = col.k === 'a_mettre'
-      ? `<button class="org-col-add" onclick="openOrgAddVehicleMenu(this)" onpointerdown="this.classList.remove('org-press');void this.offsetWidth;this.classList.add('org-press')"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button>`
+      ? `<button class="org-col-add" onclick="orgAddBtnClick(this)" onpointerdown="this.classList.remove('org-press');void this.offsetWidth;this.classList.add('org-press')"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button>`
       : `<span class="org-col-add" style="visibility:hidden;"></span>`;
     const cards = items.map(e => {
       const v = vehicles.find(x => String(x.id) === String(e.vehicleId));
@@ -2842,6 +2846,9 @@ function removeOrgEntry(id){
   renderOrgBoard();
 }
 
+function orgAddBtnClick(btn){
+  setTimeout(() => openOrgAddVehicleMenu(btn), 140);
+}
 function openOrgAddVehicleMenu(anchorEl){
   document._orgMenuAnchor = anchorEl;
   const opts = vehicles.map(v => ({v: String(v.id), l: (v.marque + ' ' + v.modele).trim()}));
