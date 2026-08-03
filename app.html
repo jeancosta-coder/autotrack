@@ -384,9 +384,10 @@
     .org-pill.active { background: var(--accent); color: #fff; }
     .org-col { background: var(--surface-2); border-radius: 16px; padding: 10px; display: flex; flex-direction: column; height: 100%; min-height: 0; min-width: 0; overflow: hidden; border-right: 1px solid var(--border); }
     .org-col:last-child { border-right: none; }
-    .org-col-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; padding: 0 2px 8px; flex-shrink: 0; border-bottom: 2px solid var(--border); }
-    .org-col-title { font-size: 14px; font-weight: 800; color: var(--text); text-transform: uppercase; letter-spacing: 0.3px; display: flex; align-items: center; gap: 6px; min-width: 0; }
-    .org-col-title-text { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .org-col-head { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; padding: 0 2px 8px; flex-shrink: 0; border-bottom: 2px solid var(--border); }
+    .org-col-title-row { display: flex; align-items: center; min-width: 0; }
+    .org-col-title-text { font-size: 14px; font-weight: 800; color: var(--text); text-transform: uppercase; letter-spacing: 0.3px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .org-col-sub-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
     .org-col-count { font-size: 10px; font-weight: 700; color: var(--text2); background: var(--surface); border-radius: 9999px; padding: 2px 7px; flex-shrink: 0; }
     .org-col-add { background: none; border: none; cursor: pointer; color: var(--accent); display: flex; align-items: center; justify-content: center; width: 23px; height: 23px; box-sizing: border-box; padding: 4px; border-radius: 50%; flex-shrink: 0; transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease; }
     .org-col-add:active { transform: scale(0.78); background: var(--accent-soft); }
@@ -409,9 +410,9 @@
     .org-card.org-just-dropped { animation: orgHop 0.32s cubic-bezier(0.34,1.56,0.64,1); }
     @media (max-width: 480px) {
       .org-col { padding: 8px 5px; border-radius: 13px; }
-      .org-col-head { gap: 4px; padding: 0 1px 7px; }
-      .org-col-title { font-size: 11px; letter-spacing: 0.1px; gap: 4px; }
-      .org-col-count { font-size: 9px; padding: 1.5px 5.5px; }
+      .org-col-head { gap: 5px; padding: 0 1px 7px; }
+      .org-col-title-text { font-size: 14px; letter-spacing: 0.1px; }
+      .org-col-count { font-size: 10px; padding: 2px 6px; }
       .org-col-add { width: 20px; height: 20px; }
       .org-col-add svg { width: 13px; height: 13px; }
       .org-card { padding: 11px 9px; gap: 8px; }
@@ -965,6 +966,8 @@
         z-index: 1 !important;
       }
       #org-board-wrap { padding: 0 20px 20px !important; }
+      .org-col-head { flex-direction: row !important; align-items: center !important; justify-content: space-between !important; }
+      .org-col-sub-row { flex-shrink: 0; }
       #planning-rail {
         display: flex !important;
         flex-direction: column;
@@ -2838,8 +2841,8 @@ function renderOrgBoard(){
     }).join('');
     return `<div class="org-col">
       <div class="org-col-head">
-        <span class="org-col-title"><span class="org-col-title-text">${col.l}</span><span class="org-col-count">${items.length}</span></span>
-        ${addBtn}
+        <div class="org-col-title-row"><span class="org-col-title-text">${col.l}</span></div>
+        <div class="org-col-sub-row"><span class="org-col-count">${items.length}</span>${addBtn}</div>
       </div>
       <div class="org-col-body" data-col="${col.k}">${cards}</div>
     </div>`;
