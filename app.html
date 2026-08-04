@@ -148,6 +148,10 @@
       width: 100%;
     }
     .desktop-only { display: none; }
+    .mobile-only { display: flex; }
+    .veh-bool-toggle { display: flex; background: var(--surface-2); border-radius: 9999px; padding: 3px; gap: 2px; }
+    .veh-bool-toggle button { border: none; background: transparent; color: var(--text2); font-size: 14px; font-weight: 600; padding: 7px 16px; border-radius: 9999px; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+    .veh-bool-toggle button.active { background: var(--surface); color: var(--accent); box-shadow: var(--shadow-sm); }
     /* ── Modale tâche : pills type, panneaux inline, créneaux, barre save ── */
     .ntask-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-bottom: 16px; }
     .ntask-sep { height: 1px; background: var(--border); margin-left: 16px; }
@@ -888,6 +892,8 @@
       .sidebar-profile-name { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .sidebar-profile-sub { font-size: 11px; color: var(--text2); white-space: nowrap; }
       .desktop-only { display: block !important; }
+      .mobile-only { display: none !important; }
+      #detail-title-mobile, #detail-subtitle-mobile { display: none !important; }
       .desktop-card-actions { display: none !important; }
       .card-menu-btn { display: flex !important; }
       .desktop-parc-toolbar { display: flex !important; }
@@ -1150,7 +1156,6 @@
       #tab-inforight { display: inline-flex !important; }
       /* Contenu Infos déplacé à droite : rétablir l'aspect carte normal */
       #detail-tab-inforight .dt-notes-wrap,
-      #detail-tab-inforight .dt-cycle-wrap,
       #detail-tab-inforight .dt-infos-wrap { padding: 0 !important; margin-bottom: 16px !important; }
       #detail-tab-inforight .detail-vehicle-specs { grid-template-columns: repeat(3, 1fr) !important; }
       #detail-tab-inforight .vsg-cell { padding: 14px !important; }
@@ -1436,8 +1441,14 @@
   <style>
     /* Mobile: rendre les checkmarks bleus et ajuster le modal d'ajout de véhicule */
     @media (max-width: 899px) {
+      /* Titre véhicule déplacé sous les segments (voir bloc mobile-only dédié) */
+      #detail-title, #detail-subtitle { display: none !important; }
       /* Statut: badge+popover aussi sur mobile */
       #statut-mobile-badges { display: none !important; }
+      #statut-active-badge { font-size: 17px !important; font-weight: 700 !important; padding: 10px 18px !important; gap: 8px !important; }
+      #statut-active-badge svg { width: 15px !important; height: 15px !important; }
+      #statut-badge-dot svg { width: 16px !important; height: 16px !important; }
+      #statut-popover button { font-size: 16px !important; padding: 11px 14px !important; }
       .check svg, .check-sm svg, .statut-btn svg, .statut-btn svg polyline {
         stroke:var(--accent) !important;
       }
@@ -1967,6 +1978,15 @@
         <button id="tab-finances" class="detail-tab" onclick="switchDetailTab('finances')">Finances</button>
       </div>
     </div>
+    <div class="mobile-only" style="background:var(--surface);flex-shrink:0;padding:12px 16px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;">
+      <div style="min-width:0;flex:1;">
+        <div id="detail-title-mobile" style="font-size:19px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+        <div id="detail-subtitle-mobile" style="font-size:13px;color:var(--text2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+      </div>
+      <div style="width:64px;height:64px;border-radius:14px;background:var(--surface-2);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text2);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 0 0-2.8 0L8 17"/></svg>
+      </div>
+    </div>
     <div id="detail-tab-infos" class="detail-tab-content" style="display:flex;flex-direction:column;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
 
 
@@ -2067,66 +2087,27 @@
           </div>
         </div>
 
-        <!-- Client -->
-        <div class="dt-client-wrap">
+        <!-- Client (visible uniquement si des infos client ont été saisies via la pop-up "Réservé") -->
+        <div class="dt-client-wrap" id="dt-client-wrap" style="display:none;">
           <div style="margin-bottom:4px;padding:0 4px;">
             <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               Client
             </span>
           </div>
-          <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
-            <div style="padding:10px 16px;"><input type="text" id="detail-client-nom" placeholder="Nom" onblur="saveClientField('nom',this.value)" style="width:100%;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;"></div>
-            <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-            <div style="padding:10px 16px;"><input type="text" id="detail-client-prenom" placeholder="Prénom" onblur="saveClientField('prenom',this.value)" style="width:100%;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;"></div>
-            <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-            <div style="padding:10px 16px;display:flex;align-items:center;gap:8px;">
-              <input type="tel" id="detail-client-tel" placeholder="Téléphone" onblur="saveClientField('tel',this.value)" oninput="updateClientCallBtn()" style="flex:1;min-width:0;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;">
-              <button id="detail-client-call-btn" onclick="callClientPhone()" title="Appeler" style="display:none;width:28px;height:28px;border-radius:50%;background:var(--success-soft);border:none;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              </button>
+          <div onclick="openClientInfoModal()" style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <div style="min-width:0;">
+              <div id="detail-client-display-name" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
+              <div id="detail-client-display-contact" style="font-size:12.5px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
             </div>
-            <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-            <div style="padding:10px 16px;"><input type="email" id="detail-client-email" placeholder="Email" onblur="saveClientField('email',this.value)" style="width:100%;border:none;outline:none;font-size:14px;color:var(--text);background:transparent;padding:2px 0;"></div>
+            <button id="detail-client-call-btn" onclick="event.stopPropagation();callClientPhone()" title="Appeler" style="display:none;width:28px;height:28px;border-radius:50%;background:var(--success-soft);border:none;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </button>
           </div>
         </div>
 
         <!-- Contenu déplacé vers l'onglet Infos sur desktop (via JS) -->
         <div id="infos-movable">
-
-        <!-- Cycle de vente -->
-        <div class="dt-cycle-wrap" style="margin-bottom:16px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 4px;">
-            <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg>
-              Cycle de vente
-            </span>
-            <span id="detail-cycle-pct" style="font-size:12px;font-weight:700;color:var(--accent);"></span>
-          </div>
-          <div style="background:var(--surface);border-radius:18px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:18px 16px;">
-            <div style="height:4px;border-radius:2px;background:var(--surface-3);margin-bottom:18px;overflow:hidden;">
-              <div id="detail-cycle-bar" style="height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width 0.3s ease;"></div>
-            </div>
-            <div id="detail-cycle"></div>
-          </div>
-        </div>
-
-        <!-- Évènements -->
-        <div class="dt-events-wrap" style="margin-bottom:16px;position:relative;">
-          <div style="margin-bottom:4px;padding:0 4px;">
-            <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><circle cx="8" cy="14" r="1"/><circle cx="12" cy="14" r="1"/><circle cx="16" cy="14" r="1"/></svg>
-              Évènements
-            </span>
-          </div>
-          <div onclick="toggleEventsPopover(event)" style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:flex-start;">
-            <span id="detail-events-summary" style="font-size:14px;font-weight:600;color:var(--text);">Aucun événement</span>
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;margin-left:6px;"><polyline points="2,3 5,7 8,3"/></svg>
-          </div>
-          <div id="events-popover" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:100;background:var(--surface);border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,0.13);padding:8px 12px;max-height:280px;overflow-y:auto;">
-            <div id="detail-events-popover-content"></div>
-          </div>
-        </div>
 
         <!-- Notes -->
         <div class="dt-notes-wrap">
@@ -2421,6 +2402,11 @@
       <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Puissance</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-puissance" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:80px;"/><span style="font-size:16px;color:var(--text2);">ch</span></div></div>
     </div>
+    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Double des clés</span><div class="veh-bool-toggle" id="f-cles-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('cles','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('cles','non')">Non</button></div></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Historique d'entretien</span><div class="veh-bool-toggle" id="f-histo-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('histo','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('histo','non')">Non</button></div></div>
+    </div>
   </div>
   <div class="ntask-save-bar"><button class="ntask-save-btn" onclick="addVehicle()">Enregistrer</button></div>
 </div>
@@ -2489,7 +2475,7 @@ const DataLayer = {
       const allowed = ['statut', 'achat', 'vente', 'prepCost', 'notes', 'statusHistory', 'carteGrise', 'transport', 'commission', 'margeCible', 'sansTva', 'avecTva',
         'marque', 'modele', 'year', 'gen', 'km', 'achatDate', 'saleDate', 'carburant', 'transmission', 'couleur', 'immatriculation', 'puissance', 'saleCycle',
         'costsSansTva', 'costsAvecTva', 'venteFinale', 'venteValidee',
-        'clientNom', 'clientPrenom', 'clientTel', 'clientEmail', 'numVo'];
+        'clientNom', 'clientPrenom', 'clientTel', 'clientEmail', 'numVo', 'clesDouble', 'histoEntretien'];
       Object.keys(updates).forEach(key => { if(allowed.includes(key)) v[key] = updates[key]; });
       save();
     }
@@ -2966,6 +2952,16 @@ function vehSelectTransmission(v){
   const panel = document.getElementById('veh-transmission-panel'); if(panel) panel.innerHTML = ntaskOptList(TRANS_OPTS, v, 'vehSelectTransmission');
   ntaskToggle('veh-transmission-panel');
 }
+function vehSelectBool(field, val){
+  document['newVehicle' + (field === 'cles' ? 'Cles' : 'Histo')] = val;
+  const toggle = document.getElementById('f-' + field + '-toggle');
+  if(toggle) toggle.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.val === val));
+}
+function setVehBoolToggle(field, val){
+  const toggle = document.getElementById('f-' + field + '-toggle');
+  if(toggle) toggle.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.val === val));
+  document['newVehicle' + (field === 'cles' ? 'Cles' : 'Histo')] = val || '';
+}
 function openAddModal(){
   document.editingVehicleId = null;
   const _t = document.getElementById('add-vehicle-title'); if(_t) _t.textContent = 'Nouveau véhicule';
@@ -2975,6 +2971,7 @@ function openAddModal(){
   const _tl = document.getElementById('veh-transmission-label'); if(_tl){ _tl.textContent = '—'; _tl.style.color = 'var(--text2)'; }
   const _cp = document.getElementById('veh-carburant-panel'); if(_cp) _cp.innerHTML = ntaskOptList(FUEL_OPTS, '', 'vehSelectCarburant');
   const _tp = document.getElementById('veh-transmission-panel'); if(_tp) _tp.innerHTML = ntaskOptList(TRANS_OPTS, '', 'vehSelectTransmission');
+  setVehBoolToggle('cles', ''); setVehBoolToggle('histo', '');
   if(window.innerWidth >= 900 && !document.getElementById('add-vehicle-backdrop')){
     const bd = document.createElement('div');
     bd.id = 'add-vehicle-backdrop';
@@ -3009,9 +3006,11 @@ function addVehicle(){
   const couleur = document.getElementById('f-couleur').value.trim() || '';
   const immatriculation = document.getElementById('f-immat').value.trim() || '';
   const puissance = document.getElementById('f-puissance').value || '';
+  const clesDouble = document.newVehicleCles || '';
+  const histoEntretien = document.newVehicleHisto || '';
   const editId = document.editingVehicleId;
   if(editId){
-    DataLayer.updateVehicle(editId, { numVo, marque, modele, year, gen, km, achatDate, achat, vente, carburant, transmission, couleur, immatriculation, puissance });
+    DataLayer.updateVehicle(editId, { numVo, marque, modele, year, gen, km, achatDate, achat, vente, carburant, transmission, couleur, immatriculation, puissance, clesDouble, histoEntretien });
     document.editingVehicleId = null;
     showToast('✓ Fiche modifiée');
     closeAddModal();
@@ -3022,7 +3021,7 @@ function addVehicle(){
   const today = Utils.today();
   const newVehicle = {
     id: Date.now(), numVo, marque, modele, year, gen, km, achatDate, achat, vente, prepCost: 0, saleCycle: ['achete'],
-    carburant, transmission, couleur, immatriculation, puissance,
+    carburant, transmission, couleur, immatriculation, puissance, clesDouble, histoEntretien,
     statut:'En cours', statusHistory: [{statut: 'En cours', date: today}],
     tasks: [{id: Date.now() + 1, type: 'sav', cat: 'Contrôle technique', desc: 'CT à planifier', cost: 0, completed: false, date: null}],
     notes: ''
@@ -3051,6 +3050,7 @@ function openEditVehicleModal(id, focusId){
   const tl = document.getElementById('veh-transmission-label'); const to = TRANS_OPTS.find(x => x.v === v.transmission);
   if(tl){ tl.textContent = to ? to.l : (v.transmission || '—'); tl.style.color = v.transmission ? 'var(--text)' : 'var(--text2)'; }
   const tp = document.getElementById('veh-transmission-panel'); if(tp) tp.innerHTML = ntaskOptList(TRANS_OPTS, v.transmission || '', 'vehSelectTransmission');
+  setVehBoolToggle('cles', v.clesDouble || ''); setVehBoolToggle('histo', v.histoEntretien || '');
   if(focusId){
     setTimeout(() => {
       if(focusId === 'veh-carburant' || focusId === 'veh-transmission'){
@@ -3251,6 +3251,8 @@ function refreshDetailHeaderAndSpecs(v){
   document.getElementById('detail-subtitle').textContent = v.year + (v.gen ? ' · ' + v.gen : '') + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
   const dtD = document.getElementById('detail-title-desktop'); if(dtD) dtD.textContent = title;
   const dsD = document.getElementById('detail-subtitle-desktop'); if(dsD) dsD.textContent = v.year + (v.gen ? ' · ' + v.gen : '') + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
+  const dtM = document.getElementById('detail-title-mobile'); if(dtM) dtM.textContent = title;
+  const dsM = document.getElementById('detail-subtitle-mobile'); if(dsM) dsM.textContent = v.year + (v.gen ? ' · ' + v.gen : '') + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
   const _nv = document.getElementById('detail-numvo'); if(_nv) _nv.textContent = v.numVo || '—';
   document.getElementById('detail-marque').textContent = v.marque;
   document.getElementById('detail-modele').textContent = v.modele;
@@ -3265,29 +3267,77 @@ function refreshDetailHeaderAndSpecs(v){
   const _dcl = document.getElementById('detail-couleur'); if(_dcl) _dcl.textContent = v.couleur || '—';
   const _dim = document.getElementById('detail-immat'); if(_dim) _dim.textContent = v.immatriculation || '—';
   const _dp = document.getElementById('detail-puissance'); if(_dp) _dp.textContent = v.puissance ? v.puissance + ' ch' : '—';
-  const _cn = document.getElementById('detail-client-nom'); if(_cn) _cn.value = v.clientNom || '';
-  const _cp = document.getElementById('detail-client-prenom'); if(_cp) _cp.value = v.clientPrenom || '';
-  const _ct = document.getElementById('detail-client-tel'); if(_ct) _ct.value = v.clientTel || '';
-  const _ce = document.getElementById('detail-client-email'); if(_ce) _ce.value = v.clientEmail || '';
-  updateClientCallBtn();
+  renderClientDisplay(v);
 }
 const CLIENT_FIELD_MAP = { nom:'clientNom', prenom:'clientPrenom', tel:'clientTel', email:'clientEmail' };
+function hasClientInfo(v){ return !!(v && (v.clientNom || v.clientPrenom || v.clientTel || v.clientEmail)); }
+function renderClientDisplay(v){
+  const wrap = document.getElementById('dt-client-wrap');
+  if(!wrap) return;
+  if(!hasClientInfo(v)){ wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  const nameEl = document.getElementById('detail-client-display-name');
+  if(nameEl) nameEl.textContent = (v.clientNom || v.clientPrenom) ? [v.clientPrenom, v.clientNom].filter(Boolean).join(' ') : '—';
+  const contactEl = document.getElementById('detail-client-display-contact');
+  if(contactEl) contactEl.textContent = [v.clientTel, v.clientEmail].filter(Boolean).join(' · ');
+  const btn = document.getElementById('detail-client-call-btn');
+  if(btn) btn.style.display = v.clientTel ? 'flex' : 'none';
+}
 function saveClientField(field, val){
   if(!DataLayer.getVehicleById(currentDetailVehicleId)) return;
   DataLayer.updateVehicle(currentDetailVehicleId, {[CLIENT_FIELD_MAP[field]]: val.trim()});
-  showToast('✓ Client enregistré');
-}
-function updateClientCallBtn(){
-  const input = document.getElementById('detail-client-tel');
-  const btn = document.getElementById('detail-client-call-btn');
-  if(!input || !btn) return;
-  btn.style.display = input.value.trim() ? 'flex' : 'none';
 }
 function callClientPhone(){
-  const input = document.getElementById('detail-client-tel');
-  const val = (input?.value || '').trim();
+  const v = DataLayer.getVehicleById(currentDetailVehicleId);
+  const val = (v?.clientTel || '').trim();
   if(!val) return;
   window.location.href = 'tel:' + val.replace(/[^0-9+]/g, '');
+}
+function openClientInfoModal(){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
+    <span style="font-size:17px;font-weight:600;color:var(--text);">Informations client</span>
+    <button onclick="closeClientInfoModal()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button>
+  </div>
+  <div style="padding:20px;">
+    <div style="background:var(--surface-2);border-radius:17px;overflow:hidden;margin-bottom:20px;">
+      <div style="padding:10px 16px;"><input type="text" id="ci-nom" placeholder="Nom" value="${v.clientNom || ''}" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:4px 0;"></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="padding:10px 16px;"><input type="text" id="ci-prenom" placeholder="Prénom" value="${v.clientPrenom || ''}" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:4px 0;"></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="padding:10px 16px;"><input type="tel" id="ci-tel" placeholder="Téléphone" value="${v.clientTel || ''}" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:4px 0;"></div>
+      <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
+      <div style="padding:10px 16px;"><input type="email" id="ci-email" placeholder="Email" value="${v.clientEmail || ''}" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:4px 0;"></div>
+    </div>
+    <button onclick="saveClientInfoModal()" class="ntask-save-btn" style="width:100%;">Enregistrer</button>
+    ${document._pendingStatutAfterClient ? `<button onclick="skipClientInfoModal()" style="width:100%;margin-top:10px;padding:12px;background:none;color:var(--text2);border:none;font-size:14px;font-weight:500;cursor:pointer;">Passer sans renseigner le client</button>` : ''}
+  </div>`;
+  createDialogOrSheet('client-info-modal', innerHtml, {desktopWidth:'420px'});
+  setTimeout(() => document.getElementById('ci-nom')?.focus(), 200);
+}
+function closeClientInfoModal(){
+  document.getElementById('client-info-modal')?.remove();
+  document._pendingStatutAfterClient = null;
+}
+function skipClientInfoModal(){
+  document.getElementById('client-info-modal')?.remove();
+  const pending = document._pendingStatutAfterClient;
+  if(pending){ document._pendingStatutAfterClient = null; applyStatutChange(pending); }
+}
+function saveClientInfoModal(){
+  if(!DataLayer.getVehicleById(currentDetailVehicleId)) return;
+  const val = (id) => document.getElementById(id)?.value.trim() || '';
+  DataLayer.updateVehicle(currentDetailVehicleId, {
+    clientNom: val('ci-nom'), clientPrenom: val('ci-prenom'), clientTel: val('ci-tel'), clientEmail: val('ci-email')
+  });
+  closeClientInfoModal();
+  renderClientDisplay(DataLayer.getVehicleById(currentDetailVehicleId));
+  const pending = document._pendingStatutAfterClient;
+  if(pending){
+    document._pendingStatutAfterClient = null;
+    applyStatutChange(pending);
+  }
+  showToast('✓ Client enregistré');
 }
 const VSG_FIELD_TYPES = { year:'number', km:'number', achat:'number', puissance:'number' };
 function editVsgField(cell, field){
@@ -3343,6 +3393,7 @@ function saveVsgTransmission(val){
 }
 function openVehicleDetails(id){
   currentDetailVehicleId = id;
+  document._pendingStatutAfterClient = null;
   const v = vehicles.find(x => x.id === id);
   if(!v) return;
   refreshDetailHeaderAndSpecs(v);
@@ -3359,8 +3410,6 @@ function openVehicleDetails(id){
   const _ade = document.getElementById('detail-achat-date-edit'); if(_ade) _ade.value = v.achatDate || '';
   const _sde = document.getElementById('detail-sale-date-edit'); if(_sde) _sde.value = v.saleDate || '';
   document.getElementById('detail-notes').value = v.notes || '';
-  renderSaleCycle(v);
-  renderEventsWidget(v.id);
   renderFinanceValidationState(v);
   relayoutDetailInfos();
   updateMargePreview();
@@ -3557,6 +3606,16 @@ function confirmDeleteCurrentVehicle(){
 
 function changeStatut(newStatut){
   const v = DataLayer.getVehicleById(currentDetailVehicleId);
+  if(!v) return;
+  if(newStatut === 'Réservé'){
+    document._pendingStatutAfterClient = newStatut;
+    openClientInfoModal();
+    return;
+  }
+  applyStatutChange(newStatut);
+}
+function applyStatutChange(newStatut){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId);
   if(v){
     const today = Utils.today();
     const updates = { statut: newStatut, statusHistory: v.statusHistory || [] };
@@ -3628,48 +3687,6 @@ function initDetailSwipe(){
   }, {passive: true});
 }
 
-function buildEventsListHtml(events){
-  if(events.length === 0) return '<div style="text-align:center;padding:24px 16px;color:var(--text2);font-size:14px;">Aucun événement lié à ce véhicule</div>';
-  const grouped = {};
-  events.forEach(t => { const key = t.date ? t.date.substring(0,7) : 'Sans date'; if(!grouped[key]) grouped[key] = []; grouped[key].push(t); });
-  let html = '';
-  Object.keys(grouped).sort().reverse().forEach(monthKey => {
-    const monthLabel = monthKey === 'Sans date' ? 'Sans date' : (() => { const [y, m] = monthKey.split('-'); return new Date(parseInt(y), parseInt(m)-1, 1).toLocaleDateString('fr-FR', {month:'long', year:'numeric'}); })();
-    html += '<div style="margin-bottom:4px;padding:6px 4px 0;"><span style="font-size:11px;font-weight:600;color:var(--text2);text-transform:capitalize;">' + monthLabel + '</span></div>';
-    grouped[monthKey].forEach((t, idx) => {
-      const color = EVENT_COLORS[t.type] || '#8e8e93';
-      const label = EVENT_LABELS[t.type] || t.type;
-      const dateStr = t.date ? new Date(t.date + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) : '';
-      html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;">';
-      html += '<div style="width:8px;height:8px;border-radius:50%;background:' + color + ';flex-shrink:0;"></div>';
-      html += '<div style="flex:1;min-width:0;"><div style="font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + t.description + '</div>';
-      html += '<div style="font-size:11.5px;color:var(--text2);margin-top:1px;">' + label + (dateStr ? ' · ' + dateStr : '') + '</div></div></div>';
-    });
-  });
-  return html;
-}
-function renderEventsWidget(vehicleId){
-  const summaryEl = document.getElementById('detail-events-summary');
-  if(!summaryEl) return;
-  const events = planning.filter(t => t.vehicleId == vehicleId).sort((a,b) => (b.date || '').localeCompare(a.date || ''));
-  summaryEl.textContent = events.length === 0 ? 'Aucun événement' : events.length + ' événement' + (events.length > 1 ? 's' : '');
-  const contentEl = document.getElementById('detail-events-popover-content');
-  if(contentEl) contentEl.innerHTML = buildEventsListHtml(events);
-}
-function toggleEventsPopover(e){
-  e.stopPropagation();
-  const pop = document.getElementById('events-popover');
-  if(!pop) return;
-  const isOpen = pop.style.display !== 'none';
-  pop.style.display = isOpen ? 'none' : 'block';
-  if(!isOpen) setTimeout(() => document.addEventListener('click', closeEventsPopover, {once:true}), 0);
-}
-function closeEventsPopover(){
-  const pop = document.getElementById('events-popover');
-  if(pop) pop.style.display = 'none';
-}
-
-
 function saveVehicleNotes(){
   const v = vehicles.find(x => x.id === currentDetailVehicleId);
   if(v) { v.notes = document.getElementById('detail-notes').value; save(); showToast('✓ Notes enregistrées'); }
@@ -3687,29 +3704,6 @@ function savePrices(){
   updateMargePreview();
 }
 
-const SALE_CYCLE_STEPS = [
-  {k:'achete', l:'Acheté'},
-  {k:'enlivraison', l:'En livraison'},
-  {k:'stock', l:'En stock'},
-  {k:'prep', l:'En préparation'},
-  {k:'visite', l:'Visite planifiée'},
-  {k:'offre', l:'Offre faite'},
-  {k:'acompte', l:'Acompte versé'},
-  {k:'dossier', l:'Dossier en cours'},
-  {k:'livraison', l:'Livraison planifiée'},
-  {k:'livre', l:'Livré'}
-];
-const SALE_CYCLE_DEFAULT = ['achete'];
-function saleCycleMenuItemsHtml(v){
-  const done = Array.isArray(v.saleCycle) ? v.saleCycle : SALE_CYCLE_DEFAULT;
-  return SALE_CYCLE_STEPS.map(s => {
-    const checked = done.includes(s.k);
-    const box = checked
-      ? `<div style="width:18px;height:18px;border-radius:5px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg></div>`
-      : `<div style="width:18px;height:18px;border-radius:5px;border:2px solid var(--border);flex-shrink:0;box-sizing:border-box;"></div>`;
-    return `<div onclick="event.stopPropagation();toggleSaleCycleStep('${s.k}')" style="display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;font-size:14px;font-weight:${checked ? '600' : '400'};color:${checked ? 'var(--text)' : 'var(--text2)'};white-space:nowrap;">${box}<span>${s.l}</span></div>`;
-  }).join('');
-}
 function renderFinanceValidationState(v){
   const pending = document.getElementById('finalize-sale-pending');
   const done = document.getElementById('finalize-sale-done');
@@ -3723,42 +3717,6 @@ function renderFinanceValidationState(v){
     const dateLbl = document.getElementById('finalize-sale-done-date');
     if(dateLbl) dateLbl.textContent = v.saleDate ? 'le ' + new Date(v.saleDate + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '';
   }
-}
-function renderSaleCycle(v){
-  const el = document.getElementById('detail-cycle'); if(!el) return;
-  const done = Array.isArray(v.saleCycle) ? v.saleCycle : SALE_CYCLE_DEFAULT;
-  const pct = Math.round((done.length / SALE_CYCLE_STEPS.length) * 100);
-  const complete = done.length === SALE_CYCLE_STEPS.length;
-  const bar = document.getElementById('detail-cycle-bar');
-  if(bar){ bar.style.width = pct + '%'; bar.style.background = complete ? 'var(--success)' : 'var(--accent)'; }
-  const pctLbl = document.getElementById('detail-cycle-pct');
-  if(pctLbl){
-    pctLbl.innerHTML = complete
-      ? `<span style="display:inline-flex;align-items:center;gap:4px;color:var(--success);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Terminé</span>`
-      : pct + '%';
-  }
-  const lastDoneIdx = [...SALE_CYCLE_STEPS].reverse().findIndex(s => done.includes(s.k));
-  const currentLabel = lastDoneIdx === -1 ? 'Aucune étape' : SALE_CYCLE_STEPS[SALE_CYCLE_STEPS.length - 1 - lastDoneIdx].l;
-  el.innerHTML = `<div onclick="openSaleCycleMenu(this)" style="display:flex;align-items:center;gap:8px;padding:4px 2px;cursor:pointer;width:fit-content;">
-    <span style="font-size:14px;font-weight:600;color:${complete ? 'var(--success)' : 'var(--text)'};">${currentLabel}</span>
-    <span style="font-size:12px;color:var(--text2);">${done.length}/${SALE_CYCLE_STEPS.length}</span>
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;"><polyline points="2,3 5,7 8,3"/></svg>
-  </div>`;
-}
-function openSaleCycleMenu(anchorEl){
-  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
-  openAnchoredMenu(anchorEl, saleCycleMenuItemsHtml(v));
-}
-function toggleSaleCycleStep(k){
-  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
-  const done = Array.isArray(v.saleCycle) ? [...v.saleCycle] : [...SALE_CYCLE_DEFAULT];
-  const idx = done.indexOf(k);
-  if(idx === -1) done.push(k); else done.splice(idx, 1);
-  DataLayer.updateVehicle(currentDetailVehicleId, {saleCycle: done});
-  const nv = DataLayer.getVehicleById(currentDetailVehicleId);
-  renderSaleCycle(nv);
-  const menu = document.getElementById('anchored-menu');
-  if(menu) menu.innerHTML = saleCycleMenuItemsHtml(nv);
 }
 function saveVehicleDateInline(kind, val){
   if(!DataLayer.getVehicleById(currentDetailVehicleId)) return;
