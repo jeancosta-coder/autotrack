@@ -2146,6 +2146,9 @@
             <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'couleur')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="10" cy="19" r="2.5"/></svg></div><div class="vsg-text"><div class="vsg-label">Couleur</div><div class="vsg-value" id="detail-couleur"></div></div></div>
             <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'immatriculation')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M7 11h.01M7 13h.01M12 11h4M12 13h4"/></svg></div><div class="vsg-text"><div class="vsg-label">Immatriculation</div><div class="vsg-value" id="detail-immat"></div></div></div>
             <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'puissance')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg></div><div class="vsg-text"><div class="vsg-label">Puissance</div><div class="vsg-value" id="detail-puissance"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'gen')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg></div><div class="vsg-text"><div class="vsg-label">Génération</div><div class="vsg-value" id="detail-gen"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openVsgBoolMenu(this,'clesDouble','detail-cles')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.5 12.5L21 2M18 5l3 3M15 8l2 2"/></svg></div><div class="vsg-text"><div class="vsg-label">Double des clés</div><div class="vsg-value" id="detail-cles"></div></div></div>
+            <div class="vsg-cell" style="cursor:pointer;" onclick="openVsgBoolMenu(this,'histoEntretien','detail-histo')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg></div><div class="vsg-text"><div class="vsg-label">Historique d'entretien</div><div class="vsg-value" id="detail-histo"></div></div></div>
           </div>
         </div>
 
@@ -3266,6 +3269,9 @@ function refreshDetailHeaderAndSpecs(v){
   const _dcl = document.getElementById('detail-couleur'); if(_dcl) _dcl.textContent = v.couleur || '—';
   const _dim = document.getElementById('detail-immat'); if(_dim) _dim.textContent = v.immatriculation || '—';
   const _dp = document.getElementById('detail-puissance'); if(_dp) _dp.textContent = v.puissance ? v.puissance + ' ch' : '—';
+  const _dg = document.getElementById('detail-gen'); if(_dg) _dg.textContent = (v.gen && v.gen !== '?') ? v.gen : '—';
+  const _dcles = document.getElementById('detail-cles'); if(_dcles) _dcles.textContent = v.clesDouble === 'oui' ? 'Oui' : v.clesDouble === 'non' ? 'Non' : '—';
+  const _dhisto = document.getElementById('detail-histo'); if(_dhisto) _dhisto.textContent = v.histoEntretien === 'oui' ? 'Oui' : v.histoEntretien === 'non' ? 'Non' : '—';
   renderClientDisplay(v);
 }
 const CLIENT_FIELD_MAP = { nom:'clientNom', prenom:'clientPrenom', tel:'clientTel', email:'clientEmail' };
@@ -3368,6 +3374,19 @@ function editVsgField(cell, field){
   };
   valueEl.replaceWith(input);
   input.focus(); input.select();
+}
+const BOOL_OPTS = [{v:'oui',l:'Oui'},{v:'non',l:'Non'}];
+function openVsgBoolMenu(cell, field){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  document._vsgBoolField = field;
+  openAnchoredMenu(cell, ntaskOptList(BOOL_OPTS, v[field] || '', 'saveVsgBool'));
+}
+function saveVsgBool(val){
+  const field = document._vsgBoolField; if(!field) return;
+  DataLayer.updateVehicle(currentDetailVehicleId, {[field]: val});
+  refreshDetailHeaderAndSpecs(DataLayer.getVehicleById(currentDetailVehicleId));
+  closeAnchoredMenu();
+  showToast('✓ Enregistré');
 }
 function openVsgCarburantMenu(cell){
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
