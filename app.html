@@ -3268,6 +3268,7 @@ function handleCardTap(e, id){
 function filterParc(status, btn){
   currentParcFilter = status;
   if(status !== 'search'){
+    if(navigator.vibrate) navigator.vibrate(8);
     document.querySelectorAll('.parc-filter').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
   }
