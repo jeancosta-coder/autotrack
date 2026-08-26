@@ -912,7 +912,8 @@
       .app-container { display: grid; gap: 32px; }
       .bottom-nav,
       #fab-planning,
-      #fab-parc {
+      #fab-parc,
+      #fab-organisation {
         display: none !important;
       }
       #parc-grid {
@@ -1854,8 +1855,13 @@
 
   <!-- VUE ORGANISATION -->
   <div id="organisation" class="view" style="position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;background:var(--surface-2);z-index:1;">
-    <div class="desktop-only" style="padding:20px 20px 0;flex-shrink:0;">
-      <h1 style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.3px;">Organisation</h1>
+    <div class="desktop-view-header desktop-only">
+      <div>
+        <h1>Organisation</h1>
+      </div>
+      <div class="desktop-header-actions">
+        <button class="desktop-card-btn" type="button" onclick="orgFabClick(this)">Ajouter un véhicule</button>
+      </div>
     </div>
 
     <div style="padding:14px 14px 0;flex-shrink:0;">
