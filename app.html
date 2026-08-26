@@ -1855,21 +1855,19 @@
 
   <!-- VUE ORGANISATION -->
   <div id="organisation" class="view" style="position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;background:var(--surface-2);z-index:1;">
-    <div class="desktop-only" style="padding:20px 20px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:12px;">
-      <h1 style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.3px;">Organisation</h1>
-      <button type="button" class="btn-primary-pill" onclick="orgFabClick(this)" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
-        <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Ajouter un véhicule</span>
-      </button>
-    </div>
-
     <div style="padding:14px 14px 0;flex-shrink:0;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;">
         <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Prestataires</span>
-        <button class="org-add-prestataire-btn" onclick="orgAddPrestataireBtnClick(this)" onpointerdown="this.classList.remove('org-press');void this.offsetWidth;this.classList.add('org-press')" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--accent);font-size:13px;font-weight:600;padding:6px 10px;border-radius:9999px;">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
-          Ajouter
-        </button>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button type="button" class="desktop-only btn-primary-pill" onclick="orgFabClick(this)" style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
+            <span style="font-size:13px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Ajouter un véhicule</span>
+          </button>
+          <button class="org-add-prestataire-btn" onclick="orgAddPrestataireBtnClick(this)" onpointerdown="this.classList.remove('org-press');void this.offsetWidth;this.classList.add('org-press')" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--accent);font-size:13px;font-weight:600;padding:6px 10px;border-radius:9999px;">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+            Prestataire
+          </button>
+        </div>
       </div>
 
       <div id="org-add-prestataire-row" style="display:none;margin-bottom:10px;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:10px 12px;align-items:center;gap:8px;">
