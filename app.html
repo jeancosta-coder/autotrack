@@ -1260,21 +1260,15 @@
         overflow: hidden !important;
       }
       #modal-add-vehicle {
-        width: min(960px, calc(100vw - 200px)) !important;
+        width: min(820px, calc(100vw - 200px)) !important;
         max-height: calc(100vh - 80px) !important;
       }
-      #add-veh-stepper, #add-veh-stepper-label-wrap, #add-veh-back-btn, #add-veh-next-btn { display: none !important; }
-      #add-veh-save-btn { display: block !important; }
-      #add-veh-body {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 0 24px !important;
-        align-content: start !important;
+      #add-veh-step-1.add-veh-cols, #add-veh-step-3.add-veh-cols {
+        grid-template-columns: 1fr 1fr;
+        gap: 0 20px;
+        align-items: start;
       }
-      #add-veh-step-1, #add-veh-step-2, #add-veh-step-3 { display: block !important; }
-      #add-veh-step-1 { grid-column: 1 !important; grid-row: 1 / 3 !important; }
-      #add-veh-step-2 { grid-column: 2 !important; grid-row: 1 !important; }
-      #add-veh-step-3 { grid-column: 2 !important; grid-row: 2 !important; }
+      #add-veh-step-1.add-veh-cols > :first-child { grid-column: 1 / 3; }
       #modal-add-vehicle > *,
       #new-task-modal > *,
       #simple-task-modal > *,
@@ -2416,7 +2410,7 @@
   <div id="add-veh-body" style="flex:1;overflow-y:auto;background:var(--surface-2);padding:16px 16px 24px 16px;">
 
     <!-- ÉTAPE 1 : Identité -->
-    <div id="add-veh-step-1">
+    <div id="add-veh-step-1" class="add-veh-cols">
       <input type="file" id="f-photo-input" accept="image/*" style="display:none;" onchange="onVehPhotoSelected(event)"/>
       <div onclick="document.getElementById('f-photo-input').click()" style="cursor:pointer;width:100%;height:160px;border-radius:17px;background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:24px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
         <div id="f-photo-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text2);">
@@ -2456,7 +2450,7 @@
     </div>
 
     <!-- ÉTAPE 3 : Détails -->
-    <div id="add-veh-step-3" style="display:none;">
+    <div id="add-veh-step-3" class="add-veh-cols" style="display:none;">
       <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:visible;margin-bottom:24px;">
         <div class="ntask-field">
           <div class="ntask-row" onclick="vehToggleDropdown('carburant')">
@@ -3053,9 +3047,10 @@ const ADD_VEH_STEP_LABELS = ['Étape 1/3 · Identité', 'Étape 2/3 · Achat & n
 let currentAddVehStep = 1;
 function addVehModalGoToStep(n){
   currentAddVehStep = n;
+  const isDesktop = window.innerWidth >= 900;
   [1,2,3].forEach(i => {
     const panel = document.getElementById('add-veh-step-' + i);
-    if(panel) panel.style.display = i === n ? 'block' : 'none';
+    if(panel) panel.style.display = i !== n ? 'none' : (isDesktop && panel.classList.contains('add-veh-cols') ? 'grid' : 'block');
     const dot = document.getElementById('add-veh-dot-' + i);
     if(dot){ dot.classList.toggle('active', i === n); dot.classList.toggle('done', i < n); }
   });
