@@ -485,6 +485,11 @@
       display: flex;
       flex-direction: column;
     }
+    @media (max-width: 768px) {
+      .vehicle-card-swipeable { transition: transform 0.15s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.15s ease; }
+      .vehicle-card-swipeable:active { transform: scale(0.96) !important; }
+      #fab-parc:active, #fab-organisation:active, #fab-planning:active { transform: scale(0.88) !important; }
+    }
     .vehicle-card:hover {
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       border-color:var(--text);
@@ -1564,7 +1569,7 @@
     } catch(e) {}
   </script>
 </head>
-<body>
+<body ontouchstart="">
 <div id="auth-loader" style="position:fixed;inset:0;background:var(--bg);z-index:99998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity 0.35s ease;">
   <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
     <div style="width:56px;height:56px;background:var(--navy);border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 32px rgba(0,0,0,0.18);">
