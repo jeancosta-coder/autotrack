@@ -1883,6 +1883,10 @@
     <div id="org-board-wrap" style="flex:1;min-height:0;padding:0 14px calc(100px + env(safe-area-inset-bottom));">
       <div id="org-board" style="display:none;grid-template-columns:repeat(3,1fr);gap:8px;height:100%;"></div>
     </div>
+
+    <button id="fab-organisation" onclick="orgFabClick(this)" style="position:fixed;bottom:130px;right:20px;width:62px;height:62px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.14);cursor:pointer;z-index:100;transition:transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--text)" stroke-width="1.6" stroke-linecap="round"><line x1="9" y1="2" x2="9" y2="16"/><line x1="2" y1="9" x2="16" y2="9"/></svg>
+    </button>
   </div>
 
   <!-- MODAL Dashboard : Gérer les données (Données avant Trakoto + Suivi financier) -->
@@ -2605,9 +2609,7 @@ function renderOrgBoard(){
   const entries = orgEntries.filter(e => e.prestataireId === currentOrgPrestataireId);
   board.innerHTML = ORG_COLUMNS.map(col => {
     const items = entries.filter(e => e.status === col.k);
-    const addBtn = col.k === 'a_mettre'
-      ? `<button class="org-col-add" onclick="orgAddBtnClick(this)" onpointerdown="this.classList.remove('org-press');void this.offsetWidth;this.classList.add('org-press')"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button>`
-      : `<span class="org-col-add" style="visibility:hidden;"></span>`;
+    const addBtn = `<span class="org-col-add" style="visibility:hidden;"></span>`;
     const cards = items.map(e => {
       const v = vehicles.find(x => String(x.id) === String(e.vehicleId));
       const name = v ? (v.marque + ' ' + v.modele) : 'Véhicule supprimé';
@@ -2641,6 +2643,10 @@ function removeOrgEntry(id){
 
 function orgAddBtnClick(btn){
   setTimeout(() => openOrgAddVehicleMenu(btn), 140);
+}
+function orgFabClick(btn){
+  if(!prestataires.length){ showToast('Ajoute d\'abord un prestataire'); openAddPrestataireRow(); return; }
+  openOrgAddVehicleMenu(btn);
 }
 function openOrgAddVehicleMenu(anchorEl){
   document._orgMenuAnchor = anchorEl;
@@ -2693,6 +2699,7 @@ function commitOrgNote(){
 let _orgDrag = null;
 let _orgJustMovedId = null;
 function startOrgDrag(e, cardEl){
+  if(e.target.closest('.org-card-del')) return;
   e.preventDefault();
   const entryId = cardEl.dataset.entryId;
   const rect = cardEl.getBoundingClientRect();
