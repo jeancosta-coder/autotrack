@@ -1259,6 +1259,15 @@
         justify-content: unset !important;
         overflow: hidden !important;
       }
+      #modal-add-vehicle {
+        width: min(600px, calc(100vw - 260px)) !important;
+        min-height: min(640px, calc(100vh - 160px)) !important;
+      }
+      #modal-add-vehicle > div[style*="overflow-y:auto"] {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+      }
       #modal-add-vehicle > *,
       #new-task-modal > *,
       #simple-task-modal > *,
