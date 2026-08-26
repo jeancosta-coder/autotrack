@@ -3255,8 +3255,8 @@ function filterParc(status, btn){
 }
 
 function refreshDetailHeaderAndSpecs(v){
-  const title = v.marque + ' ' + v.modele + (v.gen && v.gen !== '?' ? ' ' + v.gen : '') + (v.numVo ? ' · N°' + v.numVo : '');
-  const subtitle = v.year + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
+  const title = v.marque + ' ' + v.modele + (v.gen && v.gen !== '?' ? ' ' + v.gen : '');
+  const subtitle = (v.numVo ? 'N°' + v.numVo + ' · ' : '') + v.year + ' · ' + Number(v.km).toLocaleString('fr-FR') + ' km';
   document.getElementById('detail-title').textContent = title;
   document.getElementById('detail-subtitle').textContent = subtitle;
   const dtD = document.getElementById('detail-title-desktop'); if(dtD) dtD.textContent = title;
