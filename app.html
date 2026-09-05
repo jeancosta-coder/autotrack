@@ -776,6 +776,7 @@
     .bft-name { color:var(--text); }
     .bft-amt { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); }
     .bft-inp { grid-column:2; width:100%; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); border:none; outline:none; background:transparent; font-size:14px; font-family:inherit; }
+    .bft-inp:disabled { color:var(--text2); opacity:0.7; }
     .bft-badge { justify-self:end; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; white-space:nowrap; }
     .bft-badge.on { background:color-mix(in srgb, var(--accent) 14%, var(--surface)); color:var(--accent); }
     .bft-badge.off { background:var(--surface-2); color:var(--text2); }
@@ -2234,7 +2235,7 @@
 
       <div id="detail-tab-finances" class="detail-tab-content" style="display:none;flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
 
-        <!-- Vente finalisée (tout en haut, visible uniquement une fois validée) -->
+        <!-- Vente finalisée (tout en haut, visible uniquement une fois validée et non déverrouillée) -->
         <div id="finalize-sale-done" style="display:none;background:color-mix(in srgb, var(--success) 12%, var(--surface));border-radius:14px;padding:14px 16px;margin-bottom:16px;align-items:center;gap:10px;">
           <div style="width:30px;height:30px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -2243,7 +2244,14 @@
             <div style="font-size:14px;font-weight:600;color:var(--success);">Vente finalisée</div>
             <div id="finalize-sale-done-date" style="font-size:12px;color:var(--text2);margin-top:1px;"></div>
           </div>
-          <button onclick="openFinalizeSaleModal()" style="background:none;border:1px solid var(--success);color:var(--success);border-radius:9999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;">Modifier</button>
+          <button onclick="unlockFinanceForEdit()" style="background:none;border:1px solid var(--success);color:var(--success);border-radius:9999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;">Modifier</button>
+        </div>
+
+        <!-- Widget prix de revient / vente / marge : visible uniquement une fois la vente validée (figee) -->
+        <div id="fin-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+          <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
+          <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
+          <div class="bft-stat"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
         </div>
 
         <!-- Dates -->
@@ -2284,13 +2292,8 @@
           Valider la vente
         </button>
 
-        <!-- Widget prix de revient / vente / marge + Détail comptable : visibles uniquement une fois la vente validée -->
-        <div id="fin-validated-section" style="display:none;">
-          <div id="fin-stats-row" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
-            <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
-            <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
-            <div class="bft-stat"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
-          </div>
+        <!-- Détail comptable : visible uniquement une fois la vente validée (figee) -->
+        <div id="fin-comptable-wrap" style="display:none;">
           <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l2 2"/></svg><span>Détail comptable</span></div>
           <div class="bft-mini-table">
             <div class="bft-mini-row"><span>Marge TTC</span><span id="ind-marge-ttc">—</span></div>
@@ -2533,6 +2536,7 @@ let orgEntries = JSON.parse(localStorage.getItem('at_org_entries') || '[]');
 let currentOrgPrestataireId = null;
 let currentTaskFilter = 'all';
 let currentDetailVehicleId = null;
+let financeUnlocked = false;
 let currentParcFilter = 'all';
 let currentConfirmationVehicleId = null;
 
@@ -3577,6 +3581,7 @@ function saveVsgTransmission(val){
 function openVehicleDetails(id){
   currentDetailVehicleId = id;
   document._pendingStatutAfterClient = null;
+  financeUnlocked = false;
   const v = vehicles.find(x => x.id === id);
   if(!v) return;
   refreshDetailHeaderAndSpecs(v);
@@ -3622,15 +3627,16 @@ function renderCostList(kind){
   const items = costItemsOf(v, kind);
   const badgeLabel = kind === 'sansTva' ? 'Non soumis' : 'Soumis';
   const badgeCls = kind === 'sansTva' ? 'off' : 'on';
+  const locked = isFinanceLocked(v);
   const listEl = document.getElementById('fin-list-' + kind);
   if(listEl){
     listEl.innerHTML = items.map(it => `<div class="bft-row">
       <span class="bft-name">${it.label}</span>
       <span class="bft-amt">${Number(it.amount).toLocaleString('fr-FR')} €</span>
       <span class="bft-badge ${badgeCls}">${badgeLabel}</span>
-      <button class="bft-del" onclick="removeCostItem('${kind}','${it.id}')">
+      ${locked ? '<span></span>' : `<button class="bft-del" onclick="removeCostItem('${kind}','${it.id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-      </button>
+      </button>`}
     </div>`).join('');
   }
   const totalEl = document.getElementById('fin-total-' + kind);
@@ -3892,21 +3898,42 @@ function savePrices(){
   updateMargePreview();
 }
 
+function isFinanceLocked(v){
+  return !!(v && v.venteValidee) && !financeUnlocked;
+}
+function unlockFinanceForEdit(){
+  financeUnlocked = true;
+  const v = DataLayer.getVehicleById(currentDetailVehicleId);
+  if(!v) return;
+  renderFinanceValidationState(v);
+  renderCostList('sansTva');
+  renderCostList('avecTva');
+  showToast('✓ Chiffres déverrouillés pour modification');
+}
 function renderFinanceValidationState(v){
   const btn = document.getElementById('finalize-sale-btn');
   const done = document.getElementById('finalize-sale-done');
-  const validatedSection = document.getElementById('fin-validated-section');
+  const statsRow = document.getElementById('fin-stats-row');
+  const comptableWrap = document.getElementById('fin-comptable-wrap');
   if(!btn || !done) return;
-  const isValidated = !!v.venteValidee;
-  btn.style.display = isValidated ? 'none' : 'flex';
-  done.style.display = isValidated ? 'flex' : 'none';
-  if(validatedSection) validatedSection.style.display = isValidated ? 'block' : 'none';
+  const locked = isFinanceLocked(v);
+  btn.style.display = locked ? 'none' : 'flex';
+  done.style.display = locked ? 'flex' : 'none';
+  if(statsRow) statsRow.style.display = locked ? 'grid' : 'none';
+  if(comptableWrap) comptableWrap.style.display = locked ? 'block' : 'none';
   const venteDateRow = document.getElementById('fin-vente-date-row');
-  if(venteDateRow) venteDateRow.style.display = isValidated ? 'flex' : 'none';
-  if(isValidated){
+  if(venteDateRow) venteDateRow.style.display = v.venteValidee ? 'flex' : 'none';
+  if(locked){
     const dateLbl = document.getElementById('finalize-sale-done-date');
     if(dateLbl) dateLbl.textContent = v.saleDate ? 'le ' + new Date(v.saleDate + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '';
   }
+  ['detail-achat-input', 'detail-vente-input', 'detail-cg-input'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.disabled = locked;
+  });
+  document.querySelectorAll('#detail-tab-finances .bft-plus').forEach(b => {
+    b.style.display = locked ? 'none' : 'flex';
+  });
 }
 function saveVehicleDateInline(kind, val){
   if(!DataLayer.getVehicleById(currentDetailVehicleId)) return;
@@ -4024,6 +4051,7 @@ function commitFinalizeSale(){
     venteValidee: true
   });
   closeFinalizeSaleModal();
+  financeUnlocked = false;
   showToast(wasValidated ? '✓ Vente mise à jour' : '✓ Vente finalisée');
   if(!wasValidated) playSoldCarAnimation();
   updateStatutUI('Livré');
@@ -4031,6 +4059,8 @@ function commitFinalizeSale(){
   const nv = DataLayer.getVehicleById(currentDetailVehicleId);
   refreshDetailHeaderAndSpecs(nv);
   renderFinanceValidationState(nv);
+  renderCostList('sansTva');
+  renderCostList('avecTva');
   updateMargePreview();
 }
 
