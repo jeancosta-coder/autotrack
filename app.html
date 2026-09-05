@@ -3633,12 +3633,19 @@ function addCostItemForm(kind){
   const listEl = document.getElementById('fin-list-' + kind);
   if(!listEl || document.getElementById('cost-row-new-' + kind)) return;
   const rowHtml = `<div id="cost-row-new-${kind}" class="bft-row">
-    <input type="text" id="cost-row-label-${kind}" placeholder="Titre" style="border:none;outline:none;background:transparent;font-size:14px;color:var(--text);font-family:inherit;">
-    <input type="number" id="cost-row-amount-${kind}" placeholder="Montant" class="bft-inp" style="grid-column:auto;" onkeydown="if(event.key==='Enter')this.blur()" onblur="commitCostItemRow('${kind}')">
+    <input type="text" id="cost-row-label-${kind}" placeholder="Titre" style="border:none;outline:none;background:transparent;font-size:14px;color:var(--text);font-family:inherit;" onblur="handleCostRowBlur('${kind}')">
+    <input type="number" id="cost-row-amount-${kind}" placeholder="Montant" class="bft-inp" style="grid-column:auto;" onkeydown="if(event.key==='Enter')this.blur()" onblur="handleCostRowBlur('${kind}')">
     <span></span><span></span>
   </div>`;
   listEl.insertAdjacentHTML('beforeend', rowHtml);
   setTimeout(() => document.getElementById('cost-row-label-' + kind)?.focus(), 50);
+}
+function handleCostRowBlur(kind){
+  setTimeout(() => {
+    const row = document.getElementById('cost-row-new-' + kind);
+    if(!row || row.contains(document.activeElement)) return;
+    commitCostItemRow(kind);
+  }, 120);
 }
 function commitCostItemRow(kind){
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
