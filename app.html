@@ -762,7 +762,12 @@
     .bft-stat.accent .bft-stat-val { color:var(--accent); }
     .bft-stat.pos .bft-stat-val { color:var(--success); }
     .bft-card { background:var(--surface); border-radius:17px; box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05); overflow:hidden; margin-bottom:12px; }
-    .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 16px; background:var(--surface-2); font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; }
+    .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; background:var(--surface); border-top:1px solid var(--border); font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; }
+    .bft-group:first-child { border-top:none; }
+    .bft-card-title { font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin:0 4px 8px; }
+    .bft-revient-card { display:flex; align-items:center; justify-content:space-between; background:color-mix(in srgb, var(--accent) 8%, var(--surface)); border-radius:17px; padding:16px; margin-bottom:16px; }
+    .bft-revient-card .bft-name { font-size:14px; font-weight:700; color:var(--accent); }
+    .bft-revient-card .bft-amt { font-size:19px; font-weight:800; color:var(--accent); }
     .bft-plus { width:22px; height:22px; border-radius:50%; background:var(--accent); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .bft-plus svg { width:11px; height:11px; }
     .bft-row { display:grid; grid-template-columns:1fr 100px 92px 26px; align-items:center; gap:8px; padding:12px 16px; border-top:1px solid var(--border); font-size:14px; }
@@ -2227,75 +2232,43 @@
 
       <div id="detail-tab-finances" class="detail-tab-content" style="display:none;flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
 
-        <div id="finance-validated-banner" style="display:none;align-items:center;gap:10px;background:color-mix(in srgb, var(--success) 12%, var(--surface));border-radius:14px;padding:14px 16px;margin-bottom:16px;">
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div>
-            <div style="font-size:15px;font-weight:700;color:var(--success);">Finances validées</div>
-            <div style="font-size:12px;color:var(--text2);margin-top:1px;">Vente finalisée, tous les chiffres sont figés</div>
-          </div>
-        </div>
-
-        <!-- KPI : visibles uniquement une fois la vente validée -->
-        <div id="fin-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
-          <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
-          <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
-          <div class="bft-stat pos"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
-        </div>
-
-        <!-- GRAND TABLEAU FINANCES -->
+        <!-- Acquisition -->
+        <div class="bft-card-title">Acquisition</div>
         <div class="bft-card">
-          <div class="bft-group"><span>Acquisition</span></div>
-          <div class="bft-row"><span class="bft-name">Prix d'achat</span><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp"><span></span><span></span></div>
+          <div class="bft-row" style="border-top:none;"><span class="bft-name">Prix d'achat</span><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp"><span></span><span></span></div>
           <div class="bft-row"><span class="bft-name">Prix de vente cible</span><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp"><span></span><span></span></div>
+        </div>
 
-          <div class="bft-group"><span>Frais sans TVA · <span id="fin-total-sansTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('sansTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+        <!-- Frais -->
+        <div class="bft-card-title">Frais</div>
+        <div class="bft-card">
+          <div class="bft-group"><span>Sans TVA · <span id="fin-total-sansTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('sansTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
           <div id="fin-list-sansTva"></div>
-
-          <div class="bft-group"><span>Frais soumis à la TVA · <span id="fin-total-avecTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('avecTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+          <div class="bft-group"><span>Soumis à la TVA · <span id="fin-total-avecTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('avecTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
           <div id="fin-list-avecTva"></div>
+        </div>
 
-          <div class="bft-group"><span>Frais divers</span></div>
-          <div class="bft-row"><span class="bft-name">Carte grise</span><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp"><span></span><span></span></div>
+        <!-- Frais divers -->
+        <div class="bft-card-title">Frais divers</div>
+        <div class="bft-card">
+          <div class="bft-row" style="border-top:none;"><span class="bft-name">Carte grise</span><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp"><span></span><span></span></div>
+        </div>
 
-          <div class="bft-row bft-total"><span class="bft-name">Prix de revient</span><span id="detail-cout-revient" class="bft-amt">—</span><span></span><span></span></div>
+        <!-- Prix de revient -->
+        <div class="bft-revient-card">
+          <span class="bft-name">Prix de revient</span>
+          <span id="detail-cout-revient" class="bft-amt">—</span>
         </div>
 
         <input type="hidden" id="detail-marge-cible-input" value="15">
         <span id="detail-marge" style="display:none;"></span><span id="detail-marge-pct" style="display:none;"></span>
 
-        <!-- INDICATEURS TVA MARGE -->
-        <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Indicateurs TVA marge</span></div>
-        <div class="bft-card">
-          <div class="bft-row"><span class="bft-name">Marge TTC</span><span id="ind-marge-ttc" class="bft-amt">—</span><span></span><span></span></div>
-          <div class="bft-row"><span class="bft-name">Marge HT</span><span id="ind-marge-ht" class="bft-amt">—</span><span></span><span></span></div>
-          <div class="bft-row"><span class="bft-name">TVA sur marge (20%)</span><span id="ind-tva-marge" class="bft-amt">—</span><span></span><span></span></div>
-          <div class="bft-row"><span class="bft-name">% de la marge</span><span id="ind-pct-marge" class="bft-amt">—</span><span></span><span></span></div>
-          <div class="bft-row"><span class="bft-name">Bénéf. net comptable</span><span id="ind-benef-net" class="bft-amt">—</span><span></span><span></span></div>
-          <div class="bft-row bft-total"><span class="bft-name">Trésorerie</span><span id="ind-tresorerie" class="bft-amt">—</span><span></span><span></span></div>
-          <div class="bft-row"><span class="bft-name">% marge trésorerie</span><span id="ind-pct-tresorerie" class="bft-amt">—</span><span></span><span></span></div>
-        </div>
-
-        <!-- FINALISER LA VENTE -->
-        <div id="finalize-sale-pending">
-          <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Finaliser la vente</span></div>
-          <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
-            <div class="fin-row"><span class="fin-label-text">Prix de vente</span><div class="fin-input-wrap"><input type="number" id="detail-vente-finale-input" placeholder="0" oninput="updateMargePreview()" class="fin-input"><span class="fin-unit">€</span></div></div>
-            <div class="fin-row fin-sep"><span class="fin-label-text">Date de vente</span><input type="date" id="detail-sale-date" class="fin-input" style="width:150px;"></div>
-          </div>
-
-          <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:14px 16px;margin-bottom:12px;text-align:center;">
-            <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Marge réelle</div>
-            <div id="fin-widget-marge" style="font-size:20px;font-weight:700;color:var(--text);">—</div>
-          </div>
-
-          <button onclick="finalizeSale()" style="width:100%;padding:14px;background:var(--success);color:#fff;border:none;border-radius:9999px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-            Valider la vente
-          </button>
-        </div>
-        <div id="finalize-sale-done" style="display:none;background:color-mix(in srgb, var(--success) 12%, var(--surface));border-radius:14px;padding:14px 16px;margin-bottom:12px;align-items:center;gap:10px;">
+        <!-- Valider la vente / Vente finalisée -->
+        <button id="finalize-sale-btn" onclick="openFinalizeSaleModal()" style="width:100%;padding:14px;background:var(--success);color:#fff;border:none;border-radius:9999px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Valider la vente
+        </button>
+        <div id="finalize-sale-done" style="display:none;background:color-mix(in srgb, var(--success) 12%, var(--surface));border-radius:14px;padding:14px 16px;margin-bottom:16px;align-items:center;gap:10px;">
           <div style="width:30px;height:30px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
@@ -2303,7 +2276,26 @@
             <div style="font-size:14px;font-weight:600;color:var(--success);">Vente finalisée</div>
             <div id="finalize-sale-done-date" style="font-size:12px;color:var(--text2);margin-top:1px;"></div>
           </div>
-          <button onclick="reopenFinalizeSale()" style="background:none;border:1px solid var(--success);color:var(--success);border-radius:9999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;">Modifier</button>
+          <button onclick="openFinalizeSaleModal()" style="background:none;border:1px solid var(--success);color:var(--success);border-radius:9999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;">Modifier</button>
+        </div>
+
+        <!-- KPI + Indicateurs TVA marge : visibles uniquement une fois la vente validée -->
+        <div id="fin-validated-section" style="display:none;">
+          <div id="fin-stats-row" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+            <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
+            <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
+            <div class="bft-stat pos"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
+          </div>
+          <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Indicateurs TVA marge</span></div>
+          <div class="bft-card">
+            <div class="bft-row" style="border-top:none;"><span class="bft-name">Marge TTC</span><span id="ind-marge-ttc" class="bft-amt">—</span><span></span><span></span></div>
+            <div class="bft-row"><span class="bft-name">Marge HT</span><span id="ind-marge-ht" class="bft-amt">—</span><span></span><span></span></div>
+            <div class="bft-row"><span class="bft-name">TVA sur marge (20%)</span><span id="ind-tva-marge" class="bft-amt">—</span><span></span><span></span></div>
+            <div class="bft-row"><span class="bft-name">% de la marge</span><span id="ind-pct-marge" class="bft-amt">—</span><span></span><span></span></div>
+            <div class="bft-row"><span class="bft-name">Bénéf. net comptable</span><span id="ind-benef-net" class="bft-amt">—</span><span></span><span></span></div>
+            <div class="bft-row bft-total"><span class="bft-name">Trésorerie</span><span id="ind-tresorerie" class="bft-amt">—</span><span></span><span></span></div>
+            <div class="bft-row"><span class="bft-name">% marge trésorerie</span><span id="ind-pct-tresorerie" class="bft-amt">—</span><span></span><span></span></div>
+          </div>
         </div>
 
       </div>
@@ -3675,7 +3667,7 @@ function updateMargePreview(){
   const sansTva = v ? costTotal(costItemsOf(v, 'sansTva')) : 0;
   const avecTva = v ? costTotal(costItemsOf(v, 'avecTva')) : 0;
   const venteCible = parseFloat(document.getElementById('detail-vente-input')?.value) || 0;
-  const venteFinale = parseFloat(document.getElementById('detail-vente-finale-input')?.value) || 0;
+  const venteFinale = v ? parseFloat(v.venteFinale) || 0 : 0;
   const vente = venteFinale || venteCible;
   const cg = parseFloat(document.getElementById('detail-cg-input')?.value) || 0;
   const cible = parseFloat(document.getElementById('detail-marge-cible-input')?.value) || 15;
@@ -3692,11 +3684,6 @@ function updateMargePreview(){
   if(margeEl){
     if(!vente && !revient){ margeEl.textContent = '—'; margeEl.className = 'fin-marge-val fin-dark'; if(margePct) margePct.textContent = ''; }
     else { margeEl.textContent = fmt(marge); margeEl.className = 'fin-marge-val ' + (marge >= 0 ? 'fin-green' : 'fin-red'); if(margePct) margePct.textContent = pct.toFixed(1) + '%'; }
-  }
-  const margeWidget = document.getElementById('fin-widget-marge');
-  if(margeWidget){
-    if(!vente && !revient){ margeWidget.textContent = '—'; margeWidget.style.color = 'var(--text)'; }
-    else { margeWidget.textContent = fmt(marge); margeWidget.style.color = marge >= 0 ? 'var(--success)' : 'var(--danger)'; }
   }
   const statsRow = document.getElementById('fin-stats-row');
   if(statsRow) statsRow.style.display = (v && v.venteValidee) ? 'grid' : 'none';
@@ -3888,14 +3875,14 @@ function savePrices(){
 }
 
 function renderFinanceValidationState(v){
-  const pending = document.getElementById('finalize-sale-pending');
+  const btn = document.getElementById('finalize-sale-btn');
   const done = document.getElementById('finalize-sale-done');
-  if(!pending || !done) return;
+  const validatedSection = document.getElementById('fin-validated-section');
+  if(!btn || !done) return;
   const isValidated = !!v.venteValidee;
-  pending.style.display = isValidated ? 'none' : 'block';
+  btn.style.display = isValidated ? 'none' : 'flex';
   done.style.display = isValidated ? 'flex' : 'none';
-  const topBanner = document.getElementById('finance-validated-banner');
-  if(topBanner) topBanner.style.display = isValidated ? 'flex' : 'none';
+  if(validatedSection) validatedSection.style.display = isValidated ? 'block' : 'none';
   if(isValidated){
     const dateLbl = document.getElementById('finalize-sale-done-date');
     if(dateLbl) dateLbl.textContent = v.saleDate ? 'le ' + new Date(v.saleDate + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '';
@@ -3949,30 +3936,74 @@ function playSoldCarAnimation(){
   setTimeout(() => document.body.classList.remove('sold-shake'), 650);
   setTimeout(() => div.remove(), 2200);
 }
-function finalizeSale(){
+function openFinalizeSaleModal(){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  const achatDateDisp = v.achatDate ? new Date(v.achatDate + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '—';
+  const saleDate = v.saleDate || Utils.today();
+  const ventePrefill = v.venteFinale || v.vente || '';
+  const innerHtml = `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
+      <span style="font-size:17px;font-weight:600;color:var(--text);">Finaliser la vente</span>
+      <button onclick="closeFinalizeSaleModal()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button>
+    </div>
+    <div style="padding:20px;">
+      <div class="bft-card" style="margin-bottom:16px;">
+        <div class="fin-row" style="border-top:none;"><span class="fin-label-text">Date d'achat</span><span style="font-size:15px;color:var(--text2);">${achatDateDisp}</span></div>
+        <div class="fin-row fin-sep"><span class="fin-label-text">Date de vente</span><input type="date" id="fs-sale-date" class="fin-input" value="${saleDate}" style="width:150px;"></div>
+        <div class="fin-row fin-sep"><span class="fin-label-text">Prix de vente</span><div class="fin-input-wrap"><input type="number" id="fs-vente-finale" class="fin-input" placeholder="0" value="${ventePrefill}" oninput="updateFinalizeSalePreview()"><span class="fin-unit">€</span></div></div>
+      </div>
+      <div class="bft-card" style="padding:18px 16px;text-align:center;margin-bottom:20px;">
+        <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Marge réelle</div>
+        <div id="fs-marge-preview" style="font-size:22px;font-weight:700;color:var(--text);">—</div>
+      </div>
+      <button onclick="commitFinalizeSale()" style="width:100%;padding:14px;background:var(--success);color:#fff;border:none;border-radius:9999px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        Valider la vente
+      </button>
+    </div>`;
+  createDialogOrSheet('finalize-sale-modal', innerHtml, {desktopWidth:'420px'});
+  updateFinalizeSalePreview();
+}
+function closeFinalizeSaleModal(){
+  document.getElementById('finalize-sale-modal')?.remove();
+}
+function updateFinalizeSalePreview(){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  const achat = Number(v.achat) || 0;
+  const sansTva = costTotal(costItemsOf(v, 'sansTva'));
+  const avecTva = costTotal(costItemsOf(v, 'avecTva'));
+  const cg = Number(v.carteGrise) || 0;
+  const revient = achat + sansTva + avecTva + cg;
+  const vente = parseFloat(document.getElementById('fs-vente-finale')?.value) || 0;
+  const marge = vente - revient;
+  const fmt = n => Math.round(n).toLocaleString('fr-FR') + ' €';
+  const el = document.getElementById('fs-marge-preview');
+  if(el){
+    if(!vente && !revient){ el.textContent = '—'; el.style.color = 'var(--text)'; }
+    else { el.textContent = fmt(marge); el.style.color = marge >= 0 ? 'var(--success)' : 'var(--danger)'; }
+  }
+}
+function commitFinalizeSale(){
   const v = DataLayer.getVehicleById(currentDetailVehicleId);
   if(!v) return;
   const wasValidated = !!v.venteValidee;
-  const saleDate = Utils.el('detail-sale-date').value || Utils.today();
-  const venteFinale = Utils.toNumber(Utils.el('detail-vente-finale-input').value);
+  const saleDate = document.getElementById('fs-sale-date')?.value || Utils.today();
+  const venteFinale = Utils.toNumber(document.getElementById('fs-vente-finale')?.value);
   const history = [...(v.statusHistory || [])];
   if(wasValidated && history.length && history[history.length - 1].statut === 'Livré'){
     history[history.length - 1] = {statut: 'Livré', date: saleDate};
   } else {
     history.push({statut: 'Livré', date: saleDate});
   }
-  // enregistre les chiffres saisis
   DataLayer.updateVehicle(currentDetailVehicleId, {
-    achat: Utils.toNumber(Utils.el('detail-achat-input').value),
-    vente: venteFinale || Utils.toNumber(Utils.el('detail-vente-input').value),
+    vente: venteFinale || v.vente,
     venteFinale: venteFinale,
-    carteGrise: Utils.toNumber(Utils.el('detail-cg-input').value),
-    margeCible: Utils.toNumber(Utils.el('detail-marge-cible-input').value),
     saleDate: saleDate,
     statut: 'Livré',
     statusHistory: history,
     venteValidee: true
   });
+  closeFinalizeSaleModal();
   showToast(wasValidated ? '✓ Vente mise à jour' : '✓ Vente finalisée');
   if(!wasValidated) playSoldCarAnimation();
   updateStatutUI('Livré');
@@ -3981,12 +4012,6 @@ function finalizeSale(){
   refreshDetailHeaderAndSpecs(nv);
   renderFinanceValidationState(nv);
   updateMargePreview();
-}
-function reopenFinalizeSale(){
-  const pending = document.getElementById('finalize-sale-pending');
-  const done = document.getElementById('finalize-sale-done');
-  if(pending) pending.style.display = 'block';
-  if(done) done.style.display = 'none';
 }
 
 function renderPlanning(){
