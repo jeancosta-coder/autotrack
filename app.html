@@ -4299,11 +4299,11 @@ function renderWeekView(date){
       const timeLabel = endLabel ? (timeStr + '–' + endLabel) : timeStr;
       const showTime = height >= 34;
       const isMobileEvt = window.innerWidth < 768;
-      const evtTitleSize = isMobileEvt ? '13px' : '11px';
-      const evtTimeSize = isMobileEvt ? '11.5px' : '10px';
+      const evtTitleSize = isMobileEvt ? '15px' : '11px';
+      const evtTimeSize = isMobileEvt ? '13px' : '10px';
       colHtml += `<div onclick="event.stopPropagation();openEditPlanningTaskModal(${task.id})" style="position:absolute;top:${top}px;left:3px;right:2px;height:${height}px;background:${color}1F;border-left:3px solid ${color};border-radius:6px;padding:4px 8px;overflow:hidden;cursor:pointer;z-index:10;">
-        <div style="font-size:${evtTitleSize};font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${task.description}</div>
-        ${showTime ? `<div style="font-size:${evtTimeSize};font-weight:500;color:var(--text2);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${timeLabel}</div>` : ''}
+        <div style="font-size:${evtTitleSize};font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${task.description}</div>
+        ${showTime ? `<div style="font-size:${evtTimeSize};font-weight:600;color:var(--text2);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${timeLabel}</div>` : ''}
       </div>`;
     });
 
