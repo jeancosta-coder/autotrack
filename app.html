@@ -374,13 +374,16 @@
     .kpi-card .kpi-spark { margin-top: auto; }
     .dash-square-kpi { aspect-ratio: 1 / 1; min-height: 0; justify-content: center; }
     @media (max-width: 899px) {
-      .dash-mini-kpi { padding: 12px 12px 10px; }
-      .dash-mini-kpi .kpi-icon { width: 26px; height: 26px; border-radius: 50%; }
-      .dash-mini-kpi .kpi-icon svg { width: 13px; height: 13px; }
-      .dash-mini-kpi .kpi-val { font-size: 16px !important; letter-spacing: -0.3px; }
-      .dash-mini-kpi .kpi-label { font-size: 10.5px; margin-top: 2px; }
-      .dash-mini-kpi .kpi-delta { font-size: 9.5px; padding: 2px 6px; }
-      .dash-mini-kpi [id$="-spark"] svg { height: 16px; margin-top: 4px; }
+      #dash-mini-kpi-grid { grid-template-columns: repeat(2, 120px) !important; justify-content: center; gap: 8px !important; }
+      .dash-mini-kpi { padding: 8px 8px 7px; border-radius: 14px; }
+      .dash-mini-kpi .kpi-head { margin-bottom: 3px !important; }
+      .dash-mini-kpi .kpi-icon { width: 20px; height: 20px; border-radius: 50%; }
+      .dash-mini-kpi .kpi-icon svg { width: 10px; height: 10px; }
+      .dash-mini-kpi .kpi-val { font-size: 13px !important; letter-spacing: -0.2px; }
+      .dash-mini-kpi .kpi-label { font-size: 8.5px; margin-top: 1px; }
+      .dash-mini-kpi .kpi-delta { font-size: 8px; padding: 1px 5px; }
+      .dash-mini-kpi [id$="-value"] { display: none; }
+      .dash-mini-kpi [id$="-spark"] svg { height: 12px; margin-top: 2px; }
     }
     .dash-sales-table-wrap { display: none; }
     .dash-sales-cards { display: block; }
@@ -1850,7 +1853,7 @@
       </div>
 
       <!-- Marge moyenne / Temps moyen de vente / Total entrées / Total sorties -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
+      <div id="dash-mini-kpi-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
         <div class="kpi-card dash-square-kpi dash-mini-kpi">
           <div class="kpi-head" style="min-height:0;margin-bottom:6px;">
             <span class="kpi-icon" style="background:var(--success-soft);color:var(--success);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
