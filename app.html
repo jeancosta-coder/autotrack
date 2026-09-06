@@ -963,6 +963,8 @@
       .desktop-only { display: block !important; }
       .kpi-grid.desktop-only { display: grid !important; }
       #org-add-vehicle-btn-desktop { display: flex !important; }
+      #org-header-row { gap: 20px !important; }
+      #org-prestataire-dropdown { flex: none !important; width: 260px; padding: 10px 14px !important; }
       .mobile-only { display: none !important; }
       #detail-title-mobile, #detail-subtitle-mobile { display: none !important; }
       .desktop-card-actions { display: none !important; }
@@ -1933,7 +1935,7 @@
   <!-- VUE ORGANISATION -->
   <div id="organisation" class="view" style="position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;background:var(--surface-2);z-index:1;">
     <div style="padding:14px 14px 0;flex-shrink:0;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+      <div id="org-header-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
         <div id="org-prestataire-dropdown" onclick="orgDropdownClick(this)" style="flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:12px 14px;cursor:pointer;">
           <span id="org-prestataire-dropdown-label" style="font-size:15px;font-weight:600;color:var(--text);">Aucun prestataire</span>
           <span id="org-prestataire-dropdown-icon" style="display:flex;color:var(--text2);opacity:0.7;"><svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,3 5,7 8,3"/></svg></span>
