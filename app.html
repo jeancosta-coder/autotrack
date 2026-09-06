@@ -225,6 +225,8 @@
        .btn-danger      = action destructive (rouge plein, reservee aux suppressions) */
     .btn-secondary { flex: 1; padding: 11px; background: var(--surface-2); color: var(--text); border: none; border-radius: 9999px; font-size: 14px; font-weight: 500; letter-spacing: -0.2px; cursor: pointer; transition: transform 0.12s cubic-bezier(0.2,0.8,0.2,1); }
     .btn-secondary:active { transform: scale(0.97); }
+    .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-secondary:disabled:active { transform: none; }
     .btn-danger { flex: 1; padding: 11px; background: var(--danger); color: white; border: none; border-radius: 9999px; font-size: 14px; font-weight: 600; letter-spacing: -0.2px; cursor: pointer; transition: transform 0.12s cubic-bezier(0.2,0.8,0.2,1); }
     .btn-danger:active { transform: scale(0.97); }
     /* .modal-close-btn = croix de fermeture standard de tout modal/sheet (cible tactile 36x36) */
@@ -1163,12 +1165,9 @@
       .dt-infos-wrap .vsg-cell { padding: 4px 6px !important; border: none !important; background: transparent !important; }
       .dt-infos-wrap .vsg-label { font-size: 9px !important; }
       .dt-infos-wrap .vsg-value { font-size: 11px !important; }
-      /* Statut */
-      .dt-statut-wrap {
-        flex-shrink: 0 !important;
-        padding: 12px 20px 0 !important;
-      }
-      .dt-statut-wrap > div:first-child { padding: 0 !important; margin-bottom: 8px !important; }
+      /* Statut : deplace dans le nav desktop (photo/titre), on masque l'ancien emplacement */
+      .dt-statut-wrap { display: none !important; }
+      #details-desktop-nav #detail-title-desktop, #details-desktop-nav #detail-subtitle-desktop { text-align: center !important; }
       .dt-client-wrap { flex-shrink: 0 !important; padding: 12px 20px 0 !important; }
       .dt-client-wrap > div:first-child { padding: 0 !important; }
       .dt-mobile-icon { display: none !important; }
@@ -1245,8 +1244,16 @@
         overflow-y: auto !important;
       }
       #detail-tab-inforight { padding: 24px 28px 32px !important; }
-      #tab-infos { display: none !important; }
-      #tab-inforight { display: inline-flex !important; }
+      #tab-infos, #tab-inforight, #tab-finances, #tab-clients { display: none !important; }
+      #detail-tab-dropdown-desktop { display: flex !important; }
+      #detail-tab-clients {
+        grid-column: 2 !important;
+        grid-row: 2 !important;
+        height: 100% !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        padding: 24px 28px 32px !important;
+      }
       /* Contenu Infos déplacé à droite : rétablir l'aspect carte normal */
       #detail-tab-inforight .dt-notes-wrap,
       #detail-tab-inforight .dt-infos-wrap { padding: 0 !important; margin-bottom: 16px !important; }
@@ -2087,10 +2094,13 @@
       <input type="file" id="vehicle-photo-input" accept="image/*" style="display:none;" onchange="handleVehiclePhotoSelected(event)">
     </div>
     <div id="detail-tab-bar-wrap" style="background:var(--surface-2);flex-shrink:0;">
-      <div class="details-segment-wrap desktop-only" style="display:none;">
-        <button id="tab-inforight" class="detail-tab" onclick="switchDetailTab('inforight')" style="display:none;">Détails</button>
-        <button id="tab-infos" class="detail-tab detail-tab-active" onclick="switchDetailTab('infos')">Détails</button>
-        <button id="tab-finances" class="detail-tab" onclick="switchDetailTab('finances')">Finances</button>
+      <button id="tab-inforight" onclick="switchDetailTab('inforight')" style="display:none;">Détails</button>
+      <button id="tab-infos" onclick="switchDetailTab('infos')" style="display:none;">Détails</button>
+      <button id="tab-finances" onclick="switchDetailTab('finances')" style="display:none;">Finances</button>
+      <button id="tab-clients" onclick="switchDetailTab('clients')" style="display:none;">Clientèle</button>
+      <div id="detail-tab-dropdown-desktop" class="desktop-only" onclick="openDetailTabMenuDesktop(this)" style="display:none;align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:10px 14px;cursor:pointer;">
+        <span id="detail-tab-dropdown-desktop-label" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;">Détails</span>
+        <svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;flex-shrink:0;"><polyline points="2,3 5,7 8,3"/></svg>
       </div>
       <div id="detail-tab-dropdown" class="mobile-only" onclick="openDetailTabMenu(this)" style="align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:14px 16px;margin:10px 16px;cursor:pointer;">
         <span id="detail-tab-dropdown-label" style="font-size:16px;font-weight:700;color:var(--text);">Détails</span>
@@ -2108,9 +2118,21 @@
               Parc
             </button>
           </div>
-          <div style="padding:6px 16px 20px;">
+          <div style="padding:0 16px 12px;">
+            <div id="detail-photo-thumb-desktop" onclick="openVehiclePhotoPicker()" style="position:relative;cursor:pointer;width:100%;aspect-ratio:16/10;border-radius:16px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--text2);overflow:hidden;">
+              <svg id="detail-photo-placeholder-desktop" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 0 0-2.8 0L8 17"/></svg>
+              <img id="detail-photo-img-desktop" style="display:none;width:100%;height:100%;object-fit:cover;"/>
+              <div style="position:absolute;right:8px;bottom:8px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;pointer-events:none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div style="padding:6px 16px 14px;">
             <div id="detail-title-desktop" style="font-size:20px;font-weight:700;color:var(--text);line-height:1.25;text-align:center;"></div>
             <div id="detail-subtitle-desktop" style="font-size:12px;color:var(--text2);margin-top:5px;letter-spacing:0.1px;text-align:center;"></div>
+          </div>
+          <div style="padding:0 16px 16px;display:flex;justify-content:center;">
+            <div id="detail-desktop-statut-slot"></div>
           </div>
         </div>
 
@@ -2353,6 +2375,39 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- Onglet Clientele (desktop uniquement) -->
+      <div id="detail-tab-clients" class="detail-tab-content desktop-only" style="display:none;">
+        <div style="margin-bottom:16px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Informations client</span></div>
+        <div class="bft-card" style="margin-bottom:20px;">
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+            <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Nom</div>
+            <input type="text" id="dtc-nom" placeholder="Nom" onblur="saveClientField('nom', this.value)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:2px 0;">
+          </div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+            <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Prénom</div>
+            <input type="text" id="dtc-prenom" placeholder="Prénom" onblur="saveClientField('prenom', this.value)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:2px 0;">
+          </div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+            <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Téléphone</div>
+            <input type="tel" id="dtc-tel" placeholder="Téléphone" oninput="toggleClientActionBtns()" onblur="saveClientField('tel', this.value)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:2px 0;">
+          </div>
+          <div style="padding:12px 16px;">
+            <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Adresse mail</div>
+            <input type="email" id="dtc-email" placeholder="Adresse mail" oninput="toggleClientActionBtns()" onblur="saveClientField('email', this.value)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:2px 0;">
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button id="dtc-call-btn" onclick="callClientPhone()" class="btn-secondary" style="display:flex;align-items:center;justify-content:center;gap:8px;" disabled>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Appeler
+          </button>
+          <button id="dtc-email-btn" onclick="emailClient()" class="btn-secondary" style="display:flex;align-items:center;justify-content:center;gap:8px;" disabled>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+            Envoyer un email
+          </button>
+        </div>
       </div>
 
   </div>
@@ -3605,6 +3660,8 @@ function refreshDetailHeaderAndSpecs(v){
   const dsM = document.getElementById('detail-subtitle-mobile'); if(dsM) dsM.textContent = subtitle;
   const _dpi = document.getElementById('detail-photo-img'); const _dpp = document.getElementById('detail-photo-placeholder');
   if(_dpi && _dpp){ if(v.photo){ _dpi.src = v.photo; _dpi.style.display = 'block'; _dpp.style.display = 'none'; } else { _dpi.style.display = 'none'; _dpp.style.display = 'block'; } }
+  const _dpiD = document.getElementById('detail-photo-img-desktop'); const _dppD = document.getElementById('detail-photo-placeholder-desktop');
+  if(_dpiD && _dppD){ if(v.photo){ _dpiD.src = v.photo; _dpiD.style.display = 'block'; _dppD.style.display = 'none'; } else { _dpiD.style.display = 'none'; _dppD.style.display = 'block'; } }
   const _nv = document.getElementById('detail-numvo'); if(_nv) _nv.textContent = v.numVo || '—';
   document.getElementById('detail-year').textContent = v.year;
   document.getElementById('detail-km').textContent = Number(v.km).toLocaleString('fr-FR') + ' km';
@@ -3623,19 +3680,39 @@ const CLIENT_FIELD_MAP = { nom:'clientNom', prenom:'clientPrenom', tel:'clientTe
 function hasClientInfo(v){ return !!(v && (v.clientNom || v.clientPrenom || v.clientTel || v.clientEmail)); }
 function renderClientDisplay(v){
   const wrap = document.getElementById('dt-client-wrap');
-  if(!wrap) return;
-  if(!hasClientInfo(v)){ wrap.style.display = 'none'; return; }
-  wrap.style.display = 'block';
-  const nameEl = document.getElementById('detail-client-display-name');
-  if(nameEl) nameEl.textContent = (v.clientNom || v.clientPrenom) ? [v.clientPrenom, v.clientNom].filter(Boolean).join(' ') : '—';
-  const contactEl = document.getElementById('detail-client-display-contact');
-  if(contactEl) contactEl.textContent = [v.clientTel, v.clientEmail].filter(Boolean).join(' · ');
-  const btn = document.getElementById('detail-client-call-btn');
-  if(btn) btn.style.display = v.clientTel ? 'flex' : 'none';
+  if(wrap){
+    if(!hasClientInfo(v)){ wrap.style.display = 'none'; } else {
+      wrap.style.display = 'block';
+      const nameEl = document.getElementById('detail-client-display-name');
+      if(nameEl) nameEl.textContent = (v.clientNom || v.clientPrenom) ? [v.clientPrenom, v.clientNom].filter(Boolean).join(' ') : '—';
+      const contactEl = document.getElementById('detail-client-display-contact');
+      if(contactEl) contactEl.textContent = [v.clientTel, v.clientEmail].filter(Boolean).join(' · ');
+      const btn = document.getElementById('detail-client-call-btn');
+      if(btn) btn.style.display = v.clientTel ? 'flex' : 'none';
+    }
+  }
+  const dNom = document.getElementById('dtc-nom'); if(dNom) dNom.value = v.clientNom || '';
+  const dPrenom = document.getElementById('dtc-prenom'); if(dPrenom) dPrenom.value = v.clientPrenom || '';
+  const dTel = document.getElementById('dtc-tel'); if(dTel) dTel.value = v.clientTel || '';
+  const dEmail = document.getElementById('dtc-email'); if(dEmail) dEmail.value = v.clientEmail || '';
+  toggleClientActionBtns();
+}
+function toggleClientActionBtns(){
+  const tel = (document.getElementById('dtc-tel')?.value || '').trim();
+  const email = (document.getElementById('dtc-email')?.value || '').trim();
+  const callBtn = document.getElementById('dtc-call-btn'); if(callBtn) callBtn.disabled = !tel;
+  const emailBtn = document.getElementById('dtc-email-btn'); if(emailBtn) emailBtn.disabled = !email;
+}
+function emailClient(){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId);
+  const val = (v?.clientEmail || '').trim();
+  if(!val) return;
+  window.location.href = 'mailto:' + val;
 }
 function saveClientField(field, val){
   if(!DataLayer.getVehicleById(currentDetailVehicleId)) return;
   DataLayer.updateVehicle(currentDetailVehicleId, {[CLIENT_FIELD_MAP[field]]: val.trim()});
+  renderClientDisplay(DataLayer.getVehicleById(currentDetailVehicleId));
 }
 function callClientPhone(){
   const v = DataLayer.getVehicleById(currentDetailVehicleId);
@@ -3941,14 +4018,11 @@ function updateStatutUI(statut){
 }
 function relocateStatutBadgeForViewport(){
   const slot = document.getElementById('statut-badge-slot');
-  const headerSlot = document.getElementById('detail-header-statut-slot');
-  const wrap = document.querySelector('.dt-statut-wrap');
-  if(!slot || !headerSlot || !wrap) return;
-  if(window.innerWidth < 900){
-    if(slot.parentElement !== headerSlot) headerSlot.appendChild(slot);
-  } else {
-    if(slot.parentElement !== wrap) wrap.appendChild(slot);
-  }
+  const mobileSlot = document.getElementById('detail-header-statut-slot');
+  const desktopSlot = document.getElementById('detail-desktop-statut-slot');
+  if(!slot) return;
+  const target = window.innerWidth < 900 ? mobileSlot : desktopSlot;
+  if(target && slot.parentElement !== target) target.appendChild(slot);
 }
 function toggleStatutPopover(e){
   e.stopPropagation();
@@ -4017,8 +4091,13 @@ let planningIndex = {};
 
 const DETAIL_TABS = ['infos', 'finances'];
 const DETAIL_TAB_LABELS = {infos: 'Détails', finances: 'Finances'};
+const DETAIL_TAB_LABELS_DESKTOP = {inforight: 'Détails', finances: 'Finances', clients: 'Clientèle'};
 function openDetailTabMenu(anchorEl){
   const html = Object.keys(DETAIL_TAB_LABELS).map(k => `<div class="ntask-opt" onclick="switchDetailTab('${k}');closeAnchoredMenu();"><span>${DETAIL_TAB_LABELS[k]}</span></div>`).join('');
+  openAnchoredMenu(anchorEl, html);
+}
+function openDetailTabMenuDesktop(anchorEl){
+  const html = Object.keys(DETAIL_TAB_LABELS_DESKTOP).map(k => `<div class="ntask-opt" onclick="switchDetailTab('${k}');closeAnchoredMenu();"><span>${DETAIL_TAB_LABELS_DESKTOP[k]}</span></div>`).join('');
   openAnchoredMenu(anchorEl, html);
 }
 function bindDetailHeaderCollapse(){
@@ -4070,6 +4149,8 @@ function switchDetailTab(tab){
   window._currentDetailTab = tab;
   const dropdownLbl = document.getElementById('detail-tab-dropdown-label');
   if(dropdownLbl && DETAIL_TAB_LABELS[tab]) dropdownLbl.textContent = DETAIL_TAB_LABELS[tab];
+  const dropdownLblDesktop = document.getElementById('detail-tab-dropdown-desktop-label');
+  if(dropdownLblDesktop && DETAIL_TAB_LABELS_DESKTOP[tab]) dropdownLblDesktop.textContent = DETAIL_TAB_LABELS_DESKTOP[tab];
 }
 
 function initDetailSwipe(){
