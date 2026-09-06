@@ -965,6 +965,9 @@
       #org-add-vehicle-btn-desktop { display: flex !important; }
       #org-header-row { gap: 20px !important; }
       #org-prestataire-dropdown { flex: none !important; width: 260px; padding: 10px 14px !important; }
+      #parc-filters-row { display: flex !important; align-items: center; justify-content: space-between; gap: 18px; }
+      #parc-filters-scroll { flex: 1; min-width: 0; }
+      .desktop-parc-toolbar { margin-bottom: 0 !important; }
       .mobile-only { display: none !important; }
       #detail-title-mobile, #detail-subtitle-mobile { display: none !important; }
       .desktop-card-actions { display: none !important; }
@@ -1762,19 +1765,21 @@
       </div>
 
       <!-- FILTRES -->
-      <div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
-        <button class="parc-filter active" onclick="filterParc('all',this)">Tous</button>
-        <button class="parc-filter" onclick="filterParc('En cours',this)">En cours</button>
-        <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)">Prêt</button>
-        <button class="parc-filter" onclick="filterParc('Réservé',this)">Réservé</button>
-        <button class="parc-filter" onclick="filterParc('Livré',this)">Livré</button>
-      </div>
+      <div id="parc-filters-row" style="margin-bottom:14px;">
+        <div id="parc-filters-scroll" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+          <button class="parc-filter active" onclick="filterParc('all',this)">Tous</button>
+          <button class="parc-filter" onclick="filterParc('En cours',this)">En cours</button>
+          <button class="parc-filter" onclick="filterParc('Prêt à vendre',this)">Prêt</button>
+          <button class="parc-filter" onclick="filterParc('Réservé',this)">Réservé</button>
+          <button class="parc-filter" onclick="filterParc('Livré',this)">Livré</button>
+        </div>
 
-      <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:16px;">
-        <button type="button" class="btn-primary-pill" onclick="openAddModal()" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
-          <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Nouveau véhicule</span>
-        </button>
+        <div class="desktop-parc-toolbar desktop-only" style="flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;">
+          <button type="button" class="btn-primary-pill" onclick="openAddModal()" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 20px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
+            <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Nouveau véhicule</span>
+          </button>
+        </div>
       </div>
 
       <div id="parc-grid" style="padding-bottom:160px;"></div>
