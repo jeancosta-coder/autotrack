@@ -1972,10 +1972,6 @@
           </div>
         </div>
       </div>
-      <div style="margin-bottom:24px;">
-        <button onclick="saveHistorique()" style="width:100%;padding:14px;background:var(--surface);color:var(--text);border:none;border-radius:9999px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;">Enregistrer</button>
-      </div>
-
       <!-- Suivi financier -->
       <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Suivi financier</span></div>
       <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:8px;">
@@ -2004,7 +2000,7 @@
       </div>
       <div style="margin:0 0 24px 4px;"><span style="font-size:12px;color:var(--text2);">Total du stock et Total des ventes sont calculés automatiquement à partir du Parc et des données avant Trakoto.</span></div>
       <div>
-        <button onclick="saveFinanceSnapshot()" style="width:100%;padding:14px;background:var(--surface);color:var(--text);border:none;border-radius:9999px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;">Enregistrer</button>
+        <button class="ntask-save-btn" onclick="saveFinanceDataModal()">Enregistrer</button>
       </div>
 
     </div>
@@ -2938,7 +2934,6 @@ function saveHistorique(){
     prep:     Number(document.getElementById('hist-prep')?.value)     || 0
   };
   localStorage.setItem('at_historique', JSON.stringify(hist));
-  showToast('✓ Données enregistrées');
 }
 
 function loadHistorique(){
@@ -2954,7 +2949,14 @@ function saveFinanceSnapshot(){
     tresorerie: Number(document.getElementById('fsnap-tresorerie')?.value) || 0
   };
   localStorage.setItem('at_finance_snapshot', JSON.stringify(snap));
+}
+function saveFinanceDataModal(){
+  saveHistorique();
+  saveFinanceSnapshot();
   showToast('✓ Données enregistrées');
+  closeFinanceDataModal();
+  switchView('dashboard');
+  renderDashboard();
 }
 function openFinanceDataModal(){
   if(!document.getElementById('modal-anim-style')){
