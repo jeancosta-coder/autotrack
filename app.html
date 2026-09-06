@@ -1639,10 +1639,6 @@
     0%   { left: -25%; }
     100% { left: 125%; }
   }
-  @keyframes sold-confetti-fall {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(105vh) rotate(560deg); opacity: 0; }
-  }
   @keyframes sold-text-pop {
     0% { transform: translate(-50%,-50%) scale(0); opacity: 0; }
     15% { transform: translate(-50%,-50%) scale(1.18); opacity: 1; }
@@ -3805,7 +3801,6 @@ function changeStatut(newStatut){
 function applyStatutChange(newStatut){
   const v = DataLayer.getVehicleById(currentDetailVehicleId);
   if(v){
-    const wasSold = v.statut === 'Livré';
     const today = Utils.today();
     const updates = { statut: newStatut, statusHistory: v.statusHistory || [] };
     updates.statusHistory.push({statut: newStatut, date: today});
@@ -3813,7 +3808,6 @@ function applyStatutChange(newStatut){
     updateStatutUI(newStatut);
     renderParc();
     showToast('✓ Statut mis à jour');
-    if(newStatut === 'Livré' && !wasSold) playSoldCarAnimation();
   }
 }
 
@@ -3965,23 +3959,10 @@ function saveVehicleDateInline(kind, val){
 }
 function playSoldCarAnimation(){
   if(document.getElementById('sold-car-overlay')) return;
-  const colors = ['var(--success)','var(--info)','var(--warning)','#A855F7','var(--accent)'];
-  let confettiHTML = '';
-  for(let i = 0; i < 32; i++){
-    const left = Math.round(Math.random() * 100);
-    const delay = (Math.random() * 0.35).toFixed(2);
-    const dur = (1.1 + Math.random() * 0.7).toFixed(2);
-    const color = colors[i % colors.length];
-    const w = 6 + Math.round(Math.random() * 5);
-    const h = 3 + Math.round(Math.random() * 4);
-    const rot = Math.round(Math.random() * 360);
-    confettiHTML += `<div style="position:absolute;top:-5%;left:${left}%;width:${w}px;height:${h}px;background:${color};border-radius:2px;opacity:0.9;transform:rotate(${rot}deg);animation:sold-confetti-fall ${dur}s ease-in ${delay}s forwards;"></div>`;
-  }
   const div = document.createElement('div');
   div.id = 'sold-car-overlay';
   div.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;';
   div.innerHTML = `
-    <div style="position:absolute;inset:0;">${confettiHTML}</div>
     <svg id="sold-car-svg" width="170" height="90" viewBox="0 0 120 60" style="position:absolute;left:-25%;top:52%;transform:translateY(-50%);animation:sold-car-drive 1.6s cubic-bezier(0.4,0,0.2,1) forwards;">
       <g stroke="var(--text3)" stroke-width="3" stroke-linecap="round" opacity="0.55">
         <line x1="-14" y1="18" x2="14" y2="18"/>
