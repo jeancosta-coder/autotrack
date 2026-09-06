@@ -64,6 +64,11 @@
       --r-sm: 10px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px;
       /* Typographie */
       --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+      /* ── Variables semantiques de style "carte" (iOS: tres leger, pas de bordure, ombre douce) ──
+         Toute nouvelle carte/section de l'app DOIT utiliser .ntask-card (ou ces 2 variables directement)
+         plutot que redefinir un border-radius/box-shadow en dur. Source unique de verite. */
+      --card-radius: var(--r-lg);
+      --card-shadow: var(--shadow-sm);
     }
     [data-theme="dark"] {
       --bg: #0B0D11;
@@ -155,7 +160,7 @@
     .add-veh-step-dot { flex: 1; height: 4px; border-radius: 9999px; background: var(--surface-3); transition: background 0.2s ease; }
     .add-veh-step-dot.active, .add-veh-step-dot.done { background: var(--accent); }
     /* ── Modale tâche : pills type, panneaux inline, créneaux, barre save ── */
-    .ntask-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-bottom: 16px; }
+    .ntask-card { background: var(--surface); border-radius: var(--card-radius); box-shadow: var(--card-shadow); overflow: hidden; margin-bottom: 16px; }
     .ntask-sep { height: 1px; background: var(--border); margin-left: 16px; }
     .ntask-row { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; min-height: 50px; cursor: pointer; gap: 12px; }
     .ntask-row-label { font-size: 16px; color: var(--text); flex-shrink: 0; }
@@ -2995,10 +3000,12 @@ function createDesktopDialog(id, innerHtml, opts = {}) {
   const sheet = document.createElement('div');
   sheet.id = id;
   sheet.className = 'desktop-popup-sheet';
-  sheet.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:transparent;z-index:10010;display:flex;align-items:center;justify-content:center;padding:20px;pointer-events:none;';
+  const isWideViewport = window.innerWidth >= 900;
+  sheet.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:${isWideViewport ? 'transparent' : 'rgba(0,0,0,0.4)'};z-index:10010;display:flex;align-items:center;justify-content:center;padding:20px;${isWideViewport ? 'pointer-events:none;' : ''}`;
   const width = opts.desktopWidth || '520px';
   const innerStyle = opts.innerStyle || '';
-  sheet.innerHTML = `<div style="width:min(${width},calc(100vw - 320px));max-height:calc(100vh - 120px);overflow:auto;border-radius:24px;background:var(--surface);box-shadow:0 24px 80px rgba(0,0,0,0.18);pointer-events:auto;${innerStyle}">${innerHtml}</div>`;
+  const sideMargin = isWideViewport ? '320px' : '32px';
+  sheet.innerHTML = `<div style="width:min(${width},calc(100vw - ${sideMargin}));max-height:calc(100vh - 120px);overflow:auto;border-radius:24px;background:var(--surface);box-shadow:0 24px 80px rgba(0,0,0,0.18);${isWideViewport ? 'pointer-events:auto;' : ''}${innerStyle}">${innerHtml}</div>`;
   sheet.addEventListener('click', e => { if (e.target === sheet) sheet.remove(); });
   document.body.appendChild(sheet);
   return sheet;
