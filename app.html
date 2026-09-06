@@ -777,6 +777,10 @@
     .bft-amt { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); }
     .bft-inp { grid-column:2; width:100%; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); border:none; outline:none; background:transparent; font-size:14px; font-family:inherit; }
     .bft-inp:disabled { color:var(--text2); opacity:0.7; }
+    .bft-row-simple { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-top:1px solid var(--border); font-size:14px; }
+    .bft-row-simple:first-child { border-top:none; }
+    .bft-inp-simple { width:110px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); border:none; outline:none; background:transparent; font-size:14px; font-family:inherit; }
+    .bft-inp-simple:disabled { color:var(--text2); opacity:0.7; }
     .bft-badge { justify-self:end; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; white-space:nowrap; }
     .bft-badge.on { background:color-mix(in srgb, var(--accent) 14%, var(--surface)); color:var(--accent); }
     .bft-badge.off { background:var(--surface-2); color:var(--text2); }
@@ -2238,8 +2242,8 @@
           <!-- Acquisition -->
           <div class="bft-card-title">Acquisition</div>
           <div class="bft-card">
-            <div class="bft-row" style="border-top:none;"><span class="bft-name">Prix d'achat</span><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp"><span></span><span></span></div>
-            <div class="bft-row"><span class="bft-name">Prix de vente cible</span><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp"><span></span><span></span></div>
+            <div class="bft-row-simple"><span class="bft-name">Prix d'achat</span><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
+            <div class="bft-row-simple"><span class="bft-name">Prix de vente cible</span><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
           </div>
 
           <!-- Frais -->
@@ -2254,7 +2258,7 @@
           <!-- Frais divers -->
           <div class="bft-card-title">Frais divers</div>
           <div class="bft-card">
-            <div class="bft-row" style="border-top:none;"><span class="bft-name">Carte grise</span><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp"><span></span><span></span></div>
+            <div class="bft-row-simple"><span class="bft-name">Carte grise</span><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
           </div>
         </div>
 
@@ -3914,7 +3918,7 @@ function renderFinanceValidationState(v){
   if(editableSection) editableSection.style.display = locked ? 'none' : 'block';
   if(frozenTableWrap) frozenTableWrap.style.display = locked ? 'block' : 'none';
   const venteDateRow = document.getElementById('fin-vente-date-row');
-  if(venteDateRow) venteDateRow.style.display = v.venteValidee ? 'flex' : 'none';
+  if(venteDateRow) venteDateRow.style.display = v.venteValidee ? 'block' : 'none';
   if(locked){
     const dateLbl = document.getElementById('finalize-sale-done-date');
     if(dateLbl) dateLbl.textContent = v.saleDate ? 'le ' + new Date(v.saleDate + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '';
