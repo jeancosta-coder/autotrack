@@ -975,7 +975,7 @@
       #dash-mini-kpi-grid .kpi-val { font-size: 30px !important; font-weight: 800 !important; letter-spacing: -0.5px !important; }
       #dash-mini-kpi-grid .kpi-label { font-size: 13px !important; margin-top: 4px !important; }
       #dash-mini-kpi-grid .kpi-delta { font-size: 11px !important; padding: 3px 8px !important; }
-      #dash-mini-kpi-grid [id$="-spark"] svg { height: 22px !important; margin-top: 8px !important; }
+      #dash-mini-kpi-grid [id$="-spark"] svg { height: 44px !important; margin-top: 10px !important; }
       .mobile-only { display: none !important; }
       #detail-title-mobile, #detail-subtitle-mobile { display: none !important; }
       .desktop-card-actions { display: none !important; }
@@ -4764,8 +4764,24 @@ function monthlySoldSeries(n){
   });
   return arr;
 }
-function sparklineSVG(values, color){
+function sparklineSVG(values, color, isDesktop, unitFmt){
   if(!values || values.length < 2) return '';
+  const fmt = unitFmt || (v => Math.round(v).toLocaleString('fr-FR'));
+  if(isDesktop){
+    // Version desktop : mini barres avec grille + info-bulle native par periode (plus precis/complet)
+    const max = Math.max(...values, 0.0001);
+    const n = values.length;
+    const barW = 100 / n;
+    const bars = values.map((v, i) => {
+      const hpct = (v / max) * 100;
+      const x = i * barW + barW * 0.15;
+      const bw = barW * 0.7;
+      const y = 100 - hpct;
+      return `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${bw.toFixed(2)}" height="${hpct.toFixed(2)}" rx="1.5" fill="${color}" opacity="0.85"><title>Période ${i+1}/${n} : ${fmt(v)}</title></rect>`;
+    }).join('');
+    const gridLines = [25,50,75].map(p => `<line x1="0" y1="${p}" x2="100" y2="${p}" stroke="var(--border)" stroke-width="0.5" vector-effect="non-scaling-stroke"/>`).join('');
+    return `<svg viewBox="0 0 100 100" preserveAspectRatio="none" class="kpi-spark">${gridLines}${bars}</svg>`;
+  }
   if(values.every(v => v === values[0])) return '<svg viewBox="0 0 100 22" preserveAspectRatio="none" class="kpi-spark"><line x1="0" y1="11" x2="100" y2="11" stroke="' + color + '" stroke-width="2" vector-effect="non-scaling-stroke" opacity="0.4"/></svg>';
   const max = Math.max(...values), min = Math.min(...values), range = (max-min) || 1;
   const pts = values.map((v,i) => { const x = (i/(values.length-1))*100; const y = 21 - ((v-min)/range)*20; return x.toFixed(1) + ',' + y.toFixed(1); }).join(' ');
@@ -4854,14 +4870,16 @@ function dashPeriodBuckets(period, count){
   });
   return buckets;
 }
-function renderBreakevenChart(buckets, chargesFixesPerMonth, bucketMonths){
+function renderBreakevenChart(buckets, chargesFixesPerMonth, bucketMonths, isDesktop){
   const w = 100, h = 46;
   let cumulProfit = 0;
   const profitPts = [];
+  const fmtEuro = n => Math.round(n).toLocaleString('fr-FR') + ' €';
+  const fmtBucketDate = d => d.toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'2-digit'});
   buckets.forEach((b, i) => {
     cumulProfit += b.sold.reduce((s, v) => s + _dashVehicleMargin(v), 0);
     const x = (i / (buckets.length - 1)) * w;
-    profitPts.push({x, y: cumulProfit});
+    profitPts.push({x, y: cumulProfit, start: b.start, end: b.end});
   });
   const threshold = chargesFixesPerMonth * bucketMonths * buckets.length;
   const bottomY = h - 4, topY = 4;
@@ -4894,35 +4912,55 @@ function renderBreakevenChart(buckets, chargesFixesPerMonth, bucketMonths){
     else { lbl.textContent = 'Pas encore atteint'; lbl.style.color = 'var(--text2)'; lbl.style.background = 'var(--surface-2)'; }
   }
   const thresholdLine = threshold > 0 ? `<line x1="0" y1="${midY}" x2="${w}" y2="${midY}" stroke="var(--danger)" stroke-width="1.3" stroke-dasharray="3,2.4" vector-effect="non-scaling-stroke" stroke-linecap="round"/>` : '';
-  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:100%;height:120px;overflow:visible;">
+  // Sur desktop : point survolable a chaque periode (tooltip natif date + profit cumule) + repere de grille
+  let hoverPoints = '';
+  let gridLines = '';
+  if(isDesktop){
+    gridLines = [0.25, 0.5, 0.75].map(f => `<line x1="0" y1="${(topY + (bottomY - topY) * f).toFixed(1)}" x2="${w}" y2="${(topY + (bottomY - topY) * f).toFixed(1)}" stroke="var(--border)" stroke-width="0.4" vector-effect="non-scaling-stroke"/>`).join('');
+    hoverPoints = profitPts.map(p => {
+      const cy = toY(p.y);
+      const label = `${fmtBucketDate(p.start)} → ${fmtBucketDate(new Date(p.end.getTime() - 86400000))} : ${fmtEuro(p.y)}`;
+      return `<circle cx="${p.x.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.8" fill="${lineColor}" opacity="0" stroke="none" style="cursor:pointer;"><title>${label}</title></circle>`;
+    }).join('');
+  }
+  const axisLabels = isDesktop ? `<div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;">
+    ${[0, Math.floor((profitPts.length-1)/2), profitPts.length-1].map(i => `<span style="font-size:10px;color:var(--text3);">${fmtBucketDate(profitPts[i].start)}</span>`).join('')}
+  </div>` : '';
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:100%;height:${isDesktop ? 170 : 120}px;overflow:visible;">
+    ${gridLines}
     ${thresholdLine}
     <polyline points="${profitLine}" fill="none" stroke="${lineColor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
     ${breakevenMarker}
     <circle cx="${lastProfit.x.toFixed(1)}" cy="${toY(lastProfit.y).toFixed(1)}" r="2.4" fill="${lineColor}" stroke="var(--surface)" stroke-width="1.2"/>
+    ${hoverPoints}
   </svg>
-  <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px;">
-    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:2px;background:${lineColor};display:inline-block;border-radius:1px;flex-shrink:0;"></span>Profit cumulé <b style="color:var(--text);font-weight:700;">(${Math.round(cumulProfit).toLocaleString('fr-FR')} €)</b></span>
-    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:2px;background:var(--danger);display:inline-block;border-radius:1px;background-image:repeating-linear-gradient(90deg,var(--danger) 0 3px,transparent 3px 5px);flex-shrink:0;"></span>Seuil de rentabilité <b style="color:var(--text);font-weight:700;">(${Math.round(threshold).toLocaleString('fr-FR')} €)</b></span>
+  ${axisLabels}
+  <div style="display:flex;flex-direction:${isDesktop ? 'row' : 'column'};gap:${isDesktop ? '20px' : '6px'};margin-top:10px;">
+    <span style="display:flex;align-items:center;gap:5px;font-size:${isDesktop ? '12px' : '11px'};color:var(--text2);"><span style="width:10px;height:2px;background:${lineColor};display:inline-block;border-radius:1px;flex-shrink:0;"></span>Profit cumulé <b style="color:var(--text);font-weight:700;">(${Math.round(cumulProfit).toLocaleString('fr-FR')} €)</b></span>
+    <span style="display:flex;align-items:center;gap:5px;font-size:${isDesktop ? '12px' : '11px'};color:var(--text2);"><span style="width:10px;height:2px;background:var(--danger);display:inline-block;border-radius:1px;background-image:repeating-linear-gradient(90deg,var(--danger) 0 3px,transparent 3px 5px);flex-shrink:0;"></span>Seuil de rentabilité <b style="color:var(--text);font-weight:700;">(${Math.round(threshold).toLocaleString('fr-FR')} €)</b></span>
+    ${isDesktop ? `<span style="font-size:12px;color:var(--text2);">${buckets.length} périodes analysées</span>` : ''}
   </div>`;
 }
 function renderDashboard(){
   const period = getDashPeriod();
   const bm = _dashBucketMonths(period);
-  const buckets = dashPeriodBuckets(period, 8);
+  const isDesktopDash = window.innerWidth >= 900;
+  const bucketCount = isDesktopDash ? 16 : 8;
+  const buckets = dashPeriodBuckets(period, bucketCount);
   const currentBucket = buckets[buckets.length - 1];
   const previousBucket = buckets[buckets.length - 2];
 
   // Seuil de rentabilité
   const snap = loadFinanceSnapshot();
   const chartEl = document.getElementById('dash-breakeven-chart');
-  if(chartEl) chartEl.innerHTML = renderBreakevenChart(buckets, snap.charges || 0, bm);
+  if(chartEl) chartEl.innerHTML = renderBreakevenChart(buckets, snap.charges || 0, bm, isDesktopDash);
 
   // Marge moyenne (période courante)
   const margins = currentBucket.sold.map(_dashVehicleMargin);
   const avgMargin = margins.length ? Math.round(margins.reduce((a, b) => a + b, 0) / margins.length) : null;
   Utils.el('dash-avg-margin').textContent = avgMargin !== null ? avgMargin.toLocaleString('fr-FR') + ' €' : '—';
   const marginSeries = buckets.map(b => { const m = b.sold.map(_dashVehicleMargin); return m.length ? m.reduce((a, c) => a + c, 0) / m.length : 0; });
-  const mSpark = document.getElementById('dash-avg-margin-spark'); if(mSpark) mSpark.innerHTML = sparklineSVG(marginSeries, 'var(--success)');
+  const mSpark = document.getElementById('dash-avg-margin-spark'); if(mSpark) mSpark.innerHTML = sparklineSVG(marginSeries, 'var(--success)', isDesktopDash, v => Math.round(v).toLocaleString('fr-FR') + ' €');
   const prevMargins = previousBucket ? previousBucket.sold.map(_dashVehicleMargin) : [];
   const prevAvgMargin = prevMargins.length ? prevMargins.reduce((a, b) => a + b, 0) / prevMargins.length : 0;
   const mDelta = document.getElementById('dash-avg-margin-delta'); if(mDelta) mDelta.innerHTML = (avgMargin !== null) ? deltaBadgeHTML(avgMargin, prevAvgMargin) : '';
@@ -4932,21 +4970,21 @@ function renderDashboard(){
   const avgTime = times.length ? Math.round(times.reduce((a, b) => a + b, 0) / times.length) : null;
   Utils.el('dash-avg-time').textContent = avgTime !== null ? avgTime + ' j' : '—';
   const timeSeries = buckets.map(b => { const t = b.sold.map(_dashSaleDays).filter(x => x < 365); return t.length ? t.reduce((a, c) => a + c, 0) / t.length : 0; });
-  const tSpark = document.getElementById('dash-avg-time-spark'); if(tSpark) tSpark.innerHTML = sparklineSVG(timeSeries, 'var(--info)');
+  const tSpark = document.getElementById('dash-avg-time-spark'); if(tSpark) tSpark.innerHTML = sparklineSVG(timeSeries, 'var(--info)', isDesktopDash, v => Math.round(v) + ' j');
 
   // Total entrées / sorties (période courante)
   const entreesValue = currentBucket.entered.reduce((s, v) => s + (v.achat || 0), 0);
   Utils.el('dash-entrees-value').textContent = entreesValue ? entreesValue.toLocaleString('fr-FR') + ' €' : '—';
   Utils.el('dash-entrees-count').textContent = currentBucket.entered.length + (currentBucket.entered.length > 1 ? ' véhicules' : ' véhicule');
   const entreesSeries = buckets.map(b => b.entered.length);
-  const eSpark = document.getElementById('dash-entrees-spark'); if(eSpark) eSpark.innerHTML = sparklineSVG(entreesSeries, 'var(--accent)');
+  const eSpark = document.getElementById('dash-entrees-spark'); if(eSpark) eSpark.innerHTML = sparklineSVG(entreesSeries, 'var(--accent)', isDesktopDash, v => Math.round(v) + ' véh.');
   const eDelta = document.getElementById('dash-entrees-delta'); if(eDelta) eDelta.innerHTML = deltaBadgeHTML(currentBucket.entered.length, previousBucket ? previousBucket.entered.length : 0);
 
   const sortiesValue = currentBucket.sold.reduce((s, v) => s + (v.vente || 0), 0);
   Utils.el('dash-sorties-value').textContent = sortiesValue ? sortiesValue.toLocaleString('fr-FR') + ' €' : '—';
   Utils.el('dash-sorties-count').textContent = currentBucket.sold.length + (currentBucket.sold.length > 1 ? ' véhicules' : ' véhicule');
   const sortiesSeries = buckets.map(b => b.sold.length);
-  const sSpark = document.getElementById('dash-sorties-spark'); if(sSpark) sSpark.innerHTML = sparklineSVG(sortiesSeries, 'var(--warning)');
+  const sSpark = document.getElementById('dash-sorties-spark'); if(sSpark) sSpark.innerHTML = sparklineSVG(sortiesSeries, 'var(--warning)', isDesktopDash, v => Math.round(v) + ' véh.');
   const sDelta = document.getElementById('dash-sorties-delta'); if(sDelta) sDelta.innerHTML = deltaBadgeHTML(currentBucket.sold.length, previousBucket ? previousBucket.sold.length : 0);
 }
 
