@@ -2766,6 +2766,51 @@ function removeOrgEntry(id){
   renderOrgBoard();
 }
 
+function openOrgEntryDetail(entryId){
+  const e = orgEntries.find(x => x.id === entryId);
+  if(!e) return;
+  const v = vehicles.find(x => String(x.id) === String(e.vehicleId));
+  const name = v ? (v.marque + ' ' + v.modele) : 'Véhicule supprimé';
+  const color = orgThemeColor(e.theme);
+  const noteText = e.note ? escapeHtml(e.note) : 'Aucune note renseignée.';
+  const innerHtml = `<div style="padding:22px 20px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+      <span style="width:11px;height:11px;border-radius:50%;background:${color};flex-shrink:0;"></span>
+      <span style="font-size:12px;font-weight:700;color:${color};text-transform:uppercase;letter-spacing:0.4px;">${orgThemeLabel(e.theme)}</span>
+    </div>
+    <div style="font-size:19px;font-weight:800;color:var(--text);margin-bottom:16px;">${escapeHtml(name)}</div>
+    <div style="background:var(--surface-2);border-radius:12px;padding:14px;margin-bottom:18px;">
+      <div style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">Note</div>
+      <div style="font-size:15px;color:${e.note ? 'var(--text)' : 'var(--text2)'};line-height:1.4;white-space:pre-wrap;">${noteText}</div>
+    </div>
+    <button onclick="openOrgMoveMenu('${entryId}', this)" style="width:100%;padding:13px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8l4 4-4 4"/><path d="M3 12h18"/></svg>
+      Déplacer vers un autre prestataire
+    </button>
+  </div>`;
+  createDialogOrSheet('org-entry-detail-dialog', innerHtml, {desktopWidth: '420px'});
+}
+function openOrgMoveMenu(entryId, anchorEl){
+  const e = orgEntries.find(x => x.id === entryId);
+  if(!e) return;
+  const others = prestataires.filter(p => p.id !== e.prestataireId);
+  const html = others.length
+    ? others.map(p => `<div class="ntask-opt" onclick="moveOrgEntryToPrestataire('${entryId}','${p.id}')"><span>Chez ${escapeHtml(p.nom)}</span></div>`).join('')
+    : '<div style="padding:14px;color:var(--text2);font-size:14px;">Aucun autre prestataire</div>';
+  openAnchoredMenu(anchorEl, html);
+}
+function moveOrgEntryToPrestataire(entryId, newPrestataireId){
+  const e = orgEntries.find(x => x.id === entryId);
+  if(!e) return;
+  e.prestataireId = newPrestataireId;
+  saveOrg();
+  closeAnchoredMenu();
+  document.getElementById('org-entry-detail-dialog')?.remove();
+  renderOrgBoard();
+  const p = prestataires.find(x => x.id === newPrestataireId);
+  showToast('✓ Déplacé chez ' + (p ? p.nom : ''));
+}
+
 function orgAddBtnClick(btn){
   setTimeout(() => openOrgAddVehicleMenu(btn), 140);
 }
@@ -2835,7 +2880,7 @@ function startOrgDrag(e, cardEl){
   ghost.style.top = rect.top + 'px';
   document.body.appendChild(ghost);
   cardEl.style.opacity = '0.35';
-  _orgDrag = { entryId, ghost, offsetX: e.clientX - rect.left, offsetY: e.clientY - rect.top, sourceCardEl: cardEl, hoverCol: null };
+  _orgDrag = { entryId, ghost, offsetX: e.clientX - rect.left, offsetY: e.clientY - rect.top, sourceCardEl: cardEl, hoverCol: null, startX: e.clientX, startY: e.clientY };
   if(cardEl.setPointerCapture){ try { cardEl.setPointerCapture(e.pointerId); } catch(err){} }
   document.addEventListener('pointermove', onOrgDragMove);
   document.addEventListener('pointerup', onOrgDragEnd);
@@ -2862,6 +2907,11 @@ function onOrgDragEnd(e){
   document.querySelectorAll('.org-col-body').forEach(c => c.classList.remove('org-drop-hover'));
   if(drag.sourceCardEl) drag.sourceCardEl.style.opacity = '';
   _orgDrag = null;
+  const movedDist = Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY);
+  if(movedDist < 6){
+    openOrgEntryDetail(drag.entryId);
+    return;
+  }
   if(drag.hoverCol){
     const newStatus = drag.hoverCol.dataset.col;
     const entry = orgEntries.find(x => x.id === drag.entryId);
