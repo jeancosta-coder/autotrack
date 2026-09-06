@@ -4687,7 +4687,7 @@ function dashPeriodBuckets(period, count){
     const saleD = v.saleDate ? new Date(v.saleDate + 'T00:00:00') : (h ? new Date(h.date + 'T00:00:00') : null);
     const buyD = v.achatDate ? new Date(v.achatDate + 'T00:00:00') : new Date(parseInt(v.id));
     buckets.forEach(b => {
-      if(saleD && saleD >= b.start && saleD < b.end) b.sold.push(v);
+      if(v.venteValidee && saleD && saleD >= b.start && saleD < b.end) b.sold.push(v);
       if(buyD && buyD >= b.start && buyD < b.end) b.entered.push(v);
     });
   });
