@@ -375,15 +375,15 @@
     .dash-square-kpi { aspect-ratio: 1 / 1; min-height: 0; justify-content: center; }
     @media (max-width: 899px) {
       #dash-mini-kpi-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
-      .dash-mini-kpi { padding: 8px 8px 7px; border-radius: 14px; }
-      .dash-mini-kpi .kpi-head { margin-bottom: 3px !important; }
-      .dash-mini-kpi .kpi-icon { width: 20px; height: 20px; border-radius: 50%; }
-      .dash-mini-kpi .kpi-icon svg { width: 10px; height: 10px; }
-      .dash-mini-kpi .kpi-val { font-size: 13px !important; letter-spacing: -0.2px; }
-      .dash-mini-kpi .kpi-label { font-size: 8.5px; margin-top: 1px; }
-      .dash-mini-kpi .kpi-delta { font-size: 8px; padding: 1px 5px; }
-      .dash-mini-kpi [id$="-value"] { display: none; }
-      .dash-mini-kpi [id$="-spark"] svg { height: 12px; margin-top: 2px; }
+      .dash-mini-kpi { padding: 14px 14px 12px; border-radius: 16px; }
+      .dash-mini-kpi .kpi-head { margin-bottom: 8px !important; }
+      .dash-mini-kpi .kpi-icon { width: 28px; height: 28px; border-radius: 50%; }
+      .dash-mini-kpi .kpi-icon svg { width: 14px; height: 14px; }
+      .dash-mini-kpi .kpi-val { font-size: 26px !important; letter-spacing: -0.5px; font-weight: 800; }
+      .dash-mini-kpi .kpi-label { font-size: 12px; margin-top: 3px; font-weight: 600; }
+      .dash-mini-kpi .kpi-delta { font-size: 10px; padding: 2px 6px; }
+      .dash-mini-kpi [id$="-count"] { font-size: 11px !important; margin-top: 3px !important; }
+      .dash-mini-kpi [id$="-spark"] svg { height: 16px; margin-top: 6px; }
     }
     .dash-sales-table-wrap { display: none; }
     .dash-sales-cards { display: block; }
@@ -1877,9 +1877,9 @@
             <span class="kpi-icon" style="background:var(--accent-soft);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span>
             <span id="dash-entrees-delta"></span>
           </div>
-          <div class="kpi-val" style="font-size:20px;" id="dash-entrees-count">0</div>
+          <div class="kpi-val" style="font-size:20px;" id="dash-entrees-value">—</div>
           <div class="kpi-label">Total entrées</div>
-          <div id="dash-entrees-value" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
+          <div id="dash-entrees-count" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
           <div id="dash-entrees-spark"></div>
         </div>
         <div class="kpi-card dash-square-kpi dash-mini-kpi">
@@ -1887,9 +1887,9 @@
             <span class="kpi-icon" style="background:var(--warning-soft);color:var(--warning);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"/><path d="M14 17l5-5-5-5"/><path d="M9 12h12"/></svg></span>
             <span id="dash-sorties-delta"></span>
           </div>
-          <div class="kpi-val" style="font-size:20px;" id="dash-sorties-count">0</div>
+          <div class="kpi-val" style="font-size:20px;" id="dash-sorties-value">—</div>
           <div class="kpi-label">Total sorties</div>
-          <div id="dash-sorties-value" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
+          <div id="dash-sorties-count" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
           <div id="dash-sorties-spark"></div>
         </div>
       </div>
@@ -4789,15 +4789,15 @@ function renderDashboard(){
 
   // Total entrées / sorties (période courante)
   const entreesValue = currentBucket.entered.reduce((s, v) => s + (v.achat || 0), 0);
-  Utils.el('dash-entrees-count').textContent = currentBucket.entered.length;
-  Utils.el('dash-entrees-value').textContent = entreesValue ? entreesValue.toLocaleString('fr-FR') + ' € investis' : '';
+  Utils.el('dash-entrees-value').textContent = entreesValue ? entreesValue.toLocaleString('fr-FR') + ' €' : '—';
+  Utils.el('dash-entrees-count').textContent = currentBucket.entered.length + (currentBucket.entered.length > 1 ? ' véhicules' : ' véhicule');
   const entreesSeries = buckets.map(b => b.entered.length);
   const eSpark = document.getElementById('dash-entrees-spark'); if(eSpark) eSpark.innerHTML = sparklineSVG(entreesSeries, 'var(--accent)');
   const eDelta = document.getElementById('dash-entrees-delta'); if(eDelta) eDelta.innerHTML = deltaBadgeHTML(currentBucket.entered.length, previousBucket ? previousBucket.entered.length : 0);
 
   const sortiesValue = currentBucket.sold.reduce((s, v) => s + (v.vente || 0), 0);
-  Utils.el('dash-sorties-count').textContent = currentBucket.sold.length;
-  Utils.el('dash-sorties-value').textContent = sortiesValue ? sortiesValue.toLocaleString('fr-FR') + ' € de CA' : '';
+  Utils.el('dash-sorties-value').textContent = sortiesValue ? sortiesValue.toLocaleString('fr-FR') + ' €' : '—';
+  Utils.el('dash-sorties-count').textContent = currentBucket.sold.length + (currentBucket.sold.length > 1 ? ' véhicules' : ' véhicule');
   const sortiesSeries = buckets.map(b => b.sold.length);
   const sSpark = document.getElementById('dash-sorties-spark'); if(sSpark) sSpark.innerHTML = sparklineSVG(sortiesSeries, 'var(--warning)');
   const sDelta = document.getElementById('dash-sorties-delta'); if(sDelta) sDelta.innerHTML = deltaBadgeHTML(currentBucket.sold.length, previousBucket ? previousBucket.sold.length : 0);
