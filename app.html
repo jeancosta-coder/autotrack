@@ -2686,7 +2686,7 @@ function confirmDeletePrestataire(id){
       <button onclick="deletePrestataire('${id}');this.closest('[style*=fixed]').remove();" style="flex:1;padding:11px;background:var(--danger);color:white;border:none;border-radius:9999px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.2px;">Supprimer</button>
     </div>
   </div>`;
-  createDialogOrSheet('confirm-delete-prestataire-sheet', innerHtml, {desktopWidth:'420px'});
+  createDialogOrSheet('confirm-delete-prestataire-sheet', innerHtml, {desktopWidth:'420px', forceCenter:true});
 }
 function deletePrestataire(id){
   prestataires = prestataires.filter(p => p.id !== id);
@@ -2779,7 +2779,7 @@ function confirmRemoveOrgEntry(id){
       <button onclick="removeOrgEntry('${id}');this.closest('[style*=fixed]').remove();" style="flex:1;padding:11px;background:var(--danger);color:white;border:none;border-radius:9999px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.2px;">Supprimer</button>
     </div>
   </div>`;
-  createDialogOrSheet('confirm-remove-org-entry-sheet', innerHtml, {desktopWidth:'420px'});
+  createDialogOrSheet('confirm-remove-org-entry-sheet', innerHtml, {desktopWidth:'420px', forceCenter:true});
 }
 
 function openOrgEntryDetail(entryId){
@@ -2991,7 +2991,7 @@ function createDesktopDialog(id, innerHtml, opts = {}) {
 function createDialogOrSheet(id, innerHtml, options = {}) {
   const existing = document.getElementById(id);
   if (existing) existing.remove();
-  if (window.innerWidth >= 900) {
+  if (options.forceCenter || window.innerWidth >= 900) {
     return createDesktopDialog(id, innerHtml, options);
   }
   const sheet = document.createElement('div');
@@ -3910,7 +3910,7 @@ function confirmDeleteCurrentVehicle(){
       <button onclick="DataLayer.deleteVehicle(${currentDetailVehicleId});showToast('✓ Véhicule supprimé');closeVehicleDetails();renderParc();this.closest('[style*=fixed]').remove();" style="flex:1;padding:11px;background:var(--danger);color:white;border:none;border-radius:9999px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.2px;">Supprimer</button>
     </div>
   </div>`;
-  createDialogOrSheet('confirm-delete-current-vehicle-sheet', innerHtml, {desktopWidth:'480px'});
+  createDialogOrSheet('confirm-delete-current-vehicle-sheet', innerHtml, {desktopWidth:'480px', forceCenter:true});
 }
 
 
@@ -4682,7 +4682,7 @@ function confirmDeleteEditTask(taskId){
       <button onclick="DataLayer.deletePlanningTask(${taskId});save();showToast('✓ Tâche supprimée');closeEditPlanningModal();renderPlanning();this.closest('[style*=fixed]').remove();" style="flex:1;padding:11px;background:var(--danger);color:white;border:none;border-radius:9999px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.2px;">Supprimer</button>
     </div>
   </div>`;
-  createDialogOrSheet('confirm-delete-edit-task', innerHtml, {desktopWidth:'420px'});
+  createDialogOrSheet('confirm-delete-edit-task', innerHtml, {desktopWidth:'420px', forceCenter:true});
 }
 
 function saveEditPlanningTask(taskId){
@@ -4713,7 +4713,7 @@ function deleteVehicle(vehicleId){
       <button onclick="DataLayer.deleteVehicle(${vehicleId});showToast('✓ Véhicule supprimé');if(currentDetailVehicleId===${vehicleId})switchView('parc');renderParc();this.closest('[style*=fixed]').remove();" style="flex:1;padding:11px;background:var(--danger);color:white;border:none;border-radius:9999px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.2px;">Supprimer</button>
     </div>
   </div>`;
-  createDialogOrSheet('confirm-delete-vehicle-sheet', innerHtml, {desktopWidth:'480px'});
+  createDialogOrSheet('confirm-delete-vehicle-sheet', innerHtml, {desktopWidth:'480px', forceCenter:true});
 }
 
 /* ── Helpers KPI enrichies (Phase 3) ── */
