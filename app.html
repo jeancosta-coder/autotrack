@@ -1844,11 +1844,12 @@
     <!-- PANEL : Vue d'ensemble -->
     <div id="dash-panel-overview">
       <!-- Seuil de rentabilité -->
-      <div style="margin-bottom:4px;padding:0 4px;display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Seuil de rentabilité</span>
-        <span id="dash-breakeven-label" style="font-size:12px;font-weight:700;"></span>
-      </div>
-      <div style="background:var(--surface);border-radius:17px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:20px;">
+      <div class="kpi-card" style="margin-bottom:20px;">
+        <div class="kpi-head" style="margin-bottom:10px;">
+          <span class="kpi-icon" style="background:var(--accent-soft);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span>
+          <span id="dash-breakeven-label" class="kpi-delta"></span>
+        </div>
+        <div class="kpi-label" style="margin-bottom:6px;">Seuil de rentabilité</div>
         <div id="dash-breakeven-chart"></div>
       </div>
 
@@ -4742,9 +4743,9 @@ function renderBreakevenChart(buckets, chargesFixesPerMonth, bucketMonths){
   }
   const lbl = document.getElementById('dash-breakeven-label');
   if(lbl){
-    if(threshold <= 0){ lbl.textContent = 'Charges non renseignées'; lbl.style.color = 'var(--text2)'; }
-    else if(reached){ lbl.textContent = '✓ Seuil atteint'; lbl.style.color = 'var(--success)'; }
-    else { lbl.textContent = 'Pas encore atteint'; lbl.style.color = 'var(--text2)'; }
+    if(threshold <= 0){ lbl.textContent = 'Charges non renseignées'; lbl.style.color = 'var(--text2)'; lbl.style.background = 'var(--surface-2)'; }
+    else if(reached){ lbl.textContent = '✓ Seuil atteint'; lbl.style.color = 'var(--success)'; lbl.style.background = 'var(--success-soft)'; }
+    else { lbl.textContent = 'Pas encore atteint'; lbl.style.color = 'var(--text2)'; lbl.style.background = 'var(--surface-2)'; }
   }
   const thresholdLine = threshold > 0 ? `<line x1="0" y1="${midY}" x2="${w}" y2="${midY}" stroke="var(--danger)" stroke-width="1.3" stroke-dasharray="3,2.4" vector-effect="non-scaling-stroke" stroke-linecap="round"/>` : '';
   return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:100%;height:120px;overflow:visible;">
