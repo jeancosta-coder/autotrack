@@ -1914,15 +1914,9 @@
         <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Prestataires</span>
       </div>
 
-      <div id="org-add-prestataire-row" style="display:none;margin-bottom:10px;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:10px 12px;align-items:center;gap:8px;">
-        <input type="text" id="org-new-prestataire-input" placeholder="Nom du prestataire" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:15px;color:var(--text);" onkeydown="if(event.key==='Enter')commitAddPrestataire()">
-        <button onclick="commitAddPrestataire()" style="background:var(--accent);color:#fff;border:none;border-radius:9999px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Ajouter</button>
-        <button onclick="closeAddPrestataireRow()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px;padding:4px;">✕</button>
-      </div>
-
-      <div id="org-prestataire-dropdown" onclick="openOrgPrestataireMenu(this)" style="display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:12px 14px;margin-bottom:10px;cursor:pointer;">
+      <div id="org-prestataire-dropdown" onclick="orgDropdownClick(this)" style="display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:12px 14px;margin-bottom:10px;cursor:pointer;">
         <span id="org-prestataire-dropdown-label" style="font-size:15px;font-weight:600;color:var(--text);">Aucun prestataire</span>
-        <svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;"><polyline points="2,3 5,7 8,3"/></svg>
+        <span id="org-prestataire-dropdown-icon" style="display:flex;color:var(--text2);opacity:0.7;"><svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,3 5,7 8,3"/></svg></span>
       </div>
     </div>
 
@@ -2648,6 +2642,17 @@ function updateOrgPrestataireDropdownLabel(){
   if(!lbl) return;
   const p = prestataires.find(x => x.id === currentOrgPrestataireId);
   lbl.textContent = p ? ('Chez ' + p.nom) : 'Aucun prestataire';
+  const iconWrap = document.getElementById('org-prestataire-dropdown-icon');
+  if(iconWrap){
+    iconWrap.innerHTML = prestataires.length
+      ? '<svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,3 5,7 8,3"/></svg>'
+      : '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>';
+  }
+}
+
+function orgDropdownClick(el){
+  if(!prestataires.length){ openAddPrestataireModal(); return; }
+  openOrgPrestataireMenu(el);
 }
 
 function openOrgPrestataireMenu(anchorEl){
@@ -2658,7 +2663,7 @@ function openOrgPrestataireMenu(anchorEl){
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
       </button>
     </div>`).join('');
-  const addNewHtml = `<div class="ntask-opt" style="color:var(--accent);font-weight:600;${prestataires.length ? 'border-top:1px solid var(--border);' : ''}" onclick="closeAnchoredMenu();setTimeout(openAddPrestataireRow,140);">+ Nouveau prestataire</div>`;
+  const addNewHtml = `<div class="ntask-opt" style="color:var(--accent);font-weight:600;${prestataires.length ? 'border-top:1px solid var(--border);' : ''}" onclick="closeAnchoredMenu();setTimeout(openAddPrestataireModal,140);">+ Nouveau prestataire</div>`;
   openAnchoredMenu(anchorEl, itemsHtml + addNewHtml);
 }
 
@@ -2692,15 +2697,23 @@ function deletePrestataire(id){
   showToast('✓ Prestataire supprimé');
 }
 
-function openAddPrestataireRow(){
-  const row = document.getElementById('org-add-prestataire-row');
-  row.style.display = 'flex';
-  const input = document.getElementById('org-new-prestataire-input');
-  input.value = '';
-  setTimeout(() => input.focus(), 50);
+function openAddPrestataireModal(){
+  const innerHtml = `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
+      <span style="font-size:17px;font-weight:600;color:var(--text);">Nouveau prestataire</span>
+      <button onclick="closeAddPrestataireModal()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button>
+    </div>
+    <div style="padding:20px;">
+      <div style="background:var(--surface-2);border-radius:14px;overflow:hidden;margin-bottom:20px;">
+        <input type="text" id="org-new-prestataire-input" placeholder="Nom du prestataire" style="width:100%;border:none;outline:none;background:transparent;font-size:16px;color:var(--text);padding:14px 16px;box-sizing:border-box;" onkeydown="if(event.key==='Enter')commitAddPrestataire()">
+      </div>
+      <button onclick="commitAddPrestataire()" class="ntask-save-btn">Ajouter</button>
+    </div>`;
+  createDialogOrSheet('add-prestataire-modal', innerHtml, {desktopWidth:'400px'});
+  setTimeout(() => document.getElementById('org-new-prestataire-input')?.focus(), 200);
 }
-function closeAddPrestataireRow(){
-  document.getElementById('org-add-prestataire-row').style.display = 'none';
+function closeAddPrestataireModal(){
+  document.getElementById('add-prestataire-modal')?.remove();
 }
 function commitAddPrestataire(){
   const input = document.getElementById('org-new-prestataire-input');
@@ -2710,7 +2723,7 @@ function commitAddPrestataire(){
   prestataires.push(p);
   currentOrgPrestataireId = p.id;
   saveOrg();
-  closeAddPrestataireRow();
+  closeAddPrestataireModal();
   renderOrganisation();
   showToast('✓ Prestataire ajouté');
 }
@@ -2757,7 +2770,7 @@ function orgAddBtnClick(btn){
   setTimeout(() => openOrgAddVehicleMenu(btn), 140);
 }
 function orgFabClick(btn){
-  if(!prestataires.length){ showToast('Ajoute d\'abord un prestataire'); openAddPrestataireRow(); return; }
+  if(!prestataires.length){ showToast('Ajoute d\'abord un prestataire'); openAddPrestataireModal(); return; }
   openOrgAddVehicleMenu(btn);
 }
 function openOrgAddVehicleMenu(anchorEl){
