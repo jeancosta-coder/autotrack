@@ -225,6 +225,11 @@
     /* .modal-close-btn = croix de fermeture standard de tout modal/sheet (cible tactile 36x36) */
     .modal-close-btn { background: none; border: none; cursor: pointer; font-size: 22px; color: var(--text2); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
     .modal-close-btn:active { background: var(--surface-2); }
+    .btn-block { flex: none !important; width: 100%; }
+    /* .btn-danger-soft = action destructive presentee discretement hors modal (ex: Supprimer le vehicule en bas de fiche) */
+    .btn-danger-soft { width: 100%; padding: 14px; background: var(--surface-2); color: var(--danger); border: none; border-radius: 9999px; font-size: 15px; font-weight: 500; cursor: pointer; box-shadow: var(--shadow-sm); letter-spacing: -0.2px; }
+    /* .btn-success-block = action de validation positive pleine largeur (ex: Valider la vente) */
+    .btn-success-block { width: 100%; padding: 14px; background: var(--success); color: #fff; border: none; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
     /* Rail Planning "À venir" — masqué par défaut (mobile), visible desktop */
     #planning-rail { display: none; }
     .planning-rail-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
@@ -2185,14 +2190,14 @@
 
         <!-- Bouton supprimer mobile -->
         <div class="dt-delete-mobile-wrap" style="margin-top:auto;padding:16px 0 32px;">
-          <button onclick="confirmDeleteCurrentVehicle()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--danger);border:none;border-radius:9999px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-sm);letter-spacing:-0.2px;">
+          <button onclick="confirmDeleteCurrentVehicle()" class="btn-danger-soft">
             Supprimer le véhicule
           </button>
         </div>
 
         <!-- Bouton supprimer (desktop uniquement, sous les notes) -->
         <div class="dt-delete-wrap" style="display:none;">
-          <button onclick="confirmDeleteCurrentVehicle()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--danger);border:none;border-radius:9999px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-sm);letter-spacing:-0.2px;">
+          <button onclick="confirmDeleteCurrentVehicle()" class="btn-danger-soft">
             Supprimer le véhicule
           </button>
         </div>
@@ -2286,7 +2291,7 @@
         <span id="detail-marge" style="display:none;"></span><span id="detail-marge-pct" style="display:none;"></span>
 
         <!-- Valider la vente : visible tant que la vente n'est pas validée -->
-        <button id="finalize-sale-btn" onclick="openFinalizeSaleModal()" style="width:100%;padding:14px;background:var(--success);color:#fff;border:none;border-radius:9999px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;">
+        <button id="finalize-sale-btn" onclick="openFinalizeSaleModal()" class="btn-success-block" style="margin-bottom:16px;">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
           Valider la vente
         </button>
@@ -3134,8 +3139,8 @@ async function doLogout(){
   const innerHtml = `<div style="padding:24px 20px 40px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Se déconnecter ?</div>
     <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Vous devrez vous reconnecter pour accéder à vos données.</div>
-    <button onclick="confirmLogout();document.getElementById('logout-sheet')?.remove();" style="width:100%;padding:14px;background:#FF3B30;color:white;border:none;border-radius:9999px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px;">Se déconnecter</button>
-    <button onclick="document.getElementById('logout-sheet')?.remove()" style="width:100%;padding:14px;background:var(--surface-2);color:var(--text);border:none;border-radius:9999px;font-size:16px;font-weight:600;cursor:pointer;">Annuler</button>
+    <button onclick="confirmLogout();document.getElementById('logout-sheet')?.remove();" class="btn-danger btn-block" style="font-size:16px;margin-bottom:12px;">Se déconnecter</button>
+    <button onclick="document.getElementById('logout-sheet')?.remove()" class="btn-secondary btn-block" style="font-size:16px;">Annuler</button>
   </div>`;
   createDialogOrSheet('logout-sheet', innerHtml, {desktopWidth:'420px'});
 }
@@ -4153,7 +4158,7 @@ function openFinalizeSaleModal(){
         <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Marge réelle</div>
         <div id="fs-marge-preview" style="font-size:22px;font-weight:700;color:var(--text);">—</div>
       </div>
-      <button onclick="commitFinalizeSale()" style="width:100%;padding:14px;background:var(--success);color:#fff;border:none;border-radius:9999px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <button onclick="commitFinalizeSale()" class="btn-success-block">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
         Valider la vente
       </button>
@@ -4630,7 +4635,7 @@ function openEditPlanningTaskModal(taskId){
     ${ntaskModalBody(taskDate, taskDateEnd, taskTimeStart, taskTimeEnd)}
     <div class="ntask-save-bar">
       <button class="ntask-save-btn" onclick="saveTaskEdit(${taskId})">Enregistrer</button>
-      <button onclick="confirmDeleteEditTask(${taskId})" style="width:100%;margin-top:10px;padding:14px;background:var(--surface-2);color:var(--danger);border:none;border-radius:9999px;font-size:15px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-sm);letter-spacing:-0.2px;">Supprimer l'événement</button>
+      <button onclick="confirmDeleteEditTask(${taskId})" class="btn-danger-soft" style="margin-top:10px;">Supprimer l'événement</button>
     </div>
   </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
