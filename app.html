@@ -956,8 +956,7 @@
       .app-container { display: grid; gap: 32px; }
       .bottom-nav,
       #fab-planning,
-      #fab-parc,
-      #fab-organisation {
+      #fab-parc {
         display: none !important;
       }
       #parc-grid {
@@ -1911,18 +1910,11 @@
   <!-- VUE ORGANISATION -->
   <div id="organisation" class="view" style="position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;background:var(--surface-2);z-index:1;">
     <div style="padding:14px 14px 0;flex-shrink:0;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
         <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Prestataires</span>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <button type="button" class="desktop-only btn-primary-pill" onclick="orgFabClick(this)" style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 14px;transition:background 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
-            <span style="font-size:13px;font-weight:600;letter-spacing:-0.2px;color:var(--accent-contrast);">Ajouter un véhicule</span>
-          </button>
-          <button class="org-add-prestataire-btn" onclick="orgAddPrestataireBtnClick(this)" onpointerdown="this.classList.remove('org-press');void this.offsetWidth;this.classList.add('org-press')" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--accent);font-size:13px;font-weight:600;padding:6px 10px;border-radius:9999px;">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
-            Prestataire
-          </button>
-        </div>
+        <button class="org-add-prestataire-btn" onclick="orgAddPrestataireBtnClick(this)" onpointerdown="this.classList.remove('org-press');void this.offsetWidth;this.classList.add('org-press')" title="Ajouter un prestataire" style="display:flex;align-items:center;justify-content:center;background:var(--accent-soft);border:none;cursor:pointer;color:var(--accent);width:24px;height:24px;border-radius:50%;flex-shrink:0;">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+        </button>
       </div>
 
       <div id="org-add-prestataire-row" style="display:none;margin-bottom:10px;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:10px 12px;align-items:center;gap:8px;">
@@ -1931,7 +1923,10 @@
         <button onclick="closeAddPrestataireRow()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px;padding:4px;">✕</button>
       </div>
 
-      <div id="org-prestataire-pills" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;"></div>
+      <div id="org-prestataire-dropdown" onclick="openOrgPrestataireMenu(this)" style="display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:12px 14px;margin-bottom:10px;cursor:pointer;">
+        <span id="org-prestataire-dropdown-label" style="font-size:15px;font-weight:600;color:var(--text);">Aucun prestataire</span>
+        <svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;"><polyline points="2,3 5,7 8,3"/></svg>
+      </div>
     </div>
 
     <div id="org-empty-state" style="display:none;flex:1;align-items:center;justify-content:center;text-align:center;padding:40px 20px;color:var(--text2);font-size:14px;">
@@ -2637,8 +2632,8 @@ function orgThemeColor(k){ return (ORG_THEMES.find(t => t.k === k) || ORG_THEMES
 function orgThemeLabel(k){ return (ORG_THEMES.find(t => t.k === k) || ORG_THEMES[4]).l; }
 
 function renderOrganisation(){
-  renderPrestatairePills();
   if(!currentOrgPrestataireId && prestataires.length) currentOrgPrestataireId = prestataires[0].id;
+  updateOrgPrestataireDropdownLabel();
   const empty = document.getElementById('org-empty-state');
   const board = document.getElementById('org-board');
   if(!empty || !board) return;
@@ -2651,15 +2646,23 @@ function renderOrganisation(){
   renderOrgBoard();
 }
 
-function renderPrestatairePills(){
-  const wrap = document.getElementById('org-prestataire-pills');
-  if(!wrap) return;
-  wrap.innerHTML = prestataires.map(p => `<button class="org-pill ${p.id === currentOrgPrestataireId ? 'active' : ''}" onclick="selectPrestataire('${p.id}')">${p.nom}</button>`).join('');
+function updateOrgPrestataireDropdownLabel(){
+  const lbl = document.getElementById('org-prestataire-dropdown-label');
+  if(!lbl) return;
+  const p = prestataires.find(x => x.id === currentOrgPrestataireId);
+  lbl.textContent = p ? ('chez ' + p.nom) : 'Aucun prestataire';
+}
+
+function openOrgPrestataireMenu(anchorEl){
+  if(!prestataires.length) return;
+  const itemsHtml = prestataires.map(p => `<div class="ntask-opt" onclick="selectPrestataire('${p.id}')"><span>chez ${p.nom}</span></div>`).join('');
+  openAnchoredMenu(anchorEl, itemsHtml);
 }
 
 function selectPrestataire(id){
   currentOrgPrestataireId = id;
-  renderPrestatairePills();
+  updateOrgPrestataireDropdownLabel();
+  closeAnchoredMenu();
   renderOrgBoard();
 }
 
