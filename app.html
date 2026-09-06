@@ -222,6 +222,9 @@
     .btn-secondary:active { transform: scale(0.97); }
     .btn-danger { flex: 1; padding: 11px; background: var(--danger); color: white; border: none; border-radius: 9999px; font-size: 14px; font-weight: 600; letter-spacing: -0.2px; cursor: pointer; transition: transform 0.12s cubic-bezier(0.2,0.8,0.2,1); }
     .btn-danger:active { transform: scale(0.97); }
+    /* .modal-close-btn = croix de fermeture standard de tout modal/sheet (cible tactile 36x36) */
+    .modal-close-btn { background: none; border: none; cursor: pointer; font-size: 22px; color: var(--text2); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
+    .modal-close-btn:active { background: var(--surface-2); }
     /* Rail Planning "À venir" — masqué par défaut (mobile), visible desktop */
     #planning-rail { display: none; }
     .planning-rail-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
@@ -1944,7 +1947,7 @@
   <!-- MODAL Dashboard : Gérer les données (Données avant Trakoto + Suivi financier) -->
   <div id="modal-finance-data" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:none;flex-direction:column;animation:slideUpFull 0.3s ease;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
-      <button onclick="closeFinanceDataModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>
+      <button onclick="closeFinanceDataModal()" class="modal-close-btn">✕</button>
       <span style="font-size:17px;font-weight:600;color:var(--text);flex:1;text-align:center;">Gérer les données</span>
       <span style="width:36px;"></span>
     </div>
@@ -2395,7 +2398,7 @@
 
 <div id="modal-add-vehicle" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:none;flex-direction:column;animation:slideUpFull 0.3s ease;">
   <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
-    <button onclick="closeAddModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>
+    <button onclick="closeAddModal()" class="modal-close-btn">✕</button>
     <span id="add-vehicle-title" style="font-size:17px;font-weight:600;color:var(--text);flex:1;text-align:center;">Nouveau véhicule</span>
     <span style="width:36px;"></span>
   </div>
@@ -2709,7 +2712,7 @@ function openAddPrestataireModal(){
   const innerHtml = `
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
       <span style="font-size:17px;font-weight:600;color:var(--text);">Nouveau prestataire</span>
-      <button onclick="closeAddPrestataireModal()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button>
+      <button onclick="closeAddPrestataireModal()" class="modal-close-btn">✕</button>
     </div>
     <div style="padding:20px;">
       <div style="background:var(--surface-2);border-radius:14px;overflow:hidden;margin-bottom:20px;">
@@ -3594,7 +3597,7 @@ function openClientInfoModal(){
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
   const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
     <span style="font-size:17px;font-weight:600;color:var(--text);">Informations client</span>
-    <button onclick="closeClientInfoModal()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button>
+    <button onclick="closeClientInfoModal()" class="modal-close-btn">✕</button>
   </div>
   <div style="padding:20px;">
     <div style="background:var(--surface-2);border-radius:17px;overflow:hidden;margin-bottom:20px;">
@@ -4134,7 +4137,7 @@ function openFinalizeSaleModal(){
   const innerHtml = `
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
       <span style="font-size:17px;font-weight:600;color:var(--text);">Finaliser la vente</span>
-      <button onclick="closeFinalizeSaleModal()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button>
+      <button onclick="closeFinalizeSaleModal()" class="modal-close-btn">✕</button>
     </div>
     <div style="padding:20px;">
       <div class="bft-card" style="margin-bottom:16px;">
@@ -4620,7 +4623,7 @@ function openEditPlanningTaskModal(taskId){
   }
   const html = `<div id="edit-task-modal-planning" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface-2);z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
-      <button onclick="closeEditPlanningModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
+      <button onclick="closeEditPlanningModal()" class="modal-close-btn">✕</button>
       <span style="font-size:17px;font-weight:600;color:var(--text);">Modifier l'événement</span>
       <span style="width:22px;"></span>
     </div>
@@ -4675,7 +4678,7 @@ function openEditBottomSheet(key){
     </div>`).join('');
   const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
       <span style="font-size:17px;font-weight:600;color:var(--text);">${config.title}</span>
-      <button onclick="closeEditBottomSheet()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button>
+      <button onclick="closeEditBottomSheet()" class="modal-close-btn">✕</button>
     </div>${optionsHtml}`;
   createDialogOrSheet('edit-bottom-sheet', innerHtml, {desktopWidth:'420px'});
 }
@@ -5381,7 +5384,7 @@ function openNewTaskModalOutlook(dateStr, timeStr){
   const dfmt = (d) => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
   const html = `<div id="new-task-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface-2);z-index:9999;display:flex;flex-direction:column;animation:slideUpFull 0.3s ease;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
-      <button onclick="closeNewTaskModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);">✕</button>
+      <button onclick="closeNewTaskModal()" class="modal-close-btn">✕</button>
       <span style="font-size:17px;font-weight:600;color:var(--text);">Nouvel événement</span>
       <span style="width:22px;"></span>
     </div>
@@ -5445,7 +5448,7 @@ function openBottomSheet(key){
   const config = BOTTOM_SHEET_DATA[key];
   if(!config) return;
   const options = typeof config.options === 'function' ? config.options() : config.options;
-  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);"><span style="font-size:17px;font-weight:600;color:var(--text);">${config.title}</span><button onclick="closeBottomSheet()" style="background:none;border:none;font-size:22px;color:var(--text2);cursor:pointer;">✕</button></div><div id="ntask-bottom-sheet-options"></div>`;
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);"><span style="font-size:17px;font-weight:600;color:var(--text);">${config.title}</span><button onclick="closeBottomSheet()" class="modal-close-btn">✕</button></div><div id="ntask-bottom-sheet-options"></div>`;
   const sheet = createDialogOrSheet('ntask-bottom-sheet', innerHtml, {desktopWidth:'420px'});
   const container = sheet.querySelector('#ntask-bottom-sheet-options');
   if(!container) return;
