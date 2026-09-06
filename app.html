@@ -2223,14 +2223,14 @@
           <div class="bft-card">
             <div style="position:relative;padding:12px 16px;cursor:pointer;">
               <div style="display:flex;align-items:center;justify-content:space-between;pointer-events:none;">
-                <span class="fin-label-text" style="font-size:14px;">Date d'achat</span>
+                <span class="fin-label-text" style="font-size:14px;display:flex;align-items:center;gap:6px;color:var(--text2);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Date d'achat</span>
                 <span id="detail-achat-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span>
               </div>
               <input type="date" id="detail-achat-date-edit" onchange="saveVehicleDateInline('achat',this.value)" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
             </div>
             <div id="fin-vente-date-row" style="display:none;position:relative;padding:12px 16px;cursor:pointer;border-top:0.5px solid var(--border);">
               <div style="display:flex;align-items:center;justify-content:space-between;pointer-events:none;">
-                <span class="fin-label-text" style="font-size:14px;">Date de vente</span>
+                <span class="fin-label-text" style="font-size:14px;display:flex;align-items:center;gap:6px;color:var(--text2);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Date de vente</span>
                 <span id="detail-sale-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span>
               </div>
               <input type="date" id="detail-sale-date-edit" onchange="saveVehicleDateInline('vente',this.value)" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
@@ -2417,11 +2417,11 @@
         <img id="f-photo-preview" style="display:none;width:100%;height:100%;object-fit:cover;"/>
       </div>
       <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">N° de VO</span><input type="text" id="f-numvo" placeholder="—" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">N° de VO</span><input type="text" id="f-numvo" placeholder="VO2456" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Marque</span><input type="text" id="f-marque" placeholder="—" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Marque</span><input type="text" id="f-marque" placeholder="Peugeot" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Modèle</span><input type="text" id="f-modele" placeholder="—" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Modèle</span><input type="text" id="f-modele" placeholder="308" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
       </div>
       <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Année</span><input type="number" id="f-year" placeholder="2022" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
@@ -2435,7 +2435,11 @@
     <!-- ÉTAPE 2 : Achat & specs -->
     <div id="add-veh-step-2" style="display:none;">
       <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Date d'achat</span><input type="date" id="f-achat-date" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;"/></div>
+        <div style="position:relative;display:flex;align-items:center;justify-content:space-between;padding:0 16px;cursor:pointer;">
+          <span style="font-size:16px;color:var(--text2);flex-shrink:0;display:flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Date d'achat</span>
+          <span id="f-achat-date-disp" style="font-size:16px;color:var(--text2);padding:15px 0;">Choisir une date</span>
+          <input type="date" id="f-achat-date" onchange="syncDateDisplay('f-achat-date','f-achat-date-disp')" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
+        </div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix achat</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-achat" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
         <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
@@ -3093,6 +3097,7 @@ function openAddModal(){
   const _cp = document.getElementById('veh-carburant-panel'); if(_cp) _cp.innerHTML = ntaskOptList(FUEL_OPTS, '', 'vehSelectCarburant');
   const _tp = document.getElementById('veh-transmission-panel'); if(_tp) _tp.innerHTML = ntaskOptList(TRANS_OPTS, '', 'vehSelectTransmission');
   setVehBoolToggle('cles', ''); setVehBoolToggle('histo', '');
+  syncDateDisplay('f-achat-date', 'f-achat-date-disp', 'Choisir une date');
   addVehModalGoToStep(1);
   if(window.innerWidth >= 900 && !document.getElementById('add-vehicle-backdrop')){
     const bd = document.createElement('div');
@@ -3165,6 +3170,7 @@ function openEditVehicleModal(id, focusId){
   const set = (fid, val) => { const el = document.getElementById(fid); if(el) el.value = (val === undefined || val === null || val === '?') ? '' : val; };
   set('f-numvo', v.numVo); set('f-marque', v.marque); set('f-modele', v.modele); set('f-year', v.year); set('f-gen', v.gen);
   set('f-km', v.km); set('f-achat-date', v.achatDate || ''); set('f-achat', v.achat || ''); set('f-vente', v.vente || '');
+  syncDateDisplay('f-achat-date', 'f-achat-date-disp', 'Choisir une date');
   set('f-notes', v.notes || '');
   set('f-couleur', v.couleur); set('f-immat', v.immatriculation); set('f-puissance', v.puissance);
   document.newVehiclePhoto = v.photo || '';
@@ -3947,6 +3953,16 @@ function renderFinanceValidationState(v){
     b.style.display = locked ? 'none' : 'flex';
   });
 }
+const CAL_ICON_SVG = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
+function fmtDateFR(val){ return val ? new Date(val + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : ''; }
+function syncDateDisplay(inputId, dispId, placeholder){
+  const input = document.getElementById(inputId);
+  const disp = document.getElementById(dispId);
+  if(!input || !disp) return;
+  const f = fmtDateFR(input.value);
+  disp.textContent = f || (placeholder || 'Choisir une date');
+  disp.style.color = f ? 'var(--text)' : 'var(--text2)';
+}
 function saveVehicleDateInline(kind, val){
   if(!DataLayer.getVehicleById(currentDetailVehicleId)) return;
   DataLayer.updateVehicle(currentDetailVehicleId, kind === 'achat' ? {achatDate: val} : {saleDate: val});
@@ -3994,8 +4010,12 @@ function openFinalizeSaleModal(){
     </div>
     <div style="padding:20px;">
       <div class="bft-card" style="margin-bottom:16px;">
-        <div class="fin-row" style="border-top:none;"><span class="fin-label-text">Date d'achat</span><span style="font-size:15px;color:var(--text2);">${achatDateDisp}</span></div>
-        <div class="fin-row fin-sep"><span class="fin-label-text">Date de vente</span><input type="date" id="fs-sale-date" class="fin-input" value="${saleDate}" style="width:150px;"></div>
+        <div class="fin-row" style="border-top:none;"><span class="fin-label-text" style="display:flex;align-items:center;gap:6px;">${CAL_ICON_SVG}Date d'achat</span><span style="font-size:15px;color:var(--text2);">${achatDateDisp}</span></div>
+        <div class="fin-row fin-sep" style="position:relative;cursor:pointer;">
+          <span class="fin-label-text" style="display:flex;align-items:center;gap:6px;">${CAL_ICON_SVG}Date de vente</span>
+          <span id="fs-sale-date-disp" style="font-size:15px;color:var(--text2);">Choisir une date</span>
+          <input type="date" id="fs-sale-date" value="${saleDate}" onchange="syncDateDisplay('fs-sale-date','fs-sale-date-disp')" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
+        </div>
         <div class="fin-row fin-sep"><span class="fin-label-text">Prix de vente</span><div class="fin-input-wrap"><input type="number" id="fs-vente-finale" class="fin-input" placeholder="0" value="${ventePrefill}" oninput="updateFinalizeSalePreview()"><span class="fin-unit">€</span></div></div>
       </div>
       <div class="bft-card" style="padding:18px 16px;text-align:center;margin-bottom:20px;">
@@ -4008,6 +4028,7 @@ function openFinalizeSaleModal(){
       </button>
     </div>`;
   createDialogOrSheet('finalize-sale-modal', innerHtml, {desktopWidth:'420px'});
+  syncDateDisplay('fs-sale-date', 'fs-sale-date-disp', 'Choisir une date');
   updateFinalizeSalePreview();
 }
 function closeFinalizeSaleModal(){
@@ -5068,7 +5089,7 @@ function ntaskModalBody(startDate, endDate, startTime, endTime){
       </div>
       <div class="ntask-card">
         <div class="ntask-row" style="cursor:default;">
-          <span class="ntask-row-label">Début</span>
+          <span class="ntask-row-label" style="display:flex;align-items:center;gap:6px;">${CAL_ICON_SVG}Début</span>
           <span class="ntask-datetime-pair">
             <input type="date" id="ntask-start-date" class="ntask-native" value="${startDate}" onchange="document.newTaskDate=this.value">
             <input type="time" id="ntask-start-time" class="ntask-native" value="${startTime}" onchange="ntaskStartTimeChanged(this.value)">
@@ -5076,7 +5097,7 @@ function ntaskModalBody(startDate, endDate, startTime, endTime){
         </div>
         <div class="ntask-sep"></div>
         <div class="ntask-row" style="cursor:default;">
-          <span class="ntask-row-label">Fin</span>
+          <span class="ntask-row-label" style="display:flex;align-items:center;gap:6px;">${CAL_ICON_SVG}Fin</span>
           <span class="ntask-datetime-pair">
             <input type="date" id="ntask-end-date" class="ntask-native" value="${endDate}" onchange="document.newTaskDateEnd=this.value">
             <input type="time" id="ntask-end-time" class="ntask-native" value="${endTime}" onchange="document.newTaskTimeEnd=this.value">
