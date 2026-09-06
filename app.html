@@ -4668,7 +4668,7 @@ function dashPeriodRange(period){
   return { start, end };
 }
 function _dashBucketMonths(period){ return period === 'trimestre' ? 3 : period === 'semestre' ? 6 : 1; }
-function _dashVehicleMargin(v){ return (v.vente || 0) - (v.achat || 0) - (v.prepCost || 0); }
+function _dashVehicleMargin(v){ return computeVehicleSaleIndicators(v).margeTTC; }
 function _dashSaleDays(v){
   const ve = v.statusHistory ? v.statusHistory.find(h => (h.statut === 'Livré' || h.statut === 'Vendu')) : null;
   return Math.max(0, Math.floor((new Date(ve ? ve.date : '2000-01-01') - new Date(parseInt(v.id))) / 86400000));
