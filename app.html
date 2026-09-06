@@ -2420,50 +2420,50 @@
     <!-- ÉTAPE 1 : Identité -->
     <div id="add-veh-step-1" class="add-veh-cols">
       <input type="file" id="f-photo-input" accept="image/*" style="display:none;" onchange="onVehPhotoSelected(event)"/>
-      <div onclick="document.getElementById('f-photo-input').click()" style="cursor:pointer;width:100%;height:160px;border-radius:17px;background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:24px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
+      <div onclick="document.getElementById('f-photo-input').click()" class="ntask-card" style="cursor:pointer;width:100%;height:160px;display:flex;align-items:center;justify-content:center;position:relative;">
         <div id="f-photo-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text2);">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 0 0-2.8 0L8 17"/></svg>
           <span style="font-size:13px;font-weight:500;">Ajouter une photo</span>
         </div>
         <img id="f-photo-preview" style="display:none;width:100%;height:100%;object-fit:cover;"/>
       </div>
-      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">N° de VO</span><input type="text" id="f-numvo" placeholder="VO2456" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Marque</span><input type="text" id="f-marque" placeholder="Peugeot" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Modèle</span><input type="text" id="f-modele" placeholder="308" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
+      <div class="ntask-card">
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">N° de VO</span><input type="text" id="f-numvo" placeholder="VO2456" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Marque</span><input type="text" id="f-marque" placeholder="Peugeot" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Modèle</span><input type="text" id="f-modele" placeholder="308" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
       </div>
-      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Année</span><input type="number" id="f-year" placeholder="2022" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Génération</span><input type="text" id="f-gen" placeholder="W206" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Kilométrage</span><input type="number" id="f-km" placeholder="45 000" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
+      <div class="ntask-card">
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Année</span><input type="number" id="f-year" placeholder="2022" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Génération</span><input type="text" id="f-gen" placeholder="W206" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Kilométrage</span><input type="number" id="f-km" placeholder="45 000" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
       </div>
     </div>
 
     <!-- ÉTAPE 2 : Achat & specs -->
     <div id="add-veh-step-2" style="display:none;">
-      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
-        <div style="position:relative;display:flex;align-items:center;justify-content:space-between;padding:0 16px;cursor:pointer;">
-          <span style="font-size:16px;color:var(--text2);flex-shrink:0;">Date d'achat</span>
-          <span id="f-achat-date-disp" style="font-size:16px;color:var(--text2);padding:15px 0;">Choisir une date</span>
+      <div class="ntask-card">
+        <div class="ntask-row" style="position:relative;">
+          <span class="ntask-row-label">Date d'achat</span>
+          <span id="f-achat-date-disp" style="font-size:16px;color:var(--text2);">Choisir une date</span>
           <input type="date" id="f-achat-date" onchange="syncDateDisplay('f-achat-date','f-achat-date-disp')" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
         </div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix achat</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-achat" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Prix de vente cible</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-vente" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Prix achat</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-achat" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Prix de vente cible</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-vente" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:120px;"/><span style="font-size:16px;color:var(--text2);">€</span></div></div>
       </div>
-      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
+      <div class="ntask-card">
         <textarea id="f-notes" placeholder="Notes (révisions, rayures, réparations...)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:14px 16px;box-sizing:border-box;"></textarea>
       </div>
     </div>
 
     <!-- ÉTAPE 3 : Détails -->
     <div id="add-veh-step-3" class="add-veh-cols" style="display:none;">
-      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:visible;margin-bottom:24px;">
+      <div class="ntask-card" style="overflow:visible;">
         <div class="ntask-field">
           <div class="ntask-row" onclick="vehToggleDropdown('carburant')">
             <span class="ntask-row-label">Carburant</span>
@@ -2480,16 +2480,16 @@
           <div id="veh-transmission-panel" class="ntask-inline-panel"></div>
         </div>
         <div class="ntask-sep"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Couleur</span><input type="text" id="f-couleur" placeholder="Noir" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Immatriculation</span><input type="text" id="f-immat" placeholder="AA-123-AA" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:100%;"/></div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Puissance</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-puissance" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);padding:15px 0;background:transparent;text-align:right;width:80px;"/><span style="font-size:16px;color:var(--text2);">ch</span></div></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Couleur</span><input type="text" id="f-couleur" placeholder="Noir" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Immatriculation</span><input type="text" id="f-immat" placeholder="AA-123-AA" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Puissance</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-puissance" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:80px;"/><span style="font-size:16px;color:var(--text2);">ch</span></div></div>
       </div>
-      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:24px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Double des clés</span><div class="veh-bool-toggle" id="f-cles-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('cles','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('cles','non')">Non</button></div></div>
-        <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;"><span style="font-size:16px;color:var(--text2);flex-shrink:0;">Historique d'entretien</span><div class="veh-bool-toggle" id="f-histo-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('histo','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('histo','non')">Non</button></div></div>
+      <div class="ntask-card">
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Double des clés</span><div class="veh-bool-toggle" id="f-cles-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('cles','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('cles','non')">Non</button></div></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Historique d'entretien</span><div class="veh-bool-toggle" id="f-histo-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('histo','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('histo','non')">Non</button></div></div>
       </div>
     </div>
 
@@ -2815,7 +2815,7 @@ function openOrgEntryDetail(entryId){
       <div style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">Note</div>
       <div style="font-size:15px;color:${e.note ? 'var(--text)' : 'var(--text2)'};line-height:1.4;white-space:pre-wrap;">${noteText}</div>
     </div>
-    <button onclick="openOrgMoveMenu('${entryId}', this)" style="width:100%;padding:13px;background:var(--surface-2);color:var(--text);border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+    <button onclick="openOrgMoveMenu('${entryId}', this)" class="btn-secondary btn-block" style="font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8l4 4-4 4"/><path d="M3 12h18"/></svg>
       Déplacer vers un autre prestataire
     </button>
@@ -2879,7 +2879,7 @@ function openOrgNoteDialog(){
     <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;">Ajouter une note</div>
     <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">Facultatif — précise l'intervention à faire.</div>
     <input type="text" id="org-note-input" placeholder="Ex: Vidange + plaquettes avant" style="width:100%;border:none;outline:none;background:var(--surface-2);border-radius:10px;padding:13px 14px;font-size:15px;color:var(--text);box-sizing:border-box;margin-bottom:14px;" onkeydown="if(event.key==='Enter')commitOrgNote()">
-    <button onclick="commitOrgNote()" style="width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;">Ajouter le véhicule</button>
+    <button onclick="commitOrgNote()" class="ntask-save-btn">Ajouter le véhicule</button>
   </div>`;
   createDialogOrSheet('org-note-dialog', innerHtml, {desktopWidth: '420px'});
   setTimeout(() => document.getElementById('org-note-input')?.focus(), 200);
