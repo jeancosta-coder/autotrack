@@ -699,7 +699,7 @@
       .details-segment-wrap { display: flex; gap: 2px; margin: 14px 12px 10px; padding: 3px; background:var(--surface-2); border-radius: 10px; overflow-x: auto; scrollbar-width: none; }
       .details-segment-wrap .detail-tab { flex: 1; text-align: center; padding: 7px 14px; font-size: 13px; font-weight: 500; border-radius: 8px; border: none; color:var(--text2); background: transparent !important; transition: background 0.15s ease, color 0.15s ease; }
       .details-segment-wrap .detail-tab.detail-tab-active { background:var(--surface) !important; color:var(--accent) !important; font-weight: 600; box-shadow: var(--shadow-sm); }
-      #details > div:nth-child(2) { border-bottom: none !important; background:var(--surface); }
+      #detail-tab-bar-wrap { border-bottom: none !important; background:var(--surface-2); }
       #detail-tab-infos { background:var(--surface-2) !important; }
       .progress-container { margin-bottom: 0.5rem; }
       .modal-actions button { font-size: 13px; padding: 10px 14px; }
@@ -1132,7 +1132,6 @@
         flex-shrink: 0 !important;
         padding: 24px 20px 16px !important;
         background:var(--surface) !important;
-        border-bottom: 1px solid var(--border) !important;
       }
       #details-desktop-nav button {
         margin-bottom: 16px !important;
@@ -1167,7 +1166,6 @@
       .dt-infos-wrap .vsg-value { font-size: 11px !important; }
       /* Statut : deplace dans le nav desktop (photo/titre), on masque l'ancien emplacement */
       .dt-statut-wrap { display: none !important; }
-      #details-desktop-nav #detail-title-desktop, #details-desktop-nav #detail-subtitle-desktop { text-align: center !important; }
       .dt-client-wrap { flex-shrink: 0 !important; padding: 12px 20px 0 !important; }
       .dt-client-wrap > div:first-child { padding: 0 !important; }
       .dt-mobile-icon { display: none !important; }
@@ -1193,8 +1191,8 @@
       }
 
       /* === COLONNE DROITE : barre onglets + contenu === */
-      /* Barre d'onglets : col 2, row 1 */
-      #details > div:nth-child(2) {
+      /* Barre d'onglets : col 2, row 1 (cible directement l'id, pas nth-child : l'ordre des freres a change) */
+      #detail-tab-bar-wrap {
         grid-column: 2 !important;
         grid-row: 1 !important;
         display: flex !important;
@@ -1203,36 +1201,6 @@
         background:var(--surface) !important;
         border-bottom: 1px solid rgba(0,0,0,0.06) !important;
         gap: 4px !important;
-      }
-      /* Segmented control */
-      .details-segment-wrap {
-        display: flex !important;
-        background:var(--surface-2) !important;
-        border-radius: 10px !important;
-        padding: 3px !important;
-        gap: 2px !important;
-      }
-      #details > div:nth-child(2) .detail-tab {
-        flex: none !important;
-        padding: 7px 18px !important;
-        font-size: 13px !important;
-        font-weight: 500 !important;
-        border-radius: 8px !important;
-        border: none !important;
-        border-bottom: none !important;
-        color:var(--text2) !important;
-        background: transparent !important;
-        transition: background 0.15s ease, color 0.15s ease !important;
-        cursor: pointer !important;
-      }
-      #details > div:nth-child(2) .detail-tab.detail-tab-active {
-        background:var(--surface) !important;
-        color:var(--accent) !important;
-        font-weight: 600 !important;
-        box-shadow: var(--shadow-sm) !important;
-      }
-      #details > div:nth-child(2) .detail-tab:not(.detail-tab-active):hover {
-        color:var(--text) !important;
       }
       /* Onglets contenu : col 2, row 2 */
       #detail-tab-inforight,
@@ -2128,10 +2096,10 @@
             </div>
           </div>
           <div style="padding:6px 16px 14px;">
-            <div id="detail-title-desktop" style="font-size:20px;font-weight:700;color:var(--text);line-height:1.25;text-align:center;"></div>
-            <div id="detail-subtitle-desktop" style="font-size:12px;color:var(--text2);margin-top:5px;letter-spacing:0.1px;text-align:center;"></div>
+            <div id="detail-title-desktop" style="font-size:20px;font-weight:700;color:var(--text);line-height:1.25;text-align:left;"></div>
+            <div id="detail-subtitle-desktop" style="font-size:12px;color:var(--text2);margin-top:5px;letter-spacing:0.1px;text-align:left;"></div>
           </div>
-          <div style="padding:0 16px 16px;display:flex;justify-content:center;">
+          <div style="padding:0 16px 16px;display:flex;justify-content:flex-start;">
             <div id="detail-desktop-statut-slot"></div>
           </div>
         </div>
