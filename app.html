@@ -4754,9 +4754,9 @@ function renderBreakevenChart(buckets, chargesFixesPerMonth, bucketMonths){
     ${breakevenMarker}
     <circle cx="${lastProfit.x.toFixed(1)}" cy="${toY(lastProfit.y).toFixed(1)}" r="2.4" fill="${lineColor}" stroke="var(--surface)" stroke-width="1.2"/>
   </svg>
-  <div style="display:flex;gap:16px;margin-top:10px;">
-    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:2px;background:${lineColor};display:inline-block;border-radius:1px;"></span>Profit cumulé</span>
-    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:2px;background:var(--danger);display:inline-block;border-radius:1px;background-image:repeating-linear-gradient(90deg,var(--danger) 0 3px,transparent 3px 5px);"></span>Seuil de rentabilité</span>
+  <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px;">
+    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:2px;background:${lineColor};display:inline-block;border-radius:1px;flex-shrink:0;"></span>Profit cumulé <b style="color:var(--text);font-weight:700;">(${Math.round(cumulProfit).toLocaleString('fr-FR')} €)</b></span>
+    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:2px;background:var(--danger);display:inline-block;border-radius:1px;background-image:repeating-linear-gradient(90deg,var(--danger) 0 3px,transparent 3px 5px);flex-shrink:0;"></span>Seuil de rentabilité <b style="color:var(--text);font-weight:700;">(${Math.round(threshold).toLocaleString('fr-FR')} €)</b></span>
   </div>`;
 }
 function renderDashboard(){
