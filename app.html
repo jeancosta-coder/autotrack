@@ -962,6 +962,7 @@
       .sidebar-profile-sub { font-size: 11px; color: var(--text2); white-space: nowrap; }
       .desktop-only { display: block !important; }
       .kpi-grid.desktop-only { display: grid !important; }
+      #org-add-vehicle-btn-desktop { display: flex !important; }
       .mobile-only { display: none !important; }
       #detail-title-mobile, #detail-subtitle-mobile { display: none !important; }
       .desktop-card-actions { display: none !important; }
@@ -977,7 +978,8 @@
       .app-container { display: grid; gap: 32px; }
       .bottom-nav,
       #fab-planning,
-      #fab-parc {
+      #fab-parc,
+      #fab-organisation {
         display: none !important;
       }
       #parc-grid {
@@ -1931,13 +1933,15 @@
   <!-- VUE ORGANISATION -->
   <div id="organisation" class="view" style="position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;background:var(--surface-2);z-index:1;">
     <div style="padding:14px 14px 0;flex-shrink:0;">
-      <div style="margin-bottom:10px;">
-        <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Prestataires</span>
-      </div>
-
-      <div id="org-prestataire-dropdown" onclick="orgDropdownClick(this)" style="display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:12px 14px;margin-bottom:10px;cursor:pointer;">
-        <span id="org-prestataire-dropdown-label" style="font-size:15px;font-weight:600;color:var(--text);">Aucun prestataire</span>
-        <span id="org-prestataire-dropdown-icon" style="display:flex;color:var(--text2);opacity:0.7;"><svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,3 5,7 8,3"/></svg></span>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div id="org-prestataire-dropdown" onclick="orgDropdownClick(this)" style="flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:12px 14px;cursor:pointer;">
+          <span id="org-prestataire-dropdown-label" style="font-size:15px;font-weight:600;color:var(--text);">Aucun prestataire</span>
+          <span id="org-prestataire-dropdown-icon" style="display:flex;color:var(--text2);opacity:0.7;"><svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,3 5,7 8,3"/></svg></span>
+        </div>
+        <button type="button" id="org-add-vehicle-btn-desktop" class="desktop-only" onclick="orgFabClick(this)" style="display:none;flex-shrink:0;align-items:center;gap:6px;background:var(--accent);color:var(--accent-contrast);border:none;border-radius:9999px;padding:12px 18px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
+          Ajouter un véhicule
+        </button>
       </div>
     </div>
 
