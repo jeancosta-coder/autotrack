@@ -739,7 +739,7 @@
     /* ── Finances ── */
     .fin-section-label { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin:20px 0 6px 20px; }
     .fin-section-label svg { flex-shrink:0; opacity:0.85; }
-    .fin-card { background:var(--surface); border-radius:12px; overflow:hidden; margin:0 16px; box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05); }
+    .fin-card { background:var(--surface); border-radius:var(--card-radius); overflow:hidden; margin:0 16px; box-shadow:var(--card-shadow); }
     .fin-row { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:0.5px solid var(--border); min-height:50px; }
     .fin-row:last-child { border-bottom:none; }
     .fin-row-left { font-size:17px; color:var(--text); }
@@ -752,7 +752,7 @@
     .fin-row-right input::placeholder { color:var(--text3); }
     .fin-unit { font-size:17px; color:var(--text2); }
     .fin-val { font-size:17px; font-weight:500; color:var(--text); }
-    .fin-marge-card { background:var(--surface); border-radius:12px; padding:28px 16px; text-align:center; margin:0 16px; box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05); }
+    .fin-marge-card { background:var(--surface); border-radius:var(--card-radius); padding:28px 16px; text-align:center; margin:0 16px; box-shadow:var(--card-shadow); }
     .fin-marge-label { font-size:12px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
     .fin-marge-val { font-size:42px; font-weight:700; letter-spacing:-1.5px; line-height:1; }
     .fin-marge-pct { font-size:16px; color:var(--text2); margin-top:6px; }
@@ -789,12 +789,12 @@
     .fin-green { color:#34c759; }
     .fin-red { color:#ff3b30; }
     /* Grand tableau Finances */
-    .bft-stat { background:var(--surface); border-radius:14px; box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05); padding:14px 16px; }
+    .bft-stat { background:var(--surface); border-radius:var(--card-radius); box-shadow:var(--card-shadow); padding:14px 16px; }
     .bft-stat-lbl { font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px; }
     .bft-stat-val { font-size:19px; font-weight:700; letter-spacing:-0.4px; font-variant-numeric:tabular-nums; color:var(--text); }
     .bft-stat.accent .bft-stat-val { color:var(--accent); }
     .bft-stat.pos .bft-stat-val { color:var(--success); }
-    .bft-card { background:var(--surface); border-radius:17px; box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05); overflow:hidden; margin-bottom:12px; }
+    .bft-card { background:var(--surface); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; margin-bottom:12px; }
     .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; background:var(--surface); border-top:1px solid var(--border); font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; }
     .bft-group:first-child { border-top:none; }
     .bft-card-title { font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin:0 4px 8px; }
@@ -1919,7 +1919,7 @@
     <!-- PANEL : Tableau des ventes -->
     <div id="dash-panel-sales" style="display:none;">
       <div style="margin-bottom:8px;padding:0 4px;"><span id="dash-sales-period-label" style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;"></span></div>
-      <div class="dash-sales-table-wrap" style="overflow-x:auto;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:16px;">
+      <div class="dash-sales-table-wrap" style="overflow-x:auto;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);margin-bottom:16px;">
         <table id="dash-sales-table" style="width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap;"></table>
       </div>
       <div id="dash-sales-cards" class="dash-sales-cards"></div>
@@ -1935,7 +1935,7 @@
         <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Prestataires</span>
       </div>
 
-      <div id="org-prestataire-dropdown" onclick="orgDropdownClick(this)" style="display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);padding:12px 14px;margin-bottom:10px;cursor:pointer;">
+      <div id="org-prestataire-dropdown" onclick="orgDropdownClick(this)" style="display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:12px 14px;margin-bottom:10px;cursor:pointer;">
         <span id="org-prestataire-dropdown-label" style="font-size:15px;font-weight:600;color:var(--text);">Aucun prestataire</span>
         <span id="org-prestataire-dropdown-icon" style="display:flex;color:var(--text2);opacity:0.7;"><svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,3 5,7 8,3"/></svg></span>
       </div>
@@ -1965,7 +1965,7 @@
 
       <!-- Données avant Trakoto -->
       <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Données avant Trakoto</span></div>
-      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:8px;">
+      <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin-bottom:8px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
           <span style="font-size:15px;color:var(--text);">Véhicules vendus</span>
           <input type="number" id="hist-nb-ventes" placeholder="0" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;width:80px;background:transparent;"/>
@@ -1994,7 +1994,7 @@
       </div>
       <!-- Suivi financier -->
       <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Suivi financier</span></div>
-      <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:8px;">
+      <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin-bottom:8px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px;min-height:50px;border-bottom:0.5px solid var(--border);">
           <span style="font-size:15px;color:var(--text);">Charges fixes</span>
           <div style="display:flex;align-items:center;gap:4px;">
@@ -2126,7 +2126,7 @@
               Client
             </span>
           </div>
-          <div onclick="openClientInfoModal()" style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+          <div onclick="openClientInfoModal()" style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin-bottom:12px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">
             <div style="min-width:0;">
               <div id="detail-client-display-name" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
               <div id="detail-client-display-contact" style="font-size:12.5px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
@@ -2148,7 +2148,7 @@
               Notes
             </span>
           </div>
-          <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
+          <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin-bottom:12px;">
             <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:14px 16px;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
           </div>
         </div>
@@ -2179,7 +2179,7 @@
         </div>
 
         <!-- Préconisations constructeur IA -->
-        <button disabled style="width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:none;border-radius:14px;padding:14px 16px;margin-bottom:12px;cursor:not-allowed;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);opacity:0.6;">
+        <button disabled style="width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:none;border-radius:var(--card-radius);padding:14px 16px;margin-bottom:12px;cursor:not-allowed;box-shadow:var(--card-shadow);opacity:0.6;">
           <div style="display:flex;align-items:center;gap:10px;">
             <div style="width:32px;height:32px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="18" cy="6" r="3" fill="var(--text2)" stroke="none"/></svg>
@@ -2345,7 +2345,7 @@
 
     <!-- Profil -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Profil</span></div>
-    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin:0 16px 24px 16px;">
+    <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin:0 16px 24px 16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid var(--border);">
         <span style="font-size:15px;color:var(--text);">Nom</span>
         <span id="compte-nom" style="font-size:15px;color:var(--text2);">—</span>
@@ -2375,7 +2375,7 @@
 
     <!-- Abonnement -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Abonnement</span></div>
-    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin:0 16px 24px 16px;">
+    <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin:0 16px 24px 16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
         <span style="font-size:15px;color:var(--text);">Plan actuel</span>
         <span style="font-size:12px;font-weight:600;color:#34C759;background:rgba(52,199,89,0.12);padding:4px 10px;border-radius:20px;letter-spacing:0.2px;">GRATUIT</span>
@@ -2385,7 +2385,7 @@
 
     <!-- App -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
-    <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin:0 16px 32px 16px;">
+    <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin:0 16px 32px 16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
         <span style="font-size:15px;color:var(--text);">Version</span>
         <span style="font-size:15px;color:var(--text2);">1.0.0</span>
@@ -5553,7 +5553,7 @@ function showLoginScreen(){
       </div>
 
       <!-- Champs -->
-      <div style="background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:12px;">
+      <div style="background:var(--surface);border-radius:var(--card-radius);overflow:hidden;box-shadow:var(--card-shadow);margin-bottom:12px;">
         
         <div id="field-name" style="display:none;">
           <div style="padding:0 16px;">
@@ -5700,7 +5700,7 @@ function showResetPasswordScreen(){
         <div style="font-size:15px;color:var(--text2);margin-top:6px;">Nouveau mot de passe</div>
       </div>
       <div style="width:100%;max-width:360px;">
-        <div style="background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);margin-bottom:12px;">
+        <div style="background:var(--surface);border-radius:var(--card-radius);overflow:hidden;box-shadow:var(--card-shadow);margin-bottom:12px;">
           <div style="padding:0 16px;">
             <input id="inp-newpwd" type="password" placeholder="Nouveau mot de passe" style="width:100%;border:none;outline:none;font-size:16px;color:var(--text);padding:16px 0;background:transparent;"/>
           </div>
