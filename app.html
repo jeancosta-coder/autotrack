@@ -4052,7 +4052,7 @@ function commitFinalizeSale(){
   closeFinalizeSaleModal();
   financeUnlocked = false;
   showToast(wasValidated ? '✓ Vente mise à jour' : '✓ Vente finalisée');
-  if(!wasValidated) playSoldCarAnimation();
+  playSoldCarAnimation();
   updateStatutUI('Livré');
   renderParc();
   const nv = DataLayer.getVehicleById(currentDetailVehicleId);
