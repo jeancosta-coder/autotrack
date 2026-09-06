@@ -4695,45 +4695,52 @@ function dashPeriodBuckets(period, count){
 }
 function renderBreakevenChart(buckets, chargesFixesPerMonth, bucketMonths){
   const w = 100, h = 46;
-  let cumulProfit = 0, cumulCharges = 0;
-  const profitPts = [], chargePts = [];
-  let breakevenX = null;
+  let cumulProfit = 0;
+  const profitPts = [];
   buckets.forEach((b, i) => {
     cumulProfit += b.sold.reduce((s, v) => s + _dashVehicleMargin(v), 0);
-    cumulCharges += chargesFixesPerMonth * bucketMonths;
     const x = (i / (buckets.length - 1)) * w;
     profitPts.push({x, y: cumulProfit});
-    chargePts.push({x, y: cumulCharges});
-    if(breakevenX === null && cumulProfit >= cumulCharges && cumulCharges > 0) breakevenX = x;
   });
-  const allY = [...profitPts.map(p => p.y), ...chargePts.map(p => p.y), 0];
-  const maxY = Math.max(...allY), minY = Math.min(...allY);
-  const range = (maxY - minY) || 1;
-  const toY = (y) => h - 4 - ((y - minY) / range) * (h - 8);
+  const threshold = chargesFixesPerMonth * bucketMonths * buckets.length;
+  const bottomY = h - 4, topY = 4;
+  const midY = h / 2;
+  // Le seuil est toujours affiche a mi-hauteur ; l'echelle est calee dessus pour que
+  // le profit parte du bas (0) et puisse depasser le seuil vers le haut si besoin.
+  const scale = threshold > 0 ? (bottomY - midY) / threshold : (bottomY - topY) / (Math.max(...profitPts.map(p => p.y), 1));
+  const toY = (y) => {
+    const raw = bottomY - y * scale;
+    return Math.max(topY, Math.min(bottomY, raw));
+  };
   const profitLine = profitPts.map(p => p.x.toFixed(1) + ',' + toY(p.y).toFixed(1)).join(' ');
-  const chargeLine = chargePts.map(p => p.x.toFixed(1) + ',' + toY(p.y).toFixed(1)).join(' ');
   const lastProfit = profitPts[profitPts.length - 1];
-  const reached = cumulProfit >= cumulCharges && cumulCharges > 0;
-  const markerColor = reached ? 'var(--success)' : 'var(--accent)';
+  let breakevenX = null;
+  if(threshold > 0){
+    for(let i = 0; i < profitPts.length; i++){
+      if(profitPts[i].y >= threshold){ breakevenX = profitPts[i].x; break; }
+    }
+  }
+  const reached = threshold > 0 && cumulProfit >= threshold;
+  const lineColor = reached ? 'var(--success)' : 'var(--accent)';
   let breakevenMarker = '';
   if(breakevenX !== null){
-    const idx = Math.round((breakevenX / w) * (buckets.length - 1));
-    const y = toY(chargePts[idx].y);
-    breakevenMarker = `<circle cx="${breakevenX.toFixed(1)}" cy="${y.toFixed(1)}" r="2.6" fill="var(--success)" stroke="var(--surface)" stroke-width="1.2"/>`;
+    breakevenMarker = `<circle cx="${breakevenX.toFixed(1)}" cy="${midY.toFixed(1)}" r="2.6" fill="var(--success)" stroke="var(--surface)" stroke-width="1.2"/>`;
   }
   const lbl = document.getElementById('dash-breakeven-label');
   if(lbl){
-    if(breakevenX !== null){ lbl.textContent = '✓ Seuil atteint'; lbl.style.color = 'var(--success)'; }
+    if(threshold <= 0){ lbl.textContent = 'Charges non renseignées'; lbl.style.color = 'var(--text2)'; }
+    else if(reached){ lbl.textContent = '✓ Seuil atteint'; lbl.style.color = 'var(--success)'; }
     else { lbl.textContent = 'Pas encore atteint'; lbl.style.color = 'var(--text2)'; }
   }
+  const thresholdLine = threshold > 0 ? `<line x1="0" y1="${midY}" x2="${w}" y2="${midY}" stroke="var(--danger)" stroke-width="1.3" stroke-dasharray="3,2.4" vector-effect="non-scaling-stroke" stroke-linecap="round"/>` : '';
   return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:100%;height:120px;overflow:visible;">
-    <polyline points="${chargeLine}" fill="none" stroke="var(--danger)" stroke-width="1.3" stroke-dasharray="3,2.4" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
-    <polyline points="${profitLine}" fill="none" stroke="${markerColor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+    ${thresholdLine}
+    <polyline points="${profitLine}" fill="none" stroke="${lineColor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
     ${breakevenMarker}
-    <circle cx="${lastProfit.x.toFixed(1)}" cy="${toY(lastProfit.y).toFixed(1)}" r="2.4" fill="${markerColor}" stroke="var(--surface)" stroke-width="1.2"/>
+    <circle cx="${lastProfit.x.toFixed(1)}" cy="${toY(lastProfit.y).toFixed(1)}" r="2.4" fill="${lineColor}" stroke="var(--surface)" stroke-width="1.2"/>
   </svg>
   <div style="display:flex;gap:16px;margin-top:10px;">
-    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:2px;background:${markerColor};display:inline-block;border-radius:1px;"></span>Profit cumulé</span>
+    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:2px;background:${lineColor};display:inline-block;border-radius:1px;"></span>Profit cumulé</span>
     <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:2px;background:var(--danger);display:inline-block;border-radius:1px;background-image:repeating-linear-gradient(90deg,var(--danger) 0 3px,transparent 3px 5px);"></span>Seuil de rentabilité</span>
   </div>`;
 }
