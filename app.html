@@ -1116,9 +1116,6 @@
         padding: 12px 20px 0 !important;
       }
       .dt-statut-wrap > div:first-child { padding: 0 !important; margin-bottom: 8px !important; }
-      /* Dates : colonne gauche desktop */
-      .dt-dates-wrap { flex-shrink: 0 !important; padding: 12px 20px 0 !important; }
-      .dt-dates-wrap > div:first-child { padding: 0 !important; }
       .dt-client-wrap { flex-shrink: 0 !important; padding: 12px 20px 0 !important; }
       .dt-client-wrap > div:first-child { padding: 0 !important; }
       .dt-mobile-icon { display: none !important; }
@@ -2103,43 +2100,6 @@
           </div>
         </div>
 
-        <!-- Dates (colonne gauche sur desktop, visible aussi sur mobile) -->
-        <div class="dt-dates-wrap">
-          <div style="margin-bottom:4px;padding:0 4px;">
-            <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">
-              <svg class="dt-mobile-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
-              Dates
-            </span>
-          </div>
-          <div style="background:var(--surface);border-radius:17px;box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 16px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:12px;">
-            <div style="position:relative;padding:12px 16px;cursor:pointer;">
-              <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;pointer-events:none;">
-                <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);">
-                  <span class="dt-mobile-icon" style="width:26px;height:26px;border-radius:8px;background:var(--accent-soft, rgba(99,102,241,0.12));color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10l6 3"/><circle cx="12" cy="12" r="9"/></svg>
-                  </span>
-                  Date d'achat
-                </span>
-                <span id="detail-achat-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span>
-              </div>
-              <input type="date" id="detail-achat-date-edit" onchange="saveVehicleDateInline('achat',this.value)" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
-            </div>
-            <div style="height:1px;background:var(--surface-3);margin-left:16px;"></div>
-            <div style="position:relative;padding:12px 16px;cursor:pointer;">
-              <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;pointer-events:none;">
-                <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);">
-                  <span class="dt-mobile-icon" style="width:26px;height:26px;border-radius:8px;background:var(--accent-soft, rgba(99,102,241,0.12));color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-                  </span>
-                  Date de vente
-                </span>
-                <span id="detail-sale-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span>
-              </div>
-              <input type="date" id="detail-sale-date-edit" onchange="saveVehicleDateInline('vente',this.value)" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
-            </div>
-          </div>
-        </div>
-
         <!-- Client (visible uniquement si des infos client ont été saisies via la pop-up "Réservé") -->
         <div class="dt-client-wrap" id="dt-client-wrap" style="display:none;">
           <div style="margin-bottom:4px;padding:0 4px;">
@@ -2259,8 +2219,20 @@
           <!-- Dates -->
           <div class="bft-card-title">Dates</div>
           <div class="bft-card">
-            <div class="fin-row" style="border-top:none;"><span class="fin-label-text">Date d'achat</span><span id="fin-achat-date-disp" style="font-size:15px;color:var(--text2);">—</span></div>
-            <div id="fin-vente-date-row" class="fin-row fin-sep" style="display:none;"><span class="fin-label-text">Date de vente</span><span id="fin-vente-date-disp" style="font-size:15px;color:var(--text2);">—</span></div>
+            <div style="position:relative;padding:12px 16px;cursor:pointer;">
+              <div style="display:flex;align-items:center;justify-content:space-between;pointer-events:none;">
+                <span class="fin-label-text" style="font-size:14px;">Date d'achat</span>
+                <span id="detail-achat-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span>
+              </div>
+              <input type="date" id="detail-achat-date-edit" onchange="saveVehicleDateInline('achat',this.value)" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
+            </div>
+            <div id="fin-vente-date-row" style="display:none;position:relative;padding:12px 16px;cursor:pointer;border-top:0.5px solid var(--border);">
+              <div style="display:flex;align-items:center;justify-content:space-between;pointer-events:none;">
+                <span class="fin-label-text" style="font-size:14px;">Date de vente</span>
+                <span id="detail-sale-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span>
+              </div>
+              <input type="date" id="detail-sale-date-edit" onchange="saveVehicleDateInline('vente',this.value)" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
+            </div>
           </div>
 
           <!-- Acquisition -->
@@ -3446,9 +3418,6 @@ function refreshDetailHeaderAndSpecs(v){
   document.getElementById('detail-year').textContent = v.year;
   document.getElementById('detail-km').textContent = Number(v.km).toLocaleString('fr-FR') + ' km';
   const achatInput = document.getElementById('detail-achat-input'); if(achatInput) achatInput.value = v.achat || '';
-  const fmtD = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '—';
-  const _fad = document.getElementById('fin-achat-date-disp'); if(_fad) _fad.textContent = fmtD(v.achatDate);
-  const _fvd = document.getElementById('fin-vente-date-disp'); if(_fvd) _fvd.textContent = fmtD(v.saleDate);
   const _dc = document.getElementById('detail-carburant'); if(_dc) _dc.textContent = v.carburant || '—';
   const _dtr = document.getElementById('detail-transmission'); if(_dtr) _dtr.textContent = v.transmission || '—';
   const _dcl = document.getElementById('detail-couleur'); if(_dcl) _dcl.textContent = v.couleur || '—';
@@ -3828,6 +3797,7 @@ function changeStatut(newStatut){
 function applyStatutChange(newStatut){
   const v = DataLayer.getVehicleById(currentDetailVehicleId);
   if(v){
+    const wasSold = v.statut === 'Livré';
     const today = Utils.today();
     const updates = { statut: newStatut, statusHistory: v.statusHistory || [] };
     updates.statusHistory.push({statut: newStatut, date: today});
@@ -3835,6 +3805,7 @@ function applyStatutChange(newStatut){
     updateStatutUI(newStatut);
     renderParc();
     showToast('✓ Statut mis à jour');
+    if(newStatut === 'Livré' && !wasSold) playSoldCarAnimation();
   }
 }
 
@@ -3958,7 +3929,7 @@ function renderFinanceValidationState(v){
     set('fz-avec-tva', fmt(costTotal(costItemsOf(v, 'avecTva'))));
     set('fz-cg', v.carteGrise ? fmt(v.carteGrise) : '—');
   }
-  ['detail-achat-input', 'detail-vente-input', 'detail-cg-input'].forEach(id => {
+  ['detail-achat-input', 'detail-vente-input', 'detail-cg-input', 'detail-achat-date-edit', 'detail-sale-date-edit'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.disabled = locked;
   });
