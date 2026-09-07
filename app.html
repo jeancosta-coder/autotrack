@@ -1522,6 +1522,8 @@
     @media (max-width: 899px) {
       /* Titre véhicule déplacé sous les segments (voir bloc mobile-only dédié) */
       #detail-title, #detail-subtitle { display: none !important; }
+      /* Client : masqué de l'onglet Details sur mobile, accessible uniquement via l'onglet Clientele (menu deroulant) */
+      .dt-client-wrap { display: none !important; }
       /* Statut: badge+popover aussi sur mobile */
       #statut-mobile-badges { display: none !important; }
       /* Statut déplacé dans l'en-tête (photo/titre) sur mobile : masquer le libellé et l'emplacement d'origine */
@@ -2160,9 +2162,14 @@
               <div id="detail-client-display-name" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
               <div id="detail-client-display-contact" style="font-size:12.5px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
             </div>
-            <button id="detail-client-call-btn" onclick="event.stopPropagation();callClientPhone()" title="Appeler" style="display:none;width:28px;height:28px;border-radius:50%;background:var(--success-soft);border:none;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            </button>
+            <div style="display:flex;gap:6px;flex-shrink:0;">
+              <button id="detail-client-call-btn" onclick="event.stopPropagation();callClientPhone()" title="Appeler" style="display:none;width:28px;height:28px;border-radius:50%;background:var(--success-soft);border:none;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </button>
+              <button id="detail-client-email-btn" onclick="event.stopPropagation();emailClient()" title="Envoyer un email" style="display:none;width:28px;height:28px;border-radius:50%;background:var(--accent-soft);border:none;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -2336,8 +2343,8 @@
 
       </div>
 
-      <!-- Onglet Clientele (desktop uniquement) -->
-      <div id="detail-tab-clients" class="detail-tab-content desktop-only" style="display:none;">
+      <!-- Onglet Clientele (mobile + desktop) -->
+      <div id="detail-tab-clients" class="detail-tab-content" style="display:none;">
         <div style="margin-bottom:16px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Informations client</span></div>
         <div class="bft-card" style="margin-bottom:20px;">
           <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
@@ -2348,24 +2355,24 @@
             <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Prénom</div>
             <input type="text" id="dtc-prenom" placeholder="Prénom" onblur="saveClientField('prenom', this.value)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:2px 0;">
           </div>
-          <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
-            <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Téléphone</div>
-            <input type="tel" id="dtc-tel" placeholder="Téléphone" oninput="toggleClientActionBtns()" onblur="saveClientField('tel', this.value)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:2px 0;">
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Téléphone</div>
+              <input type="tel" id="dtc-tel" placeholder="Téléphone" oninput="toggleClientActionBtns()" onblur="saveClientField('tel', this.value)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:2px 0;">
+            </div>
+            <button id="dtc-call-btn" onclick="callClientPhone()" title="Appeler" style="width:34px;height:34px;border-radius:50%;background:var(--success-soft);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;" disabled>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </button>
           </div>
-          <div style="padding:12px 16px;">
-            <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Adresse mail</div>
-            <input type="email" id="dtc-email" placeholder="Adresse mail" oninput="toggleClientActionBtns()" onblur="saveClientField('email', this.value)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:2px 0;">
+          <div style="padding:12px 16px;display:flex;align-items:center;gap:10px;">
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Adresse mail</div>
+              <input type="email" id="dtc-email" placeholder="Adresse mail" oninput="toggleClientActionBtns()" onblur="saveClientField('email', this.value)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:2px 0;">
+            </div>
+            <button id="dtc-email-btn" onclick="emailClient()" title="Envoyer un email" style="width:34px;height:34px;border-radius:50%;background:var(--accent-soft);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;" disabled>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+            </button>
           </div>
-        </div>
-        <div style="display:flex;gap:10px;">
-          <button id="dtc-call-btn" onclick="callClientPhone()" class="btn-secondary" style="display:flex;align-items:center;justify-content:center;gap:8px;" disabled>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            Appeler
-          </button>
-          <button id="dtc-email-btn" onclick="emailClient()" class="btn-secondary" style="display:flex;align-items:center;justify-content:center;gap:8px;" disabled>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
-            Envoyer un email
-          </button>
         </div>
       </div>
 
@@ -3648,6 +3655,8 @@ function renderClientDisplay(v){
       if(contactEl) contactEl.textContent = [v.clientTel, v.clientEmail].filter(Boolean).join(' · ');
       const btn = document.getElementById('detail-client-call-btn');
       if(btn) btn.style.display = v.clientTel ? 'flex' : 'none';
+      const emailBtn = document.getElementById('detail-client-email-btn');
+      if(emailBtn) emailBtn.style.display = v.clientEmail ? 'flex' : 'none';
     }
   }
   const dNom = document.getElementById('dtc-nom'); if(dNom) dNom.value = v.clientNom || '';
@@ -4049,7 +4058,7 @@ let currentDisplayDate = new Date();
 let planningIndex = {};
 
 const DETAIL_TABS = ['infos', 'finances'];
-const DETAIL_TAB_LABELS = {infos: 'Détails', finances: 'Finances'};
+const DETAIL_TAB_LABELS = {infos: 'Détails', finances: 'Finances', clients: 'Clientèle'};
 const DETAIL_TAB_LABELS_DESKTOP = {inforight: 'Détails', finances: 'Finances', clients: 'Clientèle'};
 function openDetailTabMenu(anchorEl){
   const html = Object.keys(DETAIL_TAB_LABELS).map(k => `<div class="ntask-opt" onclick="switchDetailTab('${k}');closeAnchoredMenu();"><span>${DETAIL_TAB_LABELS[k]}</span></div>`).join('');
