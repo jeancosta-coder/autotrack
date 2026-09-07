@@ -233,9 +233,10 @@
     .modal-close-btn { background: none; border: none; cursor: pointer; font-size: 22px; color: var(--text2); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
     .modal-close-btn:active { background: var(--surface-2); }
     .btn-block { flex: none !important; width: 100%; }
-    /* .btn-danger-soft = style standard pour TOUT bouton "Supprimer" hors confirmation modale (fond teinte rouge, texte rouge) */
-    .btn-danger-soft { width: 100%; padding: 14px; background: var(--danger-soft); color: var(--danger); border: none; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: pointer; letter-spacing: -0.2px; transition: background 0.15s ease; }
-    .btn-danger-soft:hover { background: color-mix(in srgb, var(--danger) 20%, var(--danger-soft)); }
+    /* .btn-danger-soft = style standard pour TOUT bouton "Supprimer" hors confirmation modale : ghost outline, sobre et moderne */
+    .btn-danger-soft { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 13px; background: var(--surface); color: var(--danger); border: 1.5px solid var(--danger-soft); border-radius: 14px; font-size: 15px; font-weight: 600; cursor: pointer; letter-spacing: -0.2px; transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s cubic-bezier(0.2,0.8,0.2,1); }
+    .btn-danger-soft svg { flex-shrink: 0; }
+    .btn-danger-soft:hover { background: var(--danger-soft); border-color: var(--danger); }
     .btn-danger-soft:active { transform: scale(0.98); }
     /* .btn-success-block = action de validation positive pleine largeur (ex: Valider la vente) */
     .btn-success-block { width: 100%; padding: 14px; background: var(--success); color: #fff; border: none; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -2237,6 +2238,7 @@
         <!-- Bouton supprimer (desktop uniquement, sous les notes) : sur mobile la suppression se fait via l'icone corbeille du header -->
         <div class="dt-delete-wrap" style="display:none;">
           <button onclick="confirmDeleteCurrentVehicle()" class="btn-danger-soft">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
             Supprimer le véhicule
           </button>
         </div>
@@ -4765,7 +4767,10 @@ function openEditPlanningTaskModal(taskId){
     ${ntaskModalBody(taskDate, taskDateEnd, taskTimeStart, taskTimeEnd)}
     <div class="ntask-save-bar">
       <button class="ntask-save-btn" onclick="saveTaskEdit(${taskId})">Enregistrer</button>
-      <button onclick="confirmDeleteEditTask(${taskId})" class="btn-danger-soft" style="margin-top:10px;">Supprimer l'événement</button>
+      <button onclick="confirmDeleteEditTask(${taskId})" class="btn-danger-soft" style="margin-top:10px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Supprimer l'événement
+      </button>
     </div>
   </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
