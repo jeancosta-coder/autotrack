@@ -797,8 +797,9 @@
     .bft-stat.accent .bft-stat-val { color:var(--accent); }
     .bft-stat.pos .bft-stat-val { color:var(--success); }
     .bft-card { background:var(--surface); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; margin-bottom:12px; }
-    .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 16px; background:var(--surface-2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; }
+    .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 16px; background:color-mix(in srgb, var(--accent) 8%, var(--surface)); color:var(--accent); border-top:1px solid var(--border); border-bottom:1px solid var(--border); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; }
     .bft-group:first-child { border-top:none; }
+    .bft-subgroup { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 16px; border-top:1px solid var(--border); font-size:12px; font-weight:600; color:var(--text2); }
     .bft-card-title { font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin:0 4px 8px; }
     .bft-mini-table { background:var(--surface); border-radius:14px; padding:2px 14px; margin-bottom:16px; box-shadow:0 1px 2px rgba(0,0,0,0.03); }
     .bft-mini-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 0; font-size:12.5px; border-top:1px solid var(--border); }
@@ -2283,12 +2284,12 @@
             <div class="bft-row-simple"><span class="bft-name">Prix d'achat</span><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
             <div class="bft-row-simple"><span class="bft-name">Prix de vente cible</span><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
 
-            <div class="bft-group"><span>Frais sans TVA · <span id="fin-total-sansTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('sansTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+            <div class="bft-group"><span>Frais</span></div>
+            <div class="bft-subgroup"><span>Sans TVA · <span id="fin-total-sansTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('sansTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
             <div id="fin-list-sansTva"></div>
-            <div class="bft-group"><span>Frais soumis à la TVA · <span id="fin-total-avecTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('avecTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+            <div class="bft-subgroup"><span>Soumis à la TVA · <span id="fin-total-avecTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('avecTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
             <div id="fin-list-avecTva"></div>
-
-            <div class="bft-group"><span>Frais divers</span></div>
+            <div class="bft-subgroup"><span>Divers</span></div>
             <div class="bft-row-simple"><span class="bft-name">Carte grise</span><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
           </div>
         </div>
