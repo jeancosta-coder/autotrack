@@ -233,8 +233,10 @@
     .modal-close-btn { background: none; border: none; cursor: pointer; font-size: 22px; color: var(--text2); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
     .modal-close-btn:active { background: var(--surface-2); }
     .btn-block { flex: none !important; width: 100%; }
-    /* .btn-danger-soft = action destructive presentee discretement hors modal (ex: Supprimer le vehicule en bas de fiche) */
-    .btn-danger-soft { width: 100%; padding: 14px; background: var(--surface-2); color: var(--danger); border: none; border-radius: 9999px; font-size: 15px; font-weight: 500; cursor: pointer; box-shadow: var(--shadow-sm); letter-spacing: -0.2px; }
+    /* .btn-danger-soft = style standard pour TOUT bouton "Supprimer" hors confirmation modale (fond teinte rouge, texte rouge) */
+    .btn-danger-soft { width: 100%; padding: 14px; background: var(--danger-soft); color: var(--danger); border: none; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: pointer; letter-spacing: -0.2px; transition: background 0.15s ease; }
+    .btn-danger-soft:hover { background: color-mix(in srgb, var(--danger) 20%, var(--danger-soft)); }
+    .btn-danger-soft:active { transform: scale(0.98); }
     /* .btn-success-block = action de validation positive pleine largeur (ex: Valider la vente) */
     .btn-success-block { width: 100%; padding: 14px; background: var(--success); color: #fff; border: none; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
     /* Rail Planning "À venir" — masqué par défaut (mobile), visible desktop */
@@ -1181,8 +1183,6 @@
         border-radius: 14px !important;
         box-shadow: none !important;
       }
-      /* Masquer le bouton supprimer mobile sur desktop */
-      .dt-delete-mobile-wrap { display: none !important; }
       /* Bouton supprimer : tout en bas */
       .dt-delete-wrap {
         display: block !important;
@@ -2234,14 +2234,7 @@
         </button>
         </div><!-- /infos-movable -->
 
-        <!-- Bouton supprimer mobile -->
-        <div class="dt-delete-mobile-wrap" style="margin-top:auto;padding:16px 0 32px;">
-          <button onclick="confirmDeleteCurrentVehicle()" class="btn-danger-soft">
-            Supprimer le véhicule
-          </button>
-        </div>
-
-        <!-- Bouton supprimer (desktop uniquement, sous les notes) -->
+        <!-- Bouton supprimer (desktop uniquement, sous les notes) : sur mobile la suppression se fait via l'icone corbeille du header -->
         <div class="dt-delete-wrap" style="display:none;">
           <button onclick="confirmDeleteCurrentVehicle()" class="btn-danger-soft">
             Supprimer le véhicule
@@ -4099,11 +4092,10 @@ function relayoutDetailInfos(){
   if(!mov) return;
   const rightSlot = document.getElementById('detail-tab-inforight');
   const leftHost = document.getElementById('detail-tab-infos');
-  const deleteMobile = leftHost ? leftHost.querySelector('.dt-delete-mobile-wrap') : null;
   if(window.innerWidth >= 900){
     if(rightSlot && mov.parentElement !== rightSlot) rightSlot.appendChild(mov);
   } else {
-    if(leftHost && mov.parentElement !== leftHost) leftHost.insertBefore(mov, deleteMobile);
+    if(leftHost && mov.parentElement !== leftHost) leftHost.appendChild(mov);
   }
 }
 if(!window._detailRelayoutBound){
