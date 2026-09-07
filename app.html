@@ -1524,6 +1524,11 @@
       #detail-title, #detail-subtitle { display: none !important; }
       /* Client : masqué de l'onglet Details sur mobile, accessible uniquement via l'onglet Clientele (menu deroulant) */
       .dt-client-wrap { display: none !important; }
+      /* Onglet Clientele : format plus compact sur mobile (evite l'effet trop large) */
+      #detail-tab-clients .bft-card > div { padding: 10px 14px !important; }
+      #detail-tab-clients input, #detail-tab-clients textarea { font-size: 14px !important; }
+      #detail-tab-clients #dtc-call-btn, #detail-tab-clients #dtc-email-btn { width: 30px !important; height: 30px !important; }
+      #detail-tab-clients #dtc-call-btn svg, #detail-tab-clients #dtc-email-btn svg { width: 13px !important; height: 13px !important; }
       /* Statut: badge+popover aussi sur mobile */
       #statut-mobile-badges { display: none !important; }
       /* Statut déplacé dans l'en-tête (photo/titre) sur mobile : masquer le libellé et l'emplacement d'origine */
@@ -2373,6 +2378,11 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
             </button>
           </div>
+        </div>
+
+        <div style="margin-bottom:16px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
+        <div class="bft-card" style="margin-bottom:20px;">
+          <textarea id="dtc-notes" placeholder="Notes sur le client..." onblur="saveClientField('notes', this.value)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:14px 16px;box-sizing:border-box;"></textarea>
         </div>
       </div>
 
@@ -3642,7 +3652,7 @@ function refreshDetailHeaderAndSpecs(v){
   const _dhisto = document.getElementById('detail-histo'); if(_dhisto) _dhisto.textContent = v.histoEntretien === 'oui' ? 'Oui' : v.histoEntretien === 'non' ? 'Non' : '—';
   renderClientDisplay(v);
 }
-const CLIENT_FIELD_MAP = { nom:'clientNom', prenom:'clientPrenom', tel:'clientTel', email:'clientEmail' };
+const CLIENT_FIELD_MAP = { nom:'clientNom', prenom:'clientPrenom', tel:'clientTel', email:'clientEmail', notes:'clientNotes' };
 function hasClientInfo(v){ return !!(v && (v.clientNom || v.clientPrenom || v.clientTel || v.clientEmail)); }
 function renderClientDisplay(v){
   const wrap = document.getElementById('dt-client-wrap');
@@ -3663,6 +3673,7 @@ function renderClientDisplay(v){
   const dPrenom = document.getElementById('dtc-prenom'); if(dPrenom) dPrenom.value = v.clientPrenom || '';
   const dTel = document.getElementById('dtc-tel'); if(dTel) dTel.value = v.clientTel || '';
   const dEmail = document.getElementById('dtc-email'); if(dEmail) dEmail.value = v.clientEmail || '';
+  const dNotes = document.getElementById('dtc-notes'); if(dNotes) dNotes.value = v.clientNotes || '';
   toggleClientActionBtns();
 }
 function toggleClientActionBtns(){
