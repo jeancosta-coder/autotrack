@@ -2635,7 +2635,7 @@ const DataLayer = {
       const allowed = ['statut', 'achat', 'vente', 'prepCost', 'notes', 'statusHistory', 'carteGrise', 'transport', 'commission', 'margeCible', 'sansTva', 'avecTva',
         'marque', 'modele', 'year', 'gen', 'km', 'achatDate', 'saleDate', 'carburant', 'transmission', 'couleur', 'immatriculation', 'puissance', 'saleCycle',
         'costsSansTva', 'costsAvecTva', 'venteFinale', 'venteValidee',
-        'clientNom', 'clientPrenom', 'clientTel', 'clientEmail', 'numVo', 'clesDouble', 'histoEntretien', 'photo'];
+        'clientNom', 'clientPrenom', 'clientTel', 'clientEmail', 'clientNotes', 'numVo', 'clesDouble', 'histoEntretien', 'photo'];
       Object.keys(updates).forEach(key => { if(allowed.includes(key)) v[key] = updates[key]; });
       save();
     }
@@ -3544,11 +3544,20 @@ function switchParcView(view){
 
 
 
+const CARD_STATUTS = ['En cours', 'Prêt à vendre', 'Réservé', 'Livré'];
 function showVehicleContextMenu(vehicleId, btn){
   const v = vehicles.find(x => x.id === vehicleId);
   if(!v) return;
   const isPinned = v.pinned || false;
+  const statutItems = CARD_STATUTS.map(s => {
+    const color = STATUS_COLORS[s];
+    const active = v.statut === s;
+    return `<div class="ntask-opt" onclick="closeAnchoredMenu();changeVehicleStatutFromCard(${vehicleId},'${s}')"><span style="display:flex;align-items:center;gap:8px;${active ? 'font-weight:600;' : ''}">${statusIconSVG(s, color)}${s}</span></div>`;
+  }).join('');
   const itemsHtml = `
+    <div style="padding:6px 12px 2px;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;">Changer le statut</div>
+    ${statutItems}
+    <div class="ntask-sep"></div>
     <div class="ntask-opt" onclick="closeAnchoredMenu();pinVehicle(${vehicleId})"><span>${isPinned ? 'Désépingler' : 'Épingler'}</span></div>
     <div class="ntask-opt" onclick="closeAnchoredMenu();duplicateVehicle(${vehicleId})"><span>Dupliquer</span></div>
     <div class="ntask-opt" onclick="closeAnchoredMenu();deleteVehicle(${vehicleId})"><span style="color:var(--danger);">Supprimer</span></div>
@@ -3556,6 +3565,18 @@ function showVehicleContextMenu(vehicleId, btn){
   openAnchoredMenu(btn || event.currentTarget, itemsHtml);
 }
 function closeVehicleContextSheet(){ closeAnchoredMenu(); }
+
+function changeVehicleStatutFromCard(vehicleId, newStatut){
+  const v = vehicles.find(x => x.id === vehicleId);
+  if(!v || v.statut === newStatut) return;
+  const today = Utils.today();
+  v.statut = newStatut;
+  v.statusHistory = v.statusHistory || [];
+  v.statusHistory.push({statut: newStatut, date: today});
+  save();
+  renderParc();
+  showToast('✓ Statut mis à jour');
+}
 
 function pinVehicle(vehicleId){
   const v = vehicles.find(x => x.id === vehicleId);
