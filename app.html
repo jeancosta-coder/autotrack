@@ -3550,21 +3550,31 @@ const CARD_STATUTS = ['En cours', 'Prêt à vendre', 'Réservé', 'Livré'];
 function showVehicleContextMenu(vehicleId, btn){
   const v = vehicles.find(x => x.id === vehicleId);
   if(!v) return;
+  const anchor = btn || event.currentTarget;
+  document._vehCardMenuAnchor = anchor;
   const isPinned = v.pinned || false;
+  const itemsHtml = `
+    <div class="ntask-opt" onclick="showVehicleStatutSubmenu(${vehicleId})"><span>Changer le statut</span><span class="chev">›</span></div>
+    <div class="ntask-opt" onclick="closeAnchoredMenu();pinVehicle(${vehicleId})"><span>${isPinned ? 'Désépingler' : 'Épingler'}</span></div>
+    <div class="ntask-opt" onclick="closeAnchoredMenu();duplicateVehicle(${vehicleId})"><span>Dupliquer</span></div>
+    <div class="ntask-opt" onclick="closeAnchoredMenu();deleteVehicle(${vehicleId})"><span style="color:var(--danger);">Supprimer</span></div>
+  `;
+  openAnchoredMenu(anchor, itemsHtml);
+}
+function showVehicleStatutSubmenu(vehicleId){
+  const v = vehicles.find(x => x.id === vehicleId);
+  if(!v) return;
   const statutItems = CARD_STATUTS.map(s => {
     const color = STATUS_COLORS[s];
     const active = v.statut === s;
     return `<div class="ntask-opt" onclick="closeAnchoredMenu();changeVehicleStatutFromCard(${vehicleId},'${s}')"><span style="display:flex;align-items:center;gap:8px;${active ? 'font-weight:600;' : ''}">${statusIconSVG(s, color)}${s}</span></div>`;
   }).join('');
   const itemsHtml = `
-    <div style="padding:6px 12px 2px;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;">Changer le statut</div>
-    ${statutItems}
+    <div class="ntask-opt" onclick="showVehicleContextMenu(${vehicleId}, document._vehCardMenuAnchor)"><span style="color:var(--text2);">‹ Retour</span></div>
     <div class="ntask-sep"></div>
-    <div class="ntask-opt" onclick="closeAnchoredMenu();pinVehicle(${vehicleId})"><span>${isPinned ? 'Désépingler' : 'Épingler'}</span></div>
-    <div class="ntask-opt" onclick="closeAnchoredMenu();duplicateVehicle(${vehicleId})"><span>Dupliquer</span></div>
-    <div class="ntask-opt" onclick="closeAnchoredMenu();deleteVehicle(${vehicleId})"><span style="color:var(--danger);">Supprimer</span></div>
+    ${statutItems}
   `;
-  openAnchoredMenu(btn || event.currentTarget, itemsHtml);
+  openAnchoredMenu(document._vehCardMenuAnchor, itemsHtml);
 }
 function closeVehicleContextSheet(){ closeAnchoredMenu(); }
 
