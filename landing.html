@@ -700,6 +700,47 @@
       line-height: 1.6;
     }
 
+    /* ── FAQ ── */
+    .faq { padding: 80px 0; }
+    .faq-list {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .faq-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 4px 20px;
+    }
+    .faq-item summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 18px 0;
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary .faq-chevron {
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+      color: var(--text2);
+    }
+    .faq-item[open] summary .faq-chevron { transform: rotate(180deg); }
+    .faq-answer {
+      padding: 0 0 18px;
+      font-size: 14.5px;
+      color: var(--text2);
+      line-height: 1.65;
+    }
+
     /* ── CTA FINAL ── */
     .cta-final {
       padding: 80px 0;
@@ -1410,6 +1451,41 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#635BFF" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           Paiements gérés par <strong style="color:#635BFF;">&nbsp;Stripe</strong> — aucune donnée bancaire stockée chez nous
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="container">
+      <p class="section-label">Questions fréquentes</p>
+      <h2 class="section-title">Vous vous posez sûrement<br>ces questions.</h2>
+
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary><span>Que se passe-t-il si je n'annule pas avant la fin de l'essai ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
+          <div class="faq-answer">Votre carte est débitée de 49€ et votre abonnement continue normalement. Vous recevez un rappel avant la fin des 14 jours pour ne pas être surpris.</div>
+        </details>
+        <details class="faq-item">
+          <summary><span>Puis-je annuler à tout moment ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
+          <div class="faq-answer">Oui, sans engagement ni préavis, directement depuis votre compte dans l'app. Aucun frais de résiliation.</div>
+        </details>
+        <details class="faq-item">
+          <summary><span>Combien de véhicules puis-je gérer ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
+          <div class="faq-answer">Le parc est illimité : que vous ayez 5 ou 200 véhicules en stock, le tarif reste le même.</div>
+        </details>
+        <details class="faq-item">
+          <summary><span>Est-ce que ça marche vraiment sur mobile, ou juste sur ordinateur ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
+          <div class="faq-answer">Trakoto est pensé mobile-first : toutes les fonctionnalités (parc, planning, organisation, finances, dashboard) sont utilisables entièrement depuis votre téléphone. La version ordinateur est disponible pour ceux qui préfèrent travailler au bureau.</div>
+        </details>
+        <details class="faq-item">
+          <summary><span>Mes données sont-elles en sécurité ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
+          <div class="faq-answer">Vos données sont stockées de façon chiffrée et sécurisée, conformément au RGPD. Vos coordonnées bancaires ne transitent jamais par nos serveurs — tout est géré par Stripe.</div>
+        </details>
+        <details class="faq-item">
+          <summary><span>Ai-je besoin d'installer une application ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
+          <div class="faq-answer">Non, Trakoto fonctionne directement dans votre navigateur, sur téléphone comme sur ordinateur — rien à télécharger, rien à mettre à jour.</div>
+        </details>
       </div>
     </div>
   </section>
