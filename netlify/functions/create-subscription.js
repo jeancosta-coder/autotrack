@@ -5,9 +5,9 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: JSON.stringify({ message: 'Method Not Allowed' }) };
   }
 
-  let email, paymentMethodId, priceId;
+  let email, paymentMethodId, priceId, skipTrial;
   try {
-    ({ email, paymentMethodId, priceId } = JSON.parse(event.body));
+    ({ email, paymentMethodId, priceId, skipTrial } = JSON.parse(event.body));
   } catch {
     return { statusCode: 400, body: JSON.stringify({ message: 'Corps de requête invalide.' }) };
   }
@@ -41,11 +41,11 @@ exports.handler = async (event) => {
       invoice_settings: { default_payment_method: paymentMethodId }
     });
 
-    // 4. Créer la subscription avec 14 jours d'essai
+    // 4. Créer la subscription (avec 14 jours d'essai, sauf si l'utilisateur choisit de payer immédiatement)
     await stripe.subscriptions.create({
       customer: customer.id,
       items: [{ price: priceId }],
-      trial_period_days: 14,
+      ...(skipTrial ? {} : { trial_period_days: 14 }),
       default_payment_method: paymentMethodId,
       payment_settings: { payment_method_types: ['card'], save_default_payment_method: 'on_subscription' },
       expand: ['latest_invoice.payment_intent']
