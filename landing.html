@@ -222,6 +222,98 @@
     .btn-primary:hover { background: #333; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
     .btn-primary:active { transform: translateY(0); }
 
+    .btn-ghost {
+      padding: 14px 26px;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-ghost:hover { background: white; border-color: #ccc; transform: translateY(-1px); }
+
+    /* ── PARCOURS ── */
+    .journey {
+      padding: 72px 0 80px;
+      background: white;
+      border-top: 0.5px solid var(--border);
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .journey-track {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+      margin-top: 16px;
+    }
+
+    .journey-track::before {
+      content: '';
+      position: absolute;
+      top: 21px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--border) 0 8px, transparent 8px 14px);
+      z-index: 0;
+    }
+
+    .journey-step {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 0 10px;
+    }
+
+    .journey-num {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: white;
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-family: 'Instrument Serif', serif;
+      font-size: 19px;
+      color: var(--text2);
+      transition: all 0.25s;
+    }
+
+    .journey-step:hover .journey-num {
+      background: linear-gradient(135deg, var(--brand, #5B5BF0), var(--brand2, #A855F7));
+      border-color: transparent;
+      color: white;
+      transform: scale(1.08);
+    }
+
+    .journey-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .journey-desc {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .journey-track { grid-template-columns: 1fr 1fr; gap: 28px 0; }
+      .journey-track::before { display: none; }
+    }
+
     .hero-note {
       font-size: 13px;
       color: var(--text2);
@@ -1000,6 +1092,7 @@
               Commencer gratuitement
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg>
             </a>
+            <a href="#showcase" class="btn-ghost">Voir l'app en détail</a>
           </div>
           <p class="hero-note fade-up fade-up-4">Carte bancaire requise — aucun débit pendant 14 jours.</p>
         </div>
@@ -1097,8 +1190,40 @@
     </div>
   </section>
 
+  <!-- PARCOURS -->
+  <section class="journey">
+    <div class="container">
+      <p class="section-label reveal">Comment ça marche</p>
+      <h2 class="section-title reveal">De l'achat à la vente,<br>tout est connecté.</h2>
+      <p class="section-sub reveal">Chaque véhicule suit le même parcours dans l'app, sans ressaisie ni fichier Excel à côté.</p>
+
+      <div class="journey-track">
+        <div class="journey-step reveal">
+          <div class="journey-num">1</div>
+          <div class="journey-title">Achat</div>
+          <div class="journey-desc">Ajoutez le véhicule, son prix d'achat et ses infos en quelques secondes.</div>
+        </div>
+        <div class="journey-step reveal">
+          <div class="journey-num">2</div>
+          <div class="journey-title">Préparation</div>
+          <div class="journey-desc">Planifiez les tâches et suivez les coûts de remise en état par prestataire.</div>
+        </div>
+        <div class="journey-step reveal">
+          <div class="journey-num">3</div>
+          <div class="journey-title">Mise en vente</div>
+          <div class="journey-desc">Fixez votre prix cible et votre marge minimum recommandée.</div>
+        </div>
+        <div class="journey-step reveal">
+          <div class="journey-num">4</div>
+          <div class="journey-title">Vente & bilan</div>
+          <div class="journey-desc">Validez la vente, la marge réelle et vos statistiques se mettent à jour.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- SHOWCASE : ecran par ecran (ordre reel de l'app : Planning, Organisation, Parc, Dashboard) -->
-  <section class="showcase">
+  <section class="showcase" id="showcase">
     <div class="container">
 
       <!-- 1. PLANNING -->
@@ -1554,7 +1679,7 @@
     if(!('IntersectionObserver' in window)){ els.forEach(function(e){ e.classList.add('in-view'); }); return; }
     var groups = new Map();
     els.forEach(function(e){
-      var parent = e.closest('.features-grid, .reassurance-grid, .faq-list') || e.parentElement;
+      var parent = e.closest('.features-grid, .reassurance-grid, .faq-list, .journey-track') || e.parentElement;
       groups.has(parent) ? groups.get(parent).push(e) : groups.set(parent, [e]);
     });
     var delayIndex = new Map();
