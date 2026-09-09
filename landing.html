@@ -124,6 +124,34 @@
     .hero {
       padding: 80px 0 64px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: -220px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1100px;
+      height: 560px;
+      background: radial-gradient(closest-side, rgba(91,91,240,0.14), rgba(168,85,247,0.09) 55%, transparent 75%);
+      filter: blur(10px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero .container { position: relative; z-index: 1; }
+
+    /* ── REVEAL ON SCROLL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .hero-badge {
@@ -948,6 +976,7 @@
 
   <!-- HERO -->
   <section class="hero">
+    <div class="hero-glow"></div>
     <div class="container">
       <div class="hero-content-wrap">
 
@@ -1059,11 +1088,11 @@
   <!-- MOBILE-FIRST BANNER -->
   <section class="mobile-banner">
     <div class="container">
-      <div class="mobile-banner-badge">
+      <div class="mobile-banner-badge reveal">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
         Pensé mobile-first
       </div>
-      <h2 class="section-title">Toute votre activité,<br>dans votre poche.</h2>
+      <h2 class="section-title reveal">Toute votre activité,<br>dans votre poche.</h2>
       <p class="section-sub">Pas besoin d'un ordinateur pour gérer votre parc. Ajoutez un véhicule entre deux rendez-vous, changez un statut d'un tap, validez une vente depuis le trottoir. Trakoto est une vraie app mobile — et fonctionne tout aussi bien sur ordinateur au bureau.</p>
     </div>
   </section>
@@ -1073,7 +1102,7 @@
     <div class="container">
 
       <!-- 1. PLANNING -->
-      <div class="showcase-row">
+      <div class="showcase-row reveal">
         <div class="showcase-text">
           <div class="showcase-step"><span class="showcase-step-num">1</span>Planning</div>
           <h3 class="showcase-title">Plus aucun rendez-vous oublié.</h3>
@@ -1111,7 +1140,7 @@
       </div>
 
       <!-- 2. ORGANISATION -->
-      <div class="showcase-row reverse">
+      <div class="showcase-row reverse reveal">
         <div class="showcase-text">
           <div class="showcase-step"><span class="showcase-step-num">2</span>Organisation</div>
           <h3 class="showcase-title">Sachez exactement où en est chaque véhicule.</h3>
@@ -1160,7 +1189,7 @@
       </div>
 
       <!-- 3. PARC + FINANCE PAR VEHICULE -->
-      <div class="showcase-row">
+      <div class="showcase-row reveal">
         <div class="showcase-text">
           <div class="showcase-step"><span class="showcase-step-num">3</span>Le Parc</div>
           <h3 class="showcase-title">Chaque véhicule suivi, avec sa propre rentabilité.</h3>
@@ -1207,7 +1236,7 @@
       </div>
 
       <!-- 4. DASHBOARD -->
-      <div class="showcase-row reverse">
+      <div class="showcase-row reverse reveal">
         <div class="showcase-text">
           <div class="showcase-step"><span class="showcase-step-num">4</span>Dashboard</div>
           <h3 class="showcase-title">Votre activité, résumée en un écran.</h3>
@@ -1253,13 +1282,13 @@
   <!-- FEATURES -->
   <section class="features">
     <div class="container">
-      <p class="section-label">Fonctionnalités</p>
-      <h2 class="section-title">Tout ce dont vous avez besoin,<br>rien de plus.</h2>
+      <p class="section-label reveal">Fonctionnalités</p>
+      <h2 class="section-title reveal">Tout ce dont vous avez besoin,<br>rien de plus.</h2>
       <p class="section-sub">Tout ce qu'il faut pour gérer votre activité au quotidien, depuis votre téléphone.</p>
 
       <div class="features-grid">
 
-        <div class="feature-card">
+        <div class="feature-card reveal">
           <div class="feature-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/>
@@ -1275,7 +1304,7 @@
           <div class="feature-desc">Ajoutez vos véhicules en quelques secondes. Suivez leur statut (En cours, Prêt, Vendu), leurs infos et leurs tâches associées en un coup d'œil.</div>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal">
           <div class="feature-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
               <rect x="3" y="4" width="18" height="18" rx="2"/>
@@ -1288,7 +1317,7 @@
           <div class="feature-desc">Visualisez vos RDV, rappels et préparations sur un calendrier jour, semaine ou mois. Chaque événement est lié à un véhicule précis.</div>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal">
           <div class="feature-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
               <line x1="12" y1="1" x2="12" y2="23"/>
@@ -1299,7 +1328,7 @@
           <div class="feature-desc">Prix d'achat, coûts de préparation, carte grise, prix de vente. Calculez votre marge réelle et votre prix minimum recommandé instantanément.</div>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal">
           <div class="feature-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
               <rect x="3" y="5" width="4" height="14" rx="1"/>
@@ -1311,7 +1340,7 @@
           <div class="feature-desc">Trésorerie, CA, marge moyenne, temps de vente moyen, rotation du stock. Toutes vos métriques clés en un seul écran.</div>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal">
           <div class="feature-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="8" r="3.5"/><path d="M5.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="6" r="2"/>
@@ -1321,7 +1350,7 @@
           <div class="feature-desc">Ajoutez vos prestataires (mécanicien, carrossier...) et suivez vos véhicules par glisser-déposer : à mettre, sur place, fait.</div>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal">
           <div class="feature-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
@@ -1331,7 +1360,7 @@
           <div class="feature-desc">Nom, téléphone, email et notes pour chaque acheteur. Appelez ou envoyez un email en un tap, sans quitter l'app.</div>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal">
           <div class="feature-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 0 0-2.8 0L8 17"/>
@@ -1350,7 +1379,7 @@
     <div class="container">
       <div class="reassurance-grid">
 
-        <div class="reassurance-item">
+        <div class="reassurance-item reveal">
           <div class="reassurance-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -1360,7 +1389,7 @@
           <div class="reassurance-desc">Vos coordonnées bancaires ne transitent jamais sur nos serveurs. Tout est géré par Stripe, leader mondial des paiements en ligne.</div>
         </div>
 
-        <div class="reassurance-item">
+        <div class="reassurance-item reveal">
           <div class="reassurance-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
               <rect x="3" y="11" width="18" height="11" rx="2"/>
@@ -1371,7 +1400,7 @@
           <div class="reassurance-desc">Vos données sont stockées de façon chiffrée et sécurisée. Vous restez propriétaire de vos données, conformément au RGPD.</div>
         </div>
 
-        <div class="reassurance-item">
+        <div class="reassurance-item reveal">
           <div class="reassurance-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round">
               <polyline points="23 4 23 10 17 10"/>
@@ -1389,11 +1418,11 @@
   <!-- PRICING -->
   <section class="pricing">
     <div class="container">
-      <p class="section-label">Tarif</p>
-      <h2 class="section-title">Simple. Transparent.</h2>
+      <p class="section-label reveal">Tarif</p>
+      <h2 class="section-title reveal">Simple. Transparent.</h2>
       <p class="section-sub">Un seul plan, tout inclus. Pas de paliers, pas de fonctionnalités cachées.</p>
 
-      <div class="pricing-card">
+      <div class="pricing-card reveal">
         <div class="pricing-plan">Trakoto Pro</div>
         <div class="pricing-price">
           <div class="pricing-amount">49€</div>
@@ -1458,31 +1487,31 @@
   <!-- FAQ -->
   <section class="faq">
     <div class="container">
-      <p class="section-label">Questions fréquentes</p>
-      <h2 class="section-title">Vous vous posez sûrement<br>ces questions.</h2>
+      <p class="section-label reveal">Questions fréquentes</p>
+      <h2 class="section-title reveal">Vous vous posez sûrement<br>ces questions.</h2>
 
       <div class="faq-list">
-        <details class="faq-item">
+        <details class="faq-item reveal">
           <summary><span>Que se passe-t-il si je n'annule pas avant la fin de l'essai ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
           <div class="faq-answer">Votre carte est débitée de 49€ et votre abonnement continue normalement. Vous recevez un rappel avant la fin des 14 jours pour ne pas être surpris.</div>
         </details>
-        <details class="faq-item">
+        <details class="faq-item reveal">
           <summary><span>Puis-je annuler à tout moment ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
           <div class="faq-answer">Oui, sans engagement ni préavis, directement depuis votre compte dans l'app. Aucun frais de résiliation.</div>
         </details>
-        <details class="faq-item">
+        <details class="faq-item reveal">
           <summary><span>Combien de véhicules puis-je gérer ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
           <div class="faq-answer">Le parc est illimité : que vous ayez 5 ou 200 véhicules en stock, le tarif reste le même.</div>
         </details>
-        <details class="faq-item">
+        <details class="faq-item reveal">
           <summary><span>Est-ce que ça marche vraiment sur mobile, ou juste sur ordinateur ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
           <div class="faq-answer">Trakoto est pensé mobile-first : toutes les fonctionnalités (parc, planning, organisation, finances, dashboard) sont utilisables entièrement depuis votre téléphone. La version ordinateur est disponible pour ceux qui préfèrent travailler au bureau.</div>
         </details>
-        <details class="faq-item">
+        <details class="faq-item reveal">
           <summary><span>Mes données sont-elles en sécurité ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
           <div class="faq-answer">Vos données sont stockées de façon chiffrée et sécurisée, conformément au RGPD. Vos coordonnées bancaires ne transitent jamais par nos serveurs — tout est géré par Stripe.</div>
         </details>
-        <details class="faq-item">
+        <details class="faq-item reveal">
           <summary><span>Ai-je besoin d'installer une application ?</span><svg class="faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
           <div class="faq-answer">Non, Trakoto fonctionne directement dans votre navigateur, sur téléphone comme sur ordinateur — rien à télécharger, rien à mettre à jour.</div>
         </details>
@@ -1518,6 +1547,32 @@
     </div>
   </div>
 </footer>
+
+<script>
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){ els.forEach(function(e){ e.classList.add('in-view'); }); return; }
+    var groups = new Map();
+    els.forEach(function(e){
+      var parent = e.closest('.features-grid, .reassurance-grid, .faq-list') || e.parentElement;
+      groups.has(parent) ? groups.get(parent).push(e) : groups.set(parent, [e]);
+    });
+    var delayIndex = new Map();
+    groups.forEach(function(list){
+      list.forEach(function(e, i){ delayIndex.set(e, i * 70); });
+    });
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var el = entry.target;
+          setTimeout(function(){ el.classList.add('in-view'); }, delayIndex.get(el) || 0);
+          obs.unobserve(el);
+        }
+      });
+    }, {threshold: 0.15, rootMargin: '0px 0px -40px 0px'});
+    els.forEach(function(e){ obs.observe(e); });
+  })();
+</script>
 
 </body>
 </html>
